@@ -326,9 +326,96 @@ class WebhookService {
   }
 
   /**
+   * 验证Webhook URL安全性（防止SSRF攻击）
+   */
+  validateWebhookUrl(url) {
+    try {
+      const parsedUrl = new URL(url)
+
+      // 1. 检查协议（只允许 http 和 https）
+      if (!['http:', 'https:'].includes(parsedUrl.protocol)) {
+        throw new Error(`不允许的协议: ${parsedUrl.protocol}，只支持 http 和 https`)
+      }
+
+      // 检查是否允许本地地址（开发环境使用）
+      const allowLocalUrls =
+        appConfig.webhook?.allowLocalUrls || appConfig.server?.nodeEnv === 'development'
+
+      // 2. 检查是否为私有IP或本地地址（防止SSRF）
+      const hostname = parsedUrl.hostname.toLowerCase()
+
+      // 本地地址黑名单
+      const localAddresses = ['localhost', '127.0.0.1', '0.0.0.0', '::1', '::ffff:127.0.0.1']
+
+      if (localAddresses.includes(hostname)) {
+        if (!allowLocalUrls) {
+          throw new Error(
+            '不允许向本地地址发送Webhook请求（提示：开发环境可设置 WEBHOOK_ALLOW_LOCAL_URLS=true）'
+          )
+        }
+        logger.debug(`⚠️ 允许本地Webhook地址: ${hostname} (开发模式)`)
+        return true // 开发环境允许本地地址
+      }
+
+      // 检查私有IP段（IPv4）
+      const ipv4Regex = /^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/
+      const ipMatch = hostname.match(ipv4Regex)
+
+      if (ipMatch) {
+        const [, a, b] = ipMatch.map(Number)
+
+        // 检查是否为私有IP段
+        const isPrivate =
+          a === 10 || // 10.0.0.0/8
+          (a === 172 && b >= 16 && b <= 31) || // 172.16.0.0/12
+          (a === 192 && b === 168) || // 192.168.0.0/16
+          a === 127 || // 127.0.0.0/8 (loopback)
+          (a === 169 && b === 254) // 169.254.0.0/16 (link-local)
+
+        if (isPrivate) {
+          if (!allowLocalUrls) {
+            throw new Error(
+              '不允许向私有IP地址发送Webhook请求（提示：开发环境可设置 WEBHOOK_ALLOW_LOCAL_URLS=true）'
+            )
+          }
+          logger.debug(`⚠️ 允许私有IP Webhook地址: ${hostname} (开发模式)`)
+          return true // 开发环境允许私有IP
+        }
+
+        // 检查保留IP段
+        if (a === 0 || a >= 224) {
+          throw new Error('不允许向保留IP地址发送Webhook请求')
+        }
+      }
+
+      // 3. 可选：域名白名单（如果在配置中定义）
+      const allowedDomains = appConfig.webhook?.allowedDomains || []
+      if (allowedDomains.length > 0) {
+        const isAllowed = allowedDomains.some(
+          (domain) =>
+            // 支持子域名匹配
+            hostname === domain || hostname.endsWith(`.${domain}`)
+        )
+
+        if (!isAllowed) {
+          throw new Error(`域名 ${hostname} 不在白名单中。允许的域名: ${allowedDomains.join(', ')}`)
+        }
+      }
+
+      return true
+    } catch (error) {
+      logger.error(`⚠️ Webhook URL验证失败: ${error.message}`)
+      throw error
+    }
+  }
+
+  /**
    * 发送HTTP请求
    */
   async sendHttpRequest(url, payload, timeout, axiosOptions = {}) {
+    // 验证URL安全性
+    this.validateWebhookUrl(url)
+
     const headers = {
       'Content-Type': 'application/json',
       'User-Agent': 'claude-relay-service/2.0',

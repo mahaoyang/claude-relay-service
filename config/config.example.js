@@ -172,7 +172,27 @@ const config = {
       ? process.env.WEBHOOK_URLS.split(',').map((url) => url.trim())
       : [],
     timeout: parseInt(process.env.WEBHOOK_TIMEOUT) || 10000, // 10秒超时
-    retries: parseInt(process.env.WEBHOOK_RETRIES) || 3 // 重试3次
+    retries: parseInt(process.env.WEBHOOK_RETRIES) || 3, // 重试3次
+    // 🔒 安全：允许本地地址（开发环境使用）
+    // 设置为true时允许 localhost、127.0.0.1、私有IP等本地地址
+    // 开发环境（NODE_ENV=development）默认自动允许
+    allowLocalUrls: process.env.WEBHOOK_ALLOW_LOCAL_URLS === 'true',
+    // 🔒 安全：Webhook URL 域名白名单（可选）
+    // 如果配置了白名单，只有白名单中的域名才能接收通知（防止SSRF攻击）
+    // 留空数组表示允许所有合法的公网域名（但仍会阻止私有IP和本地地址）
+    allowedDomains: process.env.WEBHOOK_ALLOWED_DOMAINS
+      ? process.env.WEBHOOK_ALLOWED_DOMAINS.split(',').map((domain) => domain.trim())
+      : []
+    // 示例白名单配置（取消注释以启用）：
+    // allowedDomains: [
+    //   'hooks.slack.com',        // Slack
+    //   'discord.com',            // Discord
+    //   'api.telegram.org',       // Telegram
+    //   'qyapi.weixin.qq.com',    // 企业微信
+    //   'oapi.dingtalk.com',      // 钉钉
+    //   'open.feishu.cn',         // 飞书
+    //   'your-company.com'        // 自定义域名
+    // ]
   },
 
   // 🛠️ 开发配置
