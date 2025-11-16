@@ -253,7 +253,7 @@ main() {
 
 # 加载 .env 文件
 if [ -f .env ]; then
-    export $(cat .env | grep -v '^#' | xargs)
+    export $(cat .env | grep -v '^#' | grep -v '^$' | sed 's/#.*$//' | sed 's/[[:space:]]*$//' | xargs)
 fi
 
 # 运行主函数
