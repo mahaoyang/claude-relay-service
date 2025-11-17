@@ -18,7 +18,7 @@
             </p>
           </div>
           <div class="stat-icon flex-shrink-0 bg-gradient-to-br from-blue-500 to-blue-600">
-            <i class="fas fa-key" />
+            <Icon name="Key" />
           </div>
         </div>
       </div>
@@ -44,7 +44,7 @@
                   class="inline-flex items-center gap-0.5"
                   :title="`Claude: ${dashboardData.accountsByPlatform.claude.total} 个 (正常: ${dashboardData.accountsByPlatform.claude.normal})`"
                 >
-                  <i class="fas fa-brain text-xs text-indigo-600" />
+                  <Icon name="Brain" class="text-xs text-indigo-600" />
                   <span class="text-xs font-medium text-gray-700 dark:text-gray-300">{{
                     dashboardData.accountsByPlatform.claude.total
                   }}</span>
@@ -58,7 +58,7 @@
                   class="inline-flex items-center gap-0.5"
                   :title="`Console: ${dashboardData.accountsByPlatform['claude-console'].total} 个 (正常: ${dashboardData.accountsByPlatform['claude-console'].normal})`"
                 >
-                  <i class="fas fa-terminal text-xs text-purple-600" />
+                  <Icon name="Terminal" class="text-xs text-purple-600" />
                   <span class="text-xs font-medium text-gray-700 dark:text-gray-300">{{
                     dashboardData.accountsByPlatform['claude-console'].total
                   }}</span>
@@ -72,7 +72,7 @@
                   class="inline-flex items-center gap-0.5"
                   :title="`Gemini: ${dashboardData.accountsByPlatform.gemini.total} 个 (正常: ${dashboardData.accountsByPlatform.gemini.normal})`"
                 >
-                  <i class="fas fa-robot text-xs text-yellow-600" />
+                  <Icon name="Bot" class="text-xs text-yellow-600" />
                   <span class="text-xs font-medium text-gray-700 dark:text-gray-300">{{
                     dashboardData.accountsByPlatform.gemini.total
                   }}</span>
@@ -86,7 +86,7 @@
                   class="inline-flex items-center gap-0.5"
                   :title="`Bedrock: ${dashboardData.accountsByPlatform.bedrock.total} 个 (正常: ${dashboardData.accountsByPlatform.bedrock.normal})`"
                 >
-                  <i class="fab fa-aws text-xs text-orange-600" />
+                  <Icon name="Cloud" class="text-xs text-orange-600" />
                   <span class="text-xs font-medium text-gray-700 dark:text-gray-300">{{
                     dashboardData.accountsByPlatform.bedrock.total
                   }}</span>
@@ -100,7 +100,7 @@
                   class="inline-flex items-center gap-0.5"
                   :title="`OpenAI: ${dashboardData.accountsByPlatform.openai.total} 个 (正常: ${dashboardData.accountsByPlatform.openai.normal})`"
                 >
-                  <i class="fas fa-openai text-xs text-gray-100" />
+                  <Icon name="Bot" class="text-xs text-gray-100" />
                   <span class="text-xs font-medium text-gray-700 dark:text-gray-300">{{
                     dashboardData.accountsByPlatform.openai.total
                   }}</span>
@@ -114,7 +114,7 @@
                   class="inline-flex items-center gap-0.5"
                   :title="`Azure OpenAI: ${dashboardData.accountsByPlatform.azure_openai.total} 个 (正常: ${dashboardData.accountsByPlatform.azure_openai.normal})`"
                 >
-                  <i class="fab fa-microsoft text-xs text-blue-600" />
+                  <Icon name="Box" class="text-xs text-blue-600" />
                   <span class="text-xs font-medium text-gray-700 dark:text-gray-300">{{
                     dashboardData.accountsByPlatform.azure_openai.total
                   }}</span>
@@ -128,7 +128,7 @@
                   class="inline-flex items-center gap-0.5"
                   :title="`OpenAI Responses: ${dashboardData.accountsByPlatform['openai-responses'].total} 个 (正常: ${dashboardData.accountsByPlatform['openai-responses'].normal})`"
                 >
-                  <i class="fas fa-server text-xs text-cyan-600" />
+                  <Icon name="Server" class="text-xs text-cyan-600" />
                   <span class="text-xs font-medium text-gray-700 dark:text-gray-300">{{
                     dashboardData.accountsByPlatform['openai-responses'].total
                   }}</span>
@@ -152,7 +152,7 @@
             </p>
           </div>
           <div class="stat-icon ml-2 flex-shrink-0 bg-gradient-to-br from-green-500 to-green-600">
-            <i class="fas fa-user-circle" />
+            <Icon name="UserCircle" />
           </div>
         </div>
       </div>
@@ -171,7 +171,7 @@
             </p>
           </div>
           <div class="stat-icon flex-shrink-0 bg-gradient-to-br from-purple-500 to-purple-600">
-            <i class="fas fa-chart-line" />
+            <Icon name="LineChart" />
           </div>
         </div>
       </div>
@@ -190,7 +190,7 @@
             </p>
           </div>
           <div class="stat-icon flex-shrink-0 bg-gradient-to-br from-yellow-500 to-orange-500">
-            <i class="fas fa-heartbeat" />
+            <Icon name="Activity" />
           </div>
         </div>
       </div>
@@ -251,7 +251,7 @@
             </div>
           </div>
           <div class="stat-icon flex-shrink-0 bg-gradient-to-br from-indigo-500 to-indigo-600">
-            <i class="fas fa-coins" />
+            <Icon name="Coins" />
           </div>
         </div>
       </div>
@@ -307,7 +307,7 @@
             </div>
           </div>
           <div class="stat-icon flex-shrink-0 bg-gradient-to-br from-emerald-500 to-emerald-600">
-            <i class="fas fa-database" />
+            <Icon name="Database" />
           </div>
         </div>
       </div>
@@ -325,12 +325,12 @@
             <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
               每分钟请求数
               <span v-if="dashboardData.isHistoricalMetrics" class="text-yellow-600">
-                <i class="fas fa-exclamation-circle" /> 历史数据
+                <Icon name="AlertCircle" /> 历史数据
               </span>
             </p>
           </div>
           <div class="stat-icon flex-shrink-0 bg-gradient-to-br from-orange-500 to-orange-600">
-            <i class="fas fa-tachometer-alt" />
+            <Icon name="Gauge" />
           </div>
         </div>
       </div>
@@ -348,12 +348,12 @@
             <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
               每分钟Token数
               <span v-if="dashboardData.isHistoricalMetrics" class="text-yellow-600">
-                <i class="fas fa-exclamation-circle" /> 历史数据
+                <Icon name="AlertCircle" /> 历史数据
               </span>
             </p>
           </div>
           <div class="stat-icon flex-shrink-0 bg-gradient-to-br from-rose-500 to-rose-600">
-            <i class="fas fa-rocket" />
+            <Icon name="Rocket" />
           </div>
         </div>
       </div>
@@ -368,7 +368,7 @@
         <div class="flex flex-col gap-2 lg:flex-row lg:items-center lg:justify-end">
           <!-- 快捷日期选择 -->
           <div
-            class="flex flex-shrink-0 gap-1 overflow-x-auto rounded-lg bg-gray-100 p-1 dark:bg-gray-700"
+            class="flex flex-shrink-0 gap-1 overflow-x-auto rounded-md bg-gray-100 p-1 dark:bg-gray-700"
           >
             <button
               v-for="option in dateFilter.presetOptions"
@@ -386,7 +386,7 @@
           </div>
 
           <!-- 粒度切换按钮 -->
-          <div class="flex gap-1 rounded-lg bg-gray-100 p-1 dark:bg-gray-700">
+          <div class="flex gap-1 rounded-md bg-gray-100 p-1 dark:bg-gray-700">
             <button
               :class="[
                 'rounded-md px-3 py-1 text-sm font-medium transition-colors',
@@ -396,7 +396,7 @@
               ]"
               @click="setTrendGranularity('day')"
             >
-              <i class="fas fa-calendar-day mr-1" />按天
+              <Icon name="CalendarDays" class="mr-1" />按天
             </button>
             <button
               :class="[
@@ -407,7 +407,7 @@
               ]"
               @click="setTrendGranularity('hour')"
             >
-              <i class="fas fa-clock mr-1" />按小时
+              <Icon name="Clock" class="mr-1" />按小时
             </button>
           </div>
 
@@ -429,24 +429,24 @@
               @change="onCustomDateRangeChange"
             />
             <span v-if="trendGranularity === 'hour'" class="text-xs text-orange-600">
-              <i class="fas fa-info-circle" /> 最多24小时
+              <Icon name="Info" /> 最多24小时
             </span>
           </div>
 
           <!-- 刷新控制 -->
           <div class="flex items-center gap-2">
             <!-- 自动刷新控制 -->
-            <div class="flex items-center rounded-lg bg-gray-100 px-3 py-1 dark:bg-gray-700">
+            <div class="flex items-center rounded-md bg-gray-100 px-3 py-1 dark:bg-gray-700">
               <label class="relative inline-flex cursor-pointer items-center">
                 <input v-model="autoRefreshEnabled" class="peer sr-only" type="checkbox" />
                 <!-- 更小的开关 -->
                 <div
-                  class="peer relative h-5 w-9 rounded-full bg-gray-300 transition-all duration-200 after:absolute after:left-[2px] after:top-0.5 after:h-4 after:w-4 after:rounded-full after:bg-white after:shadow-sm after:transition-transform after:duration-200 after:content-[''] peer-checked:bg-blue-500 peer-checked:after:translate-x-4 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-blue-300 dark:bg-gray-600 dark:after:bg-gray-300 dark:peer-focus:ring-blue-600"
+                  class="peer relative h-5 w-9 rounded-md bg-gray-300 transition-all duration-200 after:absolute after:left-[2px] after:top-0.5 after:h-4 after:w-4 after:rounded-md after:bg-white after:shadow-sm after:transition-transform after:duration-200 after:content-[''] peer-checked:bg-blue-500 peer-checked:after:translate-x-4 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-blue-300 dark:bg-gray-600 dark:after:bg-gray-300 dark:peer-focus:ring-blue-600"
                 />
                 <span
                   class="ml-2.5 flex select-none items-center gap-1 text-sm font-medium text-gray-600 dark:text-gray-300"
                 >
-                  <i class="fas fa-redo-alt text-xs text-gray-500 dark:text-gray-400" />
+                  <Icon name="RotateCw" class="text-xs text-gray-500 dark:text-gray-400" />
                   <span>自动刷新</span>
                   <span
                     v-if="autoRefreshEnabled"
@@ -466,7 +466,7 @@
               title="立即刷新数据"
               @click="refreshAllData()"
             >
-              <i :class="['fas fa-sync-alt text-xs', { 'animate-spin': isRefreshing }]" />
+              <Icon name="RefreshCcw" :class="[' text-xs', { 'animate-spin': isRefreshing }]" />
               <span class="hidden sm:inline">{{ isRefreshing ? '刷新中' : '刷新' }}</span>
             </button>
           </div>
@@ -553,7 +553,7 @@
                     class="hidden px-2 py-2 text-right text-xs font-medium sm:table-cell sm:px-4 sm:text-sm"
                   >
                     <span
-                      class="inline-flex items-center rounded-full bg-blue-100 px-2 py-1 text-xs font-medium text-blue-800 dark:bg-blue-900/30 dark:text-blue-300"
+                      class="inline-flex items-center rounded-md bg-blue-100 px-2 py-1 text-xs font-medium text-blue-800 dark:bg-blue-900/30 dark:text-blue-300"
                     >
                       {{ calculatePercentage(stat.allTokens, dashboardModelStats) }}%
                     </span>
@@ -583,7 +583,7 @@
             API Keys 使用趋势
           </h3>
           <!-- 维度切换按钮 -->
-          <div class="flex gap-1 rounded-lg bg-gray-100 p-1 dark:bg-gray-700">
+          <div class="flex gap-1 rounded-md bg-gray-100 p-1 dark:bg-gray-700">
             <button
               :class="[
                 'rounded-md px-2 py-1 text-xs font-medium transition-colors sm:px-3 sm:text-sm',
@@ -593,7 +593,7 @@
               ]"
               @click="((apiKeysTrendMetric = 'requests'), updateApiKeysUsageTrendChart())"
             >
-              <i class="fas fa-exchange-alt mr-1" /><span class="hidden sm:inline">请求次数</span
+              <Icon name="ArrowLeftRight" class="mr-1" /><span class="hidden sm:inline">请求次数</span
               ><span class="sm:hidden">请求</span>
             </button>
             <button
@@ -605,7 +605,7 @@
               ]"
               @click="((apiKeysTrendMetric = 'tokens'), updateApiKeysUsageTrendChart())"
             >
-              <i class="fas fa-coins mr-1" /><span class="hidden sm:inline">Token 数量</span
+              <Icon name="Coins" class="mr-1" /><span class="hidden sm:inline">Token 数量</span
               ><span class="sm:hidden">Token</span>
             </button>
           </div>
@@ -635,7 +635,7 @@
             </span>
           </div>
           <div class="flex flex-wrap items-center gap-2">
-            <div class="flex gap-1 rounded-lg bg-gray-100 p-1 dark:bg-gray-700">
+            <div class="flex gap-1 rounded-md bg-gray-100 p-1 dark:bg-gray-700">
               <button
                 v-for="option in accountGroupOptions"
                 :key="option.value"

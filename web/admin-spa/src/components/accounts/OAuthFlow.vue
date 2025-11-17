@@ -3,13 +3,13 @@
     <!-- Claude OAuth流程 -->
     <div v-if="platform === 'claude'">
       <div
-        class="rounded-lg border border-blue-200 bg-blue-50 p-6 dark:border-blue-700 dark:bg-blue-900/30"
+        class="rounded-md border border-blue-200 bg-blue-50 p-6 dark:border-blue-700 dark:bg-blue-900/30"
       >
         <div class="flex items-start gap-4">
           <div
-            class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-blue-500"
+            class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-md bg-blue-500"
           >
-            <i class="fas fa-link text-white" />
+            <Icon name="Link" class="text-white" />
           </div>
           <div class="flex-1">
             <h4 class="mb-3 font-semibold text-blue-900 dark:text-blue-200">Claude 账户授权</h4>
@@ -20,11 +20,11 @@
             <div class="space-y-4">
               <!-- 步骤1: 生成授权链接 -->
               <div
-                class="rounded-lg border border-blue-300 bg-white/80 p-4 dark:border-blue-600 dark:bg-gray-800/80"
+                class="rounded-md border border-blue-300 bg-white/80 p-4 dark:border-blue-600 dark:bg-gray-800/80"
               >
                 <div class="flex items-start gap-3">
                   <div
-                    class="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-blue-600 text-xs font-bold text-white"
+                    class="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-md bg-blue-600 text-xs font-bold text-white"
                   >
                     1
                   </div>
@@ -38,7 +38,7 @@
                       :disabled="loading"
                       @click="generateAuthUrl"
                     >
-                      <i v-if="!loading" class="fas fa-link mr-2" />
+                      <Icon name="Link" class="mr-2" v-if="!loading" />
                       <div v-else class="loading-spinner mr-2" />
                       {{ loading ? '生成中...' : '生成授权链接' }}
                     </button>
@@ -51,18 +51,18 @@
                           :value="authUrl"
                         />
                         <button
-                          class="rounded-lg bg-gray-100 px-3 py-2 transition-colors hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600"
+                          class="rounded-md bg-gray-100 px-3 py-2 transition-colors hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600"
                           title="复制链接"
                           @click="copyAuthUrl"
                         >
-                          <i :class="copied ? 'fas fa-check text-green-500' : 'fas fa-copy'" />
+                          <Icon :name="copied ? 'Check' : 'Copy'" :class="copied ? 'text-green-500' : ''"/>
                         </button>
                       </div>
                       <button
                         class="text-xs text-blue-600 hover:text-blue-700"
                         @click="regenerateAuthUrl"
                       >
-                        <i class="fas fa-sync-alt mr-1" />重新生成
+                        <Icon name="RefreshCcw" class="mr-1" />重新生成
                       </button>
                     </div>
                   </div>
@@ -71,11 +71,11 @@
 
               <!-- 步骤2: 访问链接并授权 -->
               <div
-                class="rounded-lg border border-blue-300 bg-white/80 p-4 dark:border-blue-600 dark:bg-gray-800/80"
+                class="rounded-md border border-blue-300 bg-white/80 p-4 dark:border-blue-600 dark:bg-gray-800/80"
               >
                 <div class="flex items-start gap-3">
                   <div
-                    class="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-blue-600 text-xs font-bold text-white"
+                    class="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-md bg-blue-600 text-xs font-bold text-white"
                   >
                     2
                   </div>
@@ -87,10 +87,10 @@
                       请在新标签页中打开授权链接，登录您的 Claude 账户并授权。
                     </p>
                     <div
-                      class="rounded border border-yellow-300 bg-yellow-50 p-3 dark:border-yellow-700 dark:bg-yellow-900/30"
+                      class="rounded-md border border-yellow-300 bg-yellow-50 p-3 dark:border-yellow-700 dark:bg-yellow-900/30"
                     >
                       <p class="text-xs text-yellow-800 dark:text-yellow-300">
-                        <i class="fas fa-exclamation-triangle mr-1" />
+                        <Icon name="AlertTriangle" class="mr-1" />
                         <strong>注意：</strong
                         >如果您设置了代理，请确保浏览器也使用相同的代理访问授权页面。
                       </p>
@@ -101,11 +101,11 @@
 
               <!-- 步骤3: 输入授权码 -->
               <div
-                class="rounded-lg border border-blue-300 bg-white/80 p-4 dark:border-blue-600 dark:bg-gray-800/80"
+                class="rounded-md border border-blue-300 bg-white/80 p-4 dark:border-blue-600 dark:bg-gray-800/80"
               >
                 <div class="flex items-start gap-3">
                   <div
-                    class="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-blue-600 text-xs font-bold text-white"
+                    class="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-md bg-blue-600 text-xs font-bold text-white"
                   >
                     3
                   </div>
@@ -122,7 +122,7 @@
                         <label
                           class="mb-2 block text-sm font-semibold text-gray-700 dark:text-gray-300"
                         >
-                          <i class="fas fa-key mr-2 text-blue-500" />Authorization Code
+                          <Icon name="Key" class="mr-2 text-blue-500" />Authorization Code
                         </label>
                         <textarea
                           v-model="authCode"
@@ -132,7 +132,7 @@
                         />
                       </div>
                       <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">
-                        <i class="fas fa-info-circle mr-1" />
+                        <Icon name="Info" class="mr-1" />
                         请粘贴从Claude页面复制的Authorization Code
                       </p>
                     </div>
@@ -148,13 +148,13 @@
     <!-- Gemini OAuth流程 -->
     <div v-else-if="platform === 'gemini'">
       <div
-        class="rounded-lg border border-green-200 bg-green-50 p-6 dark:border-green-700 dark:bg-green-900/30"
+        class="rounded-md border border-green-200 bg-green-50 p-6 dark:border-green-700 dark:bg-green-900/30"
       >
         <div class="flex items-start gap-4">
           <div
-            class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-green-500"
+            class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-md bg-green-500"
           >
-            <i class="fas fa-robot text-white" />
+            <Icon name="Bot" class="text-white" />
           </div>
           <div class="flex-1">
             <h4 class="mb-3 font-semibold text-green-900 dark:text-green-200">Gemini 账户授权</h4>
@@ -165,11 +165,11 @@
             <div class="space-y-4">
               <!-- 步骤1: 生成授权链接 -->
               <div
-                class="rounded-lg border border-green-300 bg-white/80 p-4 dark:border-green-600 dark:bg-gray-800/80"
+                class="rounded-md border border-green-300 bg-white/80 p-4 dark:border-green-600 dark:bg-gray-800/80"
               >
                 <div class="flex items-start gap-3">
                   <div
-                    class="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-green-600 text-xs font-bold text-white"
+                    class="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-md bg-green-600 text-xs font-bold text-white"
                   >
                     1
                   </div>
@@ -183,7 +183,7 @@
                       :disabled="loading"
                       @click="generateAuthUrl"
                     >
-                      <i v-if="!loading" class="fas fa-link mr-2" />
+                      <Icon name="Link" class="mr-2" v-if="!loading" />
                       <div v-else class="loading-spinner mr-2" />
                       {{ loading ? '生成中...' : '生成授权链接' }}
                     </button>
@@ -196,18 +196,18 @@
                           :value="authUrl"
                         />
                         <button
-                          class="rounded-lg bg-gray-100 px-3 py-2 transition-colors hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600"
+                          class="rounded-md bg-gray-100 px-3 py-2 transition-colors hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600"
                           title="复制链接"
                           @click="copyAuthUrl"
                         >
-                          <i :class="copied ? 'fas fa-check text-green-500' : 'fas fa-copy'" />
+                          <Icon :name="copied ? 'Check' : 'Copy'" :class="copied ? 'text-green-500' : ''"/>
                         </button>
                       </div>
                       <button
                         class="text-xs text-green-600 hover:text-green-700"
                         @click="regenerateAuthUrl"
                       >
-                        <i class="fas fa-sync-alt mr-1" />重新生成
+                        <Icon name="RefreshCcw" class="mr-1" />重新生成
                       </button>
                     </div>
                   </div>
@@ -216,11 +216,11 @@
 
               <!-- 步骤2: 操作说明 -->
               <div
-                class="rounded-lg border border-green-300 bg-white/80 p-4 dark:border-green-600 dark:bg-gray-800/80"
+                class="rounded-md border border-green-300 bg-white/80 p-4 dark:border-green-600 dark:bg-gray-800/80"
               >
                 <div class="flex items-start gap-3">
                   <div
-                    class="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-green-600 text-xs font-bold text-white"
+                    class="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-md bg-green-600 text-xs font-bold text-white"
                   >
                     2
                   </div>
@@ -232,10 +232,10 @@
                       请在新标签页中打开授权链接，登录您的 Gemini 账户并授权。
                     </p>
                     <div
-                      class="rounded border border-yellow-300 bg-yellow-50 p-3 dark:border-yellow-700 dark:bg-yellow-900/30"
+                      class="rounded-md border border-yellow-300 bg-yellow-50 p-3 dark:border-yellow-700 dark:bg-yellow-900/30"
                     >
                       <p class="text-xs text-yellow-800 dark:text-yellow-300">
-                        <i class="fas fa-exclamation-triangle mr-1" />
+                        <Icon name="AlertTriangle" class="mr-1" />
                         <strong>注意：</strong
                         >如果您设置了代理，请确保浏览器也使用相同的代理访问授权页面。
                       </p>
@@ -246,11 +246,11 @@
 
               <!-- 步骤3: 输入授权码 -->
               <div
-                class="rounded-lg border border-green-300 bg-white/80 p-4 dark:border-green-600 dark:bg-gray-800/80"
+                class="rounded-md border border-green-300 bg-white/80 p-4 dark:border-green-600 dark:bg-gray-800/80"
               >
                 <div class="flex items-start gap-3">
                   <div
-                    class="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-green-600 text-xs font-bold text-white"
+                    class="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-md bg-green-600 text-xs font-bold text-white"
                   >
                     3
                   </div>
@@ -266,7 +266,7 @@
                         <label
                           class="mb-2 block text-sm font-semibold text-gray-700 dark:text-gray-300"
                         >
-                          <i class="fas fa-key mr-2 text-green-500" />Authorization Code
+                          <Icon name="Key" class="mr-2 text-green-500" />Authorization Code
                         </label>
                         <textarea
                           v-model="authCode"
@@ -277,7 +277,7 @@
                       </div>
                       <div class="mt-2 space-y-1">
                         <p class="text-xs text-gray-600 dark:text-gray-400">
-                          <i class="fas fa-check-circle mr-1 text-green-500" />
+                          <Icon name="CheckCircle" class="mr-1 text-green-500" />
                           请粘贴从Gemini页面复制的Authorization Code
                         </p>
                       </div>
@@ -294,13 +294,13 @@
     <!-- OpenAI OAuth流程 -->
     <div v-else-if="platform === 'openai'">
       <div
-        class="rounded-lg border border-orange-200 bg-orange-50 p-6 dark:border-orange-700 dark:bg-orange-900/30"
+        class="rounded-md border border-orange-200 bg-orange-50 p-6 dark:border-orange-700 dark:bg-orange-900/30"
       >
         <div class="flex items-start gap-4">
           <div
-            class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-orange-500"
+            class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-md bg-orange-500"
           >
-            <i class="fas fa-brain text-white" />
+            <Icon name="Brain" class="text-white" />
           </div>
           <div class="flex-1">
             <h4 class="mb-3 font-semibold text-orange-900 dark:text-orange-200">OpenAI 账户授权</h4>
@@ -311,11 +311,11 @@
             <div class="space-y-4">
               <!-- 步骤1: 生成授权链接 -->
               <div
-                class="rounded-lg border border-orange-300 bg-white/80 p-4 dark:border-orange-600 dark:bg-gray-800/80"
+                class="rounded-md border border-orange-300 bg-white/80 p-4 dark:border-orange-600 dark:bg-gray-800/80"
               >
                 <div class="flex items-start gap-3">
                   <div
-                    class="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-orange-600 text-xs font-bold text-white"
+                    class="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-md bg-orange-600 text-xs font-bold text-white"
                   >
                     1
                   </div>
@@ -329,7 +329,7 @@
                       :disabled="loading"
                       @click="generateAuthUrl"
                     >
-                      <i v-if="!loading" class="fas fa-link mr-2" />
+                      <Icon name="Link" class="mr-2" v-if="!loading" />
                       <div v-else class="loading-spinner mr-2" />
                       {{ loading ? '生成中...' : '生成授权链接' }}
                     </button>
@@ -342,18 +342,18 @@
                           :value="authUrl"
                         />
                         <button
-                          class="rounded-lg bg-gray-100 px-3 py-2 transition-colors hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600"
+                          class="rounded-md bg-gray-100 px-3 py-2 transition-colors hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600"
                           title="复制链接"
                           @click="copyAuthUrl"
                         >
-                          <i :class="copied ? 'fas fa-check text-green-500' : 'fas fa-copy'" />
+                          <Icon :name="copied ? 'Check' : 'Copy'" :class="copied ? 'text-green-500' : ''"/>
                         </button>
                       </div>
                       <button
                         class="text-xs text-orange-600 hover:text-orange-700"
                         @click="regenerateAuthUrl"
                       >
-                        <i class="fas fa-sync-alt mr-1" />重新生成
+                        <Icon name="RefreshCcw" class="mr-1" />重新生成
                       </button>
                     </div>
                   </div>
@@ -362,11 +362,11 @@
 
               <!-- 步骤2: 访问链接并授权 -->
               <div
-                class="rounded-lg border border-orange-300 bg-white/80 p-4 dark:border-orange-600 dark:bg-gray-800/80"
+                class="rounded-md border border-orange-300 bg-white/80 p-4 dark:border-orange-600 dark:bg-gray-800/80"
               >
                 <div class="flex items-start gap-3">
                   <div
-                    class="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-orange-600 text-xs font-bold text-white"
+                    class="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-md bg-orange-600 text-xs font-bold text-white"
                   >
                     2
                   </div>
@@ -378,10 +378,10 @@
                       请在新标签页中打开授权链接，登录您的 OpenAI 账户并授权。
                     </p>
                     <div
-                      class="mb-3 rounded border border-amber-300 bg-amber-50 p-3 dark:border-amber-700 dark:bg-amber-900/30"
+                      class="mb-3 rounded-md border border-amber-300 bg-amber-50 p-3 dark:border-amber-700 dark:bg-amber-900/30"
                     >
                       <p class="text-xs text-amber-800 dark:text-amber-300">
-                        <i class="fas fa-clock mr-1" />
+                        <Icon name="Clock" class="mr-1" />
                         <strong>重要提示：</strong>授权后页面可能会加载较长时间，请耐心等待。
                       </p>
                       <p class="mt-2 text-xs text-amber-700 dark:text-amber-400">
@@ -391,10 +391,10 @@
                       </p>
                     </div>
                     <div
-                      class="rounded border border-yellow-300 bg-yellow-50 p-3 dark:border-yellow-700 dark:bg-yellow-900/30"
+                      class="rounded-md border border-yellow-300 bg-yellow-50 p-3 dark:border-yellow-700 dark:bg-yellow-900/30"
                     >
                       <p class="text-xs text-yellow-800 dark:text-yellow-300">
-                        <i class="fas fa-exclamation-triangle mr-1" />
+                        <Icon name="AlertTriangle" class="mr-1" />
                         <strong>注意：</strong
                         >如果您设置了代理，请确保浏览器也使用相同的代理访问授权页面。
                       </p>
@@ -405,11 +405,11 @@
 
               <!-- 步骤3: 输入授权码 -->
               <div
-                class="rounded-lg border border-orange-300 bg-white/80 p-4 dark:border-orange-600 dark:bg-gray-800/80"
+                class="rounded-md border border-orange-300 bg-white/80 p-4 dark:border-orange-600 dark:bg-gray-800/80"
               >
                 <div class="flex items-start gap-3">
                   <div
-                    class="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-orange-600 text-xs font-bold text-white"
+                    class="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-md bg-orange-600 text-xs font-bold text-white"
                   >
                     3
                   </div>
@@ -426,7 +426,7 @@
                         <label
                           class="mb-2 block text-sm font-semibold text-gray-700 dark:text-gray-300"
                         >
-                          <i class="fas fa-link mr-2 text-orange-500" />授权链接或 Code
+                          <Icon name="Link" class="mr-2 text-orange-500" />授权链接或 Code
                         </label>
                         <textarea
                           v-model="authCode"
@@ -436,10 +436,10 @@
                         />
                       </div>
                       <div
-                        class="rounded border border-blue-300 bg-blue-50 p-2 dark:border-blue-700 dark:bg-blue-900/30"
+                        class="rounded-md border border-blue-300 bg-blue-50 p-2 dark:border-blue-700 dark:bg-blue-900/30"
                       >
                         <p class="text-xs text-blue-700 dark:text-blue-300">
-                          <i class="fas fa-lightbulb mr-1" />
+                          <Icon name="Lightbulb" class="mr-1" />
                           <strong>提示：</strong>您可以直接复制整个链接或仅复制 code
                           参数值，系统会自动识别。
                         </p>
@@ -467,13 +467,13 @@
     <!-- Droid OAuth流程 -->
     <div v-else-if="platform === 'droid'">
       <div
-        class="rounded-lg border border-cyan-200 bg-cyan-50 p-6 dark:border-cyan-700 dark:bg-cyan-900/30"
+        class="rounded-md border border-cyan-200 bg-cyan-50 p-6 dark:border-cyan-700 dark:bg-cyan-900/30"
       >
         <div class="flex items-start gap-4">
           <div
-            class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-cyan-500"
+            class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-md bg-cyan-500"
           >
-            <i class="fas fa-robot text-white" />
+            <Icon name="Bot" class="text-white" />
           </div>
           <div class="flex-1">
             <h4 class="mb-3 font-semibold text-cyan-900 dark:text-cyan-200">Droid 账户授权</h4>
@@ -484,11 +484,11 @@
             <div class="space-y-4">
               <!-- 步骤1: 生成授权链接 -->
               <div
-                class="rounded-lg border border-cyan-300 bg-white/80 p-4 dark:border-cyan-600 dark:bg-gray-800/80"
+                class="rounded-md border border-cyan-300 bg-white/80 p-4 dark:border-cyan-600 dark:bg-gray-800/80"
               >
                 <div class="flex items-start gap-3">
                   <div
-                    class="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-cyan-600 text-xs font-bold text-white"
+                    class="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-md bg-cyan-600 text-xs font-bold text-white"
                   >
                     1
                   </div>
@@ -502,7 +502,7 @@
                       :disabled="loading"
                       @click="generateAuthUrl"
                     >
-                      <i v-if="!loading" class="fas fa-link mr-2" />
+                      <Icon name="Link" class="mr-2" v-if="!loading" />
                       <div v-else class="loading-spinner mr-2" />
                       {{ loading ? '生成中...' : '生成授权链接' }}
                     </button>
@@ -522,11 +522,11 @@
                               :value="authUrl"
                             />
                             <button
-                              class="rounded-lg bg-gray-100 px-3 py-2 transition-colors hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600"
+                              class="rounded-md bg-gray-100 px-3 py-2 transition-colors hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600"
                               title="复制链接"
                               @click="copyAuthUrl"
                             >
-                              <i :class="copied ? 'fas fa-check text-green-500' : 'fas fa-copy'" />
+                              <Icon :name="copied ? 'Check' : 'Copy'" :class="copied ? 'text-green-500' : ''"/>
                             </button>
                           </div>
                           <div class="flex flex-wrap items-center gap-2">
@@ -534,13 +534,13 @@
                               class="inline-flex items-center gap-1 rounded-md border border-cyan-200 bg-white px-3 py-1.5 text-xs font-medium text-cyan-600 shadow-sm transition-colors hover:border-cyan-300 hover:bg-cyan-50 dark:border-cyan-700 dark:bg-cyan-900/40 dark:text-cyan-200 dark:hover:border-cyan-500 dark:hover:bg-cyan-900/60"
                               @click="openVerificationPage"
                             >
-                              <i class="fas fa-external-link-alt text-xs" /> 在新标签中打开
+                              <Icon name="ExternalLink" class="text-xs" /> 在新标签中打开
                             </button>
                             <button
                               class="inline-flex items-center gap-1 rounded-md px-3 py-1.5 text-xs font-medium text-cyan-600 transition-colors hover:text-cyan-700 dark:text-cyan-300 dark:hover:text-cyan-200"
                               @click="regenerateAuthUrl"
                             >
-                              <i class="fas fa-sync-alt text-xs" />重新生成
+                              <Icon name="RefreshCcw" class="text-xs" />重新生成
                             </button>
                           </div>
                         </div>
@@ -558,10 +558,10 @@
                             {{ userCode || '------' }}
                           </span>
                           <button
-                            class="rounded-lg bg-white px-3 py-1 text-sm text-cyan-600 transition-colors hover:bg-cyan-100 dark:bg-cyan-800 dark:text-cyan-200 dark:hover:bg-cyan-700"
+                            class="rounded-md bg-white px-3 py-1 text-sm text-cyan-600 transition-colors hover:bg-cyan-100 dark:bg-cyan-800 dark:text-cyan-200 dark:hover:bg-cyan-700"
                             @click="copyUserCode"
                           >
-                            <i class="fas fa-copy mr-1" />复制
+                            <Icon name="Copy" class="mr-1" />复制
                           </button>
                         </div>
                       </div>
@@ -569,7 +569,7 @@
                         class="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400"
                       >
                         <span>
-                          <i class="fas fa-hourglass-half mr-1 text-cyan-500" />
+                          <Icon name="Hourglass" class="mr-1 text-cyan-500" />
                           剩余有效期：{{ formattedCountdown }}
                         </span>
                       </div>
@@ -580,11 +580,11 @@
 
               <!-- 步骤2: 访问链接并授权 -->
               <div
-                class="rounded-lg border border-cyan-300 bg-white/80 p-4 dark:border-cyan-600 dark:bg-gray-800/80"
+                class="rounded-md border border-cyan-300 bg-white/80 p-4 dark:border-cyan-600 dark:bg-gray-800/80"
               >
                 <div class="flex items-start gap-3">
                   <div
-                    class="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-cyan-600 text-xs font-bold text-white"
+                    class="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-md bg-cyan-600 text-xs font-bold text-white"
                   >
                     2
                   </div>
@@ -604,11 +604,11 @@
 
               <!-- 步骤3: 输入授权结果 -->
               <div
-                class="rounded-lg border border-cyan-300 bg-white/80 p-4 dark:border-cyan-600 dark:bg-gray-800/80"
+                class="rounded-md border border-cyan-300 bg-white/80 p-4 dark:border-cyan-600 dark:bg-gray-800/80"
               >
                 <div class="flex items-start gap-3">
                   <div
-                    class="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-cyan-600 text-xs font-bold text-white"
+                    class="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-md bg-cyan-600 text-xs font-bold text-white"
                   >
                     3
                   </div>
@@ -630,7 +630,7 @@
 
     <div class="flex gap-3 pt-4">
       <button
-        class="flex-1 rounded-xl bg-gray-100 px-6 py-3 font-semibold text-gray-700 transition-colors hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
+        class="flex-1 rounded-md bg-gray-100 px-6 py-3 font-semibold text-gray-700 transition-colors hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
         type="button"
         @click="$emit('back')"
       >

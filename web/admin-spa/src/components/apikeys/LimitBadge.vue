@@ -10,9 +10,9 @@
       <span class="text-xs">${{ limit.toFixed(2) }}</span>
     </div>
     <!-- 小型进度条 -->
-    <div class="h-1 w-12 rounded-full bg-gray-200 dark:bg-gray-600">
+    <div class="h-1 w-12 rounded-md bg-gray-200 dark:bg-gray-600">
       <div
-        class="h-1 rounded-full transition-all duration-300"
+        class="h-1 rounded-md transition-all duration-300"
         :class="progressClass"
         :style="{ width: progress + '%' }"
       />

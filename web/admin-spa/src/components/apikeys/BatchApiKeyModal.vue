@@ -7,9 +7,9 @@
         <div class="mb-6 flex items-center justify-between">
           <div class="flex items-center gap-3">
             <div
-              class="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-green-500 to-green-600"
+              class="flex h-12 w-12 items-center justify-center rounded-md bg-gradient-to-br from-green-500 to-green-600"
             >
-              <i class="fas fa-layer-group text-lg text-white" />
+              <Icon name="Layers" class="text-lg text-white" />
             </div>
             <div>
               <h3 class="text-xl font-bold text-gray-900">批量创建成功</h3>
@@ -21,7 +21,7 @@
             title="直接关闭（不推荐）"
             @click="handleDirectClose"
           >
-            <i class="fas fa-times text-xl" />
+            <Icon name="X" class="text-xl" />
           </button>
         </div>
 
@@ -29,9 +29,9 @@
         <div class="mb-6 border-l-4 border-amber-400 bg-amber-50 p-4">
           <div class="flex items-start">
             <div
-              class="mt-0.5 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-lg bg-amber-400"
+              class="mt-0.5 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-md bg-amber-400"
             >
-              <i class="fas fa-exclamation-triangle text-sm text-white" />
+              <Icon name="AlertTriangle" class="text-sm text-white" />
             </div>
             <div class="ml-3">
               <h5 class="mb-1 font-semibold text-amber-900">重要提醒</h5>
@@ -46,7 +46,7 @@
         <!-- 统计信息 -->
         <div class="mb-6 grid grid-cols-2 gap-4 md:grid-cols-4">
           <div
-            class="rounded-lg border border-blue-200 bg-gradient-to-br from-blue-50 to-blue-100 p-4"
+            class="rounded-md border border-blue-200 bg-gradient-to-br from-blue-50 to-blue-100 p-4"
           >
             <div class="flex items-center justify-between">
               <div>
@@ -56,15 +56,15 @@
                 </p>
               </div>
               <div
-                class="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-500 bg-opacity-20"
+                class="flex h-10 w-10 items-center justify-center rounded-md bg-blue-500 bg-opacity-20"
               >
-                <i class="fas fa-key text-blue-600" />
+                <Icon name="Key" class="text-blue-600" />
               </div>
             </div>
           </div>
 
           <div
-            class="rounded-lg border border-green-200 bg-gradient-to-br from-green-50 to-green-100 p-4"
+            class="rounded-md border border-green-200 bg-gradient-to-br from-green-50 to-green-100 p-4"
           >
             <div class="flex items-center justify-between">
               <div>
@@ -74,15 +74,15 @@
                 </p>
               </div>
               <div
-                class="flex h-10 w-10 items-center justify-center rounded-lg bg-green-500 bg-opacity-20"
+                class="flex h-10 w-10 items-center justify-center rounded-md bg-green-500 bg-opacity-20"
               >
-                <i class="fas fa-tag text-green-600" />
+                <Icon name="Tag" class="text-green-600" />
               </div>
             </div>
           </div>
 
           <div
-            class="rounded-lg border border-purple-200 bg-gradient-to-br from-purple-50 to-purple-100 p-4"
+            class="rounded-md border border-purple-200 bg-gradient-to-br from-purple-50 to-purple-100 p-4"
           >
             <div class="flex items-center justify-between">
               <div>
@@ -92,15 +92,15 @@
                 </p>
               </div>
               <div
-                class="flex h-10 w-10 items-center justify-center rounded-lg bg-purple-500 bg-opacity-20"
+                class="flex h-10 w-10 items-center justify-center rounded-md bg-purple-500 bg-opacity-20"
               >
-                <i class="fas fa-shield-alt text-purple-600" />
+                <Icon name="Shield" class="text-purple-600" />
               </div>
             </div>
           </div>
 
           <div
-            class="rounded-lg border border-orange-200 bg-gradient-to-br from-orange-50 to-orange-100 p-4"
+            class="rounded-md border border-orange-200 bg-gradient-to-br from-orange-50 to-orange-100 p-4"
           >
             <div class="flex items-center justify-between">
               <div>
@@ -110,9 +110,9 @@
                 </p>
               </div>
               <div
-                class="flex h-10 w-10 items-center justify-center rounded-lg bg-orange-500 bg-opacity-20"
+                class="flex h-10 w-10 items-center justify-center rounded-md bg-orange-500 bg-opacity-20"
               >
-                <i class="fas fa-clock text-orange-600" />
+                <Icon name="Clock" class="text-orange-600" />
               </div>
             </div>
           </div>
@@ -128,7 +128,7 @@
                 type="button"
                 @click="togglePreview"
               >
-                <i :class="['fas', showPreview ? 'fa-eye-slash' : 'fa-eye']" />
+                <Icon :name="showPreview ? 'EyeOff' : 'Eye'" />
                 {{ showPreview ? '隐藏' : '显示' }}预览
               </button>
               <span class="text-xs text-gray-500">（最多显示前10个）</span>
@@ -137,7 +137,7 @@
 
           <div
             v-if="showPreview"
-            class="custom-scrollbar max-h-48 overflow-y-auto rounded-lg bg-gray-900 p-4"
+            class="custom-scrollbar max-h-48 overflow-y-auto rounded-md bg-gray-900 p-4"
           >
             <pre class="font-mono text-xs text-gray-300">{{ getPreviewText() }}</pre>
           </div>
@@ -149,11 +149,11 @@
             class="btn btn-primary flex flex-1 items-center justify-center gap-2 px-6 py-3 font-semibold"
             @click="downloadApiKeys"
           >
-            <i class="fas fa-download" />
+            <Icon name="Download" />
             下载所有 API Keys
           </button>
           <button
-            class="rounded-xl border border-gray-300 bg-gray-200 px-6 py-3 font-semibold text-gray-800 transition-colors hover:bg-gray-300"
+            class="rounded-md border border-gray-300 bg-gray-200 px-6 py-3 font-semibold text-gray-800 transition-colors hover:bg-gray-300"
             @click="handleClose"
           >
             我已保存
@@ -161,9 +161,9 @@
         </div>
 
         <!-- 额外提示 -->
-        <div class="mt-4 rounded-lg border border-blue-200 bg-blue-50 p-3">
+        <div class="mt-4 rounded-md border border-blue-200 bg-blue-50 p-3">
           <p class="flex items-start text-xs text-blue-700">
-            <i class="fas fa-info-circle mr-2 mt-0.5 flex-shrink-0" />
+            <Icon name="Info" class="mr-2 mt-0.5 flex-shrink-0" />
             <span>
               下载的文件格式为文本文件（.txt），每行包含一个 API Key。
               请将文件保存在安全的位置，避免泄露。

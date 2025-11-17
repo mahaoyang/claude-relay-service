@@ -5,7 +5,7 @@
         class="flex flex-col text-lg font-bold text-gray-900 dark:text-gray-100 sm:flex-row sm:items-center md:text-xl"
       >
         <span class="flex items-center">
-          <i class="fas fa-robot mr-2 text-sm text-indigo-500 md:mr-3 md:text-base" />
+          <Icon name="Bot" class="mr-2 text-sm text-indigo-500 md:mr-3 md:text-base" />
           模型使用统计
         </span>
         <span class="text-xs font-normal text-gray-600 dark:text-gray-400 sm:ml-2 md:text-sm"
@@ -16,9 +16,7 @@
 
     <!-- 模型统计加载状态 -->
     <div v-if="modelStatsLoading" class="py-6 text-center md:py-8">
-      <i
-        class="fas fa-spinner loading-spinner mb-2 text-xl text-gray-600 dark:text-gray-400 md:text-2xl"
-      />
+      <Icon name="Loader2" class="loading-spinner mb-2 text-xl text-gray-600 dark:text-gray-400 md:text-2xl" />
       <p class="text-sm text-gray-600 dark:text-gray-400 md:text-base">加载模型统计数据中...</p>
     </div>
 
@@ -43,25 +41,25 @@
         </div>
 
         <div class="grid grid-cols-2 gap-2 text-xs md:grid-cols-4 md:gap-3 md:text-sm">
-          <div class="rounded bg-gray-50 p-2 dark:bg-gray-700">
+          <div class="rounded-md bg-gray-50 p-2 dark:bg-gray-700">
             <div class="text-gray-600 dark:text-gray-400">输入 Token</div>
             <div class="font-medium text-gray-900 dark:text-gray-100">
               {{ formatNumber(model.inputTokens) }}
             </div>
           </div>
-          <div class="rounded bg-gray-50 p-2 dark:bg-gray-700">
+          <div class="rounded-md bg-gray-50 p-2 dark:bg-gray-700">
             <div class="text-gray-600 dark:text-gray-400">输出 Token</div>
             <div class="font-medium text-gray-900 dark:text-gray-100">
               {{ formatNumber(model.outputTokens) }}
             </div>
           </div>
-          <div class="rounded bg-gray-50 p-2 dark:bg-gray-700">
+          <div class="rounded-md bg-gray-50 p-2 dark:bg-gray-700">
             <div class="text-gray-600 dark:text-gray-400">缓存创建</div>
             <div class="font-medium text-gray-900 dark:text-gray-100">
               {{ formatNumber(model.cacheCreateTokens) }}
             </div>
           </div>
-          <div class="rounded bg-gray-50 p-2 dark:bg-gray-700">
+          <div class="rounded-md bg-gray-50 p-2 dark:bg-gray-700">
             <div class="text-gray-600 dark:text-gray-400">缓存读取</div>
             <div class="font-medium text-gray-900 dark:text-gray-100">
               {{ formatNumber(model.cacheReadTokens) }}
@@ -73,7 +71,7 @@
 
     <!-- 无模型数据 -->
     <div v-else class="py-6 text-center text-gray-500 dark:text-gray-400 md:py-8">
-      <i class="fas fa-chart-pie mb-3 text-2xl md:text-3xl" />
+      <Icon name="PieChart" class="mb-3 text-2xl md:text-3xl" />
       <p class="text-sm md:text-base">
         暂无{{ statsPeriod === 'daily' ? '今日' : '本月' }}模型使用数据
       </p>
@@ -111,7 +109,7 @@ const formatNumber = (num) => {
 /* 卡片样式 - 使用CSS变量 */
 .card {
   background: var(--surface-color);
-  border-radius: 16px;
+  border-radius: 0.375rem;
   border: 1px solid var(--border-color);
   box-shadow:
     0 10px 15px -3px rgba(0, 0, 0, 0.1),
@@ -148,7 +146,7 @@ const formatNumber = (num) => {
 .model-usage-item {
   background: var(--surface-color);
   border: 1px solid var(--border-color);
-  border-radius: 12px;
+  border-radius: 0.375rem;
   padding: 12px;
   transition: all 0.3s ease;
   position: relative;

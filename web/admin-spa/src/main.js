@@ -7,11 +7,15 @@ import 'element-plus/theme-chalk/dark/css-vars.css'
 import App from './App.vue'
 import router from './router'
 import { useUserStore } from './stores/user'
+import Icon from './components/common/Icon.vue'
 import './assets/styles/main.css'
 import './assets/styles/global.css'
 
 // 创建Vue应用
 const app = createApp(App)
+
+// 注册全局图标组件
+app.component('Icon', Icon)
 
 // 使用Pinia状态管理
 const pinia = createPinia()

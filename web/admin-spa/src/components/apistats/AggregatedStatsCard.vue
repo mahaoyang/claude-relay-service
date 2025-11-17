@@ -4,7 +4,7 @@
       class="mb-3 flex flex-col text-lg font-bold text-gray-900 dark:text-gray-100 sm:flex-row sm:items-center md:mb-4 md:text-xl"
     >
       <span class="flex items-center">
-        <i class="fas fa-chart-pie mr-2 text-sm text-orange-500 md:mr-3 md:text-base" />
+        <Icon name="PieChart" class="mr-2 text-sm text-orange-500 md:mr-3 md:text-base" />
         使用占比
       </span>
       <span class="text-xs font-normal text-gray-600 dark:text-gray-400 sm:ml-2 md:text-sm"
@@ -23,9 +23,9 @@
             {{ calculatePercentage(stat) }}%
           </span>
         </div>
-        <div class="h-2 w-full rounded-full bg-gray-200 dark:bg-gray-700">
+        <div class="h-2 w-full rounded-md bg-gray-200 dark:bg-gray-700">
           <div
-            class="h-2 rounded-full transition-all duration-300"
+            class="h-2 rounded-md transition-all duration-300"
             :class="getProgressColor(index)"
             :style="{ width: calculatePercentage(stat) + '%' }"
           />
@@ -53,7 +53,7 @@
       class="flex h-32 items-center justify-center text-sm text-gray-500 dark:text-gray-400"
     >
       <div class="text-center">
-        <i class="fas fa-chart-pie mb-2 text-2xl" />
+        <Icon name="PieChart" class="mb-2 text-2xl" />
         <p>使用占比仅在多Key查询时显示</p>
       </div>
     </div>
@@ -62,7 +62,7 @@
       v-else
       class="flex h-32 items-center justify-center text-sm text-gray-500 dark:text-gray-400"
     >
-      <i class="fas fa-chart-pie mr-2" />
+      <Icon name="PieChart" class="mr-2" />
       暂无数据
     </div>
   </div>
@@ -167,7 +167,7 @@ const formatNumber = (num) => {
 /* 卡片样式 - 使用CSS变量 */
 .card {
   background: var(--surface-color);
-  border-radius: 16px;
+  border-radius: 0.375rem;
   border: 1px solid var(--border-color);
   box-shadow:
     0 10px 15px -3px rgba(0, 0, 0, 0.1),

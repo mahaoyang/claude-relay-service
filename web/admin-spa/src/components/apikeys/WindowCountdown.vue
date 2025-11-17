@@ -3,15 +3,15 @@
     <div class="flex items-center justify-between text-xs">
       <span class="text-gray-500">{{ label }}</span>
       <span v-if="windowState === 'active'" class="font-medium text-gray-700">
-        <i class="fas fa-clock mr-1 text-blue-500" />
+        <Icon name="Clock" class="mr-1 text-blue-500" />
         {{ formatTime(remainingSeconds) }}
       </span>
       <span v-else-if="windowState === 'expired'" class="font-medium text-orange-600">
-        <i class="fas fa-sync-alt mr-1" />
+        <Icon name="RefreshCcw" class="mr-1" />
         窗口已过期
       </span>
       <span v-else-if="windowState === 'notStarted'" class="font-medium text-gray-500">
-        <i class="fas fa-pause-circle mr-1" />
+        <Icon name="PauseCircle" class="mr-1" />
         窗口未激活
       </span>
       <span v-else class="font-medium text-gray-400"> {{ rateLimitWindow }} 分钟 </span>
@@ -24,9 +24,9 @@
           <span class="text-gray-400">请求</span>
           <span class="text-gray-600"> {{ currentRequests || 0 }}/{{ requestLimit }} </span>
         </div>
-        <div class="h-1 w-full rounded-full bg-gray-200">
+        <div class="h-1 w-full rounded-md bg-gray-200">
           <div
-            class="h-1 rounded-full transition-all duration-300"
+            class="h-1 rounded-md transition-all duration-300"
             :class="getRequestProgressColor()"
             :style="{ width: getRequestProgress() + '%' }"
           />
@@ -41,9 +41,9 @@
             {{ formatTokenCount(currentTokens || 0) }}/{{ formatTokenCount(tokenLimit) }}
           </span>
         </div>
-        <div class="h-1 w-full rounded-full bg-gray-200">
+        <div class="h-1 w-full rounded-md bg-gray-200">
           <div
-            class="h-1 rounded-full transition-all duration-300"
+            class="h-1 rounded-md transition-all duration-300"
             :class="getTokenProgressColor()"
             :style="{ width: getTokenProgress() + '%' }"
           />
@@ -58,9 +58,9 @@
             ${{ (currentCost || 0).toFixed(2) }}/${{ costLimit.toFixed(2) }}
           </span>
         </div>
-        <div class="h-1 w-full rounded-full bg-gray-200">
+        <div class="h-1 w-full rounded-md bg-gray-200">
           <div
-            class="h-1 rounded-full transition-all duration-300"
+            class="h-1 rounded-md transition-all duration-300"
             :class="getCostProgressColor()"
             :style="{ width: getCostProgress() + '%' }"
           />
@@ -70,7 +70,7 @@
 
     <!-- 额外提示信息 -->
     <div v-if="windowState === 'active' && showTooltip" class="text-xs text-gray-500">
-      <i class="fas fa-info-circle mr-1" />
+      <Icon name="Info" class="mr-1" />
       <span v-if="remainingSeconds < 60">即将重置</span>
       <span v-else-if="remainingSeconds < 300"
         >{{ Math.ceil(remainingSeconds / 60) }} 分钟后重置</span

@@ -3,7 +3,7 @@
     <!-- 触发器 -->
     <div
       ref="triggerRef"
-      class="relative flex cursor-pointer items-center gap-2 rounded-lg border border-gray-200 bg-white px-3 py-2 shadow-sm transition-all duration-200 hover:shadow-md dark:border-gray-600 dark:bg-gray-800"
+      class="relative flex cursor-pointer items-center gap-2 rounded-md border border-gray-200 bg-white px-3 py-2 shadow-sm transition-all duration-200 hover:shadow-md dark:border-gray-600 dark:bg-gray-800"
       :class="[isOpen && 'border-blue-400 shadow-md']"
       @click="toggleDropdown"
     >
@@ -13,12 +13,7 @@
       >
         {{ selectedLabel || placeholder }}
       </span>
-      <i
-        :class="[
-          'fas fa-chevron-down ml-auto text-xs text-gray-400 transition-transform duration-200 dark:text-gray-500',
-          isOpen && 'rotate-180'
-        ]"
-      ></i>
+      <Icon name="ChevronDown" :class="[ ' ml-auto text-xs text-gray-400 transition-transform duration-200 dark:text-gray-500', isOpen && 'rotate-180' ]" />
     </div>
 
     <!-- 下拉选项 - 使用 Teleport 将其移动到 body -->
@@ -34,7 +29,7 @@
         <div
           v-if="isOpen"
           ref="dropdownRef"
-          class="fixed z-[9999] min-w-max overflow-hidden rounded-lg border border-gray-200 bg-white shadow-lg dark:border-gray-600 dark:bg-gray-800"
+          class="fixed z-[9999] min-w-max overflow-hidden rounded-md border border-gray-200 bg-white shadow-lg dark:border-gray-600 dark:bg-gray-800"
           :style="dropdownStyle"
         >
           <div class="max-h-60 overflow-y-auto py-1">
@@ -51,10 +46,7 @@
             >
               <i v-if="option.icon" :class="['fas', option.icon, 'text-xs']"></i>
               <span>{{ option.label }}</span>
-              <i
-                v-if="option.value === modelValue"
-                class="fas fa-check ml-auto pl-3 text-xs text-blue-600"
-              ></i>
+              <Icon name="Check" class="ml-auto pl-3 text-xs text-blue-600" v-if="option.value === modelValue" />
             </div>
           </div>
         </div>
@@ -207,12 +199,12 @@ onBeforeUnmount(() => {
 
 .max-h-60::-webkit-scrollbar-track {
   background: #f3f4f6;
-  border-radius: 3px;
+  border-radius: 0.375rem;
 }
 
 .max-h-60::-webkit-scrollbar-thumb {
   background: #d1d5db;
-  border-radius: 3px;
+  border-radius: 0.375rem;
 }
 
 .max-h-60::-webkit-scrollbar-thumb:hover {
