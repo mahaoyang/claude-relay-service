@@ -9,8 +9,14 @@ const logger = require('../utils/logger')
 /**
  * 伪装中间件
  * 在请求到达转发服务前应用伪装
+ *
+ * 流程：
+ * 1. 提取真实 sessionId
+ * 2. 池未满时添加到池
+ * 3. 从池中选择 sessionId
+ * 4. 应用伪装
  */
-function disguiseMiddleware(req, res, next) {
+async function disguiseMiddleware(req, res, next) {
   // 如果未启用伪装，直接跳过
   if (!disguiseHelper.DISGUISE_CONFIG.enabled) {
     return next()
@@ -25,8 +31,8 @@ function disguiseMiddleware(req, res, next) {
     // 保存原始数据用于日志
     const originalUserId = req.body.metadata?.user_id
 
-    // 应用伪装
-    const disguised = disguiseHelper.disguiseRequest(req.body, req.headers)
+    // 应用伪装（包含收集和选择逻辑）
+    const disguised = await disguiseHelper.disguiseRequest(req.body, req.headers)
 
     // 更新请求
     req.body = disguised.body
@@ -35,12 +41,13 @@ function disguiseMiddleware(req, res, next) {
     // 标记请求已伪装
     req.isDisguised = true
 
-    const disguiseInfo = disguiseHelper.getDisguiseInfo()
+    const disguiseInfo = await disguiseHelper.getDisguiseInfo()
 
     logger.info(`🎭 Request disguised`, {
-      originalUserId: `${originalUserId?.substring(0, 50)}...`,
+      originalUserId: originalUserId ? `${originalUserId.substring(0, 50)}...` : 'N/A',
       disguisedSessionId: disguiseInfo.todaySessionId,
-      disguisedClientId: `${disguiseInfo.clientId.substring(0, 16)}...`
+      disguisedClientId: `${disguiseInfo.clientId.substring(0, 16)}...`,
+      poolStatus: `${disguiseInfo.sessionPool.size}/${disguiseInfo.sessionPool.maxSize}`
     })
   } catch (error) {
     logger.error(`❌ Disguise middleware error: ${error.message}`, error)
