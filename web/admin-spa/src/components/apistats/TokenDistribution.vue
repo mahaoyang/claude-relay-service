@@ -4,7 +4,7 @@
       class="mb-3 flex flex-col text-lg font-bold text-gray-900 dark:text-gray-100 sm:flex-row sm:items-center md:mb-4 md:text-xl"
     >
       <span class="flex items-center">
-        <i class="fas fa-coins mr-2 text-sm text-yellow-500 md:mr-3 md:text-base" />
+        <Icon name="Coins" class="mr-2 text-sm text-yellow-500 md:mr-3 md:text-base" />
         Token 使用分布
       </span>
       <span class="text-xs font-normal text-gray-600 dark:text-gray-400 sm:ml-2 md:text-sm"
@@ -14,7 +14,7 @@
     <div class="space-y-2 md:space-y-3">
       <div class="flex items-center justify-between">
         <span class="flex items-center text-sm text-gray-600 dark:text-gray-400 md:text-base">
-          <i class="fas fa-arrow-right mr-1 text-xs text-green-500 md:mr-2 md:text-sm" />
+          <Icon name="ArrowRight" class="mr-1 text-xs text-green-500 md:mr-2 md:text-sm" />
           输入 Token
         </span>
         <span class="text-sm font-medium text-gray-900 dark:text-gray-100 md:text-base">{{
@@ -23,7 +23,7 @@
       </div>
       <div class="flex items-center justify-between">
         <span class="flex items-center text-sm text-gray-600 dark:text-gray-400 md:text-base">
-          <i class="fas fa-arrow-left mr-1 text-xs text-blue-500 md:mr-2 md:text-sm" />
+          <Icon name="ArrowLeft" class="mr-1 text-xs text-blue-500 md:mr-2 md:text-sm" />
           输出 Token
         </span>
         <span class="text-sm font-medium text-gray-900 dark:text-gray-100 md:text-base">{{
@@ -32,7 +32,7 @@
       </div>
       <div class="flex items-center justify-between">
         <span class="flex items-center text-sm text-gray-600 dark:text-gray-400 md:text-base">
-          <i class="fas fa-save mr-1 text-xs text-purple-500 md:mr-2 md:text-sm" />
+          <Icon name="Save" class="mr-1 text-xs text-purple-500 md:mr-2 md:text-sm" />
           缓存创建 Token
         </span>
         <span class="text-sm font-medium text-gray-900 dark:text-gray-100 md:text-base">{{
@@ -41,7 +41,7 @@
       </div>
       <div class="flex items-center justify-between">
         <span class="flex items-center text-sm text-gray-600 dark:text-gray-400 md:text-base">
-          <i class="fas fa-download mr-1 text-xs text-orange-500 md:mr-2 md:text-sm" />
+          <Icon name="Download" class="mr-1 text-xs text-orange-500 md:mr-2 md:text-sm" />
           缓存读取 Token
         </span>
         <span class="text-sm font-medium text-gray-900 dark:text-gray-100 md:text-base">{{
@@ -90,7 +90,7 @@ const formatNumber = (num) => {
 /* 卡片样式 - 使用CSS变量 */
 .card {
   background: var(--surface-color);
-  border-radius: 16px;
+  border-radius: 0.375rem;
   border: 1px solid var(--border-color);
   box-shadow:
     0 10px 15px -3px rgba(0, 0, 0, 0.1),

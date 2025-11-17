@@ -133,7 +133,7 @@
                       newApiKey.key
                     }}</code>
                     <button
-                      class="ml-3 inline-flex flex-shrink-0 items-center rounded border border-transparent bg-green-100 px-2 py-1 text-xs font-medium text-green-700 hover:bg-green-200 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
+                      class="ml-3 inline-flex flex-shrink-0 items-center rounded-md border border-transparent bg-green-100 px-2 py-1 text-xs font-medium text-green-700 hover:bg-green-200 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
                       @click="copyToClipboard(newApiKey.key)"
                     >
                       <svg

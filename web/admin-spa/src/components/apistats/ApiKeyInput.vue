@@ -1,9 +1,9 @@
 <template>
-  <div class="api-input-wide-card mb-8 rounded-3xl p-6 shadow-xl">
+  <div class="api-input-wide-card mb-8 rounded-md p-6 shadow-xl">
     <!-- 标题区域 -->
     <div class="wide-card-title mb-6">
       <h2 class="mb-2 text-2xl font-bold text-gray-900 dark:text-gray-200">
-        <i class="fas fa-chart-line mr-3" />
+        <Icon name="LineChart" class="mr-3" />
         使用统计查询
       </h2>
       <p class="text-base text-gray-600 dark:text-gray-400">查询您的 API Key 使用情况和统计数据</p>
@@ -15,7 +15,7 @@
       <div class="control-bar mb-4 flex flex-wrap items-center justify-between gap-3">
         <!-- API Key 标签 -->
         <label class="text-sm font-medium text-gray-700 dark:text-gray-300">
-          <i class="fas fa-key mr-2" />
+          <Icon name="Key" class="mr-2" />
           {{ multiKeyMode ? '输入您的 API Keys（每行一个或用逗号分隔）' : '输入您的 API Key' }}
         </label>
 
@@ -23,7 +23,7 @@
         <div class="button-group flex items-center gap-2">
           <!-- 模式切换 -->
           <div
-            class="mode-switch-group flex items-center rounded-lg bg-gray-100 p-1 dark:bg-gray-800"
+            class="mode-switch-group flex items-center rounded-md bg-gray-100 p-1 dark:bg-gray-800"
           >
             <button
               class="mode-switch-btn"
@@ -31,7 +31,7 @@
               title="单一模式"
               @click="multiKeyMode = false"
             >
-              <i class="fas fa-key" />
+              <Icon name="Key" />
               <span class="ml-2 hidden sm:inline">单一</span>
             </button>
             <button
@@ -40,11 +40,11 @@
               title="聚合模式"
               @click="multiKeyMode = true"
             >
-              <i class="fas fa-layer-group" />
+              <Icon name="Layers" />
               <span class="ml-2 hidden sm:inline">聚合</span>
               <span
                 v-if="multiKeyMode && parsedApiKeys.length > 0"
-                class="ml-1 rounded-full bg-white/20 px-1.5 py-0.5 text-xs font-semibold"
+                class="ml-1 rounded-md bg-white/20 px-1.5 py-0.5 text-xs font-semibold"
               >
                 {{ parsedApiKeys.length }}
               </span>
@@ -83,7 +83,7 @@
               title="清空输入"
               @click="clearInput"
             >
-              <i class="fas fa-times-circle" />
+              <Icon name="XCircle" />
             </button>
           </div>
         </div>
@@ -95,8 +95,8 @@
             :disabled="loading || !hasValidInput"
             @click="queryStats"
           >
-            <i v-if="loading" class="fas fa-spinner loading-spinner" />
-            <i v-else class="fas fa-search" />
+            <Icon name="Loader2" class="loading-spinner" v-if="loading" />
+            <Icon name="Search" v-else />
             {{ loading ? '查询中...' : '查询统计' }}
           </button>
         </div>
@@ -104,7 +104,7 @@
 
       <!-- 安全提示 -->
       <div class="security-notice mt-4">
-        <i class="fas fa-shield-alt mr-2" />
+        <Icon name="Shield" class="mr-2" />
         {{
           multiKeyMode
             ? '您的 API Keys 仅用于查询统计数据，不会被存储。聚合模式下部分个体化信息将不显示。'
@@ -115,9 +115,9 @@
       <!-- 多 Key 模式额外提示 -->
       <div
         v-if="multiKeyMode"
-        class="mt-2 rounded-lg bg-blue-50 p-3 text-sm text-blue-700 dark:bg-blue-900/20 dark:text-blue-400"
+        class="mt-2 rounded-md bg-blue-50 p-3 text-sm text-blue-700 dark:bg-blue-900/20 dark:text-blue-400"
       >
-        <i class="fas fa-lightbulb mr-2" />
+        <Icon name="Lightbulb" class="mr-2" />
         <span>提示：最多支持同时查询 30 个 API Keys。使用 Ctrl+Enter 快速查询。</span>
       </div>
     </div>
@@ -229,7 +229,7 @@ const hasValidInput = computed(() => {
 .wide-card-input {
   background: var(--input-bg);
   border: 2px solid var(--input-border);
-  border-radius: 12px;
+  border-radius: 0.375rem;
   padding: 14px 16px;
   font-size: 16px;
   transition: all 0.3s ease;
@@ -273,7 +273,7 @@ const hasValidInput = computed(() => {
 /* 按钮样式 */
 .btn {
   font-weight: 500;
-  border-radius: 12px;
+  border-radius: 0.375rem;
   border: none;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -289,18 +289,18 @@ const hasValidInput = computed(() => {
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%);
   color: white;
   box-shadow:
-    0 10px 15px -3px rgba(102, 126, 234, 0.3),
-    0 4px 6px -2px rgba(102, 126, 234, 0.05);
+    0 10px 15px -3px rgba(20, 184, 166, 0.3),
+    0 4px 6px -2px rgba(20, 184, 166, 0.05);
 }
 
 .btn-primary:hover:not(:disabled) {
   transform: translateY(-1px);
   box-shadow:
-    0 20px 25px -5px rgba(102, 126, 234, 0.3),
-    0 10px 10px -5px rgba(102, 126, 234, 0.1);
+    0 20px 25px -5px rgba(20, 184, 166, 0.3),
+    0 10px 10px -5px rgba(20, 184, 166, 0.1);
 }
 
 .btn-primary:disabled {
@@ -314,7 +314,7 @@ const hasValidInput = computed(() => {
   background: rgba(255, 255, 255, 0.5);
   border: 1px solid rgba(255, 255, 255, 0.4);
   backdrop-filter: blur(10px);
-  border-radius: 8px;
+  border-radius: 0.375rem;
   padding: 12px 16px;
   color: #374151;
   font-size: 0.875rem;
@@ -366,7 +366,7 @@ const hasValidInput = computed(() => {
   display: inline-flex;
   padding: 4px;
   background: #f3f4f6;
-  border-radius: 0.5rem;
+  border-radius: 0.375rem;
   box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
@@ -407,12 +407,12 @@ const hasValidInput = computed(() => {
 
 .mode-switch-btn.active {
   color: white;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  box-shadow: 0 2px 4px rgba(102, 126, 234, 0.2);
+  background: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%);
+  box-shadow: 0 2px 4px rgba(20, 184, 166, 0.2);
 }
 
 .mode-switch-btn.active:hover {
-  box-shadow: 0 4px 6px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 4px 6px rgba(20, 184, 166, 0.3);
 }
 
 .mode-switch-btn i {

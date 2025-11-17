@@ -84,7 +84,7 @@
               <div class="flex-shrink-0">
                 <div
                   :class="[
-                    'h-2 w-2 rounded-full',
+                    'h-2 w-2 rounded-md',
                     apiKey.isDeleted === 'true' || apiKey.deletedAt
                       ? 'bg-gray-400'
                       : apiKey.isActive
@@ -98,13 +98,13 @@
                   <p class="text-sm font-medium text-gray-900">{{ apiKey.name }}</p>
                   <span
                     v-if="apiKey.isDeleted === 'true' || apiKey.deletedAt"
-                    class="ml-2 inline-flex items-center rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-800"
+                    class="ml-2 inline-flex items-center rounded-md bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-800"
                   >
                     Deleted
                   </span>
                   <span
                     v-else-if="!apiKey.isActive"
-                    class="ml-2 inline-flex items-center rounded-full bg-red-100 px-2.5 py-0.5 text-xs font-medium text-red-800"
+                    class="ml-2 inline-flex items-center rounded-md bg-red-100 px-2.5 py-0.5 text-xs font-medium text-red-800"
                   >
                     Deleted
                   </span>
@@ -138,7 +138,7 @@
               <!-- Actions -->
               <div class="flex items-center space-x-1">
                 <button
-                  class="inline-flex items-center rounded border border-transparent p-1 text-gray-400 hover:text-gray-600"
+                  class="inline-flex items-center rounded-md border border-transparent p-1 text-gray-400 hover:text-gray-600"
                   title="View API Key"
                   @click="showApiKey(apiKey)"
                 >
@@ -164,7 +164,7 @@
                     apiKey.isActive &&
                     allowUserDeleteApiKeys
                   "
-                  class="inline-flex items-center rounded border border-transparent p-1 text-red-400 hover:text-red-600"
+                  class="inline-flex items-center rounded-md border border-transparent p-1 text-red-400 hover:text-red-600"
                   title="Delete API Key"
                   @click="deleteApiKey(apiKey)"
                 >

@@ -24,7 +24,7 @@
           <div class="rounded-md bg-gray-50 p-4">
             <div class="flex items-center">
               <div class="flex-shrink-0">
-                <div class="flex h-10 w-10 items-center justify-center rounded-full bg-gray-300">
+                <div class="flex h-10 w-10 items-center justify-center rounded-md bg-gray-300">
                   <svg
                     class="h-6 w-6 text-gray-600"
                     fill="none"
@@ -48,7 +48,7 @@
                 <div class="mt-1">
                   <span
                     :class="[
-                      'inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium',
+                      'inline-flex items-center rounded-md px-2.5 py-0.5 text-xs font-medium',
                       user.role === 'admin'
                         ? 'bg-purple-100 text-purple-800'
                         : 'bg-blue-100 text-blue-800'

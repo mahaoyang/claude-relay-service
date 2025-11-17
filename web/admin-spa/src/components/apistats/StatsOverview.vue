@@ -6,13 +6,9 @@
       <!-- 基础信息 / 批量概要 -->
       <div class="card-section">
         <header class="section-header">
-          <i
-            class="header-icon"
-            :class="
-              multiKeyMode
-                ? 'fas fa-layer-group text-purple-500'
-                : 'fas fa-info-circle text-blue-500'
-            "
+          <Icon
+            name="Layers"
+            :class="['header-icon', multiKeyMode ? 'text-purple-500' : 'text-blue-500']"
           />
           <h3 class="header-title">{{ multiKeyMode ? '批量查询概要' : 'API Key 信息' }}</h3>
         </header>
@@ -25,13 +21,13 @@
           <div class="info-item">
             <p class="info-label">有效 Keys 数</p>
             <p class="info-value text-green-600 dark:text-emerald-400">
-              <i class="fas fa-check-circle mr-1" />{{ aggregatedStats.activeKeys }} 个
+              <Icon name="CheckCircle" class="mr-1" />{{ aggregatedStats.activeKeys }} 个
             </p>
           </div>
           <div v-if="invalidKeys.length > 0" class="info-item">
             <p class="info-label">无效 Keys 数</p>
             <p class="info-value text-red-500 dark:text-red-400">
-              <i class="fas fa-times-circle mr-1" />{{ invalidKeys.length }} 个
+              <Icon name="XCircle" class="mr-1" />{{ invalidKeys.length }} 个
             </p>
           </div>
           <div class="info-item">
@@ -74,10 +70,7 @@
                   : 'text-red-500 dark:text-red-400'
               "
             >
-              <i
-                class="mr-1"
-                :class="statsData.isActive ? 'fas fa-check-circle' : 'fas fa-times-circle'"
-              />
+              <Icon :name="statsData.isActive ? 'CheckCircle' : 'XCircle'" class="mr-1" />
               {{ statsData.isActive ? '活跃' : '已停用' }}
             </p>
           </div>
@@ -94,7 +87,7 @@
             <div class="info-value">
               <template v-if="statsData.expirationMode === 'activation' && !statsData.isActivated">
                 <span class="text-amber-600 dark:text-amber-400">
-                  <i class="fas fa-pause-circle mr-1" />未激活
+                  <Icon name="PauseCircle" class="mr-1" />未激活
                 </span>
                 <span class="ml-2 text-xs text-gray-500 dark:text-gray-400">
                   首次使用后
@@ -107,19 +100,19 @@
                   v-if="isApiKeyExpired(statsData.expiresAt)"
                   class="text-red-500 dark:text-red-400"
                 >
-                  <i class="fas fa-exclamation-circle mr-1" />已过期
+                  <Icon name="AlertCircle" class="mr-1" />已过期
                 </span>
                 <span
                   v-else-if="isApiKeyExpiringSoon(statsData.expiresAt)"
                   class="text-orange-500 dark:text-orange-400"
                 >
-                  <i class="fas fa-clock mr-1" />{{ formatExpireDate(statsData.expiresAt) }}
+                  <Icon name="Clock" class="mr-1" />{{ formatExpireDate(statsData.expiresAt) }}
                 </span>
                 <span v-else>{{ formatExpireDate(statsData.expiresAt) }}</span>
               </template>
               <template v-else>
                 <span class="text-gray-400 dark:text-gray-500">
-                  <i class="fas fa-infinity mr-1" />永不过期
+                  <Icon name="Infinity" class="mr-1" />永不过期
                 </span>
               </template>
             </div>
@@ -130,7 +123,7 @@
       <!-- 使用统计概览 -->
       <div class="card-section">
         <header class="section-header">
-          <i class="header-icon fas fa-chart-bar text-green-500" />
+          <Icon name="BarChart3" class="header-icon text-green-500" />
           <h3 class="header-title">使用统计概览</h3>
           <span class="header-tag">{{ statsPeriod === 'daily' ? '今日' : '本月' }}</span>
         </header>
@@ -166,7 +159,7 @@
     <!-- 专属账号运行状态，仅在单 key 且存在绑定时显示 -->
     <div v-if="!multiKeyMode && boundAccountList.length > 0" class="card-section">
       <header class="section-header">
-        <i class="header-icon fas fa-plug text-indigo-500" />
+        <Icon name="Plug" class="header-icon text-indigo-500" />
         <h3 class="header-title">专属账号运行状态</h3>
         <span class="header-tag">实时更新</span>
       </header>
@@ -183,7 +176,7 @@
                 class="account-icon"
                 :class="account.platform === 'claude' ? 'icon-claude' : 'icon-openai'"
               >
-                <i :class="account.platform === 'claude' ? 'fas fa-meteor' : 'fas fa-robot'" />
+                <Icon :name="account.platform === 'claude' ? 'Sparkles' : 'Bot'" />
               </span>
               <div>
                 <p class="account-name">{{ getAccountLabel(account) }}</p>
@@ -196,7 +189,7 @@
               v-if="getRateLimitDisplay(account.rateLimitStatus)"
               :class="['rate-badge', getRateLimitDisplay(account.rateLimitStatus).class]"
             >
-              <i class="fas fa-tachometer-alt mr-1" />
+              <Icon name="Gauge" class="mr-1" />
               {{ getRateLimitDisplay(account.rateLimitStatus).text }}
             </div>
           </div>
@@ -265,7 +258,7 @@
             </div>
             <p
               v-else
-              class="rounded-xl bg-slate-100 px-3 py-2 text-xs text-slate-500 dark:bg-slate-800 dark:text-slate-300"
+              class="rounded-md bg-slate-100 px-3 py-2 text-xs text-slate-500 dark:bg-slate-800 dark:text-slate-300"
             >
               暂无额度使用数据
             </p>
@@ -510,7 +503,7 @@ const getCodexWindowLabel = (type) => (type === 'secondary' ? '周限' : '5h')
 
 <style scoped>
 .card-section {
-  @apply flex h-full flex-col gap-4 rounded-2xl border border-slate-200/70 bg-white/90 p-4 shadow-md dark:border-slate-700/60 dark:bg-slate-900/70 md:p-6;
+  @apply flex h-full flex-col gap-4 rounded-md border border-slate-200/70 bg-white/90 p-4 shadow-md dark:border-slate-700/60 dark:bg-slate-900/70 md:p-6;
 }
 
 :global(.dark) .card-section {
@@ -530,7 +523,7 @@ const getCodexWindowLabel = (type) => (type === 'secondary' ? '周限' : '5h')
 }
 
 .header-tag {
-  @apply ml-auto rounded-full bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-500 dark:bg-slate-800 dark:text-slate-300;
+  @apply ml-auto rounded-md bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-500 dark:bg-slate-800 dark:text-slate-300;
 }
 
 .info-grid {
@@ -551,7 +544,7 @@ const getCodexWindowLabel = (type) => (type === 'secondary' ? '周限' : '5h')
 }
 
 .info-item {
-  @apply rounded-xl border border-slate-200 bg-white/70 p-4 dark:border-slate-700 dark:bg-slate-900/60;
+  @apply rounded-md border border-slate-200 bg-white/70 p-4 dark:border-slate-700 dark:bg-slate-900/60;
   min-height: 86px;
 }
 
@@ -564,7 +557,7 @@ const getCodexWindowLabel = (type) => (type === 'secondary' ? '周限' : '5h')
 }
 
 .contributor-item {
-  @apply flex items-center justify-between rounded-lg bg-slate-50 px-3 py-2 text-xs text-slate-600 dark:bg-slate-800 dark:text-slate-300;
+  @apply flex items-center justify-between rounded-md bg-slate-50 px-3 py-2 text-xs text-slate-600 dark:bg-slate-800 dark:text-slate-300;
 }
 
 .metric-grid {
@@ -572,7 +565,7 @@ const getCodexWindowLabel = (type) => (type === 'secondary' ? '周限' : '5h')
 }
 
 .metric-card {
-  @apply rounded-xl border border-slate-200 bg-white/70 p-4 text-center shadow-sm dark:border-slate-700 dark:bg-slate-900/60;
+  @apply rounded-md border border-slate-200 bg-white/70 p-4 text-center shadow-sm dark:border-slate-700 dark:bg-slate-900/60;
 }
 
 .metric-value {
@@ -584,11 +577,11 @@ const getCodexWindowLabel = (type) => (type === 'secondary' ? '周限' : '5h')
 }
 
 .account-card {
-  @apply rounded-2xl border border-slate-200 bg-white/80 p-4 shadow-sm transition-shadow hover:shadow-md dark:border-slate-700 dark:bg-slate-900/60;
+  @apply rounded-md border border-slate-200 bg-white/80 p-4 shadow-sm transition-shadow hover:shadow-md dark:border-slate-700 dark:bg-slate-900/60;
 }
 
 .account-icon {
-  @apply inline-flex h-10 w-10 items-center justify-center rounded-full text-white;
+  @apply inline-flex h-10 w-10 items-center justify-center rounded-md text-white;
 }
 
 .icon-claude {
@@ -608,7 +601,7 @@ const getCodexWindowLabel = (type) => (type === 'secondary' ? '周限' : '5h')
 }
 
 .rate-badge {
-  @apply rounded-full bg-slate-100 px-2 py-0.5 text-xs font-medium dark:bg-slate-800;
+  @apply rounded-md bg-slate-100 px-2 py-0.5 text-xs font-medium dark:bg-slate-800;
 }
 
 .progress-row {
@@ -616,11 +609,11 @@ const getCodexWindowLabel = (type) => (type === 'secondary' ? '周限' : '5h')
 }
 
 .progress-track {
-  @apply h-1.5 flex-1 rounded-full bg-slate-200 dark:bg-slate-700;
+  @apply h-1.5 flex-1 rounded-md bg-slate-200 dark:bg-slate-700;
 }
 
 .progress-bar {
-  @apply h-1.5 rounded-full transition-all duration-300;
+  @apply h-1.5 rounded-md transition-all duration-300;
 }
 
 .progress-value {
@@ -628,7 +621,7 @@ const getCodexWindowLabel = (type) => (type === 'secondary' ? '周限' : '5h')
 }
 
 .quota-row {
-  @apply rounded-xl border border-slate-200 bg-white/60 p-3 dark:border-slate-700 dark:bg-slate-900/50;
+  @apply rounded-md border border-slate-200 bg-white/60 p-3 dark:border-slate-700 dark:bg-slate-900/50;
 }
 
 .quota-header {
@@ -636,7 +629,7 @@ const getCodexWindowLabel = (type) => (type === 'secondary' ? '周限' : '5h')
 }
 
 .quota-tag {
-  @apply inline-flex min-w-[34px] justify-center rounded-full px-2 py-0.5 text-[11px] font-semibold;
+  @apply inline-flex min-w-[34px] justify-center rounded-md px-2 py-0.5 text-[11px] font-semibold;
 }
 
 .tag-indigo {

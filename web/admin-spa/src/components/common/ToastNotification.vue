@@ -20,7 +20,7 @@
             </div>
           </div>
           <button class="toast-close" @click.stop="removeToast(toast.id)">
-            <i class="fas fa-times" />
+            <Icon name="X" />
           </button>
         </div>
         <div
@@ -150,7 +150,7 @@ defineExpose({
   min-width: 320px;
   max-width: 500px;
   background: white;
-  border-radius: 12px;
+  border-radius: 0.375rem;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
   border: 1px solid #e5e7eb;
   overflow: hidden;
@@ -223,7 +223,7 @@ defineExpose({
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 4px;
+  border-radius: 0.375rem;
   color: #9ca3af;
   transition: all 0.2s ease;
 }

@@ -16,7 +16,7 @@
             <!-- 排序选择器 -->
             <div class="group relative min-w-[160px]">
               <div
-                class="absolute -inset-0.5 rounded-lg bg-gradient-to-r from-indigo-500 to-blue-500 opacity-0 blur transition duration-300 group-hover:opacity-20"
+                class="absolute -inset-0.5 rounded-md bg-gradient-to-r from-indigo-500 to-blue-500 opacity-0 blur transition duration-300 group-hover:opacity-20"
               ></div>
               <CustomDropdown
                 v-model="accountSortBy"
@@ -31,7 +31,7 @@
             <!-- 平台筛选器 -->
             <div class="group relative min-w-[140px]">
               <div
-                class="absolute -inset-0.5 rounded-lg bg-gradient-to-r from-blue-500 to-indigo-500 opacity-0 blur transition duration-300 group-hover:opacity-20"
+                class="absolute -inset-0.5 rounded-md bg-gradient-to-r from-blue-500 to-indigo-500 opacity-0 blur transition duration-300 group-hover:opacity-20"
               ></div>
               <CustomDropdown
                 v-model="platformFilter"
@@ -46,7 +46,7 @@
             <!-- 分组筛选器 -->
             <div class="group relative min-w-[160px]">
               <div
-                class="absolute -inset-0.5 rounded-lg bg-gradient-to-r from-purple-500 to-pink-500 opacity-0 blur transition duration-300 group-hover:opacity-20"
+                class="absolute -inset-0.5 rounded-md bg-gradient-to-r from-purple-500 to-pink-500 opacity-0 blur transition duration-300 group-hover:opacity-20"
               ></div>
               <CustomDropdown
                 v-model="groupFilter"
@@ -61,22 +61,22 @@
             <!-- 搜索框 -->
             <div class="group relative min-w-[200px]">
               <div
-                class="absolute -inset-0.5 rounded-lg bg-gradient-to-r from-cyan-500 to-teal-500 opacity-0 blur transition duration-300 group-hover:opacity-20"
+                class="absolute -inset-0.5 rounded-md bg-gradient-to-r from-cyan-500 to-teal-500 opacity-0 blur transition duration-300 group-hover:opacity-20"
               ></div>
               <div class="relative flex items-center">
                 <input
                   v-model="searchKeyword"
-                  class="h-10 w-full rounded-lg border border-gray-200 bg-white px-3 pl-9 text-sm text-gray-700 placeholder-gray-400 shadow-sm transition-all duration-200 hover:border-gray-300 focus:border-cyan-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/20 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200 dark:placeholder-gray-500 dark:hover:border-gray-500"
+                  class="h-10 w-full rounded-md border border-gray-200 bg-white px-3 pl-9 text-sm text-gray-700 placeholder-gray-400 shadow-sm transition-all duration-200 hover:border-gray-300 focus:border-cyan-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/20 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200 dark:placeholder-gray-500 dark:hover:border-gray-500"
                   placeholder="搜索账户名称..."
                   type="text"
                 />
-                <i class="fas fa-search absolute left-3 text-sm text-cyan-500" />
+                <Icon name="Search" class="absolute left-3 text-sm text-cyan-500" />
                 <button
                   v-if="searchKeyword"
-                  class="absolute right-2 flex h-5 w-5 items-center justify-center rounded-full text-gray-400 hover:bg-gray-100 hover:text-gray-600 dark:hover:bg-gray-700 dark:hover:text-gray-300"
+                  class="absolute right-2 flex h-5 w-5 items-center justify-center rounded-md text-gray-400 hover:bg-gray-100 hover:text-gray-600 dark:hover:bg-gray-700 dark:hover:text-gray-300"
                   @click="clearSearch"
                 >
-                  <i class="fas fa-times text-xs" />
+                  <Icon name="X" class="text-xs" />
                 </button>
               </div>
             </div>
@@ -91,14 +91,14 @@
                 placement="bottom"
               >
                 <button
-                  class="group relative flex items-center justify-center gap-2 rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm transition-all duration-200 hover:border-gray-300 hover:shadow-md disabled:cursor-not-allowed disabled:opacity-50 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:border-gray-500 sm:w-auto"
+                  class="group relative flex items-center justify-center gap-2 rounded-md border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm transition-all duration-200 hover:border-gray-300 hover:shadow-md disabled:cursor-not-allowed disabled:opacity-50 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:border-gray-500 sm:w-auto"
                   :disabled="accountsLoading"
                   @click.ctrl.exact="loadAccounts(true)"
                   @click.exact="loadAccounts(false)"
                   @click.meta.exact="loadAccounts(true)"
                 >
                   <div
-                    class="absolute -inset-0.5 rounded-lg bg-gradient-to-r from-green-500 to-teal-500 opacity-0 blur transition duration-300 group-hover:opacity-20"
+                    class="absolute -inset-0.5 rounded-md bg-gradient-to-r from-green-500 to-teal-500 opacity-0 blur transition duration-300 group-hover:opacity-20"
                   ></div>
                   <i
                     :class="[
@@ -113,32 +113,32 @@
 
             <!-- 选择/取消选择按钮 -->
             <button
-              class="flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm transition-all duration-200 hover:border-gray-300 hover:bg-gray-50 hover:shadow-md dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
+              class="flex items-center gap-2 rounded-md border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm transition-all duration-200 hover:border-gray-300 hover:bg-gray-50 hover:shadow-md dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
               @click="toggleSelectionMode"
             >
-              <i :class="showCheckboxes ? 'fas fa-times' : 'fas fa-check-square'"></i>
+              <Icon :name="showCheckboxes ? 'X' : 'CheckSquare'" />
               <span>{{ showCheckboxes ? '取消选择' : '选择' }}</span>
             </button>
 
             <!-- 批量删除按钮 -->
             <button
               v-if="selectedAccounts.length > 0"
-              class="group relative flex items-center justify-center gap-2 rounded-lg border border-red-200 bg-red-50 px-4 py-2 text-sm font-medium text-red-700 shadow-sm transition-all duration-200 hover:border-red-300 hover:bg-red-100 hover:shadow-md dark:border-red-700 dark:bg-red-900/30 dark:text-red-300 dark:hover:bg-red-900/50 sm:w-auto"
+              class="group relative flex items-center justify-center gap-2 rounded-md border border-red-200 bg-red-50 px-4 py-2 text-sm font-medium text-red-700 shadow-sm transition-all duration-200 hover:border-red-300 hover:bg-red-100 hover:shadow-md dark:border-red-700 dark:bg-red-900/30 dark:text-red-300 dark:hover:bg-red-900/50 sm:w-auto"
               @click="batchDeleteAccounts"
             >
               <div
-                class="absolute -inset-0.5 rounded-lg bg-gradient-to-r from-red-500 to-pink-500 opacity-0 blur transition duration-300 group-hover:opacity-20"
+                class="absolute -inset-0.5 rounded-md bg-gradient-to-r from-red-500 to-pink-500 opacity-0 blur transition duration-300 group-hover:opacity-20"
               ></div>
-              <i class="fas fa-trash relative text-red-600 dark:text-red-400" />
+              <Icon name="Trash" class="relative text-red-600 dark:text-red-400" />
               <span class="relative">删除选中 ({{ selectedAccounts.length }})</span>
             </button>
 
             <!-- 添加账户按钮 -->
             <button
-              class="flex w-full items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-green-500 to-green-600 px-5 py-2.5 text-sm font-medium text-white shadow-md transition-all duration-200 hover:from-green-600 hover:to-green-700 hover:shadow-lg sm:w-auto"
+              class="flex w-full items-center justify-center gap-2 rounded-md bg-gradient-to-r from-green-500 to-green-600 px-5 py-2.5 text-sm font-medium text-white shadow-md transition-all duration-200 hover:from-green-600 hover:to-green-700 hover:shadow-lg sm:w-auto"
               @click.stop="openCreateAccountModal"
             >
-              <i class="fas fa-plus"></i>
+              <Icon name="Plus" />
               <span>添加账户</span>
             </button>
           </div>
@@ -152,9 +152,9 @@
 
       <div v-else-if="sortedAccounts.length === 0" class="py-12 text-center">
         <div
-          class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gray-100 dark:bg-gray-700"
+          class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-md bg-gray-100 dark:bg-gray-700"
         >
-          <i class="fas fa-user-circle text-xl text-gray-400" />
+          <Icon name="UserCircle" class="text-xl text-gray-400" />
         </div>
         <p class="text-lg text-gray-500 dark:text-gray-400">暂无账户</p>
         <p class="mt-2 text-sm text-gray-400 dark:text-gray-500">点击上方按钮添加您的第一个账户</p>
@@ -169,7 +169,7 @@
                 <div class="flex items-center">
                   <input
                     v-model="selectAllChecked"
-                    class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                    class="h-4 w-4 rounded-md border-gray-300 text-blue-600 focus:ring-blue-500"
                     :indeterminate="isIndeterminate"
                     type="checkbox"
                     @change="handleSelectAll"
@@ -189,7 +189,7 @@
                     'ml-1'
                   ]"
                 />
-                <i v-else class="fas fa-sort ml-1 text-gray-400" />
+                <Icon name="ArrowUpDown" class="ml-1 text-gray-400" v-else />
               </th>
               <th
                 class="w-[15%] min-w-[120px] cursor-pointer px-3 py-4 text-left text-xs font-bold uppercase tracking-wider text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600"
@@ -204,7 +204,7 @@
                     'ml-1'
                   ]"
                 />
-                <i v-else class="fas fa-sort ml-1 text-gray-400" />
+                <Icon name="ArrowUpDown" class="ml-1 text-gray-400" v-else />
               </th>
               <th
                 class="w-[12%] min-w-[110px] cursor-pointer px-3 py-4 text-left text-xs font-bold uppercase tracking-wider text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600"
@@ -219,7 +219,7 @@
                     'ml-1'
                   ]"
                 />
-                <i v-else class="fas fa-sort ml-1 text-gray-400" />
+                <Icon name="ArrowUpDown" class="ml-1 text-gray-400" v-else />
               </th>
               <th
                 class="w-[12%] min-w-[100px] cursor-pointer px-3 py-4 text-left text-xs font-bold uppercase tracking-wider text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600"
@@ -234,7 +234,7 @@
                     'ml-1'
                   ]"
                 />
-                <i v-else class="fas fa-sort ml-1 text-gray-400" />
+                <Icon name="ArrowUpDown" class="ml-1 text-gray-400" v-else />
               </th>
               <th
                 class="w-[8%] min-w-[80px] cursor-pointer px-3 py-4 text-left text-xs font-bold uppercase tracking-wider text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600"
@@ -249,7 +249,7 @@
                     'ml-1'
                   ]"
                 />
-                <i v-else class="fas fa-sort ml-1 text-gray-400" />
+                <Icon name="ArrowUpDown" class="ml-1 text-gray-400" v-else />
               </th>
               <th
                 class="w-[10%] min-w-[100px] px-3 py-4 text-left text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-gray-300"
@@ -281,7 +281,7 @@
                           <div class="space-y-1 pt-1 text-gray-200 dark:text-gray-600">
                             <div class="flex items-center gap-2">
                               <div
-                                class="h-2 w-16 rounded bg-gradient-to-r from-blue-500 to-indigo-600"
+                                class="h-2 w-16 rounded-md bg-gradient-to-r from-blue-500 to-indigo-600"
                               ></div>
                               <span class="font-medium text-white dark:text-gray-900"
                                 >正常：请求正常处理</span
@@ -289,7 +289,7 @@
                             </div>
                             <div class="flex items-center gap-2">
                               <div
-                                class="h-2 w-16 rounded bg-gradient-to-r from-yellow-500 to-orange-500"
+                                class="h-2 w-16 rounded-md bg-gradient-to-r from-yellow-500 to-orange-500"
                               ></div>
                               <span class="font-medium text-white dark:text-gray-900"
                                 >警告：接近限制</span
@@ -297,7 +297,7 @@
                             </div>
                             <div class="flex items-center gap-2">
                               <div
-                                class="h-2 w-16 rounded bg-gradient-to-r from-red-500 to-red-600"
+                                class="h-2 w-16 rounded-md bg-gradient-to-r from-red-500 to-red-600"
                               ></div>
                               <span class="font-medium text-white dark:text-gray-900"
                                 >拒绝：达到速率限制</span
@@ -315,21 +315,19 @@
                           </div>
                           <div class="space-y-1 text-gray-200 dark:text-gray-600">
                             <div class="flex items-start gap-2">
-                              <i class="fas fa-clock mt-[2px] text-[10px] text-blue-500"></i>
+                              <Icon name="Clock" class="mt-[2px] text-[10px] text-blue-500" />
                               <span class="font-medium text-white dark:text-gray-900"
                                 >5h 窗口：5小时使用量进度，到达重置时间后会自动归零。</span
                               >
                             </div>
                             <div class="flex items-start gap-2">
-                              <i class="fas fa-history mt-[2px] text-[10px] text-emerald-500"></i>
+                              <Icon name="History" class="mt-[2px] text-[10px] text-emerald-500" />
                               <span class="font-medium text-white dark:text-gray-900"
                                 >周限窗口：7天使用量进度，重置时同样回到 0%。</span
                               >
                             </div>
                             <div class="flex items-start gap-2">
-                              <i
-                                class="fas fa-info-circle mt-[2px] text-[10px] text-indigo-500"
-                              ></i>
+                              <Icon name="Info" class="mt-[2px] text-[10px] text-indigo-500" />
                               <span class="font-medium text-white dark:text-gray-900"
                                 >当“重置剩余”为 0 时，进度条与百分比会同步清零。</span
                               >
@@ -346,27 +344,25 @@
                           </div>
                           <div class="space-y-1 text-gray-200 dark:text-gray-600">
                             <div class="flex items-start gap-2">
-                              <i class="fas fa-clock mt-[2px] text-[10px] text-indigo-500"></i>
+                              <Icon name="Clock" class="mt-[2px] text-[10px] text-indigo-500" />
                               <span class="font-medium text-white dark:text-gray-900"
                                 >5h 窗口：5小时滑动窗口的使用率。</span
                               >
                             </div>
                             <div class="flex items-start gap-2">
-                              <i
-                                class="fas fa-calendar-alt mt-[2px] text-[10px] text-emerald-500"
-                              ></i>
+                              <Icon name="CalendarDays" class="mt-[2px] text-[10px] text-emerald-500" />
                               <span class="font-medium text-white dark:text-gray-900"
                                 >7d 窗口：7天总限额的使用率。</span
                               >
                             </div>
                             <div class="flex items-start gap-2">
-                              <i class="fas fa-gem mt-[2px] text-[10px] text-purple-500"></i>
+                              <Icon name="Gem" class="mt-[2px] text-[10px] text-purple-500" />
                               <span class="font-medium text-white dark:text-gray-900"
                                 >Opus 窗口：7天Opus模型专用限额。</span
                               >
                             </div>
                             <div class="flex items-start gap-2">
-                              <i class="fas fa-sync-alt mt-[2px] text-[10px] text-blue-500"></i>
+                              <Icon name="RefreshCcw" class="mt-[2px] text-[10px] text-blue-500" />
                               <span class="font-medium text-white dark:text-gray-900"
                                 >到达重置时间后自动归零。</span
                               >
@@ -375,9 +371,7 @@
                         </div>
                       </div>
                     </template>
-                    <i
-                      class="fas fa-question-circle cursor-help text-xs text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-400"
-                    />
+                    <Icon name="HelpCircle" class="cursor-help text-xs text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-400" />
                   </el-tooltip>
                 </div>
               </th>
@@ -399,7 +393,7 @@
                 <div class="flex items-center">
                   <input
                     v-model="selectedAccounts"
-                    class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                    class="h-4 w-4 rounded-md border-gray-300 text-blue-600 focus:ring-blue-500"
                     type="checkbox"
                     :value="account.id"
                     @change="updateSelectAllState"
@@ -409,9 +403,9 @@
               <td class="px-3 py-4">
                 <div class="flex items-center">
                   <div
-                    class="mr-2 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-green-500 to-green-600"
+                    class="mr-2 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-md bg-gradient-to-br from-green-500 to-green-600"
                   >
-                    <i class="fas fa-user-circle text-xs text-white" />
+                    <Icon name="UserCircle" class="text-xs text-white" />
                   </div>
                   <div class="min-w-0">
                     <div class="flex items-center gap-2">
@@ -423,21 +417,21 @@
                       </div>
                       <span
                         v-if="account.accountType === 'dedicated'"
-                        class="inline-flex items-center rounded-full bg-purple-100 px-2 py-0.5 text-xs font-medium text-purple-800"
+                        class="inline-flex items-center rounded-md bg-purple-100 px-2 py-0.5 text-xs font-medium text-purple-800"
                       >
-                        <i class="fas fa-lock mr-1" />专属
+                        <Icon name="Lock" class="mr-1" />专属
                       </span>
                       <span
                         v-else-if="account.accountType === 'group'"
-                        class="inline-flex items-center rounded-full bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-800"
+                        class="inline-flex items-center rounded-md bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-800"
                       >
-                        <i class="fas fa-layer-group mr-1" />分组调度
+                        <Icon name="Layers" class="mr-1" />分组调度
                       </span>
                       <span
                         v-else
-                        class="inline-flex items-center rounded-full bg-green-100 px-2 py-0.5 text-xs font-medium text-green-800"
+                        class="inline-flex items-center rounded-md bg-green-100 px-2 py-0.5 text-xs font-medium text-green-800"
                       >
-                        <i class="fas fa-share-alt mr-1" />共享
+                        <Icon name="Share2" class="mr-1" />共享
                       </span>
                     </div>
                     <!-- 显示所有分组 - 换行显示 -->
@@ -448,10 +442,10 @@
                       <span
                         v-for="group in account.groupInfos"
                         :key="group.id"
-                        class="inline-flex items-center rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-600 dark:bg-gray-700 dark:text-gray-400"
+                        class="inline-flex items-center rounded-md bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-600 dark:bg-gray-700 dark:text-gray-400"
                         :title="`所属分组: ${group.name}`"
                       >
-                        <i class="fas fa-folder mr-1" />{{ group.name }}
+                        <Icon name="Folder" class="mr-1" />{{ group.name }}
                       </span>
                     </div>
                     <div
@@ -468,9 +462,9 @@
                   <!-- 平台图标和名称 -->
                   <div
                     v-if="account.platform === 'gemini'"
-                    class="flex items-center gap-1.5 rounded-lg border border-yellow-200 bg-gradient-to-r from-yellow-100 to-amber-100 px-2.5 py-1"
+                    class="flex items-center gap-1.5 rounded-md border border-yellow-200 bg-gradient-to-r from-yellow-100 to-amber-100 px-2.5 py-1"
                   >
-                    <i class="fas fa-robot text-xs text-yellow-700" />
+                    <Icon name="Bot" class="text-xs text-yellow-700" />
                     <span class="text-xs font-semibold text-yellow-800">Gemini</span>
                     <span class="mx-1 h-4 w-px bg-yellow-300" />
                     <span class="text-xs font-medium text-yellow-700">
@@ -479,25 +473,25 @@
                   </div>
                   <div
                     v-else-if="account.platform === 'claude-console'"
-                    class="flex items-center gap-1.5 rounded-lg border border-purple-200 bg-gradient-to-r from-purple-100 to-pink-100 px-2.5 py-1"
+                    class="flex items-center gap-1.5 rounded-md border border-purple-200 bg-gradient-to-r from-purple-100 to-pink-100 px-2.5 py-1"
                   >
-                    <i class="fas fa-terminal text-xs text-purple-700" />
+                    <Icon name="Terminal" class="text-xs text-purple-700" />
                     <span class="text-xs font-semibold text-purple-800">Console</span>
                     <span class="mx-1 h-4 w-px bg-purple-300" />
                     <span class="text-xs font-medium text-purple-700">API Key</span>
                   </div>
                   <div
                     v-else-if="account.platform === 'bedrock'"
-                    class="flex items-center gap-1.5 rounded-lg border border-orange-200 bg-gradient-to-r from-orange-100 to-red-100 px-2.5 py-1"
+                    class="flex items-center gap-1.5 rounded-md border border-orange-200 bg-gradient-to-r from-orange-100 to-red-100 px-2.5 py-1"
                   >
-                    <i class="fab fa-aws text-xs text-orange-700" />
+                    <Icon name="Cloud" class="text-xs text-orange-700" />
                     <span class="text-xs font-semibold text-orange-800">Bedrock</span>
                     <span class="mx-1 h-4 w-px bg-orange-300" />
                     <span class="text-xs font-medium text-orange-700">AWS</span>
                   </div>
                   <div
                     v-else-if="account.platform === 'openai'"
-                    class="flex items-center gap-1.5 rounded-lg border border-gray-700 bg-gray-100 bg-gradient-to-r from-gray-100 to-gray-100 px-2.5 py-1"
+                    class="flex items-center gap-1.5 rounded-md border border-gray-700 bg-gray-100 bg-gradient-to-r from-gray-100 to-gray-100 px-2.5 py-1"
                   >
                     <div class="fa-openai" />
                     <span class="text-xs font-semibold text-gray-950">OpenAi</span>
@@ -506,9 +500,9 @@
                   </div>
                   <div
                     v-else-if="account.platform === 'azure_openai'"
-                    class="flex items-center gap-1.5 rounded-lg border border-blue-200 bg-gradient-to-r from-blue-100 to-cyan-100 px-2.5 py-1 dark:border-blue-700 dark:from-blue-900/20 dark:to-cyan-900/20"
+                    class="flex items-center gap-1.5 rounded-md border border-blue-200 bg-gradient-to-r from-blue-100 to-cyan-100 px-2.5 py-1 dark:border-blue-700 dark:from-blue-900/20 dark:to-cyan-900/20"
                   >
-                    <i class="fab fa-microsoft text-xs text-blue-700 dark:text-blue-400" />
+                    <Icon name="Box" class="text-xs text-blue-700 dark:text-blue-400" />
                     <span class="text-xs font-semibold text-blue-800 dark:text-blue-300"
                       >Azure OpenAI</span
                     >
@@ -519,9 +513,9 @@
                   </div>
                   <div
                     v-else-if="account.platform === 'openai-responses'"
-                    class="flex items-center gap-1.5 rounded-lg border border-teal-200 bg-gradient-to-r from-teal-100 to-green-100 px-2.5 py-1 dark:border-teal-700 dark:from-teal-900/20 dark:to-green-900/20"
+                    class="flex items-center gap-1.5 rounded-md border border-teal-200 bg-gradient-to-r from-teal-100 to-green-100 px-2.5 py-1 dark:border-teal-700 dark:from-teal-900/20 dark:to-green-900/20"
                   >
-                    <i class="fas fa-server text-xs text-teal-700 dark:text-teal-400" />
+                    <Icon name="Server" class="text-xs text-teal-700 dark:text-teal-400" />
                     <span class="text-xs font-semibold text-teal-800 dark:text-teal-300"
                       >OpenAI-Responses</span
                     >
@@ -532,9 +526,9 @@
                   </div>
                   <div
                     v-else-if="account.platform === 'claude' || account.platform === 'claude-oauth'"
-                    class="flex items-center gap-1.5 rounded-lg border border-indigo-200 bg-gradient-to-r from-indigo-100 to-blue-100 px-2.5 py-1"
+                    class="flex items-center gap-1.5 rounded-md border border-indigo-200 bg-gradient-to-r from-indigo-100 to-blue-100 px-2.5 py-1"
                   >
-                    <i class="fas fa-brain text-xs text-indigo-700" />
+                    <Icon name="Brain" class="text-xs text-indigo-700" />
                     <span class="text-xs font-semibold text-indigo-800">{{
                       getClaudeAccountType(account)
                     }}</span>
@@ -545,18 +539,18 @@
                   </div>
                   <div
                     v-else-if="account.platform === 'ccr'"
-                    class="flex items-center gap-1.5 rounded-lg border border-teal-200 bg-gradient-to-r from-teal-100 to-emerald-100 px-2.5 py-1 dark:border-teal-700 dark:from-teal-900/20 dark:to-emerald-900/20"
+                    class="flex items-center gap-1.5 rounded-md border border-teal-200 bg-gradient-to-r from-teal-100 to-emerald-100 px-2.5 py-1 dark:border-teal-700 dark:from-teal-900/20 dark:to-emerald-900/20"
                   >
-                    <i class="fas fa-code-branch text-xs text-teal-700 dark:text-teal-400" />
+                    <Icon name="GitBranch" class="text-xs text-teal-700 dark:text-teal-400" />
                     <span class="text-xs font-semibold text-teal-800 dark:text-teal-300">CCR</span>
                     <span class="mx-1 h-4 w-px bg-teal-300 dark:bg-teal-600" />
                     <span class="text-xs font-medium text-teal-700 dark:text-teal-300">Relay</span>
                   </div>
                   <div
                     v-else-if="account.platform === 'droid'"
-                    class="flex items-center gap-1.5 rounded-lg border border-cyan-200 bg-gradient-to-r from-cyan-100 to-sky-100 px-2.5 py-1 dark:border-cyan-700 dark:from-cyan-900/20 dark:to-sky-900/20"
+                    class="flex items-center gap-1.5 rounded-md border border-cyan-200 bg-gradient-to-r from-cyan-100 to-sky-100 px-2.5 py-1 dark:border-cyan-700 dark:from-cyan-900/20 dark:to-sky-900/20"
                   >
-                    <i class="fas fa-robot text-xs text-cyan-700 dark:text-cyan-400" />
+                    <Icon name="Bot" class="text-xs text-cyan-700 dark:text-cyan-400" />
                     <span class="text-xs font-semibold text-cyan-800 dark:text-cyan-300"
                       >Droid</span
                     >
@@ -568,15 +562,15 @@
                       v-if="isDroidApiKeyMode(account)"
                       :class="getDroidApiKeyBadgeClasses(account)"
                     >
-                      <i class="fas fa-key text-[9px]" />
+                      <Icon name="Key" class="text-[9px]" />
                       <span>x{{ getDroidApiKeyCount(account) }}</span>
                     </span>
                   </div>
                   <div
                     v-else
-                    class="flex items-center gap-1.5 rounded-lg border border-gray-200 bg-gradient-to-r from-gray-100 to-gray-200 px-2.5 py-1"
+                    class="flex items-center gap-1.5 rounded-md border border-gray-200 bg-gradient-to-r from-gray-100 to-gray-200 px-2.5 py-1"
                   >
-                    <i class="fas fa-question text-xs text-gray-700" />
+                    <Icon name="HelpCircle" class="text-xs text-gray-700" />
                     <span class="text-xs font-semibold text-gray-800">未知</span>
                   </div>
                 </div>
@@ -591,7 +585,7 @@
                       style="font-size: 13px"
                       @click.stop="startEditAccountExpiry(account)"
                     >
-                      <i class="fas fa-exclamation-circle mr-1 text-xs" />
+                      <Icon name="AlertCircle" class="mr-1 text-xs" />
                       已过期
                     </span>
                     <span
@@ -600,7 +594,7 @@
                       style="font-size: 13px"
                       @click.stop="startEditAccountExpiry(account)"
                     >
-                      <i class="fas fa-clock mr-1 text-xs" />
+                      <Icon name="Clock" class="mr-1 text-xs" />
                       {{ formatExpireDate(account.expiresAt) }}
                     </span>
                     <span
@@ -619,7 +613,7 @@
                     style="font-size: 13px"
                     @click.stop="startEditAccountExpiry(account)"
                   >
-                    <i class="fas fa-infinity mr-1 text-xs" />
+                    <Icon name="Infinity" class="mr-1 text-xs" />
                     永不过期
                   </span>
                 </div>
@@ -628,7 +622,7 @@
                 <div class="flex flex-col gap-1">
                   <span
                     :class="[
-                      'inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold',
+                      'inline-flex items-center rounded-md px-3 py-1 text-xs font-semibold',
                       account.status === 'blocked'
                         ? 'bg-orange-100 text-orange-800'
                         : account.status === 'unauthorized'
@@ -642,7 +636,7 @@
                   >
                     <div
                       :class="[
-                        'mr-2 h-2 w-2 rounded-full',
+                        'mr-2 h-2 w-2 rounded-md',
                         account.status === 'blocked'
                           ? 'bg-orange-500'
                           : account.status === 'unauthorized'
@@ -671,9 +665,9 @@
                       (account.rateLimitStatus && account.rateLimitStatus.isRateLimited) ||
                       account.rateLimitStatus === 'limited'
                     "
-                    class="inline-flex items-center rounded-full bg-yellow-100 px-3 py-1 text-xs font-semibold text-yellow-800"
+                    class="inline-flex items-center rounded-md bg-yellow-100 px-3 py-1 text-xs font-semibold text-yellow-800"
                   >
-                    <i class="fas fa-exclamation-triangle mr-1" />
+                    <Icon name="AlertTriangle" class="mr-1" />
                     限流中
                     <span
                       v-if="
@@ -686,9 +680,9 @@
                   </span>
                   <span
                     v-if="account.schedulable === false"
-                    class="inline-flex items-center rounded-full bg-gray-100 px-3 py-1 text-xs font-semibold text-gray-700"
+                    class="inline-flex items-center rounded-md bg-gray-100 px-3 py-1 text-xs font-semibold text-gray-700"
                   >
-                    <i class="fas fa-pause-circle mr-1" />
+                    <Icon name="PauseCircle" class="mr-1" />
                     不可调度
                     <el-tooltip
                       v-if="getSchedulableReason(account)"
@@ -696,7 +690,7 @@
                       effect="dark"
                       placement="top"
                     >
-                      <i class="fas fa-question-circle ml-1 cursor-help text-gray-500" />
+                      <Icon name="HelpCircle" class="ml-1 cursor-help text-gray-500" />
                     </el-tooltip>
                   </span>
                   <span
@@ -729,9 +723,9 @@
                   "
                   class="flex items-center gap-2"
                 >
-                  <div class="h-2 w-16 rounded-full bg-gray-200">
+                  <div class="h-2 w-16 rounded-md bg-gray-200">
                     <div
-                      class="h-2 rounded-full bg-gradient-to-r from-green-500 to-blue-600 transition-all duration-300"
+                      class="h-2 rounded-md bg-gradient-to-r from-green-500 to-blue-600 transition-all duration-300"
                       :style="{ width: 101 - (account.priority || 50) + '%' }"
                     />
                   </div>
@@ -746,7 +740,7 @@
               <td class="px-3 py-4 text-sm text-gray-600">
                 <div
                   v-if="formatProxyDisplay(account.proxy)"
-                  class="break-all rounded bg-blue-50 px-2 py-1 font-mono text-xs"
+                  class="break-all rounded-md bg-blue-50 px-2 py-1 font-mono text-xs"
                   :title="formatProxyDisplay(account.proxy)"
                 >
                   {{ formatProxyDisplay(account.proxy) }}
@@ -756,19 +750,19 @@
               <td class="whitespace-nowrap px-3 py-4 text-sm">
                 <div v-if="account.usage && account.usage.daily" class="space-y-1">
                   <div class="flex items-center gap-2">
-                    <div class="h-2 w-2 rounded-full bg-blue-500" />
+                    <div class="h-2 w-2 rounded-md bg-blue-500" />
                     <span class="text-sm font-medium text-gray-900 dark:text-gray-100"
                       >{{ account.usage.daily.requests || 0 }} 次</span
                     >
                   </div>
                   <div class="flex items-center gap-2">
-                    <div class="h-2 w-2 rounded-full bg-purple-500" />
+                    <div class="h-2 w-2 rounded-md bg-purple-500" />
                     <span class="text-xs text-gray-600 dark:text-gray-300"
                       >{{ formatNumber(account.usage.daily.allTokens || 0) }}M</span
                     >
                   </div>
                   <div class="flex items-center gap-2">
-                    <div class="h-2 w-2 rounded-full bg-green-500" />
+                    <div class="h-2 w-2 rounded-md bg-green-500" />
                     <span class="text-xs text-gray-600 dark:text-gray-300"
                       >${{ calculateDailyCost(account) }}</span
                     >
@@ -787,19 +781,19 @@
                   <!-- OAuth 账户：显示三窗口 OAuth usage -->
                   <div v-if="isClaudeOAuth(account) && account.claudeUsage" class="space-y-2">
                     <!-- 5小时窗口 -->
-                    <div class="rounded-lg bg-gray-50 p-2 dark:bg-gray-700/70">
+                    <div class="rounded-md bg-gray-50 p-2 dark:bg-gray-700/70">
                       <div class="flex items-center gap-2">
                         <span
-                          class="inline-flex min-w-[32px] justify-center rounded-full bg-indigo-100 px-2 py-0.5 text-[11px] font-medium text-indigo-600 dark:bg-indigo-500/20 dark:text-indigo-300"
+                          class="inline-flex min-w-[32px] justify-center rounded-md bg-indigo-100 px-2 py-0.5 text-[11px] font-medium text-indigo-600 dark:bg-indigo-500/20 dark:text-indigo-300"
                         >
                           5h
                         </span>
                         <div class="flex-1">
                           <div class="flex items-center gap-2">
-                            <div class="h-2 flex-1 rounded-full bg-gray-200 dark:bg-gray-600">
+                            <div class="h-2 flex-1 rounded-md bg-gray-200 dark:bg-gray-600">
                               <div
                                 :class="[
-                                  'h-2 rounded-full transition-all duration-300',
+                                  'h-2 rounded-md transition-all duration-300',
                                   getClaudeUsageBarClass(account.claudeUsage.fiveHour)
                                 ]"
                                 :style="{
@@ -820,19 +814,19 @@
                       </div>
                     </div>
                     <!-- 7天窗口 -->
-                    <div class="rounded-lg bg-gray-50 p-2 dark:bg-gray-700/70">
+                    <div class="rounded-md bg-gray-50 p-2 dark:bg-gray-700/70">
                       <div class="flex items-center gap-2">
                         <span
-                          class="inline-flex min-w-[32px] justify-center rounded-full bg-emerald-100 px-2 py-0.5 text-[11px] font-medium text-emerald-600 dark:bg-emerald-500/20 dark:text-emerald-300"
+                          class="inline-flex min-w-[32px] justify-center rounded-md bg-emerald-100 px-2 py-0.5 text-[11px] font-medium text-emerald-600 dark:bg-emerald-500/20 dark:text-emerald-300"
                         >
                           7d
                         </span>
                         <div class="flex-1">
                           <div class="flex items-center gap-2">
-                            <div class="h-2 flex-1 rounded-full bg-gray-200 dark:bg-gray-600">
+                            <div class="h-2 flex-1 rounded-md bg-gray-200 dark:bg-gray-600">
                               <div
                                 :class="[
-                                  'h-2 rounded-full transition-all duration-300',
+                                  'h-2 rounded-md transition-all duration-300',
                                   getClaudeUsageBarClass(account.claudeUsage.sevenDay)
                                 ]"
                                 :style="{
@@ -853,19 +847,19 @@
                       </div>
                     </div>
                     <!-- 7天Opus窗口 -->
-                    <div class="rounded-lg bg-gray-50 p-2 dark:bg-gray-700/70">
+                    <div class="rounded-md bg-gray-50 p-2 dark:bg-gray-700/70">
                       <div class="flex items-center gap-2">
                         <span
-                          class="inline-flex min-w-[32px] justify-center rounded-full bg-purple-100 px-2 py-0.5 text-[11px] font-medium text-purple-600 dark:bg-purple-500/20 dark:text-purple-300"
+                          class="inline-flex min-w-[32px] justify-center rounded-md bg-purple-100 px-2 py-0.5 text-[11px] font-medium text-purple-600 dark:bg-purple-500/20 dark:text-purple-300"
                         >
                           Opus
                         </span>
                         <div class="flex-1">
                           <div class="flex items-center gap-2">
-                            <div class="h-2 flex-1 rounded-full bg-gray-200 dark:bg-gray-600">
+                            <div class="h-2 flex-1 rounded-md bg-gray-200 dark:bg-gray-600">
                               <div
                                 :class="[
-                                  'h-2 rounded-full transition-all duration-300',
+                                  'h-2 rounded-md transition-all duration-300',
                                   getClaudeUsageBarClass(account.claudeUsage.sevenDayOpus)
                                 ]"
                                 :style="{
@@ -901,13 +895,13 @@
                       class="flex items-center gap-3 text-xs"
                     >
                       <div class="flex items-center gap-1">
-                        <div class="h-1.5 w-1.5 rounded-full bg-purple-500" />
+                        <div class="h-1.5 w-1.5 rounded-md bg-purple-500" />
                         <span class="font-medium text-gray-900 dark:text-gray-100">
                           {{ formatNumber(account.usage.sessionWindow.totalTokens) }}M
                         </span>
                       </div>
                       <div class="flex items-center gap-1">
-                        <div class="h-1.5 w-1.5 rounded-full bg-green-500" />
+                        <div class="h-1.5 w-1.5 rounded-md bg-green-500" />
                         <span class="font-medium text-gray-900 dark:text-gray-100">
                           ${{ formatCost(account.usage.sessionWindow.totalCost) }}
                         </span>
@@ -916,10 +910,10 @@
 
                     <!-- 进度条 -->
                     <div class="flex items-center gap-2">
-                      <div class="h-2 w-24 rounded-full bg-gray-200 dark:bg-gray-700">
+                      <div class="h-2 w-24 rounded-md bg-gray-200 dark:bg-gray-700">
                         <div
                           :class="[
-                            'h-2 rounded-full transition-all duration-300',
+                            'h-2 rounded-md transition-all duration-300',
                             getSessionProgressBarClass(
                               account.sessionWindow.sessionWindowStatus,
                               account
@@ -966,10 +960,10 @@
                         </span>
                       </div>
                       <div class="flex items-center gap-2">
-                        <div class="h-2 w-24 rounded-full bg-gray-200 dark:bg-gray-700">
+                        <div class="h-2 w-24 rounded-md bg-gray-200 dark:bg-gray-700">
                           <div
                             :class="[
-                              'h-2 rounded-full transition-all duration-300',
+                              'h-2 rounded-md transition-all duration-300',
                               getQuotaBarClass(getQuotaUsagePercent(account))
                             ]"
                             :style="{ width: Math.min(100, getQuotaUsagePercent(account)) + '%' }"
@@ -992,7 +986,7 @@
                     </template>
                     <template v-else>
                       <div class="text-sm text-gray-400">
-                        <i class="fas fa-minus" />
+                        <Icon name="Minus" />
                       </div>
                     </template>
                   </div>
@@ -1011,10 +1005,10 @@
                       v-if="Number(account.maxConcurrentTasks || 0) > 0"
                       class="flex items-center gap-2"
                     >
-                      <div class="h-2 w-24 rounded-full bg-gray-200 dark:bg-gray-700">
+                      <div class="h-2 w-24 rounded-md bg-gray-200 dark:bg-gray-700">
                         <div
                           :class="[
-                            'h-2 rounded-full transition-all duration-300',
+                            'h-2 rounded-md transition-all duration-300',
                             getConcurrencyBarClass(getConsoleConcurrencyPercent(account))
                           ]"
                           :style="{
@@ -1034,27 +1028,27 @@
                     </div>
                     <div
                       v-else
-                      class="inline-flex items-center rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-500 dark:bg-gray-700 dark:text-gray-300"
+                      class="inline-flex items-center rounded-md bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-500 dark:bg-gray-700 dark:text-gray-300"
                     >
-                      <i class="fas fa-infinity mr-1" />并发无限制
+                      <Icon name="Infinity" class="mr-1" />并发无限制
                     </div>
                   </div>
                 </div>
                 <div v-else-if="account.platform === 'openai'" class="space-y-2">
                   <div v-if="account.codexUsage" class="space-y-2">
-                    <div class="rounded-lg bg-gray-50 p-2 dark:bg-gray-700/70">
+                    <div class="rounded-md bg-gray-50 p-2 dark:bg-gray-700/70">
                       <div class="flex items-center gap-2">
                         <span
-                          class="inline-flex min-w-[32px] justify-center rounded-full bg-indigo-100 px-2 py-0.5 text-[11px] font-medium text-indigo-600 dark:bg-indigo-500/20 dark:text-indigo-300"
+                          class="inline-flex min-w-[32px] justify-center rounded-md bg-indigo-100 px-2 py-0.5 text-[11px] font-medium text-indigo-600 dark:bg-indigo-500/20 dark:text-indigo-300"
                         >
                           {{ getCodexWindowLabel('primary') }}
                         </span>
                         <div class="flex-1">
                           <div class="flex items-center gap-2">
-                            <div class="h-2 flex-1 rounded-full bg-gray-200 dark:bg-gray-600">
+                            <div class="h-2 flex-1 rounded-md bg-gray-200 dark:bg-gray-600">
                               <div
                                 :class="[
-                                  'h-2 rounded-full transition-all duration-300',
+                                  'h-2 rounded-md transition-all duration-300',
                                   getCodexUsageBarClass(account.codexUsage.primary)
                                 ]"
                                 :style="{
@@ -1074,19 +1068,19 @@
                         重置剩余 {{ formatCodexRemaining(account.codexUsage.primary) }}
                       </div>
                     </div>
-                    <div class="rounded-lg bg-gray-50 p-2 dark:bg-gray-700/70">
+                    <div class="rounded-md bg-gray-50 p-2 dark:bg-gray-700/70">
                       <div class="flex items-center gap-2">
                         <span
-                          class="inline-flex min-w-[32px] justify-center rounded-full bg-blue-100 px-2 py-0.5 text-[11px] font-medium text-blue-600 dark:bg-blue-500/20 dark:text-blue-300"
+                          class="inline-flex min-w-[32px] justify-center rounded-md bg-blue-100 px-2 py-0.5 text-[11px] font-medium text-blue-600 dark:bg-blue-500/20 dark:text-blue-300"
                         >
                           {{ getCodexWindowLabel('secondary') }}
                         </span>
                         <div class="flex-1">
                           <div class="flex items-center gap-2">
-                            <div class="h-2 flex-1 rounded-full bg-gray-200 dark:bg-gray-600">
+                            <div class="h-2 flex-1 rounded-md bg-gray-200 dark:bg-gray-600">
                               <div
                                 :class="[
-                                  'h-2 rounded-full transition-all duration-300',
+                                  'h-2 rounded-md transition-all duration-300',
                                   getCodexUsageBarClass(account.codexUsage.secondary)
                                 ]"
                                 :style="{
@@ -1133,7 +1127,7 @@
                         !account.isActive)
                     "
                     :class="[
-                      'rounded px-2.5 py-1 text-xs font-medium transition-colors',
+                      'rounded-md px-2.5 py-1 text-xs font-medium transition-colors',
                       account.isResetting
                         ? 'cursor-not-allowed bg-gray-100 text-gray-400'
                         : 'bg-yellow-100 text-yellow-700 hover:bg-yellow-200'
@@ -1142,12 +1136,12 @@
                     :title="account.isResetting ? '重置中...' : '重置所有异常状态'"
                     @click="resetAccountStatus(account)"
                   >
-                    <i :class="['fas fa-redo', account.isResetting ? 'animate-spin' : '']" />
+                    <Icon name="RotateCw" :class="[' ', account.isResetting ? 'animate-spin' : '']" />
                     <span class="ml-1">重置状态</span>
                   </button>
                   <button
                     :class="[
-                      'rounded px-2.5 py-1 text-xs font-medium transition-colors',
+                      'rounded-md px-2.5 py-1 text-xs font-medium transition-colors',
                       account.isTogglingSchedulable
                         ? 'cursor-not-allowed bg-gray-100 text-gray-400'
                         : account.schedulable
@@ -1163,27 +1157,27 @@
                   </button>
                   <button
                     v-if="canViewUsage(account)"
-                    class="rounded bg-indigo-100 px-2.5 py-1 text-xs font-medium text-indigo-700 transition-colors hover:bg-indigo-200"
+                    class="rounded-md bg-indigo-100 px-2.5 py-1 text-xs font-medium text-indigo-700 transition-colors hover:bg-indigo-200"
                     :title="'查看使用详情'"
                     @click="openAccountUsageModal(account)"
                   >
-                    <i class="fas fa-chart-line" />
+                    <Icon name="LineChart" />
                     <span class="ml-1">详情</span>
                   </button>
                   <button
-                    class="rounded bg-blue-100 px-2.5 py-1 text-xs font-medium text-blue-700 transition-colors hover:bg-blue-200"
+                    class="rounded-md bg-blue-100 px-2.5 py-1 text-xs font-medium text-blue-700 transition-colors hover:bg-blue-200"
                     :title="'编辑账户'"
                     @click="editAccount(account)"
                   >
-                    <i class="fas fa-edit" />
+                    <Icon name="Edit" />
                     <span class="ml-1">编辑</span>
                   </button>
                   <button
-                    class="rounded bg-red-100 px-2.5 py-1 text-xs font-medium text-red-700 transition-colors hover:bg-red-200"
+                    class="rounded-md bg-red-100 px-2.5 py-1 text-xs font-medium text-red-700 transition-colors hover:bg-red-200"
                     :title="'删除账户'"
                     @click="deleteAccount(account)"
                   >
-                    <i class="fas fa-trash" />
+                    <Icon name="Trash" />
                     <span class="ml-1">删除</span>
                   </button>
                 </div>
@@ -1206,14 +1200,14 @@
               <input
                 v-if="shouldShowCheckboxes"
                 v-model="selectedAccounts"
-                class="mt-1 h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                class="mt-1 h-4 w-4 rounded-md border-gray-300 text-blue-600 focus:ring-blue-500"
                 type="checkbox"
                 :value="account.id"
                 @change="updateSelectAllState"
               />
               <div
                 :class="[
-                  'flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg',
+                  'flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-md',
                   account.platform === 'claude'
                     ? 'bg-gradient-to-br from-purple-500 to-purple-600'
                     : account.platform === 'bedrock'
@@ -1229,24 +1223,7 @@
                               : 'bg-gradient-to-br from-blue-500 to-blue-600'
                 ]"
               >
-                <i
-                  :class="[
-                    'text-sm text-white',
-                    account.platform === 'claude'
-                      ? 'fas fa-brain'
-                      : account.platform === 'bedrock'
-                        ? 'fab fa-aws'
-                        : account.platform === 'azure_openai'
-                          ? 'fab fa-microsoft'
-                          : account.platform === 'openai'
-                            ? 'fas fa-openai'
-                            : account.platform === 'ccr'
-                              ? 'fas fa-code-branch'
-                              : account.platform === 'droid'
-                                ? 'fas fa-robot'
-                                : 'fas fa-robot'
-                  ]"
-                />
+                <Icon name="Brain" :class="[ 'text-sm text-white', account.platform === 'claude' ? ' ' : account.platform === 'bedrock' ? 'fab fa-aws' : account.platform === 'azure_openai' ? 'fab fa-microsoft' : account.platform === 'openai' ? 'fas fa-openai' : account.platform === 'ccr' ? 'fas fa-code-branch' : account.platform === 'droid' ? 'fas fa-robot' : 'fas fa-robot' ]" />
               </div>
               <div>
                 <h4 class="text-sm font-semibold text-gray-900">
@@ -1263,12 +1240,12 @@
             </div>
             <span
               :class="[
-                'inline-flex items-center rounded-full px-2 py-1 text-xs font-semibold',
+                'inline-flex items-center rounded-md px-2 py-1 text-xs font-semibold',
                 getAccountStatusClass(account)
               ]"
             >
               <div
-                :class="['mr-1.5 h-1.5 w-1.5 rounded-full', getAccountStatusDotClass(account)]"
+                :class="['mr-1.5 h-1.5 w-1.5 rounded-md', getAccountStatusDotClass(account)]"
               />
               {{ getAccountStatusText(account) }}
             </span>
@@ -1280,19 +1257,19 @@
               <p class="text-xs text-gray-500 dark:text-gray-400">今日使用</p>
               <div class="space-y-1">
                 <div class="flex items-center gap-1.5">
-                  <div class="h-1.5 w-1.5 rounded-full bg-blue-500" />
+                  <div class="h-1.5 w-1.5 rounded-md bg-blue-500" />
                   <p class="text-sm font-semibold text-gray-900 dark:text-gray-100">
                     {{ account.usage?.daily?.requests || 0 }} 次
                   </p>
                 </div>
                 <div class="flex items-center gap-1.5">
-                  <div class="h-1.5 w-1.5 rounded-full bg-purple-500" />
+                  <div class="h-1.5 w-1.5 rounded-md bg-purple-500" />
                   <p class="text-xs text-gray-600 dark:text-gray-400">
                     {{ formatNumber(account.usage?.daily?.allTokens || 0) }}M
                   </p>
                 </div>
                 <div class="flex items-center gap-1.5">
-                  <div class="h-1.5 w-1.5 rounded-full bg-green-500" />
+                  <div class="h-1.5 w-1.5 rounded-md bg-green-500" />
                   <p class="text-xs text-gray-600 dark:text-gray-400">
                     ${{ calculateDailyCost(account) }}
                   </p>
@@ -1303,13 +1280,13 @@
               <p class="text-xs text-gray-500 dark:text-gray-400">会话窗口</p>
               <div v-if="account.usage && account.usage.sessionWindow" class="space-y-1">
                 <div class="flex items-center gap-1.5">
-                  <div class="h-1.5 w-1.5 rounded-full bg-purple-500" />
+                  <div class="h-1.5 w-1.5 rounded-md bg-purple-500" />
                   <p class="text-sm font-semibold text-gray-900 dark:text-gray-100">
                     {{ formatNumber(account.usage.sessionWindow.totalTokens) }}M
                   </p>
                 </div>
                 <div class="flex items-center gap-1.5">
-                  <div class="h-1.5 w-1.5 rounded-full bg-green-500" />
+                  <div class="h-1.5 w-1.5 rounded-md bg-green-500" />
                   <p class="text-xs text-gray-600 dark:text-gray-400">
                     ${{ formatCost(account.usage.sessionWindow.totalCost) }}
                   </p>
@@ -1326,19 +1303,19 @@
               <!-- OAuth 账户：显示三窗口 OAuth usage -->
               <div v-if="isClaudeOAuth(account) && account.claudeUsage" class="space-y-2">
                 <!-- 5小时窗口 -->
-                <div class="rounded-lg bg-gray-50 p-2 dark:bg-gray-700/70">
+                <div class="rounded-md bg-gray-50 p-2 dark:bg-gray-700/70">
                   <div class="flex items-center gap-2">
                     <span
-                      class="inline-flex min-w-[32px] justify-center rounded-full bg-indigo-100 px-2 py-0.5 text-[11px] font-medium text-indigo-600 dark:bg-indigo-500/20 dark:text-indigo-300"
+                      class="inline-flex min-w-[32px] justify-center rounded-md bg-indigo-100 px-2 py-0.5 text-[11px] font-medium text-indigo-600 dark:bg-indigo-500/20 dark:text-indigo-300"
                     >
                       5h
                     </span>
                     <div class="flex-1">
                       <div class="flex items-center gap-2">
-                        <div class="h-2 flex-1 rounded-full bg-gray-200 dark:bg-gray-600">
+                        <div class="h-2 flex-1 rounded-md bg-gray-200 dark:bg-gray-600">
                           <div
                             :class="[
-                              'h-2 rounded-full transition-all duration-300',
+                              'h-2 rounded-md transition-all duration-300',
                               getClaudeUsageBarClass(account.claudeUsage.fiveHour)
                             ]"
                             :style="{
@@ -1359,19 +1336,19 @@
                   </div>
                 </div>
                 <!-- 7天窗口 -->
-                <div class="rounded-lg bg-gray-50 p-2 dark:bg-gray-700/70">
+                <div class="rounded-md bg-gray-50 p-2 dark:bg-gray-700/70">
                   <div class="flex items-center gap-2">
                     <span
-                      class="inline-flex min-w-[32px] justify-center rounded-full bg-emerald-100 px-2 py-0.5 text-[11px] font-medium text-emerald-600 dark:bg-emerald-500/20 dark:text-emerald-300"
+                      class="inline-flex min-w-[32px] justify-center rounded-md bg-emerald-100 px-2 py-0.5 text-[11px] font-medium text-emerald-600 dark:bg-emerald-500/20 dark:text-emerald-300"
                     >
                       7d
                     </span>
                     <div class="flex-1">
                       <div class="flex items-center gap-2">
-                        <div class="h-2 flex-1 rounded-full bg-gray-200 dark:bg-gray-600">
+                        <div class="h-2 flex-1 rounded-md bg-gray-200 dark:bg-gray-600">
                           <div
                             :class="[
-                              'h-2 rounded-full transition-all duration-300',
+                              'h-2 rounded-md transition-all duration-300',
                               getClaudeUsageBarClass(account.claudeUsage.sevenDay)
                             ]"
                             :style="{
@@ -1392,19 +1369,19 @@
                   </div>
                 </div>
                 <!-- 7天Opus窗口 -->
-                <div class="rounded-lg bg-gray-50 p-2 dark:bg-gray-700/70">
+                <div class="rounded-md bg-gray-50 p-2 dark:bg-gray-700/70">
                   <div class="flex items-center gap-2">
                     <span
-                      class="inline-flex min-w-[32px] justify-center rounded-full bg-purple-100 px-2 py-0.5 text-[11px] font-medium text-purple-600 dark:bg-purple-500/20 dark:text-purple-300"
+                      class="inline-flex min-w-[32px] justify-center rounded-md bg-purple-100 px-2 py-0.5 text-[11px] font-medium text-purple-600 dark:bg-purple-500/20 dark:text-purple-300"
                     >
                       Opus
                     </span>
                     <div class="flex-1">
                       <div class="flex items-center gap-2">
-                        <div class="h-2 flex-1 rounded-full bg-gray-200 dark:bg-gray-600">
+                        <div class="h-2 flex-1 rounded-md bg-gray-200 dark:bg-gray-600">
                           <div
                             :class="[
-                              'h-2 rounded-full transition-all duration-300',
+                              'h-2 rounded-md transition-all duration-300',
                               getClaudeUsageBarClass(account.claudeUsage.sevenDayOpus)
                             ]"
                             :style="{
@@ -1432,7 +1409,7 @@
                   account.sessionWindow &&
                   account.sessionWindow.hasActiveWindow
                 "
-                class="space-y-1.5 rounded-lg bg-gray-50 p-2 dark:bg-gray-700"
+                class="space-y-1.5 rounded-md bg-gray-50 p-2 dark:bg-gray-700"
               >
                 <div class="flex items-center justify-between text-xs">
                   <div class="flex items-center gap-1">
@@ -1441,16 +1418,14 @@
                       content="会话窗口进度不代表使用量，仅表示距离下一个5小时窗口的剩余时间"
                       placement="top"
                     >
-                      <i
-                        class="fas fa-question-circle cursor-help text-xs text-gray-400 hover:text-gray-600"
-                      />
+                      <Icon name="HelpCircle" class="cursor-help text-xs text-gray-400 hover:text-gray-600" />
                     </el-tooltip>
                   </div>
                   <span class="font-medium text-gray-700 dark:text-gray-200">
                     {{ account.sessionWindow.progress }}%
                   </span>
                 </div>
-                <div class="h-2 w-full overflow-hidden rounded-full bg-gray-200 dark:bg-gray-600">
+                <div class="h-2 w-full overflow-hidden rounded-md bg-gray-200 dark:bg-gray-600">
                   <div
                     :class="[
                       'h-full transition-all duration-300',
@@ -1481,19 +1456,19 @@
             </div>
             <div v-else-if="account.platform === 'openai'" class="space-y-2">
               <div v-if="account.codexUsage" class="space-y-2">
-                <div class="rounded-lg bg-gray-50 p-2 dark:bg-gray-700">
+                <div class="rounded-md bg-gray-50 p-2 dark:bg-gray-700">
                   <div class="flex items-center gap-2">
                     <span
-                      class="inline-flex min-w-[32px] justify-center rounded-full bg-indigo-100 px-2 py-0.5 text-[11px] font-medium text-indigo-600 dark:bg-indigo-500/20 dark:text-indigo-300"
+                      class="inline-flex min-w-[32px] justify-center rounded-md bg-indigo-100 px-2 py-0.5 text-[11px] font-medium text-indigo-600 dark:bg-indigo-500/20 dark:text-indigo-300"
                     >
                       {{ getCodexWindowLabel('primary') }}
                     </span>
                     <div class="flex-1">
                       <div class="flex items-center gap-2">
-                        <div class="h-2 flex-1 rounded-full bg-gray-200 dark:bg-gray-600">
+                        <div class="h-2 flex-1 rounded-md bg-gray-200 dark:bg-gray-600">
                           <div
                             :class="[
-                              'h-2 rounded-full transition-all duration-300',
+                              'h-2 rounded-md transition-all duration-300',
                               getCodexUsageBarClass(account.codexUsage.primary)
                             ]"
                             :style="{
@@ -1513,19 +1488,19 @@
                     重置剩余 {{ formatCodexRemaining(account.codexUsage.primary) }}
                   </div>
                 </div>
-                <div class="rounded-lg bg-gray-50 p-2 dark:bg-gray-700">
+                <div class="rounded-md bg-gray-50 p-2 dark:bg-gray-700">
                   <div class="flex items-center gap-2">
                     <span
-                      class="inline-flex min-w-[32px] justify-center rounded-full bg-blue-100 px-2 py-0.5 text-[11px] font-medium text-blue-600 dark:bg-blue-500/20 dark:text-blue-300"
+                      class="inline-flex min-w-[32px] justify-center rounded-md bg-blue-100 px-2 py-0.5 text-[11px] font-medium text-blue-600 dark:bg-blue-500/20 dark:text-blue-300"
                     >
                       {{ getCodexWindowLabel('secondary') }}
                     </span>
                     <div class="flex-1">
                       <div class="flex items-center gap-2">
-                        <div class="h-2 flex-1 rounded-full bg-gray-200 dark:bg-gray-600">
+                        <div class="h-2 flex-1 rounded-md bg-gray-200 dark:bg-gray-600">
                           <div
                             :class="[
-                              'h-2 rounded-full transition-all duration-300',
+                              'h-2 rounded-md transition-all duration-300',
                               getCodexUsageBarClass(account.codexUsage.secondary)
                             ]"
                             :style="{
@@ -1580,7 +1555,7 @@
           <!-- 操作按钮 -->
           <div class="mt-3 flex gap-2 border-t border-gray-100 pt-3">
             <button
-              class="flex flex-1 items-center justify-center gap-1 rounded-lg px-3 py-2 text-xs transition-colors"
+              class="flex flex-1 items-center justify-center gap-1 rounded-md px-3 py-2 text-xs transition-colors"
               :class="
                 account.schedulable
                   ? 'bg-gray-50 text-gray-600 hover:bg-gray-100'
@@ -1595,26 +1570,26 @@
 
             <button
               v-if="canViewUsage(account)"
-              class="flex flex-1 items-center justify-center gap-1 rounded-lg bg-indigo-50 px-3 py-2 text-xs text-indigo-600 transition-colors hover:bg-indigo-100"
+              class="flex flex-1 items-center justify-center gap-1 rounded-md bg-indigo-50 px-3 py-2 text-xs text-indigo-600 transition-colors hover:bg-indigo-100"
               @click="openAccountUsageModal(account)"
             >
-              <i class="fas fa-chart-line" />
+              <Icon name="LineChart" />
               详情
             </button>
 
             <button
-              class="flex-1 rounded-lg bg-gray-50 px-3 py-2 text-xs text-gray-600 transition-colors hover:bg-gray-100"
+              class="flex-1 rounded-md bg-gray-50 px-3 py-2 text-xs text-gray-600 transition-colors hover:bg-gray-100"
               @click="editAccount(account)"
             >
-              <i class="fas fa-edit mr-1" />
+              <Icon name="Edit" class="mr-1" />
               编辑
             </button>
 
             <button
-              class="rounded-lg bg-red-50 px-3 py-2 text-xs text-red-600 transition-colors hover:bg-red-100"
+              class="rounded-md bg-red-50 px-3 py-2 text-xs text-red-600 transition-colors hover:bg-red-100"
               @click="deleteAccount(account)"
             >
-              <i class="fas fa-trash" />
+              <Icon name="Trash" />
             </button>
           </div>
         </div>
@@ -1650,7 +1625,7 @@
           :disabled="currentPage === 1"
           @click="currentPage--"
         >
-          <i class="fas fa-chevron-left" />
+          <Icon name="ChevronLeft" />
         </button>
 
         <div class="flex items-center gap-1">
@@ -1704,7 +1679,7 @@
           :disabled="currentPage === totalPages || totalPages === 0"
           @click="currentPage++"
         >
-          <i class="fas fa-chevron-right" />
+          <Icon name="ChevronRight" />
         </button>
       </div>
     </div>
@@ -3886,7 +3861,7 @@ onMounted(() => {
 
 <style scoped>
 .table-container {
-  border-radius: 12px;
+  border-radius: 0.375rem;
   border: 1px solid rgba(0, 0, 0, 0.05);
 }
 

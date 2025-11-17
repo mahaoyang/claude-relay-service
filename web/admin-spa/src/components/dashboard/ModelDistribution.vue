@@ -1,8 +1,8 @@
 <template>
-  <div class="glass-strong rounded-3xl p-6">
+  <div class="glass-strong rounded-md p-6">
     <div class="mb-6 flex flex-col items-start justify-between gap-4 md:flex-row md:items-center">
       <h2 class="flex items-center text-xl font-bold text-gray-800">
-        <i class="fas fa-robot mr-2 text-purple-500" />
+        <Icon name="Bot" class="mr-2 text-purple-500" />
         模型使用分布
       </h2>
 
@@ -16,7 +16,7 @@
       v-if="dashboardStore.dashboardModelStats.length === 0"
       class="py-12 text-center text-gray-500"
     >
-      <i class="fas fa-chart-pie mb-3 text-4xl opacity-30" />
+      <Icon name="PieChart" class="mb-3 text-4xl opacity-30" />
       <p>暂无模型使用数据</p>
     </div>
 
@@ -31,10 +31,10 @@
         <div
           v-for="(stat, index) in sortedStats"
           :key="stat.model"
-          class="flex items-center justify-between rounded-lg bg-gray-50 p-3"
+          class="flex items-center justify-between rounded-md bg-gray-50 p-3"
         >
           <div class="flex items-center gap-3">
-            <div class="h-4 w-4 rounded" :style="`background-color: ${getColor(index)}`" />
+            <div class="h-4 w-4 rounded-md" :style="`background-color: ${getColor(index)}`" />
             <span class="font-medium text-gray-700">{{ stat.model }}</span>
           </div>
           <div class="text-right">

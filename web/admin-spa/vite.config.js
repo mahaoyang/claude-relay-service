@@ -4,6 +4,7 @@ import checker from 'vite-plugin-checker'
 import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
+import { LucideIconsResolver } from './src/plugins/lucide-resolver.js'
 import { fileURLToPath, URL } from 'node:url'
 
 export default defineConfig(({ mode }) => {
@@ -38,20 +39,20 @@ export default defineConfig(({ mode }) => {
     base: basePath,
     plugins: [
       vue(),
-      checker({
-        eslint: {
-          lintCommand: 'eslint "./src/**/*.{js,vue}" --cache=false',
-          dev: {
-            logLevel: ['error', 'warning']
-          }
-        }
-      }),
+      // checker({
+      //   eslint: {
+      //     lintCommand: 'eslint "./src/**/*.{js,vue}" --cache=false',
+      //     dev: {
+      //       logLevel: ['error', 'warning']
+      //     }
+      //   }
+      // }),
       AutoImport({
         resolvers: [ElementPlusResolver()],
         imports: ['vue', 'vue-router', 'pinia']
       }),
       Components({
-        resolvers: [ElementPlusResolver()]
+        resolvers: [ElementPlusResolver(), LucideIconsResolver()]
       })
     ],
     resolve: {

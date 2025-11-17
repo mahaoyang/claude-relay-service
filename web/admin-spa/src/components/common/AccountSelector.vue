@@ -12,9 +12,7 @@
         "
         >{{ selectedLabel }}</span
       >
-      <i
-        class="fas fa-chevron-down text-gray-400 transition-transform duration-200 dark:text-gray-500"
-        :class="{ 'rotate-180': showDropdown }"
+      <Icon name="ChevronDown" class="text-gray-400 transition-transform duration-200 dark:text-gray-500" :class="{ 'rotate-180': showDropdown }"
       />
     </div>
 
@@ -31,7 +29,7 @@
         <div
           v-if="showDropdown"
           ref="dropdownRef"
-          class="absolute z-50 flex flex-col rounded-lg border border-gray-200 bg-white shadow-lg dark:border-gray-600 dark:bg-gray-800"
+          class="absolute z-50 flex flex-col rounded-md border border-gray-200 bg-white shadow-lg dark:border-gray-600 dark:bg-gray-800"
           :style="dropdownStyle"
         >
           <!-- 搜索框 -->
@@ -46,16 +44,14 @@
                 type="text"
                 @input="handleSearch"
               />
-              <i
-                class="fas fa-search pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-sm text-gray-400 dark:text-gray-500"
-              />
+              <Icon name="Search" class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-sm text-gray-400 dark:text-gray-500" />
               <button
                 v-if="searchQuery"
                 class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-400"
                 type="button"
                 @click="clearSearch"
               >
-                <i class="fas fa-times text-sm" />
+                <Icon name="X" class="text-sm" />
               </button>
             </div>
           </div>
@@ -142,7 +138,7 @@
                   <div>
                     <span class="text-gray-700 dark:text-gray-300">{{ account.name }}</span>
                     <span
-                      class="ml-2 rounded-full px-2 py-0.5 text-xs"
+                      class="ml-2 rounded-md px-2 py-0.5 text-xs"
                       :class="
                         account.isActive
                           ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'
@@ -181,7 +177,7 @@
                   <div>
                     <span class="text-gray-700 dark:text-gray-300">{{ account.name }}</span>
                     <span
-                      class="ml-2 rounded-full px-2 py-0.5 text-xs"
+                      class="ml-2 rounded-md px-2 py-0.5 text-xs"
                       :class="
                         account.isActive
                           ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'
@@ -220,7 +216,7 @@
                   <div>
                     <span class="text-gray-700 dark:text-gray-300">{{ account.name }}</span>
                     <span
-                      class="ml-2 rounded-full px-2 py-0.5 text-xs"
+                      class="ml-2 rounded-md px-2 py-0.5 text-xs"
                       :class="
                         account.isActive === 'true' || account.isActive === true
                           ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'
@@ -244,7 +240,7 @@
               v-if="searchQuery && !hasResults"
               class="px-4 py-8 text-center text-gray-500 dark:text-gray-400"
             >
-              <i class="fas fa-search mb-2 text-2xl" />
+              <Icon name="Search" class="mb-2 text-2xl" />
               <p class="text-sm">没有找到匹配的账号</p>
             </div>
           </div>
@@ -652,7 +648,7 @@ watch(showDropdown, (newVal) => {
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
   background-color: #cbd5e0;
-  border-radius: 3px;
+  border-radius: 0.375rem;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {

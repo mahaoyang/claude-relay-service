@@ -7,9 +7,9 @@
         <div class="mb-6 flex items-center justify-between">
           <div class="flex items-center gap-3">
             <div
-              class="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-green-500 to-green-600"
+              class="flex h-12 w-12 items-center justify-center rounded-md bg-gradient-to-br from-green-500 to-green-600"
             >
-              <i class="fas fa-check text-lg text-white" />
+              <Icon name="Check" class="text-lg text-white" />
             </div>
             <div>
               <h3 class="text-xl font-bold text-gray-900 dark:text-gray-100">API Key 创建成功</h3>
@@ -21,7 +21,7 @@
             title="直接关闭（不推荐）"
             @click="handleDirectClose"
           >
-            <i class="fas fa-times text-xl" />
+            <Icon name="X" class="text-xl" />
           </button>
         </div>
 
@@ -31,9 +31,9 @@
         >
           <div class="flex items-start">
             <div
-              class="mt-0.5 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-lg bg-amber-400 dark:bg-amber-500"
+              class="mt-0.5 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-md bg-amber-400 dark:bg-amber-500"
             >
-              <i class="fas fa-exclamation-triangle text-sm text-white" />
+              <Icon name="AlertTriangle" class="text-sm text-white" />
             </div>
             <div class="ml-3">
               <h5 class="mb-1 font-semibold text-amber-900 dark:text-amber-400">重要提醒</h5>
@@ -52,7 +52,7 @@
               >API Key 名称</label
             >
             <div
-              class="rounded-lg border border-gray-200 bg-gray-50 p-3 dark:border-gray-600 dark:bg-gray-800"
+              class="rounded-md border border-gray-200 bg-gray-50 p-3 dark:border-gray-600 dark:bg-gray-800"
             >
               <span class="font-medium text-gray-900 dark:text-gray-100">{{ apiKey.name }}</span>
             </div>
@@ -63,7 +63,7 @@
               >备注</label
             >
             <div
-              class="rounded-lg border border-gray-200 bg-gray-50 p-3 dark:border-gray-600 dark:bg-gray-800"
+              class="rounded-md border border-gray-200 bg-gray-50 p-3 dark:border-gray-600 dark:bg-gray-800"
             >
               <span class="text-gray-700 dark:text-gray-300">{{
                 apiKey.description || '无描述'
@@ -77,7 +77,7 @@
             >
             <div class="relative">
               <div
-                class="flex min-h-[60px] items-center break-all rounded-lg border border-gray-700 bg-gray-900 p-4 pr-14 font-mono text-sm text-white dark:border-gray-600 dark:bg-gray-900"
+                class="flex min-h-[60px] items-center break-all rounded-md border border-gray-700 bg-gray-900 p-4 pr-14 font-mono text-sm text-white dark:border-gray-600 dark:bg-gray-900"
               >
                 {{ getDisplayedApiKey() }}
               </div>
@@ -88,7 +88,7 @@
                   type="button"
                   @click="toggleKeyVisibility"
                 >
-                  <i :class="['fas', showFullKey ? 'fa-eye-slash' : 'fa-eye', 'text-gray-300']" />
+                  <Icon :name="showFullKey ? 'EyeOff' : 'Eye'" class="text-gray-300" />
                 </button>
               </div>
             </div>
@@ -102,25 +102,25 @@
         <div class="flex flex-col gap-3 sm:gap-4">
           <div class="flex flex-col gap-3 sm:flex-row sm:gap-4">
             <button
-              class="flex w-full items-center justify-center gap-2 rounded-xl border border-blue-200 bg-blue-50 px-5 py-3 text-sm font-semibold text-blue-700 transition-colors hover:border-blue-300 hover:bg-blue-100 dark:border-blue-500/50 dark:bg-blue-500/10 dark:text-blue-200 dark:hover:bg-blue-500/20 sm:flex-1 sm:text-base"
+              class="flex w-full items-center justify-center gap-2 rounded-md border border-blue-200 bg-blue-50 px-5 py-3 text-sm font-semibold text-blue-700 transition-colors hover:border-blue-300 hover:bg-blue-100 dark:border-blue-500/50 dark:bg-blue-500/10 dark:text-blue-200 dark:hover:bg-blue-500/20 sm:flex-1 sm:text-base"
               @click="copyKeyOnly"
             >
-              <i class="fas fa-key" />
+              <Icon name="Key" />
               仅复制密钥
             </button>
             <button
               class="btn btn-primary flex w-full items-center justify-center gap-2 px-5 py-3 text-sm font-semibold sm:flex-1 sm:text-base"
               @click="copyFullConfig"
             >
-              <i class="fas fa-copy" />
+              <Icon name="Copy" />
               复制Claude配置
             </button>
           </div>
           <button
-            class="flex w-full items-center justify-center gap-2 rounded-xl border border-gray-300 bg-gray-200 px-5 py-3 text-sm font-semibold text-gray-800 transition-colors hover:border-gray-400 hover:bg-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600 sm:text-base"
+            class="flex w-full items-center justify-center gap-2 rounded-md border border-gray-300 bg-gray-200 px-5 py-3 text-sm font-semibold text-gray-800 transition-colors hover:border-gray-400 hover:bg-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600 sm:text-base"
             @click="handleClose"
           >
-            <i class="fas fa-check-circle" />
+            <Icon name="CheckCircle" />
             我已保存
           </button>
         </div>

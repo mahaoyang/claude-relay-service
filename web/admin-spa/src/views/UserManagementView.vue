@@ -29,7 +29,7 @@
 
     <!-- Stats Cards -->
     <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
-      <div class="overflow-hidden rounded-lg bg-white shadow dark:bg-gray-800">
+      <div class="overflow-hidden rounded-md bg-white shadow dark:bg-gray-800">
         <div class="p-5">
           <div class="flex items-center">
             <div class="flex-shrink-0">
@@ -61,7 +61,7 @@
         </div>
       </div>
 
-      <div class="overflow-hidden rounded-lg bg-white shadow dark:bg-gray-800">
+      <div class="overflow-hidden rounded-md bg-white shadow dark:bg-gray-800">
         <div class="p-5">
           <div class="flex items-center">
             <div class="flex-shrink-0">
@@ -93,7 +93,7 @@
         </div>
       </div>
 
-      <div class="overflow-hidden rounded-lg bg-white shadow dark:bg-gray-800">
+      <div class="overflow-hidden rounded-md bg-white shadow dark:bg-gray-800">
         <div class="p-5">
           <div class="flex items-center">
             <div class="flex-shrink-0">
@@ -125,7 +125,7 @@
         </div>
       </div>
 
-      <div class="overflow-hidden rounded-lg bg-white shadow dark:bg-gray-800">
+      <div class="overflow-hidden rounded-md bg-white shadow dark:bg-gray-800">
         <div class="p-5">
           <div class="flex items-center">
             <div class="flex-shrink-0">
@@ -159,7 +159,7 @@
     </div>
 
     <!-- Search and Filters -->
-    <div class="rounded-lg bg-white shadow dark:bg-gray-800">
+    <div class="rounded-md bg-white shadow dark:bg-gray-800">
       <div class="px-4 py-5 sm:p-6">
         <div class="sm:flex sm:items-center sm:justify-between">
           <div class="space-y-4 sm:flex sm:items-center sm:space-x-4 sm:space-y-0">
@@ -268,7 +268,7 @@
             <div class="flex min-w-0 flex-1 items-center">
               <div class="flex-shrink-0">
                 <div
-                  class="flex h-10 w-10 items-center justify-center rounded-full bg-gray-300 dark:bg-gray-600"
+                  class="flex h-10 w-10 items-center justify-center rounded-md bg-gray-300 dark:bg-gray-600"
                 >
                   <svg
                     class="h-6 w-6 text-gray-600 dark:text-gray-400"
@@ -293,7 +293,7 @@
                   <div class="ml-2 flex items-center space-x-2">
                     <span
                       :class="[
-                        'inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium',
+                        'inline-flex items-center rounded-md px-2.5 py-0.5 text-xs font-medium',
                         user.isActive
                           ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
                           : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
@@ -303,7 +303,7 @@
                     </span>
                     <span
                       :class="[
-                        'inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium',
+                        'inline-flex items-center rounded-md px-2.5 py-0.5 text-xs font-medium',
                         user.role === 'admin'
                           ? 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200'
                           : 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200'
@@ -336,7 +336,7 @@
             <div class="flex items-center space-x-2">
               <!-- View Usage Stats -->
               <button
-                class="inline-flex items-center rounded border border-transparent p-1 text-gray-400 hover:text-blue-600"
+                class="inline-flex items-center rounded-md border border-transparent p-1 text-gray-400 hover:text-blue-600"
                 title="View Usage Stats"
                 @click="viewUserStats(user)"
               >
@@ -352,7 +352,7 @@
 
               <!-- Disable User API Keys -->
               <button
-                class="inline-flex items-center rounded border border-transparent p-1 text-gray-400 hover:text-red-600 disabled:cursor-not-allowed disabled:opacity-50"
+                class="inline-flex items-center rounded-md border border-transparent p-1 text-gray-400 hover:text-red-600 disabled:cursor-not-allowed disabled:opacity-50"
                 :disabled="user.apiKeyCount === 0"
                 title="Disable All API Keys"
                 @click="disableUserApiKeys(user)"
@@ -370,7 +370,7 @@
               <!-- Toggle User Status -->
               <button
                 :class="[
-                  'inline-flex items-center rounded border border-transparent p-1',
+                  'inline-flex items-center rounded-md border border-transparent p-1',
                   user.isActive
                     ? 'text-gray-400 hover:text-red-600'
                     : 'text-gray-400 hover:text-green-600'
@@ -404,7 +404,7 @@
 
               <!-- Change Role -->
               <button
-                class="inline-flex items-center rounded border border-transparent p-1 text-gray-400 hover:text-purple-600"
+                class="inline-flex items-center rounded-md border border-transparent p-1 text-gray-400 hover:text-purple-600"
                 title="Change Role"
                 @click="changeUserRole(user)"
               >

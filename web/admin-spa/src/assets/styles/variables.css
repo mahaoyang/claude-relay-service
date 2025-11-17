@@ -1,13 +1,21 @@
 :root {
-  --primary-color: #667eea;
-  --secondary-color: #764ba2;
-  --accent-color: #f093fb;
+  /* 主色调：青绿色系 */
+  --primary-color: #14b8a6; /* teal-500 */
+  --secondary-color: #2dd4bf; /* teal-400 */
+  --accent-color: #5eead4; /* teal-300 */
   --success-color: #10b981;
   --warning-color: #f59e0b;
   --error-color: #ef4444;
-  --surface-color: rgba(255, 255, 255, 0.95);
-  --glass-color: rgba(255, 255, 255, 0.1);
-  --text-primary: #1f2937;
-  --text-secondary: #6b7280;
-  --border-color: rgba(255, 255, 255, 0.2);
+  /* 深色玻璃态效果 */
+  --surface-color: rgba(8, 15, 30, 0.58);
+  --glass-color: rgba(15, 23, 42, 0.7);
+  --glass-header: rgba(7, 19, 39, 0.55);
+  /* 深色文字 */
+  --text-primary: #ffffff;
+  --text-secondary: #e2e8f0; /* slate-200 */
+  --text-tertiary: #cbd5e1; /* slate-300 */
+  --text-muted: #94a3b8; /* slate-400 */
+  /* 边框颜色 */
+  --border-color: rgba(56, 189, 248, 0.16);
+  --border-teal: rgba(45, 212, 191, 0.16);
 }

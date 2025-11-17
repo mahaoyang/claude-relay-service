@@ -12,16 +12,16 @@
         <div class="mb-4 flex items-center justify-between sm:mb-6">
           <div class="flex items-center gap-2 sm:gap-3">
             <div
-              class="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 sm:h-10 sm:w-10 sm:rounded-xl"
+              class="flex h-8 w-8 items-center justify-center rounded-md bg-gradient-to-br from-blue-500 to-blue-600 sm:h-10 sm:w-10 sm:rounded-md"
             >
-              <i class="fas fa-chart-line text-sm text-white sm:text-base" />
+              <Icon name="LineChart" class="text-sm text-white sm:text-base" />
             </div>
             <h3 class="text-lg font-bold text-gray-900 dark:text-gray-100 sm:text-xl">
               使用统计详情 - {{ apiKey.name }}
             </h3>
           </div>
           <button class="p-1 text-gray-400 transition-colors hover:text-gray-600" @click="close">
-            <i class="fas fa-times text-lg sm:text-xl" />
+            <Icon name="X" class="text-lg sm:text-xl" />
           </button>
         </div>
 
@@ -31,11 +31,11 @@
           <div class="mb-6 grid grid-cols-1 gap-4 md:grid-cols-2">
             <!-- 请求统计卡片 -->
             <div
-              class="rounded-lg border border-blue-200 bg-gradient-to-br from-blue-50 to-blue-100 p-4 dark:border-blue-700 dark:from-blue-900/20 dark:to-blue-800/20"
+              class="rounded-md border border-blue-200 bg-gradient-to-br from-blue-50 to-blue-100 p-4 dark:border-blue-700 dark:from-blue-900/20 dark:to-blue-800/20"
             >
               <div class="mb-3 flex items-center justify-between">
                 <span class="text-sm font-medium text-gray-700 dark:text-gray-300">总请求数</span>
-                <i class="fas fa-paper-plane text-blue-500" />
+                <Icon name="Send" class="text-blue-500" />
               </div>
               <div class="text-2xl font-bold text-gray-900 dark:text-gray-100">
                 {{ formatNumber(totalRequests) }}
@@ -47,11 +47,11 @@
 
             <!-- Token统计卡片 -->
             <div
-              class="rounded-lg border border-green-200 bg-gradient-to-br from-green-50 to-green-100 p-4 dark:border-green-700 dark:from-green-900/20 dark:to-green-800/20"
+              class="rounded-md border border-green-200 bg-gradient-to-br from-green-50 to-green-100 p-4 dark:border-green-700 dark:from-green-900/20 dark:to-green-800/20"
             >
               <div class="mb-3 flex items-center justify-between">
                 <span class="text-sm font-medium text-gray-700 dark:text-gray-300">总Token数</span>
-                <i class="fas fa-coins text-green-500" />
+                <Icon name="Coins" class="text-green-500" />
               </div>
               <div class="text-2xl font-bold text-gray-900 dark:text-gray-100">
                 {{ formatTokenCount(totalTokens) }}
@@ -63,11 +63,11 @@
 
             <!-- 费用统计卡片 -->
             <div
-              class="rounded-lg border border-yellow-200 bg-gradient-to-br from-yellow-50 to-yellow-100 p-4 dark:border-yellow-700 dark:from-yellow-900/20 dark:to-yellow-800/20"
+              class="rounded-md border border-yellow-200 bg-gradient-to-br from-yellow-50 to-yellow-100 p-4 dark:border-yellow-700 dark:from-yellow-900/20 dark:to-yellow-800/20"
             >
               <div class="mb-3 flex items-center justify-between">
                 <span class="text-sm font-medium text-gray-700 dark:text-gray-300">总费用</span>
-                <i class="fas fa-dollar-sign text-yellow-600" />
+                <Icon name="DollarSign" class="text-yellow-600" />
               </div>
               <div class="text-2xl font-bold text-gray-900 dark:text-gray-100">
                 ${{ totalCost.toFixed(4) }}
@@ -79,11 +79,11 @@
 
             <!-- 平均统计卡片 -->
             <div
-              class="rounded-lg border border-purple-200 bg-gradient-to-br from-purple-50 to-purple-100 p-4 dark:border-purple-700 dark:from-purple-900/20 dark:to-purple-800/20"
+              class="rounded-md border border-purple-200 bg-gradient-to-br from-purple-50 to-purple-100 p-4 dark:border-purple-700 dark:from-purple-900/20 dark:to-purple-800/20"
             >
               <div class="mb-3 flex items-center justify-between">
                 <span class="text-sm font-medium text-gray-700 dark:text-gray-300">平均速率</span>
-                <i class="fas fa-tachometer-alt text-purple-500" />
+                <Icon name="Gauge" class="text-purple-500" />
               </div>
               <div class="space-y-1 text-sm">
                 <div class="flex justify-between">
@@ -103,13 +103,13 @@
             <h4
               class="mb-3 flex items-center text-sm font-semibold text-gray-700 dark:text-gray-300"
             >
-              <i class="fas fa-chart-pie mr-2 text-indigo-500" />
+              <Icon name="PieChart" class="mr-2 text-indigo-500" />
               Token 使用分布
             </h4>
-            <div class="space-y-3 rounded-lg bg-gray-50 p-4 dark:bg-gray-700/50">
+            <div class="space-y-3 rounded-md bg-gray-50 p-4 dark:bg-gray-700/50">
               <div class="flex items-center justify-between">
                 <div class="flex items-center">
-                  <i class="fas fa-arrow-down mr-2 text-green-500" />
+                  <Icon name="ArrowDown" class="mr-2 text-green-500" />
                   <span class="text-sm text-gray-600 dark:text-gray-400">输入 Token</span>
                 </div>
                 <span class="text-sm font-semibold text-gray-900 dark:text-gray-100">
@@ -118,7 +118,7 @@
               </div>
               <div class="flex items-center justify-between">
                 <div class="flex items-center">
-                  <i class="fas fa-arrow-up mr-2 text-blue-500" />
+                  <Icon name="ArrowUp" class="mr-2 text-blue-500" />
                   <span class="text-sm text-gray-600 dark:text-gray-400">输出 Token</span>
                 </div>
                 <span class="text-sm font-semibold text-gray-900 dark:text-gray-100">
@@ -127,7 +127,7 @@
               </div>
               <div v-if="cacheCreateTokens > 0" class="flex items-center justify-between">
                 <div class="flex items-center">
-                  <i class="fas fa-save mr-2 text-purple-500" />
+                  <Icon name="Save" class="mr-2 text-purple-500" />
                   <span class="text-sm text-gray-600 dark:text-gray-400">缓存创建 Token</span>
                 </div>
                 <span class="text-sm font-semibold text-purple-600">
@@ -136,7 +136,7 @@
               </div>
               <div v-if="cacheReadTokens > 0" class="flex items-center justify-between">
                 <div class="flex items-center">
-                  <i class="fas fa-download mr-2 text-purple-500" />
+                  <Icon name="Download" class="mr-2 text-purple-500" />
                   <span class="text-sm text-gray-600 dark:text-gray-400">缓存读取 Token</span>
                 </div>
                 <span class="text-sm font-semibold text-purple-600">
@@ -151,10 +151,10 @@
             <h4
               class="mb-3 flex items-center text-sm font-semibold text-gray-700 dark:text-gray-300"
             >
-              <i class="fas fa-shield-alt mr-2 text-red-500" />
+              <Icon name="Shield" class="mr-2 text-red-500" />
               限制设置
             </h4>
-            <div class="space-y-3 rounded-lg bg-gray-50 p-4 dark:bg-gray-700/50">
+            <div class="space-y-3 rounded-md bg-gray-50 p-4 dark:bg-gray-700/50">
               <div v-if="apiKey.dailyCostLimit > 0" class="space-y-1.5">
                 <LimitProgressBar
                   :current="dailyCost"
@@ -196,7 +196,7 @@
 
               <div
                 v-if="apiKey.concurrencyLimit > 0"
-                class="flex items-center justify-between rounded-lg border border-purple-200/70 bg-white/60 px-3 py-2 text-sm shadow-sm dark:border-purple-500/40 dark:bg-purple-950/20"
+                class="flex items-center justify-between rounded-md border border-purple-200/70 bg-white/60 px-3 py-2 text-sm shadow-sm dark:border-purple-500/40 dark:bg-purple-950/20"
               >
                 <span class="text-gray-600 dark:text-gray-300">并发限制</span>
                 <span class="font-semibold text-purple-600 dark:text-purple-300">
@@ -206,7 +206,7 @@
 
               <div v-if="apiKey.rateLimitWindow > 0" class="space-y-2">
                 <h5 class="text-sm font-medium text-gray-700 dark:text-gray-300">
-                  <i class="fas fa-clock mr-1 text-blue-500" />
+                  <Icon name="Clock" class="mr-1 text-blue-500" />
                   时间窗口限制
                 </h5>
                 <WindowCountdown

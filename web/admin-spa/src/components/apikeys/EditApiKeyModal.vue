@@ -7,9 +7,9 @@
         <div class="mb-4 flex items-center justify-between sm:mb-6">
           <div class="flex items-center gap-2 sm:gap-3">
             <div
-              class="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 sm:h-10 sm:w-10 sm:rounded-xl"
+              class="flex h-8 w-8 items-center justify-center rounded-md bg-gradient-to-br from-blue-500 to-blue-600 sm:h-10 sm:w-10 sm:rounded-md"
             >
-              <i class="fas fa-edit text-sm text-white sm:text-base" />
+              <Icon name="Edit" class="text-sm text-white sm:text-base" />
             </div>
             <h3 class="text-lg font-bold text-gray-900 dark:text-gray-100 sm:text-xl">
               编辑 API Key
@@ -19,7 +19,7 @@
             class="p-1 text-gray-400 transition-colors hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300"
             @click="$emit('close')"
           >
-            <i class="fas fa-times text-lg sm:text-xl" />
+            <Icon name="X" class="text-lg sm:text-xl" />
           </button>
         </div>
 
@@ -83,7 +83,7 @@
                   <span
                     v-for="(tag, index) in form.tags"
                     :key="'selected-' + index"
-                    class="inline-flex items-center gap-1 rounded-full bg-blue-100 px-3 py-1 text-sm text-blue-800 dark:bg-blue-900/30 dark:text-blue-400"
+                    class="inline-flex items-center gap-1 rounded-md bg-blue-100 px-3 py-1 text-sm text-blue-800 dark:bg-blue-900/30 dark:text-blue-400"
                   >
                     {{ tag }}
                     <button
@@ -91,7 +91,7 @@
                       type="button"
                       @click="removeTag(index)"
                     >
-                      <i class="fas fa-times text-xs" />
+                      <Icon name="X" class="text-xs" />
                     </button>
                   </span>
                 </div>
@@ -106,11 +106,11 @@
                   <button
                     v-for="tag in unselectedTags"
                     :key="'available-' + tag"
-                    class="inline-flex items-center gap-1 rounded-full bg-gray-100 px-3 py-1 text-sm text-gray-700 transition-colors hover:bg-blue-100 hover:text-blue-700 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-blue-900/30 dark:hover:text-blue-400"
+                    class="inline-flex items-center gap-1 rounded-md bg-gray-100 px-3 py-1 text-sm text-gray-700 transition-colors hover:bg-blue-100 hover:text-blue-700 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-blue-900/30 dark:hover:text-blue-400"
                     type="button"
                     @click="selectTag(tag)"
                   >
-                    <i class="fas fa-tag text-xs text-gray-500 dark:text-gray-400" />
+                    <Icon name="Tag" class="text-xs text-gray-500 dark:text-gray-400" />
                     {{ tag }}
                   </button>
                 </div>
@@ -130,11 +130,11 @@
                     @keypress.enter.prevent="addTag"
                   />
                   <button
-                    class="rounded-lg bg-green-500 px-4 py-2 text-white transition-colors hover:bg-green-600"
+                    class="rounded-md bg-green-500 px-4 py-2 text-white transition-colors hover:bg-green-600"
                     type="button"
                     @click="addTag"
                   >
-                    <i class="fas fa-plus" />
+                    <Icon name="Plus" />
                   </button>
                 </div>
               </div>
@@ -147,13 +147,13 @@
 
           <!-- 速率限制设置 -->
           <div
-            class="rounded-lg border border-blue-200 bg-blue-50 p-3 dark:border-blue-700 dark:bg-blue-900/20"
+            class="rounded-md border border-blue-200 bg-blue-50 p-3 dark:border-blue-700 dark:bg-blue-900/20"
           >
             <div class="mb-2 flex items-center gap-2">
               <div
-                class="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded bg-blue-500"
+                class="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-md bg-blue-500"
               >
-                <i class="fas fa-tachometer-alt text-xs text-white" />
+                <Icon name="Gauge" class="text-xs text-white" />
               </div>
               <h4 class="text-sm font-semibold text-gray-800 dark:text-gray-200">
                 速率限制设置 (可选)
@@ -207,7 +207,7 @@
               </div>
 
               <!-- 示例说明 -->
-              <div class="rounded-lg bg-blue-100 p-2 dark:bg-blue-900/30">
+              <div class="rounded-md bg-blue-100 p-2 dark:bg-blue-900/30">
                 <h5 class="mb-1 text-xs font-semibold text-blue-800 dark:text-blue-400">
                   💡 使用示例
                 </h5>
@@ -231,28 +231,28 @@
             <div class="space-y-3">
               <div class="flex gap-2">
                 <button
-                  class="rounded-lg bg-gray-100 px-3 py-1 text-sm font-medium hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
+                  class="rounded-md bg-gray-100 px-3 py-1 text-sm font-medium hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
                   type="button"
                   @click="form.dailyCostLimit = '50'"
                 >
                   $50
                 </button>
                 <button
-                  class="rounded-lg bg-gray-100 px-3 py-1 text-sm font-medium hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
+                  class="rounded-md bg-gray-100 px-3 py-1 text-sm font-medium hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
                   type="button"
                   @click="form.dailyCostLimit = '100'"
                 >
                   $100
                 </button>
                 <button
-                  class="rounded-lg bg-gray-100 px-3 py-1 text-sm font-medium hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
+                  class="rounded-md bg-gray-100 px-3 py-1 text-sm font-medium hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
                   type="button"
                   @click="form.dailyCostLimit = '200'"
                 >
                   $200
                 </button>
                 <button
-                  class="rounded-lg bg-gray-100 px-3 py-1 text-sm font-medium hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
+                  class="rounded-md bg-gray-100 px-3 py-1 text-sm font-medium hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
                   type="button"
                   @click="form.dailyCostLimit = ''"
                 >
@@ -280,28 +280,28 @@
             <div class="space-y-3">
               <div class="flex gap-2">
                 <button
-                  class="rounded-lg bg-gray-100 px-3 py-1 text-sm font-medium hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
+                  class="rounded-md bg-gray-100 px-3 py-1 text-sm font-medium hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
                   type="button"
                   @click="form.totalCostLimit = '100'"
                 >
                   $100
                 </button>
                 <button
-                  class="rounded-lg bg-gray-100 px-3 py-1 text-sm font-medium hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
+                  class="rounded-md bg-gray-100 px-3 py-1 text-sm font-medium hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
                   type="button"
                   @click="form.totalCostLimit = '500'"
                 >
                   $500
                 </button>
                 <button
-                  class="rounded-lg bg-gray-100 px-3 py-1 text-sm font-medium hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
+                  class="rounded-md bg-gray-100 px-3 py-1 text-sm font-medium hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
                   type="button"
                   @click="form.totalCostLimit = '1000'"
                 >
                   $1000
                 </button>
                 <button
-                  class="rounded-lg bg-gray-100 px-3 py-1 text-sm font-medium hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
+                  class="rounded-md bg-gray-100 px-3 py-1 text-sm font-medium hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
                   type="button"
                   @click="form.totalCostLimit = ''"
                 >
@@ -329,28 +329,28 @@
             <div class="space-y-3">
               <div class="flex gap-2">
                 <button
-                  class="rounded-lg bg-gray-100 px-3 py-1 text-sm font-medium hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
+                  class="rounded-md bg-gray-100 px-3 py-1 text-sm font-medium hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
                   type="button"
                   @click="form.weeklyOpusCostLimit = '100'"
                 >
                   $100
                 </button>
                 <button
-                  class="rounded-lg bg-gray-100 px-3 py-1 text-sm font-medium hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
+                  class="rounded-md bg-gray-100 px-3 py-1 text-sm font-medium hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
                   type="button"
                   @click="form.weeklyOpusCostLimit = '500'"
                 >
                   $500
                 </button>
                 <button
-                  class="rounded-lg bg-gray-100 px-3 py-1 text-sm font-medium hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
+                  class="rounded-md bg-gray-100 px-3 py-1 text-sm font-medium hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
                   type="button"
                   @click="form.weeklyOpusCostLimit = '1000'"
                 >
                   $1000
                 </button>
                 <button
-                  class="rounded-lg bg-gray-100 px-3 py-1 text-sm font-medium hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
+                  class="rounded-md bg-gray-100 px-3 py-1 text-sm font-medium hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
                   type="button"
                   @click="form.weeklyOpusCostLimit = ''"
                 >
@@ -393,7 +393,7 @@
               <input
                 id="editIsActive"
                 v-model="form.isActive"
-                class="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700"
+                class="h-4 w-4 rounded-md border-gray-300 bg-gray-100 text-blue-600 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700"
                 type="checkbox"
               />
               <label
@@ -568,7 +568,7 @@
               <input
                 id="editEnableModelRestriction"
                 v-model="form.enableModelRestriction"
-                class="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700"
+                class="h-4 w-4 rounded-md border-gray-300 bg-gray-100 text-blue-600 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700"
                 type="checkbox"
               />
               <label
@@ -585,12 +585,12 @@
                   >限制的模型列表</label
                 >
                 <div
-                  class="mb-3 flex min-h-[32px] flex-wrap gap-2 rounded-lg border border-gray-200 bg-gray-50 p-2 dark:border-gray-600 dark:bg-gray-700"
+                  class="mb-3 flex min-h-[32px] flex-wrap gap-2 rounded-md border border-gray-200 bg-gray-50 p-2 dark:border-gray-600 dark:bg-gray-700"
                 >
                   <span
                     v-for="(model, index) in form.restrictedModels"
                     :key="index"
-                    class="inline-flex items-center rounded-full bg-red-100 px-3 py-1 text-sm text-red-800 dark:bg-red-900/30 dark:text-red-400"
+                    class="inline-flex items-center rounded-md bg-red-100 px-3 py-1 text-sm text-red-800 dark:bg-red-900/30 dark:text-red-400"
                   >
                     {{ model }}
                     <button
@@ -598,7 +598,7 @@
                       type="button"
                       @click="removeRestrictedModel(index)"
                     >
-                      <i class="fas fa-times text-xs" />
+                      <Icon name="X" class="text-xs" />
                     </button>
                   </span>
                   <span
@@ -614,7 +614,7 @@
                     <button
                       v-for="model in availableQuickModels"
                       :key="model"
-                      class="flex-shrink-0 rounded-lg bg-gray-100 px-3 py-1 text-xs text-gray-700 transition-colors hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 sm:text-sm"
+                      class="flex-shrink-0 rounded-md bg-gray-100 px-3 py-1 text-xs text-gray-700 transition-colors hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 sm:text-sm"
                       type="button"
                       @click="quickAddRestrictedModel(model)"
                     >
@@ -638,11 +638,11 @@
                       @keydown.enter.prevent="addRestrictedModel"
                     />
                     <button
-                      class="rounded-lg bg-red-500 px-4 py-2 text-white transition-colors hover:bg-red-600"
+                      class="rounded-md bg-red-500 px-4 py-2 text-white transition-colors hover:bg-red-600"
                       type="button"
                       @click="addRestrictedModel"
                     >
-                      <i class="fas fa-plus" />
+                      <Icon name="Plus" />
                     </button>
                   </div>
                 </div>
@@ -659,7 +659,7 @@
               <input
                 id="editEnableClientRestriction"
                 v-model="form.enableClientRestriction"
-                class="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700"
+                class="h-4 w-4 rounded-md border-gray-300 bg-gray-100 text-blue-600 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700"
                 type="checkbox"
               />
               <label
@@ -683,7 +683,7 @@
                     <input
                       :id="`edit_client_${client.id}`"
                       v-model="form.allowedClients"
-                      class="mt-0.5 h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-blue-500"
+                      class="mt-0.5 h-4 w-4 rounded-md border-gray-300 bg-gray-100 text-blue-600 focus:ring-blue-500"
                       type="checkbox"
                       :value="client.id"
                     />
@@ -703,7 +703,7 @@
 
           <div class="flex gap-3 pt-4">
             <button
-              class="flex-1 rounded-xl bg-gray-100 px-6 py-3 font-semibold text-gray-700 transition-colors hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
+              class="flex-1 rounded-md bg-gray-100 px-6 py-3 font-semibold text-gray-700 transition-colors hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
               type="button"
               @click="$emit('close')"
             >
@@ -715,7 +715,7 @@
               type="submit"
             >
               <div v-if="loading" class="loading-spinner mr-2" />
-              <i v-else class="fas fa-save mr-2" />
+              <Icon name="Save" class="mr-2" v-else />
               {{ loading ? '保存中...' : '保存修改' }}
             </button>
           </div>

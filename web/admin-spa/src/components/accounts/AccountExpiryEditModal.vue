@@ -13,9 +13,9 @@
         <div class="mb-6 flex items-center justify-between">
           <div class="flex items-center gap-3">
             <div
-              class="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-amber-500 to-orange-600"
+              class="flex h-10 w-10 items-center justify-center rounded-md bg-gradient-to-br from-amber-500 to-orange-600"
             >
-              <i class="fas fa-clock text-white" />
+              <Icon name="Clock" class="text-white" />
             </div>
             <div>
               <h3 class="text-xl font-bold text-gray-900 dark:text-gray-100">修改到期时间</h3>
@@ -28,14 +28,14 @@
             class="text-gray-400 transition-colors hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300"
             @click="$emit('close')"
           >
-            <i class="fas fa-times text-xl" />
+            <Icon name="X" class="text-xl" />
           </button>
         </div>
 
         <div class="space-y-6">
           <!-- 当前状态显示 -->
           <div
-            class="rounded-lg border border-gray-200 bg-gradient-to-r from-gray-50 to-gray-100 p-4 dark:border-gray-600 dark:from-gray-700 dark:to-gray-800"
+            class="rounded-md border border-gray-200 bg-gradient-to-r from-gray-50 to-gray-100 p-4 dark:border-gray-600 dark:from-gray-700 dark:to-gray-800"
           >
             <div class="flex items-center justify-between">
               <div>
@@ -54,22 +54,15 @@
                   </template>
                   <!-- 永不过期 -->
                   <template v-else>
-                    <i class="fas fa-infinity mr-1 text-gray-500" />
+                    <Icon name="Infinity" class="mr-1 text-gray-500" />
                     永不过期
                   </template>
                 </p>
               </div>
               <div
-                class="flex h-12 w-12 items-center justify-center rounded-lg bg-white shadow-sm dark:bg-gray-700"
+                class="flex h-12 w-12 items-center justify-center rounded-md bg-white shadow-sm dark:bg-gray-700"
               >
-                <i
-                  :class="[
-                    'fas fa-hourglass-half text-lg',
-                    account.expiresAt && isExpired(account.expiresAt)
-                      ? 'text-red-500'
-                      : 'text-gray-400'
-                  ]"
-                />
+                <Icon name="Hourglass" :class="[ ' text-lg', account.expiresAt && isExpired(account.expiresAt) ? 'text-red-500' : 'text-gray-400' ]" />
               </div>
             </div>
           </div>
@@ -84,7 +77,7 @@
                 v-for="option in quickOptions"
                 :key="option.value"
                 :class="[
-                  'rounded-lg px-3 py-2 text-sm font-medium transition-all',
+                  'rounded-md px-3 py-2 text-sm font-medium transition-all',
                   localForm.expireDuration === option.value
                     ? 'bg-blue-500 text-white shadow-md'
                     : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'
@@ -95,14 +88,14 @@
               </button>
               <button
                 :class="[
-                  'rounded-lg px-3 py-2 text-sm font-medium transition-all',
+                  'rounded-md px-3 py-2 text-sm font-medium transition-all',
                   localForm.expireDuration === 'custom'
                     ? 'bg-blue-500 text-white shadow-md'
                     : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'
                 ]"
                 @click="selectQuickOption('custom')"
               >
-                <i class="fas fa-calendar-alt mr-1" />
+                <Icon name="CalendarDays" class="mr-1" />
                 自定义
               </button>
             </div>
@@ -128,12 +121,12 @@
           <!-- 预览新的过期时间 -->
           <div
             v-if="localForm.expiresAt !== account.expiresAt"
-            class="rounded-lg border border-blue-200 bg-gradient-to-r from-blue-50 to-indigo-50 p-4 dark:border-blue-700 dark:from-blue-900/20 dark:to-indigo-900/20"
+            class="rounded-md border border-blue-200 bg-gradient-to-r from-blue-50 to-indigo-50 p-4 dark:border-blue-700 dark:from-blue-900/20 dark:to-indigo-900/20"
           >
             <div class="flex items-center justify-between">
               <div>
                 <p class="mb-1 text-xs font-medium text-blue-700 dark:text-blue-400">
-                  <i class="fas fa-arrow-right mr-1" />
+                  <Icon name="ArrowRight" class="mr-1" />
                   新的到期时间
                 </p>
                 <p class="text-sm font-semibold text-blue-900 dark:text-blue-200">
@@ -148,15 +141,15 @@
                     </span>
                   </template>
                   <template v-else>
-                    <i class="fas fa-infinity mr-1" />
+                    <Icon name="Infinity" class="mr-1" />
                     永不过期
                   </template>
                 </p>
               </div>
               <div
-                class="flex h-12 w-12 items-center justify-center rounded-lg bg-white shadow-sm dark:bg-gray-700"
+                class="flex h-12 w-12 items-center justify-center rounded-md bg-white shadow-sm dark:bg-gray-700"
               >
-                <i class="fas fa-check text-lg text-green-500" />
+                <Icon name="Check" class="text-lg text-green-500" />
               </div>
             </div>
           </div>
@@ -164,7 +157,7 @@
           <!-- 操作按钮 -->
           <div class="flex gap-3 pt-2">
             <button
-              class="flex-1 rounded-lg bg-gray-100 px-4 py-2.5 font-semibold text-gray-700 transition-colors hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
+              class="flex-1 rounded-md bg-gray-100 px-4 py-2.5 font-semibold text-gray-700 transition-colors hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
               @click="$emit('close')"
             >
               取消
@@ -175,7 +168,7 @@
               @click="handleSave"
             >
               <div v-if="saving" class="loading-spinner mr-2" />
-              <i v-else class="fas fa-save mr-2" />
+              <Icon name="Save" class="mr-2" v-else />
               {{ saving ? '保存中...' : '保存更改' }}
             </button>
           </div>

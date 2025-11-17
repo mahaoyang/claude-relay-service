@@ -7,9 +7,9 @@
         <div class="mb-4 flex items-center justify-between sm:mb-6">
           <div class="flex items-center gap-2 sm:gap-3">
             <div
-              class="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-purple-500 to-purple-600 sm:h-10 sm:w-10 sm:rounded-xl"
+              class="flex h-8 w-8 items-center justify-center rounded-md bg-gradient-to-br from-purple-500 to-purple-600 sm:h-10 sm:w-10 sm:rounded-md"
             >
-              <i class="fas fa-key text-sm text-white sm:text-base" />
+              <Icon name="Key" class="text-sm text-white sm:text-base" />
             </div>
             <div>
               <h3 class="text-lg font-bold text-gray-900 dark:text-gray-100 sm:text-xl">
@@ -22,24 +22,22 @@
           </div>
           <div class="flex items-center gap-2">
             <button
-              class="flex items-center gap-2 rounded-lg border border-purple-200 bg-white/90 px-3 py-1.5 text-xs font-semibold text-purple-600 shadow-sm transition-all duration-200 hover:border-purple-300 hover:bg-purple-50 hover:text-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-200 disabled:cursor-not-allowed disabled:opacity-60 dark:border-purple-600/60 dark:bg-purple-900/20 dark:text-purple-200 dark:hover:border-purple-500 dark:hover:bg-purple-900/40 dark:hover:text-purple-100 dark:focus:ring-purple-500/40 sm:text-sm"
+              class="flex items-center gap-2 rounded-md border border-purple-200 bg-white/90 px-3 py-1.5 text-xs font-semibold text-purple-600 shadow-sm transition-all duration-200 hover:border-purple-300 hover:bg-purple-50 hover:text-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-200 disabled:cursor-not-allowed disabled:opacity-60 dark:border-purple-600/60 dark:bg-purple-900/20 dark:text-purple-200 dark:hover:border-purple-500 dark:hover:bg-purple-900/40 dark:hover:text-purple-100 dark:focus:ring-purple-500/40 sm:text-sm"
               :disabled="loading || apiKeys.length === 0 || copyingAll"
               @click="copyAllApiKeys"
             >
-              <i
-                :class="[
-                  'text-sm sm:text-base',
-                  copyingAll ? 'fas fa-spinner fa-spin' : 'fas fa-clipboard-list'
-                ]"
+              <Icon
+                :name="copyingAll ? 'Loader2' : 'ClipboardList'"
+                :class="['text-sm sm:text-base', copyingAll ? 'animate-spin' : '']"
               />
               <span>复制全部 Key</span>
             </button>
             <button
-              class="flex h-9 w-9 items-center justify-center rounded-full bg-gray-100 text-gray-400 transition-colors hover:text-gray-600 dark:bg-gray-800 dark:text-gray-400 dark:hover:text-gray-200 sm:h-10 sm:w-10"
+              class="flex h-9 w-9 items-center justify-center rounded-md bg-gray-100 text-gray-400 transition-colors hover:text-gray-600 dark:bg-gray-800 dark:text-gray-400 dark:hover:text-gray-200 sm:h-10 sm:w-10"
               title="关闭"
               @click="$emit('close')"
             >
-              <i class="fas fa-times text-base sm:text-lg" />
+              <Icon name="X" class="text-base sm:text-lg" />
             </button>
           </div>
         </div>
@@ -53,9 +51,9 @@
         <!-- 空状态：没有加载且没有 API Key -->
         <div
           v-if="!loading && apiKeys.length === 0"
-          class="rounded-lg bg-gray-50 py-8 text-center dark:bg-gray-800"
+          class="rounded-md bg-gray-50 py-8 text-center dark:bg-gray-800"
         >
-          <i class="fas fa-key mb-4 text-4xl text-gray-300 dark:text-gray-600" />
+          <Icon name="Key" class="mb-4 text-4xl text-gray-300 dark:text-gray-600" />
           <p class="text-gray-500 dark:text-gray-400">暂无 API Key</p>
         </div>
 
@@ -65,13 +63,13 @@
           <div class="mb-4 space-y-3">
             <!-- 工具栏：筛选、搜索和操作 -->
             <div
-              class="rounded-lg border border-gray-200 bg-white p-3 shadow-sm dark:border-gray-700 dark:bg-gray-800"
+              class="rounded-md border border-gray-200 bg-white p-3 shadow-sm dark:border-gray-700 dark:bg-gray-800"
             >
               <!-- 第一行：筛选和搜索 -->
               <div class="mb-3 flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
                 <!-- 左侧：状态筛选 -->
                 <div class="flex items-center gap-2">
-                  <i class="fas fa-filter text-gray-400 dark:text-gray-500" />
+                  <Icon name="Filter" class="text-gray-400 dark:text-gray-500" />
                   <span class="text-sm font-medium text-gray-700 dark:text-gray-300">筛选：</span>
                   <div class="flex gap-1">
                     <button
@@ -94,7 +92,7 @@
                       ]"
                       @click="statusFilter = 'active'"
                     >
-                      <i class="fas fa-check-circle mr-1" />
+                      <Icon name="CheckCircle" class="mr-1" />
                       正常 ({{ activeKeysCount }})
                     </button>
                     <button
@@ -106,7 +104,7 @@
                       ]"
                       @click="statusFilter = 'error'"
                     >
-                      <i class="fas fa-exclamation-triangle mr-1" />
+                      <Icon name="AlertTriangle" class="mr-1" />
                       异常 ({{ errorKeysCount }})
                     </button>
                   </div>
@@ -121,9 +119,7 @@
                       placeholder="搜索 API Key..."
                       type="text"
                     />
-                    <i
-                      class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500"
-                    />
+                    <Icon name="Search" class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500" />
                   </div>
                   <div class="flex gap-1">
                     <button
@@ -136,7 +132,7 @@
                       title="模糊搜索：包含查询字符串即可"
                       @click="searchMode = 'fuzzy'"
                     >
-                      <i class="fas fa-search mr-1" />
+                      <Icon name="Search" class="mr-1" />
                       模糊
                     </button>
                     <button
@@ -149,7 +145,7 @@
                       title="精确搜索：完全匹配完整 Key"
                       @click="searchMode = 'exact'"
                     >
-                      <i class="fas fa-equals mr-1" />
+                      <Icon name="Equal" class="mr-1" />
                       精确
                     </button>
                   </div>
@@ -172,7 +168,7 @@
                     title="删除所有异常状态的 API Key"
                     @click="deleteAllErrorKeys"
                   >
-                    <i class="fas fa-trash-alt mr-1" />
+                    <Icon name="Trash2" class="mr-1" />
                     删除异常
                   </button>
                   <button
@@ -181,7 +177,7 @@
                     title="删除所有 API Key"
                     @click="deleteAllKeys"
                   >
-                    <i class="fas fa-trash mr-1" />
+                    <Icon name="Trash" class="mr-1" />
                     删除全部
                   </button>
                   <div class="mx-1 h-5 w-px bg-gray-300 dark:bg-gray-600"></div>
@@ -191,7 +187,7 @@
                     title="导出所有异常状态的 API Key"
                     @click="exportKeys('error')"
                   >
-                    <i class="fas fa-download mr-1" />
+                    <Icon name="Download" class="mr-1" />
                     导出异常
                   </button>
                   <button
@@ -200,7 +196,7 @@
                     title="导出所有 API Key"
                     @click="exportKeys('all')"
                   >
-                    <i class="fas fa-file-export mr-1" />
+                    <Icon name="FileOutput" class="mr-1" />
                     导出全部
                   </button>
                 </div>
@@ -209,7 +205,7 @@
                 <div
                   class="flex items-center gap-2 rounded-md bg-purple-50 px-3 py-1.5 dark:bg-purple-900/20"
                 >
-                  <i class="fas fa-info-circle text-purple-500 dark:text-purple-400" />
+                  <Icon name="Info" class="text-purple-500 dark:text-purple-400" />
                   <span class="text-xs font-medium text-purple-700 dark:text-purple-300">
                     显示 <strong>{{ filteredApiKeys.length }}</strong> 个
                   </span>
@@ -222,7 +218,7 @@
             <div
               v-for="(apiKey, index) in paginatedApiKeys"
               :key="index"
-              class="relative rounded-lg border border-gray-200 bg-white p-4 transition-all hover:shadow-md dark:border-gray-700 dark:bg-gray-800"
+              class="relative rounded-md border border-gray-200 bg-white p-4 transition-all hover:shadow-md dark:border-gray-700 dark:bg-gray-800"
             >
               <!-- 左上角错误状态码角标 -->
               <div
@@ -232,7 +228,7 @@
                 class="absolute -left-2 -top-2 z-10"
               >
                 <span
-                  class="inline-flex items-center justify-center rounded-full px-2 py-0.5 text-[10px] font-semibold shadow-sm"
+                  class="inline-flex items-center justify-center rounded-md px-2 py-0.5 text-[10px] font-semibold shadow-sm"
                   :class="[
                     apiKey.status === 'error'
                       ? 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'
@@ -259,7 +255,7 @@
                       title="复制 API Key"
                       @click="copyApiKey(apiKey.key)"
                     >
-                      <i class="fas fa-copy" />
+                      <Icon name="Copy" />
                     </button>
                     <button
                       v-if="apiKey.status === 'error' || apiKey.status === 'disabled'"
@@ -274,7 +270,7 @@
                       @click="resetApiKeyStatus(apiKey)"
                     >
                       <div v-if="resetting === apiKey.key" class="loading-spinner-sm" />
-                      <i v-else class="fas fa-redo"></i>
+                      <Icon name="RotateCw" v-else />
                     </button>
                     <button
                       class="text-xs text-red-500 transition-colors hover:text-red-700 disabled:cursor-not-allowed disabled:opacity-50 dark:text-red-400 dark:hover:text-red-600"
@@ -282,7 +278,7 @@
                       @click="deleteApiKey(apiKey)"
                     >
                       <div v-if="deleting === apiKey.key" class="loading-spinner-sm" />
-                      <i v-else class="fas fa-trash" />
+                      <Icon name="Trash" v-else />
                     </button>
                   </div>
                 </div>
@@ -301,15 +297,15 @@
                             : 'text-yellow-600 dark:text-yellow-400'
                       ]"
                     >
-                      <i
-                        class="mr-1"
-                        :class="[
+                      <Icon
+                        :name="
                           apiKey.status === 'active'
-                            ? 'fas fa-check-circle'
+                            ? 'CheckCircle'
                             : apiKey.status === 'error'
-                              ? 'fas fa-exclamation-triangle'
-                              : 'fas fa-exclamation-circle'
-                        ]"
+                              ? 'AlertTriangle'
+                              : 'AlertCircle'
+                        "
+                        class="mr-1"
                       />
                       {{
                         apiKey.status === 'active'
@@ -346,35 +342,35 @@
             </div>
             <div class="flex items-center gap-2">
               <button
-                class="rounded-lg bg-gray-100 px-3 py-1.5 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-200 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
+                class="rounded-md bg-gray-100 px-3 py-1.5 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-200 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
                 :disabled="currentPage === 1"
                 @click="currentPage = 1"
               >
-                <i class="fas fa-angle-double-left" />
+                <Icon name="ChevronsLeft" />
               </button>
               <button
-                class="rounded-lg bg-gray-100 px-3 py-1.5 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-200 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
+                class="rounded-md bg-gray-100 px-3 py-1.5 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-200 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
                 :disabled="currentPage === 1"
                 @click="currentPage--"
               >
-                <i class="fas fa-angle-left" />
+                <Icon name="ChevronLeft" />
               </button>
               <span class="px-3 py-1.5 text-sm font-medium text-gray-700 dark:text-gray-300">
                 {{ currentPage }} / {{ totalPages }}
               </span>
               <button
-                class="rounded-lg bg-gray-100 px-3 py-1.5 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-200 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
+                class="rounded-md bg-gray-100 px-3 py-1.5 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-200 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
                 :disabled="currentPage === totalPages"
                 @click="currentPage++"
               >
-                <i class="fas fa-angle-right" />
+                <Icon name="ChevronRight" />
               </button>
               <button
-                class="rounded-lg bg-gray-100 px-3 py-1.5 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-200 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
+                class="rounded-md bg-gray-100 px-3 py-1.5 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-200 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
                 :disabled="currentPage === totalPages"
                 @click="currentPage = totalPages"
               >
-                <i class="fas fa-angle-double-right" />
+                <Icon name="ChevronsRight" />
               </button>
             </div>
           </div>

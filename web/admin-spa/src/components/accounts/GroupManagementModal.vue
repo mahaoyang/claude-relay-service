@@ -7,9 +7,9 @@
         <div class="mb-4 flex items-center justify-between sm:mb-6">
           <div class="flex items-center gap-2 sm:gap-3">
             <div
-              class="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-purple-500 to-purple-600 sm:h-10 sm:w-10 sm:rounded-xl"
+              class="flex h-8 w-8 items-center justify-center rounded-md bg-gradient-to-br from-purple-500 to-purple-600 sm:h-10 sm:w-10 sm:rounded-md"
             >
-              <i class="fas fa-layer-group text-sm text-white sm:text-base" />
+              <Icon name="Layers" class="text-sm text-white sm:text-base" />
             </div>
             <h3 class="text-lg font-bold text-gray-900 sm:text-xl">账户分组管理</h3>
           </div>
@@ -17,20 +17,20 @@
             class="p-1 text-gray-400 transition-colors hover:text-gray-600"
             @click="$emit('close')"
           >
-            <i class="fas fa-times text-lg sm:text-xl" />
+            <Icon name="X" class="text-lg sm:text-xl" />
           </button>
         </div>
 
         <!-- 添加分组按钮 -->
         <div class="mb-6">
           <button class="btn btn-primary px-4 py-2" @click="showCreateForm = true">
-            <i class="fas fa-plus mr-2" />
+            <Icon name="Plus" class="mr-2" />
             创建新分组
           </button>
         </div>
 
         <!-- 创建分组表单 -->
-        <div v-if="showCreateForm" class="mb-6 rounded-lg border border-blue-200 bg-blue-50 p-4">
+        <div v-if="showCreateForm" class="mb-6 rounded-md border border-blue-200 bg-blue-50 p-4">
           <h4 class="mb-4 text-lg font-semibold text-gray-900">创建新分组</h4>
           <div class="space-y-4">
             <div>
@@ -96,8 +96,8 @@
             <p class="text-gray-500">加载中...</p>
           </div>
 
-          <div v-else-if="groups.length === 0" class="rounded-lg bg-gray-50 py-8 text-center">
-            <i class="fas fa-layer-group mb-4 text-4xl text-gray-300" />
+          <div v-else-if="groups.length === 0" class="rounded-md bg-gray-50 py-8 text-center">
+            <Icon name="Layers" class="mb-4 text-4xl text-gray-300" />
             <p class="text-gray-500">暂无分组</p>
           </div>
 
@@ -105,7 +105,7 @@
             <div
               v-for="group in groups"
               :key="group.id"
-              class="rounded-lg border bg-white p-4 transition-shadow hover:shadow-md"
+              class="rounded-md border bg-white p-4 transition-shadow hover:shadow-md"
             >
               <div class="mb-3 flex items-start justify-between">
                 <div class="flex-1">
@@ -119,7 +119,7 @@
                 <div class="ml-4 flex items-center gap-2">
                   <span
                     :class="[
-                      'rounded-full px-2 py-1 text-xs font-medium',
+                      'rounded-md px-2 py-1 text-xs font-medium',
                       group.platform === 'claude'
                         ? 'bg-purple-100 text-purple-700'
                         : group.platform === 'gemini'
@@ -145,11 +145,11 @@
               <div class="flex items-center justify-between text-sm text-gray-600">
                 <div class="flex items-center gap-4">
                   <span>
-                    <i class="fas fa-users mr-1" />
+                    <Icon name="Users" class="mr-1" />
                     {{ group.memberCount || 0 }} 个成员
                   </span>
                   <span>
-                    <i class="fas fa-clock mr-1" />
+                    <Icon name="Clock" class="mr-1" />
                     {{ formatDate(group.createdAt) }}
                   </span>
                 </div>
@@ -159,7 +159,7 @@
                     title="编辑"
                     @click="editGroup(group)"
                   >
-                    <i class="fas fa-edit" />
+                    <Icon name="Edit" />
                   </button>
                   <button
                     class="text-red-600 transition-colors hover:text-red-800"
@@ -167,7 +167,7 @@
                     title="删除"
                     @click="deleteGroup(group)"
                   >
-                    <i class="fas fa-trash" />
+                    <Icon name="Trash" />
                   </button>
                 </div>
               </div>
@@ -186,7 +186,7 @@
         <div class="mb-4 flex items-center justify-between">
           <h3 class="text-lg font-bold text-gray-900">编辑分组</h3>
           <button class="text-gray-400 transition-colors hover:text-gray-600" @click="cancelEdit">
-            <i class="fas fa-times" />
+            <Icon name="X" />
           </button>
         </div>
 
@@ -203,7 +203,7 @@
 
           <div>
             <label class="mb-2 block text-sm font-semibold text-gray-700">平台类型</label>
-            <div class="rounded-lg bg-gray-100 px-3 py-2 text-sm text-gray-600">
+            <div class="rounded-md bg-gray-100 px-3 py-2 text-sm text-gray-600">
               {{
                 editForm.platform === 'claude'
                   ? 'Claude'

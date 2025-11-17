@@ -67,7 +67,7 @@
         <div v-else class="space-y-6">
           <!-- Summary Cards -->
           <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
-            <div class="overflow-hidden rounded-lg bg-blue-50 shadow">
+            <div class="overflow-hidden rounded-md bg-blue-50 shadow">
               <div class="p-5">
                 <div class="flex items-center">
                   <div class="flex-shrink-0">
@@ -97,7 +97,7 @@
               </div>
             </div>
 
-            <div class="overflow-hidden rounded-lg bg-green-50 shadow">
+            <div class="overflow-hidden rounded-md bg-green-50 shadow">
               <div class="p-5">
                 <div class="flex items-center">
                   <div class="flex-shrink-0">
@@ -127,7 +127,7 @@
               </div>
             </div>
 
-            <div class="overflow-hidden rounded-lg bg-purple-50 shadow">
+            <div class="overflow-hidden rounded-md bg-purple-50 shadow">
               <div class="p-5">
                 <div class="flex items-center">
                   <div class="flex-shrink-0">
@@ -157,7 +157,7 @@
               </div>
             </div>
 
-            <div class="overflow-hidden rounded-lg bg-yellow-50 shadow">
+            <div class="overflow-hidden rounded-md bg-yellow-50 shadow">
               <div class="p-5">
                 <div class="flex items-center">
                   <div class="flex-shrink-0">
@@ -191,7 +191,7 @@
           <!-- User API Keys Table -->
           <div
             v-if="userDetails?.apiKeys?.length > 0"
-            class="rounded-lg border border-gray-200 bg-white"
+            class="rounded-md border border-gray-200 bg-white"
           >
             <div class="border-b border-gray-200 px-4 py-5 sm:px-6">
               <h4 class="text-lg font-medium leading-6 text-gray-900">API Keys Usage</h4>
@@ -247,7 +247,7 @@
                     <td class="whitespace-nowrap px-6 py-4">
                       <span
                         :class="[
-                          'inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium',
+                          'inline-flex items-center rounded-md px-2.5 py-0.5 text-xs font-medium',
                           apiKey.isActive
                             ? 'bg-green-100 text-green-800'
                             : 'bg-red-100 text-red-800'
@@ -276,13 +276,13 @@
           </div>
 
           <!-- Chart Placeholder -->
-          <div class="rounded-lg border border-gray-200 bg-white">
+          <div class="rounded-md border border-gray-200 bg-white">
             <div class="border-b border-gray-200 px-4 py-5 sm:px-6">
               <h4 class="text-lg font-medium leading-6 text-gray-900">Usage Trend</h4>
             </div>
             <div class="p-6">
               <div
-                class="flex h-64 items-center justify-center rounded-lg border-2 border-dashed border-gray-300"
+                class="flex h-64 items-center justify-center rounded-md border-2 border-dashed border-gray-300"
               >
                 <div class="text-center">
                   <svg

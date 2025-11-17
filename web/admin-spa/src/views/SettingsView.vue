@@ -21,7 +21,7 @@
             ]"
             @click="activeSection = 'branding'"
           >
-            <i class="fas fa-palette mr-2"></i>
+            <Icon name="Palette" class="mr-2" />
             品牌设置
           </button>
           <button
@@ -33,7 +33,7 @@
             ]"
             @click="activeSection = 'webhook'"
           >
-            <i class="fas fa-bell mr-2"></i>
+            <Icon name="Bell" class="mr-2" />
             通知设置
           </button>
         </nav>
@@ -58,9 +58,9 @@
                   <td class="w-48 whitespace-nowrap px-6 py-4">
                     <div class="flex items-center">
                       <div
-                        class="mr-3 flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-blue-500 to-blue-600"
+                        class="mr-3 flex h-8 w-8 items-center justify-center rounded-md bg-gradient-to-br from-blue-500 to-blue-600"
                       >
-                        <i class="fas fa-font text-xs text-white" />
+                        <Icon name="Type" class="text-xs text-white" />
                       </div>
                       <div>
                         <div class="text-sm font-semibold text-gray-900 dark:text-gray-100">
@@ -89,9 +89,9 @@
                   <td class="w-48 whitespace-nowrap px-6 py-4">
                     <div class="flex items-center">
                       <div
-                        class="mr-3 flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-purple-500 to-purple-600"
+                        class="mr-3 flex h-8 w-8 items-center justify-center rounded-md bg-gradient-to-br from-purple-500 to-purple-600"
                       >
-                        <i class="fas fa-image text-xs text-white" />
+                        <Icon name="Image" class="text-xs text-white" />
                       </div>
                       <div>
                         <div class="text-sm font-semibold text-gray-900 dark:text-gray-100">
@@ -106,7 +106,7 @@
                       <!-- 图标预览 -->
                       <div
                         v-if="oemSettings.siteIconData || oemSettings.siteIcon"
-                        class="inline-flex items-center gap-3 rounded-lg bg-gray-50 p-3 dark:bg-gray-700"
+                        class="inline-flex items-center gap-3 rounded-md bg-gray-50 p-3 dark:bg-gray-700"
                       >
                         <img
                           alt="图标预览"
@@ -116,10 +116,10 @@
                         />
                         <span class="text-sm text-gray-600 dark:text-gray-400">当前图标</span>
                         <button
-                          class="rounded-lg px-3 py-1 font-medium text-red-600 transition-colors hover:bg-red-50 hover:text-red-900"
+                          class="rounded-md px-3 py-1 font-medium text-red-600 transition-colors hover:bg-red-50 hover:text-red-900"
                           @click="removeIcon"
                         >
-                          <i class="fas fa-trash mr-1" />删除
+                          <Icon name="Trash" class="mr-1" />删除
                         </button>
                       </div>
 
@@ -136,7 +136,7 @@
                           class="btn btn-success px-4 py-2"
                           @click="$refs.iconFileInput.click()"
                         >
-                          <i class="fas fa-upload mr-2" />
+                          <Icon name="Upload" class="mr-2" />
                           上传图标
                         </button>
                         <span class="ml-3 text-xs text-gray-500 dark:text-gray-400"
@@ -152,9 +152,9 @@
                   <td class="w-48 whitespace-nowrap px-6 py-4">
                     <div class="flex items-center">
                       <div
-                        class="mr-3 flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600"
+                        class="mr-3 flex h-8 w-8 items-center justify-center rounded-md bg-gradient-to-br from-indigo-500 to-purple-600"
                       >
-                        <i class="fas fa-eye-slash text-xs text-white" />
+                        <Icon name="EyeOff" class="text-xs text-white" />
                       </div>
                       <div>
                         <div class="text-sm font-semibold text-gray-900 dark:text-gray-100">
@@ -169,7 +169,7 @@
                       <label class="inline-flex cursor-pointer items-center">
                         <input v-model="hideAdminButton" class="peer sr-only" type="checkbox" />
                         <div
-                          class="peer relative h-6 w-11 rounded-full bg-gray-200 after:absolute after:left-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-blue-600 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:border-gray-600 dark:bg-gray-700 dark:peer-focus:ring-blue-800"
+                          class="peer relative h-6 w-11 rounded-md bg-gray-200 after:absolute after:left-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-md after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-blue-600 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:border-gray-600 dark:bg-gray-700 dark:peer-focus:ring-blue-800"
                         ></div>
                         <span class="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">{{
                           hideAdminButton ? '隐藏登录按钮' : '显示登录按钮'
@@ -194,7 +194,7 @@
                           @click="saveOemSettings"
                         >
                           <div v-if="saving" class="loading-spinner mr-2"></div>
-                          <i v-else class="fas fa-save mr-2" />
+                          <Icon name="Save" class="mr-2" v-else />
                           {{ saving ? '保存中...' : '保存设置' }}
                         </button>
 
@@ -203,7 +203,7 @@
                           :disabled="saving"
                           @click="resetOemSettings"
                         >
-                          <i class="fas fa-undo mr-2" />
+                          <Icon name="RotateCcw" class="mr-2" />
                           重置为默认
                         </button>
                       </div>
@@ -212,7 +212,7 @@
                         v-if="oemSettings.updatedAt"
                         class="text-sm text-gray-500 dark:text-gray-400"
                       >
-                        <i class="fas fa-clock mr-1" />
+                        <Icon name="Clock" class="mr-1" />
                         最后更新：{{ formatDateTime(oemSettings.updatedAt) }}
                       </div>
                     </div>
@@ -228,9 +228,9 @@
             <div class="glass-card p-4">
               <div class="mb-3 flex items-center gap-3">
                 <div
-                  class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-cyan-600 text-white shadow-md"
+                  class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-md bg-gradient-to-br from-blue-500 to-cyan-600 text-white shadow-md"
                 >
-                  <i class="fas fa-tag"></i>
+                  <Icon name="Tag" />
                 </div>
                 <div>
                   <h3 class="text-base font-semibold text-gray-900 dark:text-gray-100">站点名称</h3>
@@ -250,9 +250,9 @@
             <div class="glass-card p-4">
               <div class="mb-3 flex items-center gap-3">
                 <div
-                  class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-purple-500 to-pink-600 text-white shadow-md"
+                  class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-md bg-gradient-to-br from-purple-500 to-pink-600 text-white shadow-md"
                 >
-                  <i class="fas fa-image"></i>
+                  <Icon name="Image" />
                 </div>
                 <div>
                   <h3 class="text-base font-semibold text-gray-900 dark:text-gray-100">站点图标</h3>
@@ -265,7 +265,7 @@
                 <!-- 图标预览 -->
                 <div
                   v-if="oemSettings.siteIconData || oemSettings.siteIcon"
-                  class="inline-flex items-center gap-3 rounded-lg bg-gray-50 p-3 dark:bg-gray-700"
+                  class="inline-flex items-center gap-3 rounded-md bg-gray-50 p-3 dark:bg-gray-700"
                 >
                   <img
                     alt="图标预览"
@@ -275,7 +275,7 @@
                   />
                   <span class="text-sm text-gray-600 dark:text-gray-400">当前图标</span>
                   <button
-                    class="rounded-lg px-3 py-1 font-medium text-red-600 transition-colors hover:bg-red-50 hover:text-red-900"
+                    class="rounded-md px-3 py-1 font-medium text-red-600 transition-colors hover:bg-red-50 hover:text-red-900"
                     @click="removeIcon"
                   >
                     删除
@@ -295,7 +295,7 @@
                     class="btn btn-success px-4 py-2"
                     @click="$refs.iconFileInputMobile.click()"
                   >
-                    <i class="fas fa-upload mr-2" />
+                    <Icon name="Upload" class="mr-2" />
                     上传图标
                   </button>
                   <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">
@@ -309,9 +309,9 @@
             <div class="glass-card p-4">
               <div class="mb-3 flex items-center gap-3">
                 <div
-                  class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 text-white shadow-md"
+                  class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-md bg-gradient-to-br from-indigo-500 to-purple-600 text-white shadow-md"
                 >
-                  <i class="fas fa-eye-slash"></i>
+                  <Icon name="EyeOff" />
                 </div>
                 <div>
                   <h3 class="text-base font-semibold text-gray-900 dark:text-gray-100">管理入口</h3>
@@ -322,7 +322,7 @@
                 <label class="inline-flex cursor-pointer items-center">
                   <input v-model="hideAdminButton" class="peer sr-only" type="checkbox" />
                   <div
-                    class="peer relative h-6 w-11 rounded-full bg-gray-200 after:absolute after:left-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-blue-600 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:border-gray-600 dark:bg-gray-700 dark:peer-focus:ring-blue-800"
+                    class="peer relative h-6 w-11 rounded-md bg-gray-200 after:absolute after:left-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-md after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-blue-600 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:border-gray-600 dark:bg-gray-700 dark:peer-focus:ring-blue-800"
                   ></div>
                   <span class="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">{{
                     hideAdminButton ? '隐藏登录按钮' : '显示登录按钮'
@@ -344,7 +344,7 @@
                   @click="saveOemSettings"
                 >
                   <div v-if="saving" class="loading-spinner mr-2"></div>
-                  <i v-else class="fas fa-save mr-2" />
+                  <Icon name="Save" class="mr-2" v-else />
                   {{ saving ? '保存中...' : '保存设置' }}
                 </button>
 
@@ -353,7 +353,7 @@
                   :disabled="saving"
                   @click="resetOemSettings"
                 >
-                  <i class="fas fa-undo mr-2" />
+                  <Icon name="RotateCcw" class="mr-2" />
                   重置为默认
                 </button>
 
@@ -361,7 +361,7 @@
                   v-if="oemSettings.updatedAt"
                   class="text-center text-sm text-gray-500 dark:text-gray-400"
                 >
-                  <i class="fas fa-clock mr-1" />
+                  <Icon name="Clock" class="mr-1" />
                   上次更新: {{ formatDateTime(oemSettings.updatedAt) }}
                 </div>
               </div>
@@ -373,7 +373,7 @@
         <div v-show="activeSection === 'webhook'">
           <!-- 主开关 -->
           <div
-            class="mb-6 rounded-lg bg-white/80 p-6 shadow-lg backdrop-blur-sm dark:bg-gray-800/80"
+            class="mb-6 rounded-md bg-white/80 p-6 shadow-lg backdrop-blur-sm dark:bg-gray-800/80"
           >
             <div class="flex items-center justify-between">
               <div>
@@ -390,7 +390,7 @@
                   @change="saveWebhookConfig"
                 />
                 <div
-                  class="peer h-6 w-11 rounded-full bg-gray-200 after:absolute after:left-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-blue-600 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:border-gray-600 dark:bg-gray-700 dark:peer-focus:ring-blue-800"
+                  class="peer h-6 w-11 rounded-md bg-gray-200 after:absolute after:left-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-md after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-blue-600 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:border-gray-600 dark:bg-gray-700 dark:peer-focus:ring-blue-800"
                 ></div>
               </label>
             </div>
@@ -398,7 +398,7 @@
 
           <!-- 通知类型设置 -->
           <div
-            class="mb-6 rounded-lg bg-white/80 p-6 shadow-lg backdrop-blur-sm dark:bg-gray-800/80"
+            class="mb-6 rounded-md bg-white/80 p-6 shadow-lg backdrop-blur-sm dark:bg-gray-800/80"
           >
             <h2 class="mb-4 text-lg font-semibold text-gray-800 dark:text-gray-200">通知类型</h2>
             <div class="space-y-3">
@@ -423,7 +423,7 @@
                     @change="saveWebhookConfig"
                   />
                   <div
-                    class="peer h-5 w-9 rounded-full bg-gray-200 after:absolute after:left-[2px] after:top-[2px] after:h-4 after:w-4 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-green-600 peer-checked:after:translate-x-full peer-checked:after:border-white dark:border-gray-600 dark:bg-gray-700"
+                    class="peer h-5 w-9 rounded-md bg-gray-200 after:absolute after:left-[2px] after:top-[2px] after:h-4 after:w-4 after:rounded-md after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-green-600 peer-checked:after:translate-x-full peer-checked:after:border-white dark:border-gray-600 dark:bg-gray-700"
                   ></div>
                 </label>
               </div>
@@ -432,15 +432,15 @@
 
           <!-- 平台列表 -->
           <div
-            class="mb-6 rounded-lg bg-white/80 p-6 shadow-lg backdrop-blur-sm dark:bg-gray-800/80"
+            class="mb-6 rounded-md bg-white/80 p-6 shadow-lg backdrop-blur-sm dark:bg-gray-800/80"
           >
             <div class="mb-4 flex items-center justify-between">
               <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200">通知平台</h2>
               <button
-                class="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700"
+                class="rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700"
                 @click="showAddPlatformModal = true"
               >
-                <i class="fas fa-plus mr-2"></i>
+                <Icon name="Plus" class="mr-2" />
                 添加平台
               </button>
             </div>
@@ -453,7 +453,7 @@
               <div
                 v-for="platform in webhookConfig.platforms"
                 :key="platform.id"
-                class="rounded-lg border border-gray-200 p-4 dark:border-gray-700"
+                class="rounded-md border border-gray-200 p-4 dark:border-gray-700"
               >
                 <div class="flex items-start justify-between">
                   <div class="flex-1">
@@ -473,21 +473,21 @@
                         v-if="platform.type !== 'smtp' && platform.type !== 'telegram'"
                         class="flex items-center text-gray-600 dark:text-gray-400"
                       >
-                        <i class="fas fa-link mr-2"></i>
+                        <Icon name="Link" class="mr-2" />
                         <span class="truncate">{{ platform.url }}</span>
                       </div>
                       <div
                         v-if="platform.type === 'telegram'"
                         class="flex items-center text-gray-600 dark:text-gray-400"
                       >
-                        <i class="fas fa-comments mr-2"></i>
+                        <Icon name="MessagesSquare" class="mr-2" />
                         <span class="truncate">Chat ID: {{ platform.chatId || '未配置' }}</span>
                       </div>
                       <div
                         v-if="platform.type === 'telegram' && platform.botToken"
                         class="flex items-center text-gray-600 dark:text-gray-400"
                       >
-                        <i class="fas fa-key mr-2"></i>
+                        <Icon name="Key" class="mr-2" />
                         <span class="truncate"
                           >Token: {{ formatTelegramToken(platform.botToken) }}</span
                         >
@@ -496,21 +496,21 @@
                         v-if="platform.type === 'telegram' && platform.apiBaseUrl"
                         class="flex items-center text-gray-600 dark:text-gray-400"
                       >
-                        <i class="fas fa-globe mr-2"></i>
+                        <Icon name="Globe" class="mr-2" />
                         <span class="truncate">API: {{ platform.apiBaseUrl }}</span>
                       </div>
                       <div
                         v-if="platform.type === 'telegram' && platform.proxyUrl"
                         class="flex items-center text-gray-600 dark:text-gray-400"
                       >
-                        <i class="fas fa-route mr-2"></i>
+                        <Icon name="Route" class="mr-2" />
                         <span class="truncate">代理: {{ platform.proxyUrl }}</span>
                       </div>
                       <div
                         v-if="platform.type === 'smtp' && platform.to"
                         class="flex items-center text-gray-600 dark:text-gray-400"
                       >
-                        <i class="fas fa-envelope mr-2"></i>
+                        <Icon name="Mail" class="mr-2" />
                         <span class="truncate">{{
                           Array.isArray(platform.to) ? platform.to.join(', ') : platform.to
                         }}</span>
@@ -519,7 +519,7 @@
                         v-if="platform.enableSign"
                         class="flex items-center text-gray-600 dark:text-gray-400"
                       >
-                        <i class="fas fa-shield-alt mr-2"></i>
+                        <Icon name="Shield" class="mr-2" />
                         <span>已启用签名验证</span>
                       </div>
                     </div>
@@ -534,32 +534,32 @@
                         @change="togglePlatform(platform.id)"
                       />
                       <div
-                        class="peer h-5 w-9 rounded-full bg-gray-200 after:absolute after:left-[2px] after:top-[2px] after:h-4 after:w-4 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-green-600 peer-checked:after:translate-x-full peer-checked:after:border-white dark:border-gray-600 dark:bg-gray-700"
+                        class="peer h-5 w-9 rounded-md bg-gray-200 after:absolute after:left-[2px] after:top-[2px] after:h-4 after:w-4 after:rounded-md after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-green-600 peer-checked:after:translate-x-full peer-checked:after:border-white dark:border-gray-600 dark:bg-gray-700"
                       ></div>
                     </label>
                     <!-- 测试按钮 -->
                     <button
-                      class="rounded-lg bg-blue-100 p-2 text-blue-600 transition-colors hover:bg-blue-200 dark:bg-blue-900 dark:text-blue-400 dark:hover:bg-blue-800"
+                      class="rounded-md bg-blue-100 p-2 text-blue-600 transition-colors hover:bg-blue-200 dark:bg-blue-900 dark:text-blue-400 dark:hover:bg-blue-800"
                       title="测试连接"
                       @click="testPlatform(platform)"
                     >
-                      <i class="fas fa-vial"></i>
+                      <Icon name="TestTube" />
                     </button>
                     <!-- 编辑按钮 -->
                     <button
-                      class="rounded-lg bg-gray-100 p-2 text-gray-600 transition-colors hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-400 dark:hover:bg-gray-600"
+                      class="rounded-md bg-gray-100 p-2 text-gray-600 transition-colors hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-400 dark:hover:bg-gray-600"
                       title="编辑"
                       @click="editPlatform(platform)"
                     >
-                      <i class="fas fa-edit"></i>
+                      <Icon name="Edit" />
                     </button>
                     <!-- 删除按钮 -->
                     <button
-                      class="rounded-lg bg-red-100 p-2 text-red-600 transition-colors hover:bg-red-200 dark:bg-red-900 dark:text-red-400 dark:hover:bg-red-800"
+                      class="rounded-md bg-red-100 p-2 text-red-600 transition-colors hover:bg-red-200 dark:bg-red-900 dark:text-red-400 dark:hover:bg-red-800"
                       title="删除"
                       @click="deletePlatform(platform.id)"
                     >
-                      <i class="fas fa-trash"></i>
+                      <Icon name="Trash" />
                     </button>
                   </div>
                 </div>
@@ -571,7 +571,7 @@
           </div>
 
           <!-- 高级设置 -->
-          <div class="rounded-lg bg-white/80 p-6 shadow-lg backdrop-blur-sm dark:bg-gray-800/80">
+          <div class="rounded-md bg-white/80 p-6 shadow-lg backdrop-blur-sm dark:bg-gray-800/80">
             <h2 class="mb-4 text-lg font-semibold text-gray-800 dark:text-gray-200">高级设置</h2>
             <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
               <div>
@@ -580,7 +580,7 @@
                 </label>
                 <input
                   v-model.number="webhookConfig.retrySettings.maxRetries"
-                  class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white sm:text-sm"
+                  class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white sm:text-sm"
                   max="10"
                   min="0"
                   type="number"
@@ -593,7 +593,7 @@
                 </label>
                 <input
                   v-model.number="webhookConfig.retrySettings.retryDelay"
-                  class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white sm:text-sm"
+                  class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white sm:text-sm"
                   max="10000"
                   min="100"
                   step="100"
@@ -607,7 +607,7 @@
                 </label>
                 <input
                   v-model.number="webhookConfig.retrySettings.timeout"
-                  class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white sm:text-sm"
+                  class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white sm:text-sm"
                   max="30000"
                   min="1000"
                   step="1000"
@@ -621,10 +621,10 @@
           <!-- 测试通知按钮 -->
           <div class="mt-6 text-center">
             <button
-              class="rounded-lg bg-green-600 px-6 py-3 text-white shadow-lg transition-all hover:bg-green-700 hover:shadow-xl"
+              class="rounded-md bg-green-600 px-6 py-3 text-white shadow-lg transition-all hover:bg-green-700 hover:shadow-xl"
               @click="sendTestNotification"
             >
-              <i class="fas fa-paper-plane mr-2"></i>
+              <Icon name="Send" class="mr-2" />
               发送测试通知
             </button>
           </div>
@@ -640,7 +640,7 @@
     @click="closePlatformModal"
   >
     <div
-      class="relative mx-4 w-full max-w-2xl overflow-hidden rounded-2xl bg-white shadow-2xl transition-all duration-300 ease-out dark:bg-gray-800"
+      class="relative mx-4 w-full max-w-2xl overflow-hidden rounded-md bg-white shadow-2xl transition-all duration-300 ease-out dark:bg-gray-800"
       @click.stop
     >
       <!-- 头部 -->
@@ -650,9 +650,9 @@
         <div class="flex items-center justify-between">
           <div class="flex items-center space-x-3">
             <div
-              class="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 text-white shadow-lg"
+              class="flex h-10 w-10 items-center justify-center rounded-md bg-gradient-to-br from-blue-500 to-indigo-600 text-white shadow-lg"
             >
-              <i class="fas fa-bell"></i>
+              <Icon name="Bell" />
             </div>
             <div>
               <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
@@ -664,10 +664,10 @@
             </div>
           </div>
           <button
-            class="rounded-lg p-2 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600 dark:hover:bg-gray-700 dark:hover:text-gray-300"
+            class="rounded-md p-2 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600 dark:hover:bg-gray-700 dark:hover:text-gray-300"
             @click="closePlatformModal"
           >
-            <i class="fas fa-times text-lg"></i>
+            <Icon name="X" class="text-lg" />
           </button>
         </div>
       </div>
@@ -680,13 +680,13 @@
             <label
               class="mb-2 flex items-center text-sm font-medium text-gray-700 dark:text-gray-300"
             >
-              <i class="fas fa-layer-group mr-2 text-gray-400"></i>
+              <Icon name="Layers" class="mr-2 text-gray-400" />
               平台类型
             </label>
             <div class="relative">
               <select
                 v-model="platformForm.type"
-                class="w-full appearance-none rounded-xl border border-gray-300 bg-white px-4 py-3 pr-10 text-gray-900 shadow-sm transition-all focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+                class="w-full appearance-none rounded-md border border-gray-300 bg-white px-4 py-3 pr-10 text-gray-900 shadow-sm transition-all focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
                 :disabled="editingPlatform"
               >
                 <option value="wechat_work">🟢 企业微信</option>
@@ -700,11 +700,11 @@
                 <option value="custom">⚙️ 自定义</option>
               </select>
               <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
-                <i class="fas fa-chevron-down text-gray-400"></i>
+                <Icon name="ChevronDown" class="text-gray-400" />
               </div>
             </div>
             <p v-if="editingPlatform" class="mt-1 text-xs text-amber-600 dark:text-amber-400">
-              <i class="fas fa-info-circle mr-1"></i>
+              <Icon name="Info" class="mr-1" />
               编辑模式下不能更改平台类型
             </p>
           </div>
@@ -714,13 +714,13 @@
             <label
               class="mb-2 flex items-center text-sm font-medium text-gray-700 dark:text-gray-300"
             >
-              <i class="fas fa-tag mr-2 text-gray-400"></i>
+              <Icon name="Tag" class="mr-2 text-gray-400" />
               名称
               <span class="ml-2 text-xs text-gray-500">(可选)</span>
             </label>
             <input
               v-model="platformForm.name"
-              class="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-gray-900 shadow-sm transition-all placeholder:text-gray-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-500"
+              class="w-full rounded-md border border-gray-300 bg-white px-4 py-3 text-gray-900 shadow-sm transition-all placeholder:text-gray-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-500"
               placeholder="例如：运维群通知、开发测试群"
               type="text"
             />
@@ -737,14 +737,14 @@
             <label
               class="mb-2 flex items-center text-sm font-medium text-gray-700 dark:text-gray-300"
             >
-              <i class="fas fa-link mr-2 text-gray-400"></i>
+              <Icon name="Link" class="mr-2 text-gray-400" />
               Webhook URL
               <span class="ml-1 text-xs text-red-500">*</span>
             </label>
             <div class="relative">
               <input
                 v-model="platformForm.url"
-                class="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 pr-10 font-mono text-sm text-gray-900 shadow-sm transition-all placeholder:text-gray-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-500"
+                class="w-full rounded-md border border-gray-300 bg-white px-4 py-3 pr-10 font-mono text-sm text-gray-900 shadow-sm transition-all placeholder:text-gray-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-500"
                 :class="{
                   'border-red-500 focus:border-red-500 focus:ring-red-500/20': urlError,
                   'border-green-500 focus:border-green-500 focus:ring-green-500/20': urlValid
@@ -755,17 +755,17 @@
                 @input="validateUrl"
               />
               <div v-if="urlValid" class="absolute inset-y-0 right-0 flex items-center pr-3">
-                <i class="fas fa-check-circle text-green-500"></i>
+                <Icon name="CheckCircle" class="text-green-500" />
               </div>
               <div v-if="urlError" class="absolute inset-y-0 right-0 flex items-center pr-3">
-                <i class="fas fa-exclamation-circle text-red-500"></i>
+                <Icon name="AlertCircle" class="text-red-500" />
               </div>
             </div>
             <div
               v-if="getWebhookHint(platformForm.type)"
-              class="mt-2 flex items-start rounded-lg bg-blue-50 p-3 dark:bg-blue-900/20"
+              class="mt-2 flex items-start rounded-md bg-blue-50 p-3 dark:bg-blue-900/20"
             >
-              <i class="fas fa-info-circle mr-2 mt-0.5 text-blue-600 dark:text-blue-400"></i>
+              <Icon name="Info" class="mr-2 mt-0.5 text-blue-600 dark:text-blue-400" />
               <p class="text-sm text-blue-700 dark:text-blue-300">
                 {{ getWebhookHint(platformForm.type) }}
               </p>
@@ -778,13 +778,13 @@
               <label
                 class="mb-2 flex items-center text-sm font-medium text-gray-700 dark:text-gray-300"
               >
-                <i class="fas fa-robot mr-2 text-gray-400"></i>
+                <Icon name="Bot" class="mr-2 text-gray-400" />
                 Bot Token
                 <span class="ml-1 text-xs text-red-500">*</span>
               </label>
               <input
                 v-model="platformForm.botToken"
-                class="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 font-mono text-sm text-gray-900 shadow-sm transition-all placeholder:text-gray-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-500"
+                class="w-full rounded-md border border-gray-300 bg-white px-4 py-3 font-mono text-sm text-gray-900 shadow-sm transition-all placeholder:text-gray-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-500"
                 placeholder="例如：123456789:ABCDEFghijk-xyz"
                 required
                 type="text"
@@ -798,13 +798,13 @@
               <label
                 class="mb-2 flex items-center text-sm font-medium text-gray-700 dark:text-gray-300"
               >
-                <i class="fas fa-comments mr-2 text-gray-400"></i>
+                <Icon name="MessagesSquare" class="mr-2 text-gray-400" />
                 Chat ID
                 <span class="ml-1 text-xs text-red-500">*</span>
               </label>
               <input
                 v-model="platformForm.chatId"
-                class="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 font-mono text-sm text-gray-900 shadow-sm transition-all placeholder:text-gray-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-500"
+                class="w-full rounded-md border border-gray-300 bg-white px-4 py-3 font-mono text-sm text-gray-900 shadow-sm transition-all placeholder:text-gray-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-500"
                 placeholder="例如：123456789 或 -1001234567890"
                 required
                 type="text"
@@ -818,13 +818,13 @@
               <label
                 class="mb-2 flex items-center text-sm font-medium text-gray-700 dark:text-gray-300"
               >
-                <i class="fas fa-globe mr-2 text-gray-400"></i>
+                <Icon name="Globe" class="mr-2 text-gray-400" />
                 API 基础地址
                 <span class="ml-2 text-xs text-gray-500">(可选)</span>
               </label>
               <input
                 v-model="platformForm.apiBaseUrl"
-                class="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 font-mono text-sm text-gray-900 shadow-sm transition-all placeholder:text-gray-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-500"
+                class="w-full rounded-md border border-gray-300 bg-white px-4 py-3 font-mono text-sm text-gray-900 shadow-sm transition-all placeholder:text-gray-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-500"
                 placeholder="默认: https://api.telegram.org"
                 type="url"
               />
@@ -837,13 +837,13 @@
               <label
                 class="mb-2 flex items-center text-sm font-medium text-gray-700 dark:text-gray-300"
               >
-                <i class="fas fa-route mr-2 text-gray-400"></i>
+                <Icon name="Route" class="mr-2 text-gray-400" />
                 代理地址
                 <span class="ml-2 text-xs text-gray-500">(可选)</span>
               </label>
               <input
                 v-model="platformForm.proxyUrl"
-                class="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 font-mono text-sm text-gray-900 shadow-sm transition-all placeholder:text-gray-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-500"
+                class="w-full rounded-md border border-gray-300 bg-white px-4 py-3 font-mono text-sm text-gray-900 shadow-sm transition-all placeholder:text-gray-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-500"
                 placeholder="例如：socks5://user:pass@127.0.0.1:1080"
                 type="text"
               />
@@ -853,9 +853,9 @@
             </div>
 
             <div
-              class="flex items-start rounded-lg bg-blue-50 p-3 text-sm text-blue-700 dark:bg-blue-900/20 dark:text-blue-300"
+              class="flex items-start rounded-md bg-blue-50 p-3 text-sm text-blue-700 dark:bg-blue-900/20 dark:text-blue-300"
             >
-              <i class="fas fa-info-circle mr-2 mt-0.5"></i>
+              <Icon name="Info" class="mr-2 mt-0.5" />
               <div>机器人需先加入对应群组或频道并授予发送消息权限，通知会以纯文本方式发送。</div>
             </div>
           </div>
@@ -867,13 +867,13 @@
               <label
                 class="mb-2 flex items-center text-sm font-medium text-gray-700 dark:text-gray-300"
               >
-                <i class="fas fa-key mr-2 text-gray-400"></i>
+                <Icon name="Key" class="mr-2 text-gray-400" />
                 设备密钥 (Device Key)
                 <span class="ml-1 text-xs text-red-500">*</span>
               </label>
               <input
                 v-model="platformForm.deviceKey"
-                class="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 font-mono text-sm text-gray-900 shadow-sm transition-all placeholder:text-gray-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-500"
+                class="w-full rounded-md border border-gray-300 bg-white px-4 py-3 font-mono text-sm text-gray-900 shadow-sm transition-all placeholder:text-gray-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-500"
                 placeholder="例如：aBcDeFgHiJkLmNoPqRsTuVwX"
                 required
                 type="text"
@@ -888,13 +888,13 @@
               <label
                 class="mb-2 flex items-center text-sm font-medium text-gray-700 dark:text-gray-300"
               >
-                <i class="fas fa-server mr-2 text-gray-400"></i>
+                <Icon name="Server" class="mr-2 text-gray-400" />
                 服务器地址
                 <span class="ml-2 text-xs text-gray-500">(可选)</span>
               </label>
               <input
                 v-model="platformForm.serverUrl"
-                class="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 font-mono text-sm text-gray-900 shadow-sm transition-all placeholder:text-gray-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-500"
+                class="w-full rounded-md border border-gray-300 bg-white px-4 py-3 font-mono text-sm text-gray-900 shadow-sm transition-all placeholder:text-gray-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-500"
                 placeholder="默认: https://api.day.app/push"
                 type="url"
               />
@@ -905,12 +905,12 @@
               <label
                 class="mb-2 flex items-center text-sm font-medium text-gray-700 dark:text-gray-300"
               >
-                <i class="fas fa-flag mr-2 text-gray-400"></i>
+                <Icon name="Flag" class="mr-2 text-gray-400" />
                 通知级别
               </label>
               <select
                 v-model="platformForm.level"
-                class="w-full appearance-none rounded-xl border border-gray-300 bg-white px-4 py-3 pr-10 text-gray-900 shadow-sm transition-all focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+                class="w-full appearance-none rounded-md border border-gray-300 bg-white px-4 py-3 pr-10 text-gray-900 shadow-sm transition-all focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
               >
                 <option value="">自动（根据通知类型）</option>
                 <option value="passive">被动</option>
@@ -925,12 +925,12 @@
               <label
                 class="mb-2 flex items-center text-sm font-medium text-gray-700 dark:text-gray-300"
               >
-                <i class="fas fa-volume-up mr-2 text-gray-400"></i>
+                <Icon name="Volume2" class="mr-2 text-gray-400" />
                 通知声音
               </label>
               <select
                 v-model="platformForm.sound"
-                class="w-full appearance-none rounded-xl border border-gray-300 bg-white px-4 py-3 pr-10 text-gray-900 shadow-sm transition-all focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+                class="w-full appearance-none rounded-md border border-gray-300 bg-white px-4 py-3 pr-10 text-gray-900 shadow-sm transition-all focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
               >
                 <option value="">自动（根据通知类型）</option>
                 <option value="default">默认</option>
@@ -949,21 +949,21 @@
               <label
                 class="mb-2 flex items-center text-sm font-medium text-gray-700 dark:text-gray-300"
               >
-                <i class="fas fa-folder mr-2 text-gray-400"></i>
+                <Icon name="Folder" class="mr-2 text-gray-400" />
                 通知分组
                 <span class="ml-2 text-xs text-gray-500">(可选)</span>
               </label>
               <input
                 v-model="platformForm.group"
-                class="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-gray-900 shadow-sm transition-all placeholder:text-gray-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-500"
+                class="w-full rounded-md border border-gray-300 bg-white px-4 py-3 text-gray-900 shadow-sm transition-all placeholder:text-gray-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-500"
                 placeholder="默认: claude-relay"
                 type="text"
               />
             </div>
 
             <!-- 提示信息 -->
-            <div class="mt-2 flex items-start rounded-lg bg-blue-50 p-3 dark:bg-blue-900/20">
-              <i class="fas fa-info-circle mr-2 mt-0.5 text-blue-600 dark:text-blue-400"></i>
+            <div class="mt-2 flex items-start rounded-md bg-blue-50 p-3 dark:bg-blue-900/20">
+              <Icon name="Info" class="mr-2 mt-0.5 text-blue-600 dark:text-blue-400" />
               <div class="text-sm text-blue-700 dark:text-blue-300">
                 <p>1. 在iPhone上安装Bark App</p>
                 <p>2. 打开App获取您的设备密钥</p>
@@ -979,13 +979,13 @@
               <label
                 class="mb-2 flex items-center text-sm font-medium text-gray-700 dark:text-gray-300"
               >
-                <i class="fas fa-server mr-2 text-gray-400"></i>
+                <Icon name="Server" class="mr-2 text-gray-400" />
                 SMTP 服务器
                 <span class="ml-1 text-xs text-red-500">*</span>
               </label>
               <input
                 v-model="platformForm.host"
-                class="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-gray-900 shadow-sm transition-all placeholder:text-gray-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-500"
+                class="w-full rounded-md border border-gray-300 bg-white px-4 py-3 text-gray-900 shadow-sm transition-all placeholder:text-gray-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-500"
                 placeholder="例如: smtp.gmail.com"
                 required
                 type="text"
@@ -998,12 +998,12 @@
                 <label
                   class="mb-2 flex items-center text-sm font-medium text-gray-700 dark:text-gray-300"
                 >
-                  <i class="fas fa-plug mr-2 text-gray-400"></i>
+                  <Icon name="Plug" class="mr-2 text-gray-400" />
                   端口
                 </label>
                 <input
                   v-model.number="platformForm.port"
-                  class="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-gray-900 shadow-sm transition-all focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+                  class="w-full rounded-md border border-gray-300 bg-white px-4 py-3 text-gray-900 shadow-sm transition-all focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
                   max="65535"
                   min="1"
                   placeholder="587"
@@ -1018,12 +1018,12 @@
                 <label
                   class="mb-2 flex items-center text-sm font-medium text-gray-700 dark:text-gray-300"
                 >
-                  <i class="fas fa-shield-alt mr-2 text-gray-400"></i>
+                  <Icon name="Shield" class="mr-2 text-gray-400" />
                   加密方式
                 </label>
                 <select
                   v-model="platformForm.secure"
-                  class="w-full appearance-none rounded-xl border border-gray-300 bg-white px-4 py-3 pr-10 text-gray-900 shadow-sm transition-all focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+                  class="w-full appearance-none rounded-md border border-gray-300 bg-white px-4 py-3 pr-10 text-gray-900 shadow-sm transition-all focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
                 >
                   <option :value="false">STARTTLS (端口587)</option>
                   <option :value="true">SSL/TLS (端口465)</option>
@@ -1036,13 +1036,13 @@
               <label
                 class="mb-2 flex items-center text-sm font-medium text-gray-700 dark:text-gray-300"
               >
-                <i class="fas fa-user mr-2 text-gray-400"></i>
+                <Icon name="User" class="mr-2 text-gray-400" />
                 用户名
                 <span class="ml-1 text-xs text-red-500">*</span>
               </label>
               <input
                 v-model="platformForm.user"
-                class="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-gray-900 shadow-sm transition-all placeholder:text-gray-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-500"
+                class="w-full rounded-md border border-gray-300 bg-white px-4 py-3 text-gray-900 shadow-sm transition-all placeholder:text-gray-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-500"
                 placeholder="user@example.com"
                 required
                 type="email"
@@ -1054,13 +1054,13 @@
               <label
                 class="mb-2 flex items-center text-sm font-medium text-gray-700 dark:text-gray-300"
               >
-                <i class="fas fa-lock mr-2 text-gray-400"></i>
+                <Icon name="Lock" class="mr-2 text-gray-400" />
                 密码 / 应用密码
                 <span class="ml-1 text-xs text-red-500">*</span>
               </label>
               <input
                 v-model="platformForm.pass"
-                class="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-gray-900 shadow-sm transition-all placeholder:text-gray-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-500"
+                class="w-full rounded-md border border-gray-300 bg-white px-4 py-3 text-gray-900 shadow-sm transition-all placeholder:text-gray-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-500"
                 placeholder="邮箱密码或应用专用密码"
                 required
                 type="password"
@@ -1075,13 +1075,13 @@
               <label
                 class="mb-2 flex items-center text-sm font-medium text-gray-700 dark:text-gray-300"
               >
-                <i class="fas fa-paper-plane mr-2 text-gray-400"></i>
+                <Icon name="Send" class="mr-2 text-gray-400" />
                 发件人邮箱
                 <span class="ml-2 text-xs text-gray-500">(可选)</span>
               </label>
               <input
                 v-model="platformForm.from"
-                class="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-gray-900 shadow-sm transition-all placeholder:text-gray-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-500"
+                class="w-full rounded-md border border-gray-300 bg-white px-4 py-3 text-gray-900 shadow-sm transition-all placeholder:text-gray-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-500"
                 placeholder="默认使用用户名邮箱"
                 type="email"
               />
@@ -1092,13 +1092,13 @@
               <label
                 class="mb-2 flex items-center text-sm font-medium text-gray-700 dark:text-gray-300"
               >
-                <i class="fas fa-envelope mr-2 text-gray-400"></i>
+                <Icon name="Mail" class="mr-2 text-gray-400" />
                 收件人邮箱
                 <span class="ml-1 text-xs text-red-500">*</span>
               </label>
               <input
                 v-model="platformForm.to"
-                class="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-gray-900 shadow-sm transition-all placeholder:text-gray-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-500"
+                class="w-full rounded-md border border-gray-300 bg-white px-4 py-3 text-gray-900 shadow-sm transition-all placeholder:text-gray-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-500"
                 placeholder="admin@example.com"
                 required
                 type="email"
@@ -1110,7 +1110,7 @@
           <!-- 签名设置（钉钉/飞书） -->
           <div
             v-if="platformForm.type === 'dingtalk' || platformForm.type === 'feishu'"
-            class="rounded-xl border border-gray-200 bg-gray-50 p-4 dark:border-gray-700 dark:bg-gray-900/50"
+            class="rounded-md border border-gray-200 bg-gray-50 p-4 dark:border-gray-700 dark:bg-gray-900/50"
           >
             <div class="space-y-4">
               <div class="flex items-center justify-between">
@@ -1118,19 +1118,19 @@
                   <input
                     id="enableSign"
                     v-model="platformForm.enableSign"
-                    class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-2 focus:ring-blue-500 focus:ring-offset-0"
+                    class="h-4 w-4 rounded-md border-gray-300 text-blue-600 focus:ring-2 focus:ring-blue-500 focus:ring-offset-0"
                     type="checkbox"
                   />
                   <span
                     class="ml-3 flex items-center text-sm font-medium text-gray-700 dark:text-gray-300"
                   >
-                    <i class="fas fa-shield-alt mr-2 text-gray-400"></i>
+                    <Icon name="Shield" class="mr-2 text-gray-400" />
                     启用签名验证
                   </span>
                 </label>
                 <span
                   v-if="platformForm.enableSign"
-                  class="rounded-full bg-green-100 px-2 py-1 text-xs font-medium text-green-700 dark:bg-green-900/50 dark:text-green-400"
+                  class="rounded-md bg-green-100 px-2 py-1 text-xs font-medium text-green-700 dark:bg-green-900/50 dark:text-green-400"
                 >
                   已启用
                 </span>
@@ -1149,7 +1149,7 @@
                   </label>
                   <input
                     v-model="platformForm.secret"
-                    class="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 font-mono text-sm text-gray-900 shadow-sm transition-all placeholder:text-gray-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:placeholder:text-gray-500"
+                    class="w-full rounded-md border border-gray-300 bg-white px-4 py-3 font-mono text-sm text-gray-900 shadow-sm transition-all placeholder:text-gray-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:placeholder:text-gray-500"
                     placeholder="SEC..."
                     type="text"
                   />
@@ -1166,41 +1166,43 @@
       >
         <div class="flex items-center justify-between">
           <div class="text-xs text-gray-500 dark:text-gray-400">
-            <i class="fas fa-asterisk mr-1 text-red-500"></i>
+            <Icon name="Asterisk" class="mr-1 text-red-500" />
             必填项
           </div>
           <div class="flex space-x-3">
             <button
-              class="group flex items-center rounded-xl border border-gray-300 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 shadow-sm transition-all hover:bg-gray-50 hover:shadow-md dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
+              class="group flex items-center rounded-md border border-gray-300 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 shadow-sm transition-all hover:bg-gray-50 hover:shadow-md dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
               @click="closePlatformModal"
             >
-              <i class="fas fa-times mr-2 transition-transform group-hover:scale-110"></i>
+              <Icon name="X" class="mr-2 transition-transform group-hover:scale-110" />
               取消
             </button>
             <button
-              class="group flex items-center rounded-xl border border-blue-200 bg-blue-50 px-4 py-2.5 text-sm font-medium text-blue-700 shadow-sm transition-all hover:bg-blue-100 hover:shadow-md dark:border-blue-800 dark:bg-blue-900/50 dark:text-blue-300 dark:hover:bg-blue-900/70"
+              class="group flex items-center rounded-md border border-blue-200 bg-blue-50 px-4 py-2.5 text-sm font-medium text-blue-700 shadow-sm transition-all hover:bg-blue-100 hover:shadow-md dark:border-blue-800 dark:bg-blue-900/50 dark:text-blue-300 dark:hover:bg-blue-900/70"
               :disabled="testingConnection"
               @click="testPlatformForm"
             >
-              <i
-                class="mr-2 transition-transform"
-                :class="
-                  testingConnection ? 'fas fa-spinner fa-spin' : 'fas fa-vial group-hover:scale-110'
-                "
-              ></i>
+              <Icon
+                name="Loader2"
+                :class="[
+                  'mr-2 transition-transform',
+                  testingConnection ? 'animate-spin' : 'group-hover:scale-110'
+                ]"
+              />
               {{ testingConnection ? '测试中...' : '测试连接' }}
             </button>
             <button
-              class="group flex items-center rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 px-5 py-2.5 text-sm font-medium text-white shadow-md transition-all hover:from-blue-700 hover:to-indigo-700 hover:shadow-lg disabled:cursor-not-allowed disabled:from-gray-400 disabled:to-gray-500"
+              class="group flex items-center rounded-md bg-gradient-to-r from-blue-600 to-indigo-600 px-5 py-2.5 text-sm font-medium text-white shadow-md transition-all hover:from-blue-700 hover:to-indigo-700 hover:shadow-lg disabled:cursor-not-allowed disabled:from-gray-400 disabled:to-gray-500"
               :disabled="!isPlatformFormValid || savingPlatform"
               @click="savePlatform"
             >
-              <i
-                class="mr-2 transition-transform"
-                :class="
-                  savingPlatform ? 'fas fa-spinner fa-spin' : 'fas fa-save group-hover:scale-110'
-                "
-              ></i>
+              <Icon
+                name="Loader2"
+                :class="[
+                  'mr-2 transition-transform',
+                  savingPlatform ? 'animate-spin' : 'group-hover:scale-110'
+                ]"
+              />
               {{ savingPlatform ? '保存中...' : editingPlatform ? '保存修改' : '添加平台' }}
             </button>
           </div>
@@ -2049,7 +2051,7 @@ const formatDateTime = settingsStore.formatDateTime
 
 .card {
   background: white;
-  border-radius: 12px;
+  border-radius: 0.375rem;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
   border: 1px solid #e5e7eb;
 }
@@ -2062,7 +2064,7 @@ const formatDateTime = settingsStore.formatDateTime
 
 .table-container {
   overflow: hidden;
-  border-radius: 8px;
+  border-radius: 0.375rem;
   border: 1px solid #f3f4f6;
 }
 
@@ -2083,11 +2085,11 @@ const formatDateTime = settingsStore.formatDateTime
 }
 
 .form-input {
-  @apply w-full rounded-lg border border-gray-300 px-4 py-2 transition-all duration-200 focus:border-transparent focus:ring-2 focus:ring-blue-500;
+  @apply w-full rounded-md border border-gray-300 px-4 py-2 transition-all duration-200 focus:border-transparent focus:ring-2 focus:ring-blue-500;
 }
 
 .btn {
-  @apply inline-flex items-center justify-center rounded-lg px-4 py-2 text-sm font-semibold transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2;
+  @apply inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-semibold transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2;
 }
 
 .btn-primary {
@@ -2099,6 +2101,6 @@ const formatDateTime = settingsStore.formatDateTime
 }
 
 .loading-spinner {
-  @apply h-5 w-5 animate-spin rounded-full border-2 border-gray-300 border-t-blue-600;
+  @apply h-5 w-5 animate-spin rounded-md border-2 border-gray-300 border-t-blue-600;
 }
 </style>

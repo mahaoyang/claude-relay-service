@@ -8,9 +8,9 @@
       @click="handleCycleTheme"
     >
       <transition mode="out-in" name="fade">
-        <i v-if="themeStore.themeMode === 'light'" key="sun" class="fas fa-sun" />
-        <i v-else-if="themeStore.themeMode === 'dark'" key="moon" class="fas fa-moon" />
-        <i v-else key="auto" class="fas fa-circle-half-stroke" />
+        <Icon name="Sun" v-if="themeStore.themeMode === 'light'" key="sun" />
+        <Icon name="Moon" v-else-if="themeStore.themeMode === 'dark'" key="moon" />
+        <Icon name="Moon" v-else key="auto" />
       </transition>
     </button>
 
@@ -41,9 +41,9 @@
         <!-- 切换滑块 -->
         <div class="switch-handle">
           <div class="handle-icon">
-            <i v-if="themeStore.themeMode === 'light'" class="fas fa-sun" />
-            <i v-else-if="themeStore.themeMode === 'dark'" class="fas fa-moon" />
-            <i v-else class="fas fa-circle-half-stroke" />
+            <Icon name="Sun" v-if="themeStore.themeMode === 'light'" />
+            <Icon name="Moon" v-else-if="themeStore.themeMode === 'dark'" />
+            <Icon name="Moon" v-else />
           </div>
         </div>
       </button>
@@ -137,7 +137,7 @@ const selectTheme = (mode) => {
 /* 基础按钮样式 - 更简洁优雅 */
 .theme-toggle-button {
   @apply flex items-center justify-center;
-  @apply h-9 w-9 rounded-full;
+  @apply h-9 w-9 rounded-md;
   @apply bg-white/90 dark:bg-gray-800/90;
   @apply hover:bg-white dark:hover:bg-gray-700;
   @apply text-gray-600 dark:text-gray-300;
@@ -201,11 +201,11 @@ const selectTheme = (mode) => {
   @apply relative;
   width: 76px;
   height: 38px;
-  border-radius: 50px;
+  border-radius: 0.375rem;
   padding: 4px;
   cursor: pointer;
   transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%);
   border: 2px solid rgba(255, 255, 255, 0.1);
   box-shadow:
     0 4px 15px rgba(102, 126, 234, 0.3),
@@ -341,7 +341,7 @@ const selectTheme = (mode) => {
 .clouds span {
   position: absolute;
   background: rgba(255, 255, 255, 0.3);
-  border-radius: 100px;
+  border-radius: 0.375rem;
 }
 
 .clouds span:nth-child(1) {
@@ -436,7 +436,7 @@ const selectTheme = (mode) => {
 .theme-segmented {
   @apply inline-flex;
   @apply bg-gray-100 dark:bg-gray-800;
-  @apply rounded-full p-1;
+  @apply rounded-md p-1;
   @apply border border-gray-200 dark:border-gray-700;
   @apply shadow-sm;
 }
@@ -446,7 +446,7 @@ const selectTheme = (mode) => {
   @apply text-xs font-medium;
   @apply text-gray-500 dark:text-gray-400;
   @apply transition-all duration-200;
-  @apply rounded-full;
+  @apply rounded-md;
   @apply flex items-center gap-1;
   @apply cursor-pointer;
   position: relative;
