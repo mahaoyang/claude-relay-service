@@ -197,34 +197,5 @@ defineExpose({
   transform: scale(0.9) translateY(-20px);
 }
 
-/* Scrollbar styling */
-.modal-content::-webkit-scrollbar {
-  width: 6px;
-}
-
-.modal-content::-webkit-scrollbar-track {
-  background: #f1f5f9;
-  border-radius: 0.375rem;
-}
-
-:global(.dark) .modal-content::-webkit-scrollbar-track {
-  background: #374151;
-}
-
-.modal-content::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
-  border-radius: 0.375rem;
-}
-
-:global(.dark) .modal-content::-webkit-scrollbar-thumb {
-  background: #4b5563;
-}
-
-.modal-content::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
-}
-
-:global(.dark) .modal-content::-webkit-scrollbar-thumb:hover {
-  background: #6b7280;
-}
+/* Radix-style 滚动条 - 已在 main.css 全局隐藏 */
 </style>
