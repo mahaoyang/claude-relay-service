@@ -290,33 +290,24 @@ body::before {
 }
 
 .card {
-  background: var(--surface-color);
-  border-radius: 0.375rem;
-  border: 1px solid var(--border-color);
-  box-shadow:
-    0 10px 15px -3px rgba(0, 0, 0, 0.1),
-    0 4px 6px -2px rgba(0, 0, 0, 0.05);
-  overflow: hidden;
+  /* 移除背景、边框、阴影 - 保持简洁 */
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  overflow: visible;
   position: relative;
-  transition:
-    background-color 0.3s ease,
-    border-color 0.3s ease;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
 }
 
 .dark .card {
-  box-shadow:
-    0 10px 15px -3px rgba(0, 0, 0, 0.25),
-    0 4px 6px -2px rgba(0, 0, 0, 0.1);
+  /* 暗色模式下也移除阴影 */
+  box-shadow: none;
 }
 
 .card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
+  /* 移除顶部装饰线 */
+  display: none;
 }
 
 .stat-card {
@@ -630,55 +621,7 @@ body::before {
   display: none;
 }
 
-/* 自定义滚动条样式 */
-.custom-scrollbar {
-  scrollbar-width: thin;
-  scrollbar-color: rgba(102, 126, 234, 0.3) rgba(102, 126, 234, 0.05);
-}
-
-.dark .custom-scrollbar {
-  scrollbar-color: rgba(129, 140, 248, 0.3) rgba(129, 140, 248, 0.05);
-}
-
-.custom-scrollbar::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-
-.custom-scrollbar::-webkit-scrollbar-track {
-  background: rgba(102, 126, 234, 0.05);
-  border-radius: 0.375rem;
-}
-
-.dark .custom-scrollbar::-webkit-scrollbar-track {
-  background: rgba(129, 140, 248, 0.05);
-}
-
-.custom-scrollbar::-webkit-scrollbar-thumb {
-  background: linear-gradient(135deg, rgba(102, 126, 234, 0.4) 0%, rgba(118, 75, 162, 0.4) 100%);
-  border-radius: 0.375rem;
-  transition: background 0.3s ease;
-}
-
-.dark .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: linear-gradient(135deg, rgba(129, 140, 248, 0.4) 0%, rgba(167, 139, 250, 0.4) 100%);
-}
-
-.custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(135deg, rgba(102, 126, 234, 0.6) 0%, rgba(118, 75, 162, 0.6) 100%);
-}
-
-.dark .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(135deg, rgba(129, 140, 248, 0.6) 0%, rgba(167, 139, 250, 0.6) 100%);
-}
-
-.custom-scrollbar::-webkit-scrollbar-thumb:active {
-  background: linear-gradient(135deg, rgba(102, 126, 234, 0.8) 0%, rgba(118, 75, 162, 0.8) 100%);
-}
-
-.dark .custom-scrollbar::-webkit-scrollbar-thumb:active {
-  background: linear-gradient(135deg, rgba(129, 140, 248, 0.8) 0%, rgba(167, 139, 250, 0.8) 100%);
-}
+/* Radix-style 滚动条 - 已在 main.css 全局隐藏 */
 
 /* 弹窗滚动内容样式 */
 .modal-scroll-content {

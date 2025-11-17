@@ -1,6 +1,8 @@
 <template>
   <div id="app">
-    <router-view />
+    <ScrollArea style="position: fixed; top: 0; left: 0; right: 0; bottom: 0">
+      <router-view />
+    </ScrollArea>
 
     <!-- 全局组件 -->
     <ToastNotification ref="toastRef" />
@@ -14,6 +16,7 @@ import { useAuthStore } from '@/stores/auth'
 import { useThemeStore } from '@/stores/theme'
 import ToastNotification from '@/components/common/ToastNotification.vue'
 import ConfirmDialog from '@/components/common/ConfirmDialog.vue'
+import ScrollArea from '@/components/common/ScrollArea.vue'
 
 const authStore = useAuthStore()
 const themeStore = useThemeStore()
