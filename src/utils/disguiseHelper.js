@@ -27,6 +27,7 @@ const DISGUISE_CONFIG = {
   // SessionId 池配置
   sessionPoolSize: parseInt(process.env.DISGUISE_SESSION_POOL_SIZE || '3', 10),
   sessionPoolKey: 'disguise:session_pool',
+  sessionPoolTTL: parseInt(process.env.DISGUISE_SESSION_POOL_TTL_DAYS || '5', 10) * 24 * 60 * 60, // 转换为秒
 
   // 是否启用伪装
   enabled: process.env.DISGUISE_ENABLED === 'true' || false,
@@ -63,15 +64,24 @@ function extractSessionIdFromUserId(userId) {
 
 /**
  * 从 Redis 池中获取所有 sessionId
+ * 池为空时返回默认 sessionIds 作为兜底
  */
 async function getSessionIdsFromPool() {
   try {
     const client = redisClient.getClient()
     if (!client) {
+      logger.warn('⚠️  Redis not connected, using default sessionIds')
       return DISGUISE_CONFIG.defaultSessionIds
     }
     const sessionIds = await client.smembers(DISGUISE_CONFIG.sessionPoolKey)
-    return sessionIds || []
+
+    // 池为空（过期或未收集），使用默认 sessionIds 兜底
+    if (!sessionIds || sessionIds.length === 0) {
+      logger.info('🔄 SessionId pool is empty, using default sessionIds as fallback')
+      return DISGUISE_CONFIG.defaultSessionIds
+    }
+
+    return sessionIds
   } catch (error) {
     logger.error('Failed to get sessionIds from pool:', error)
     return DISGUISE_CONFIG.defaultSessionIds
@@ -109,6 +119,16 @@ async function addSessionIdToPool(sessionId) {
       logger.info(
         `📥 Collected sessionId to pool [${newSize}/${DISGUISE_CONFIG.sessionPoolSize}]: ${sessionId}`
       )
+
+      // 设置或刷新 TTL（5天后自动清理）
+      await client.expire(DISGUISE_CONFIG.sessionPoolKey, DISGUISE_CONFIG.sessionPoolTTL)
+
+      // 如果是第一个添加的 sessionId，记录 TTL 设置
+      if (newSize === 1) {
+        const ttlDays = DISGUISE_CONFIG.sessionPoolTTL / (24 * 60 * 60)
+        logger.info(`⏰ SessionId pool TTL set to ${ttlDays} days`)
+      }
+
       return true
     }
 
@@ -121,20 +141,11 @@ async function addSessionIdToPool(sessionId) {
 
 /**
  * 基于日期hash从池中选择当天的sessionId
+ * 池会自动在空时返回默认 sessionIds
  */
 async function getDailySessionId() {
-  // 获取池中的 sessionIds
+  // 获取池中的 sessionIds（自动兜底）
   const sessionIds = await getSessionIdsFromPool()
-
-  if (!sessionIds || sessionIds.length === 0) {
-    logger.warn('SessionId pool is empty, using default sessionIds')
-    // 池为空，使用默认值
-    const dateString = getTodayDateString()
-    const hash = crypto.createHash('sha256').update(dateString).digest('hex')
-    const hashNum = parseInt(hash.substring(0, 8), 16)
-    const index = hashNum % DISGUISE_CONFIG.defaultSessionIds.length
-    return DISGUISE_CONFIG.defaultSessionIds[index]
-  }
 
   // 从池中 hash 选择
   const dateString = getTodayDateString()
