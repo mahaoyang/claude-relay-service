@@ -538,7 +538,8 @@ const renderChart = async () => {
             color: chartColors.value.text
           },
           grid: {
-            color: chartColors.value.grid
+            display: false,
+            drawBorder: false
           }
         },
         y: {
@@ -548,7 +549,8 @@ const renderChart = async () => {
             callback: (value) => formatCost(value)
           },
           grid: {
-            color: chartColors.value.grid
+            display: false,
+            drawBorder: false
           }
         },
         y1: {
@@ -558,7 +560,8 @@ const renderChart = async () => {
             callback: (value) => formatNumber(value)
           },
           grid: {
-            drawOnChartArea: false
+            display: false,
+            drawBorder: false
           }
         }
       }
