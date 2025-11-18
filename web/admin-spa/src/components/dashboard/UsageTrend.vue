@@ -60,7 +60,7 @@ const createChart = () => {
     chart.destroy()
   }
 
-  const { getGradient } = useChartConfig()
+  const { getGradient, lineChartStyle } = useChartConfig()
   const ctx = chartCanvas.value.getContext('2d')
 
   const labels = dashboardStore.trendData.map((item) => {
@@ -84,17 +84,17 @@ const createChart = () => {
           label: '请求次数',
           data: dashboardStore.trendData.map((item) => item.requests),
           borderColor: '#14b8a6',
-          backgroundColor: getGradient(ctx, '#14b8a6', 0.1),
+          backgroundColor: getGradient(ctx, '#14b8a6', 0.15),
           yAxisID: 'y',
-          tension: 0.4
+          ...lineChartStyle
         },
         {
           label: 'Token使用量',
           data: dashboardStore.trendData.map((item) => item.tokens),
           borderColor: '#2dd4bf',
-          backgroundColor: getGradient(ctx, '#2dd4bf', 0.1),
+          backgroundColor: getGradient(ctx, '#2dd4bf', 0.15),
           yAxisID: 'y1',
-          tension: 0.4
+          ...lineChartStyle
         }
       ]
     },
@@ -102,23 +102,50 @@ const createChart = () => {
       responsive: true,
       maintainAspectRatio: false,
       interaction: {
-        mode: 'index',
+        mode: 'nearest',
+        axis: 'x',
         intersect: false
       },
       plugins: {
         legend: {
-          position: 'top'
+          position: 'top',
+          labels: {
+            usePointStyle: true,
+            pointStyle: 'circle',
+            padding: 16,
+            font: {
+              size: 12,
+              weight: '500'
+            },
+            color: 'rgba(255, 255, 255, 0.9)',
+            boxWidth: 8,
+            boxHeight: 8
+          }
         },
         tooltip: {
           mode: 'index',
-          intersect: false
+          intersect: false,
+          backgroundColor: 'rgba(0, 0, 0, 0.9)',
+          borderColor: 'rgba(20, 184, 166, 0.5)',
+          borderWidth: 1,
+          titleColor: '#ffffff',
+          bodyColor: 'rgba(255, 255, 255, 0.9)',
+          padding: 12,
+          cornerRadius: 8
         }
       },
       scales: {
         x: {
           display: true,
           grid: {
-            display: false
+            display: false,
+            drawBorder: false
+          },
+          ticks: {
+            color: 'rgba(255, 255, 255, 0.7)',
+            font: {
+              size: 11
+            }
           }
         },
         y: {
@@ -127,7 +154,22 @@ const createChart = () => {
           position: 'left',
           title: {
             display: true,
-            text: '请求次数'
+            text: '请求次数',
+            color: 'rgba(255, 255, 255, 0.9)',
+            font: {
+              size: 12,
+              weight: '500'
+            }
+          },
+          grid: {
+            display: false,
+            drawBorder: false
+          },
+          ticks: {
+            color: 'rgba(255, 255, 255, 0.7)',
+            font: {
+              size: 11
+            }
           }
         },
         y1: {
@@ -136,10 +178,22 @@ const createChart = () => {
           position: 'right',
           title: {
             display: true,
-            text: 'Token使用量'
+            text: 'Token使用量',
+            color: 'rgba(255, 255, 255, 0.9)',
+            font: {
+              size: 12,
+              weight: '500'
+            }
           },
           grid: {
-            drawOnChartArea: false
+            display: false,
+            drawBorder: false
+          },
+          ticks: {
+            color: 'rgba(255, 255, 255, 0.7)',
+            font: {
+              size: 11
+            }
           }
         }
       }

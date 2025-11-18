@@ -466,7 +466,7 @@
               title="立即刷新数据"
               @click="refreshAllData()"
             >
-              <Icon name="RefreshCcw" :class="[' text-xs', { 'animate-spin': isRefreshing }]" />
+              <Icon name="RefreshCcw" :class="['text-xs', { 'animate-spin': isRefreshing }]" />
               <span class="hidden sm:inline">{{ isRefreshing ? '刷新中' : '刷新' }}</span>
             </button>
           </div>
@@ -593,7 +593,8 @@
               ]"
               @click="((apiKeysTrendMetric = 'requests'), updateApiKeysUsageTrendChart())"
             >
-              <Icon name="ArrowLeftRight" class="mr-1" /><span class="hidden sm:inline">请求次数</span
+              <Icon name="ArrowLeftRight" class="mr-1" /><span class="hidden sm:inline"
+                >请求次数</span
               ><span class="sm:hidden">请求</span>
             </button>
             <button
@@ -681,7 +682,11 @@ import { ref, onMounted, onUnmounted, watch, nextTick, computed } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useDashboardStore } from '@/stores/dashboard'
 import { useThemeStore } from '@/stores/theme'
+import { useChartConfig } from '@/composables/useChartConfig'
 import Chart from 'chart.js/auto'
+
+// 初始化 Chart.js 全局配置
+const { trendLineColors } = useChartConfig()
 
 const dashboardStore = useDashboardStore()
 const themeStore = useThemeStore()
@@ -899,44 +904,44 @@ function createUsageTrendChart() {
       {
         label: '输入Token',
         data: inputData,
-        borderColor: 'rgb(102, 126, 234)',
-        backgroundColor: 'rgba(102, 126, 234, 0.1)',
+        borderColor: trendLineColors.inputToken,
+        backgroundColor: trendLineColors.inputTokenBg,
         tension: 0.3
       },
       {
         label: '输出Token',
         data: outputData,
-        borderColor: 'rgb(240, 147, 251)',
-        backgroundColor: 'rgba(240, 147, 251, 0.1)',
+        borderColor: trendLineColors.outputToken,
+        backgroundColor: trendLineColors.outputTokenBg,
         tension: 0.3
       },
       {
         label: '缓存创建Token',
         data: cacheCreateData,
-        borderColor: 'rgb(59, 130, 246)',
-        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+        borderColor: trendLineColors.cacheCreate,
+        backgroundColor: trendLineColors.cacheCreateBg,
         tension: 0.3
       },
       {
         label: '缓存读取Token',
         data: cacheReadData,
-        borderColor: 'rgb(147, 51, 234)',
-        backgroundColor: 'rgba(147, 51, 234, 0.1)',
+        borderColor: trendLineColors.cacheRead,
+        backgroundColor: trendLineColors.cacheReadBg,
         tension: 0.3
       },
       {
         label: '费用 (USD)',
         data: costData,
-        borderColor: 'rgb(34, 197, 94)',
-        backgroundColor: 'rgba(34, 197, 94, 0.1)',
+        borderColor: trendLineColors.cost,
+        backgroundColor: trendLineColors.costBg,
         tension: 0.3,
         yAxisID: 'y2'
       },
       {
         label: '请求数',
         data: requestsData,
-        borderColor: 'rgb(16, 185, 129)',
-        backgroundColor: 'rgba(16, 185, 129, 0.1)',
+        borderColor: trendLineColors.requests,
+        backgroundColor: trendLineColors.requestsBg,
         tension: 0.3,
         yAxisID: 'y1'
       }
@@ -1029,7 +1034,8 @@ function createUsageTrendChart() {
             color: chartColors.value.text
           },
           grid: {
-            color: chartColors.value.grid
+            display: false,
+            drawBorder: false
           }
         },
         y: {
@@ -1048,7 +1054,8 @@ function createUsageTrendChart() {
             color: chartColors.value.text
           },
           grid: {
-            color: chartColors.value.grid
+            display: false,
+            drawBorder: false
           }
         },
         y1: {
@@ -1061,7 +1068,8 @@ function createUsageTrendChart() {
             color: chartColors.value.text
           },
           grid: {
-            drawOnChartArea: false
+            display: false,
+            drawBorder: false
           },
           ticks: {
             callback: function (value) {
@@ -1248,7 +1256,8 @@ function createApiKeysUsageTrendChart() {
             color: chartColors.value.text
           },
           grid: {
-            color: chartColors.value.grid
+            display: false,
+            drawBorder: false
           }
         },
         y: {
@@ -1265,7 +1274,8 @@ function createApiKeysUsageTrendChart() {
             color: chartColors.value.text
           },
           grid: {
-            color: chartColors.value.grid
+            display: false,
+            drawBorder: false
           }
         }
       }
@@ -1423,7 +1433,8 @@ function createAccountUsageTrendChart() {
             color: chartColors.value.text
           },
           grid: {
-            color: chartColors.value.grid
+            display: false,
+            drawBorder: false
           }
         },
         y: {
@@ -1438,7 +1449,8 @@ function createAccountUsageTrendChart() {
             color: chartColors.value.text
           },
           grid: {
-            color: chartColors.value.grid
+            display: false,
+            drawBorder: false
           }
         }
       }
