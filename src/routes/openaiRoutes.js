@@ -4,6 +4,8 @@ const router = express.Router()
 const logger = require('../utils/logger')
 const config = require('../../config/config')
 const { authenticateApiKey } = require('../middleware/auth')
+const codexRequestLogger = require('../middleware/codexRequestLogger')
+const codexDisguise = require('../middleware/codexDisguise')
 const unifiedOpenAIScheduler = require('../services/unifiedOpenAIScheduler')
 const openaiAccountService = require('../services/openaiAccountService')
 const openaiResponsesAccountService = require('../services/openaiResponsesAccountService')
@@ -856,8 +858,16 @@ const handleResponses = async (req, res) => {
 }
 
 // 注册两个路由路径，都使用相同的处理函数
-router.post('/responses', authenticateApiKey, handleResponses)
-router.post('/v1/responses', authenticateApiKey, handleResponses)
+// 使用 codexRequestLogger 中间件来记录 Codex 请求格式
+// 使用 codexDisguise 中间件来伪装请求（仅修改 session_id，模型透传）
+router.post('/responses', authenticateApiKey, codexRequestLogger(), codexDisguise, handleResponses)
+router.post(
+  '/v1/responses',
+  authenticateApiKey,
+  codexRequestLogger(),
+  codexDisguise,
+  handleResponses
+)
 
 // 使用情况统计端点
 router.get('/usage', authenticateApiKey, async (req, res) => {
