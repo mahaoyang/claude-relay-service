@@ -179,6 +179,26 @@ certs/
 # Redis dumps
 dump.rdb
 appendonly.aof
+*.rdb
+*.aof
+
+# Backup directories (contain sensitive keys and credentials)
+backups/
+data-exports/
+data-git-backup/
+!backups/.gitkeep
+!data-exports/.gitkeep
+
+# Backup and export files (contain sensitive data)
+backup-*.json
+*-backup-*.json
+*-export-*.json
+
+# Test reports and debug output
+*-test-report.json
+*-comparison-report.json
+rate-limit-output.txt
+session-*.txt
 
 # PM2 files
 ecosystem.config.js

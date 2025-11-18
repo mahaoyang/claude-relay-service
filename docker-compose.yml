@@ -84,12 +84,11 @@ services:
   redis:
     image: redis:7-alpine
     restart: unless-stopped
-    # 仅在容器网络内部暴露端口，不映射到主机
-    expose:
-      - "6379"
-    # 注意：如需本地调试访问，可取消下行注释（生产环境禁用）
-    # ports:
-    #   - "127.0.0.1:${REDIS_PORT:-6379}:6379"
+    # 暴露端口到本地，允许应用连接
+    ports:
+      - "127.0.0.1:${REDIS_PORT:-6379}:6379"
+    # expose:
+    #   - "6379"
     volumes:
       - ./redis_data:/data
     command: redis-server --save 60 1 --appendonly yes --appendfsync everysec

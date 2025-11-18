@@ -22,6 +22,7 @@ const {
 const CostCalculator = require('../utils/costCalculator')
 const pricingService = require('../services/pricingService')
 const claudeCodeHeadersService = require('../services/claudeCodeHeadersService')
+const codexRequestLoggerService = require('../services/codexRequestLoggerService')
 const webhookNotifier = require('../utils/webhookNotifier')
 const axios = require('axios')
 const crypto = require('crypto')
@@ -9178,6 +9179,53 @@ router.post('/droid-accounts/:id/refresh-token', authenticateAdmin, async (req, 
   } catch (error) {
     logger.error(`Failed to refresh Droid account token ${req.params.id}:`, error)
     return res.status(500).json({ error: 'Failed to refresh token', message: error.message })
+  }
+})
+
+// ====================================
+// Codex Request Logger 端点
+// ====================================
+
+// 获取最近的 Codex 请求日志
+router.get('/codex-request-logs', authenticateAdmin, async (req, res) => {
+  try {
+    const limit = parseInt(req.query.limit) || 10
+    const codexCliOnly = req.query.codexCliOnly === 'true'
+
+    const logs = await codexRequestLoggerService.getRecentLogs(limit, codexCliOnly)
+
+    res.json({
+      success: true,
+      data: logs,
+      count: logs.length,
+      codexCliOnly
+    })
+  } catch (error) {
+    logger.error('Failed to get Codex request logs:', error)
+    res.status(500).json({
+      success: false,
+      error: 'Failed to retrieve Codex request logs',
+      message: error.message
+    })
+  }
+})
+
+// 清除 Codex 请求日志
+router.delete('/codex-request-logs', authenticateAdmin, async (req, res) => {
+  try {
+    await codexRequestLoggerService.clearLogs()
+
+    res.json({
+      success: true,
+      message: 'All Codex request logs have been cleared'
+    })
+  } catch (error) {
+    logger.error('Failed to clear Codex request logs:', error)
+    res.status(500).json({
+      success: false,
+      error: 'Failed to clear Codex request logs',
+      message: error.message
+    })
   }
 })
 
