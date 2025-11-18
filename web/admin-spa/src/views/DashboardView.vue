@@ -569,7 +569,7 @@
     <!-- Token使用趋势图 -->
     <div class="mb-4 sm:mb-6 md:mb-8">
       <div class="card p-4 sm:p-6">
-        <div class="sm:h-[300px]" style="height: 250px">
+        <div class="h-[300px] sm:h-[400px]">
           <canvas ref="usageTrendChart" />
         </div>
       </div>
