@@ -269,9 +269,12 @@ async function disguiseRequest(requestBody, headers) {
     }
   }
 
-  // 深拷贝避免修改原始对象
-  const disguisedBody = JSON.parse(JSON.stringify(requestBody))
-  const disguisedHeaders = { ...headers }
+  // 仅做浅拷贝以减少大请求体的开销
+  const disguisedBody = { ...(requestBody || {}) }
+  const disguisedHeaders = { ...(headers || {}) }
+  if (requestBody?.metadata) {
+    disguisedBody.metadata = { ...requestBody.metadata }
+  }
 
   // 0. 更新版本信息（从原始请求中学习）
   if (headers && headers['user-agent']) {
