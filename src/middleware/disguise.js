@@ -31,6 +31,7 @@ async function disguiseMiddleware(req, res, next) {
     // 保存原始数据用于日志
     const originalUserId = req.body.metadata?.user_id
 
+    // 若需保留原始请求体用于调试，可在此行前加：req.originalBody = { ...req.body, metadata: { ...req.body.metadata } }
     // 应用伪装（包含收集和选择逻辑）
     const disguised = await disguiseHelper.disguiseRequest(req.body, req.headers)
 
