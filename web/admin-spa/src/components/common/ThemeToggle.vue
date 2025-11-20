@@ -1,32 +1,18 @@
 <template>
   <div class="theme-toggle-container">
-    <ToggleGroupRoot
-      :model-value="themeStore.themeMode"
-      @update:model-value="selectTheme"
-      type="single"
-      class="toggle-group"
-    >
-      <ToggleGroupItem value="light" class="toggle-item">
-        <Icon name="Sun" :size="16" />
-        <span v-if="showLabel" class="toggle-label">浅色</span>
-      </ToggleGroupItem>
+    <button @click="handleToggle" class="theme-toggle-button" :title="themeTooltip">
+      <!-- 图标 -->
+      <Icon :name="currentIcon" :size="18" class="theme-icon" />
 
-      <ToggleGroupItem value="auto" class="toggle-item">
-        <Icon name="Monitor" :size="16" />
-        <span v-if="showLabel" class="toggle-label">自动</span>
-      </ToggleGroupItem>
-
-      <ToggleGroupItem value="dark" class="toggle-item">
-        <Icon name="Moon" :size="16" />
-        <span v-if="showLabel" class="toggle-label">深色</span>
-      </ToggleGroupItem>
-    </ToggleGroupRoot>
+      <!-- 可选的标签文本 -->
+      <span v-if="showLabel" class="theme-label">{{ themeLabel }}</span>
+    </button>
   </div>
 </template>
 
 <script setup>
+import { computed } from 'vue'
 import { useThemeStore } from '@/stores/theme'
-import { ToggleGroupRoot, ToggleGroupItem } from 'radix-vue'
 
 // Props
 defineProps({
@@ -39,11 +25,39 @@ defineProps({
 // Store
 const themeStore = useThemeStore()
 
-// 方法
-const selectTheme = (value) => {
-  if (value) {
-    themeStore.setThemeMode(value)
+// 计算当前主题对应的图标
+const currentIcon = computed(() => {
+  const iconMap = {
+    light: 'Sun',
+    dark: 'Moon',
+    auto: 'Monitor'
   }
+  return iconMap[themeStore.themeMode] || 'Monitor'
+})
+
+// 计算当前主题对应的标签
+const themeLabel = computed(() => {
+  const labelMap = {
+    light: '浅色',
+    dark: '深色',
+    auto: '自动'
+  }
+  return labelMap[themeStore.themeMode] || '自动'
+})
+
+// 计算提示文本
+const themeTooltip = computed(() => {
+  const tooltipMap = {
+    light: '切换到深色模式',
+    dark: '切换到自动模式',
+    auto: '切换到浅色模式'
+  }
+  return tooltipMap[themeStore.themeMode] || '切换主题'
+})
+
+// 处理点击事件 - 循环切换主题
+const handleToggle = () => {
+  themeStore.cycleThemeMode()
 }
 </script>
 
@@ -53,69 +67,89 @@ const selectTheme = (value) => {
   align-items: center;
 }
 
-/* Toggle Group - 简洁的分段控制 */
-.toggle-group {
-  display: inline-flex;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 0.5rem;
-  padding: 0.25rem;
-  gap: 0.25rem;
-  backdrop-filter: blur(8px);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-}
-
-/* Toggle Item */
-.toggle-item {
+/* 主题切换按钮 - 玻璃态效果 */
+.theme-toggle-button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.375rem;
-  padding: 0.5rem 0.75rem;
-  border-radius: 0.375rem;
-  background: transparent;
-  color: rgba(255, 255, 255, 0.6);
-  border: none;
+  gap: 0.5rem;
+  padding: 0.625rem 0.875rem;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 0.5rem;
+  backdrop-filter: blur(8px);
+  color: rgba(255, 255, 255, 0.9);
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   font-size: 0.875rem;
   font-weight: 500;
   white-space: nowrap;
   outline: none;
+  position: relative;
+  overflow: hidden;
 }
 
-.toggle-item:hover {
-  color: rgba(255, 255, 255, 0.9);
-  background: rgba(255, 255, 255, 0.08);
+/* 悬停效果 */
+.theme-toggle-button:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.25);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
-.toggle-item[data-state='on'] {
-  background: rgba(20, 184, 166, 0.9);
-  color: #ffffff;
+/* 点击效果 */
+.theme-toggle-button:active {
+  transform: translateY(0);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-/* 图标颜色 */
-.toggle-item[data-state='on'] :deep(svg) {
-  color: #ffffff;
+/* 聚焦效果 */
+.theme-toggle-button:focus-visible {
+  outline: 2px solid rgba(20, 184, 166, 0.6);
+  outline-offset: 2px;
 }
 
-.toggle-item :deep(svg) {
+/* 图标动画 */
+.theme-icon {
   flex-shrink: 0;
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Label */
-.toggle-label {
+.theme-toggle-button:hover .theme-icon {
+  transform: scale(1.1);
+}
+
+.theme-toggle-button:active .theme-icon {
+  transform: scale(0.95);
+}
+
+/* 标签文本 */
+.theme-label {
   font-size: 0.875rem;
+  line-height: 1;
 }
 
-/* 响应式 */
+/* 响应式 - 移动端 */
 @media (max-width: 640px) {
-  .toggle-item {
-    padding: 0.375rem 0.5rem;
+  .theme-toggle-button {
+    padding: 0.5rem;
   }
 
-  .toggle-label {
+  .theme-label {
     display: none;
   }
+}
+
+/* 暗黑模式适配 */
+:global(.dark) .theme-toggle-button {
+  background: rgba(0, 0, 0, 0.2);
+  border-color: rgba(75, 85, 99, 0.3);
+  color: rgba(243, 244, 246, 0.9);
+}
+
+:global(.dark) .theme-toggle-button:hover {
+  background: rgba(0, 0, 0, 0.3);
+  border-color: rgba(75, 85, 99, 0.5);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 </style>
