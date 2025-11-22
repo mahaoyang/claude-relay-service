@@ -106,7 +106,7 @@ class Application {
           // 代理所有 /admin-next/* 请求到 Vite
           this.app.use('/admin-next', async (req, res, next) => {
             try {
-              const targetUrl = `http://localhost:${viteDevServerPort}${req.path.replace('/admin-next', '')}`
+              const targetUrl = `http://localhost:${viteDevServerPort}${req.originalUrl}`
               logger.info(`🔀 Proxying to Vite: ${req.path} -> ${targetUrl}`)
 
               const response = await axios({
@@ -346,6 +346,11 @@ class Application {
       // 🏠 根路径重定向到新版管理界面
       this.app.get('/', (req, res) => {
         res.redirect('/admin-next/api-stats')
+      })
+
+      // 兼容旧路径重定向
+      this.app.get('/admin/api-stats', (req, res) => {
+        res.redirect(301, '/admin-next/api-stats')
       })
 
       // 🏥 增强的健康检查端点
