@@ -10,10 +10,10 @@ import { fileURLToPath, URL } from 'node:url'
 export default defineConfig(({ mode }) => {
   // 加载环境变量
   const env = loadEnv(mode, process.cwd(), '')
-  const apiTarget = env.VITE_API_TARGET || 'http://localhost:3000'
+  const apiTarget = env.VITE_API_TARGET || 'http://localhost:3010'
   const httpProxy = env.VITE_HTTP_PROXY || env.HTTP_PROXY || env.http_proxy
-  // 使用环境变量配置基础路径，如果未设置则使用默认值
-  const basePath = env.VITE_APP_BASE_URL || (mode === 'development' ? '/admin/' : '/admin-next/')
+  // 使用环境变量配置基础路径，开发模式用根路径，生产用 /admin-next/
+  const basePath = env.VITE_APP_BASE_URL || (mode === 'development' ? '/' : '/admin-next/')
 
   // 创建代理配置
   const proxyConfig = {
@@ -63,7 +63,7 @@ export default defineConfig(({ mode }) => {
     server: {
       port: 3001,
       host: true,
-      open: true,
+      open: false, // 禁止自动打开浏览器
       proxy: {
         // 统一的 API 代理规则 - 开发环境所有 API 请求都加 /webapi 前缀
         '/webapi': {
