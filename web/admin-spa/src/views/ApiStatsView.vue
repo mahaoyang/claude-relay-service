@@ -1,107 +1,119 @@
 <template>
-  <div>
+  <div class="min-h-screen bg-gray-50 p-6 dark:bg-dark-bg">
     <!-- 顶部导航 -->
-    <div>
-      <div>
+    <div class="mb-6">
+      <div class="flex items-center justify-between">
         <LogoTitle
           :loading="oemLoading"
           :logo-src="oemSettings.siteIconData || oemSettings.siteIcon"
           :subtitle="currentTab === 'stats' ? 'API Key 使用统计' : '使用教程'"
           :title="oemSettings.siteName"
         />
-        <div>
+        <div class="flex items-center gap-3">
           <!-- 主题切换按钮 -->
           <div>
             <ThemeToggle mode="dropdown" />
           </div>
 
           <!-- 分隔线 -->
-          <div v-if="oemSettings.ldapEnabled || oemSettings.showAdminButton !== false" />
+          <div
+            v-if="oemSettings.ldapEnabled || oemSettings.showAdminButton !== false"
+            class="h-6 w-px bg-secondary-700"
+          />
 
           <!-- 用户登录按钮 (仅在 LDAP 启用时显示) -->
           <router-link v-if="oemSettings.ldapEnabled" to="/user-login">
-            <span>用户登录</span>
+            <Button variant="ghost" size="sm">
+              <span>用户登录</span>
+            </Button>
           </router-link>
           <!-- 管理后台按钮 -->
           <router-link v-if="oemSettings.showAdminButton !== false" to="/dashboard">
-            <span>管理后台</span>
+            <Button variant="primary" size="sm">
+              <span>管理后台</span>
+            </Button>
           </router-link>
         </div>
       </div>
     </div>
 
     <!-- Tab 切换 -->
-    <div>
-      <div>
-        <div>
-          <button @click="currentTab = 'stats'">
-            <span>统计查询</span>
-          </button>
-          <button @click="currentTab = 'tutorial'">
-            <span>使用教程</span>
-          </button>
-        </div>
-      </div>
-    </div>
+    <Card class="mb-6">
+      <Tabs
+        v-model="currentTab"
+        :tabs="[
+          { key: 'stats', label: '统计查询' },
+          { key: 'tutorial', label: '使用教程' }
+        ]"
+      >
+        <!-- 统计内容 -->
+        <template #panel-stats>
+          <div class="space-y-6">
+            <!-- API Key 输入区域 -->
+            <ApiKeyInput />
 
-    <!-- 统计内容 -->
-    <div v-if="currentTab === 'stats'">
-      <!-- API Key 输入区域 -->
-      <ApiKeyInput />
+            <!-- 错误提示 -->
+            <Alert v-if="error" variant="danger" title="错误" :closable="true" @close="error = ''">
+              {{ error }}
+            </Alert>
 
-      <!-- 错误提示 -->
-      <div v-if="error">
-        <div>
-          {{ error }}
-        </div>
-      </div>
+            <!-- 统计数据展示区域 -->
+            <div v-if="statsData" class="space-y-6">
+              <!-- 时间范围选择器 -->
+              <Card>
+                <div class="flex items-center justify-between">
+                  <div>
+                    <span class="text-sm font-medium text-secondary-300">统计时间范围</span>
+                  </div>
+                  <div class="flex gap-2">
+                    <Button
+                      :disabled="loading || modelStatsLoading"
+                      :variant="statsPeriod === 'daily' ? 'primary' : 'ghost'"
+                      size="sm"
+                      @click="switchPeriod('daily')"
+                    >
+                      今日
+                    </Button>
+                    <Button
+                      :disabled="loading || modelStatsLoading"
+                      :variant="statsPeriod === 'monthly' ? 'primary' : 'ghost'"
+                      size="sm"
+                      @click="switchPeriod('monthly')"
+                    >
+                      本月
+                    </Button>
+                  </div>
+                </div>
+              </Card>
 
-      <!-- 统计数据展示区域 -->
-      <div v-if="statsData">
-        <div>
-          <!-- 时间范围选择器 -->
-          <div>
-            <div>
-              <div>
-                <span>统计时间范围</span>
+              <!-- 基本信息和统计概览 -->
+              <StatsOverview />
+
+              <!-- Token 分布和限制配置 -->
+              <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
+                <TokenDistribution />
+                <template v-if="multiKeyMode">
+                  <AggregatedStatsCard />
+                </template>
+                <template v-else>
+                  <LimitConfig />
+                </template>
               </div>
-              <div>
-                <button :disabled="loading || modelStatsLoading" @click="switchPeriod('daily')">
-                  今日
-                </button>
-                <button :disabled="loading || modelStatsLoading" @click="switchPeriod('monthly')">
-                  本月
-                </button>
-              </div>
+
+              <!-- 模型使用统计 -->
+              <ModelUsageStats />
             </div>
           </div>
+        </template>
 
-          <!-- 基本信息和统计概览 -->
-          <StatsOverview />
-
-          <!-- Token 分布和限制配置 -->
+        <!-- 教程内容 -->
+        <template #panel-tutorial>
           <div>
-            <TokenDistribution />
-            <template v-if="multiKeyMode">
-              <AggregatedStatsCard />
-            </template>
-            <template v-else>
-              <LimitConfig />
-            </template>
+            <TutorialView />
           </div>
-
-          <!-- 模型使用统计 -->
-          <ModelUsageStats />
-        </div>
-      </div>
-    </div>
-
-    <!-- 教程内容 -->
-    <div v-if="currentTab === 'tutorial'">
-      <div>
-        <TutorialView />
-      </div>
-    </div>
+        </template>
+      </Tabs>
+    </Card>
   </div>
 </template>
 
@@ -111,6 +123,7 @@ import { useRoute } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import { useApiStatsStore } from '@/stores/apistats'
 import { useThemeStore } from '@/stores/theme'
+import { Button, Card, Tabs, Alert } from '@/ui'
 import LogoTitle from '@/components/common/LogoTitle.vue'
 import ThemeToggle from '@/components/common/ThemeToggle.vue'
 import ApiKeyInput from '@/components/apistats/ApiKeyInput.vue'

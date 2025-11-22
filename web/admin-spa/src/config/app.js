@@ -1,7 +1,7 @@
 // 应用配置
 export const APP_CONFIG = {
-  // 应用基础路径
-  basePath: import.meta.env.VITE_APP_BASE_URL || (import.meta.env.DEV ? '/admin/' : '/web/admin/'),
+  // 应用基础路径 - 标准前后端分离：开发用 /，生产用 /admin-next/
+  basePath: import.meta.env.VITE_APP_BASE_URL || (import.meta.env.DEV ? '/' : '/admin-next/'),
 
   // 应用标题
   title: import.meta.env.VITE_APP_TITLE || 'Claude Relay Service - 管理后台',
@@ -9,8 +9,8 @@ export const APP_CONFIG = {
   // 是否为开发环境
   isDev: import.meta.env.DEV,
 
-  // API 前缀
-  apiPrefix: import.meta.env.DEV ? '/webapi' : ''
+  // API 前缀 - 开发和生产环境都不使用前缀，直接访问后端API
+  apiPrefix: ''
 }
 
 // 获取完整的应用URL
