@@ -12,8 +12,8 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
   const apiTarget = env.VITE_API_TARGET || 'http://localhost:3010'
   const httpProxy = env.VITE_HTTP_PROXY || env.HTTP_PROXY || env.http_proxy
-  // 使用环境变量配置基础路径，开发模式用根路径，生产用 /admin-next/
-  const basePath = env.VITE_APP_BASE_URL || (mode === 'development' ? '/' : '/admin-next/')
+  // 标准前后端分离：开发模式用 /，生产模式用 /admin-next/
+  const basePath = mode === 'development' ? '/' : env.VITE_APP_BASE_URL || '/admin-next/'
 
   // 创建代理配置
   const proxyConfig = {
@@ -65,40 +65,15 @@ export default defineConfig(({ mode }) => {
       host: true,
       open: false, // 禁止自动打开浏览器
       proxy: {
-        // 统一的 API 代理规则 - 开发环境所有 API 请求都加 /webapi 前缀
-        '/webapi': {
-          ...proxyConfig,
-          rewrite: (path) => path.replace(/^\/webapi/, ''), // 转发时去掉 /webapi 前缀
-          configure: (proxy, options) => {
-            proxy.on('proxyReq', (proxyReq, req) => {
-              console.log(
-                'Proxying:',
-                req.method,
-                req.url,
-                '->',
-                options.target + req.url.replace(/^\/webapi/, '')
-              )
-            })
-            proxy.on('error', (err) => {
-              console.log('Proxy error:', err)
-            })
-          }
-        },
-        // API Stats 专用代理规则
-        '/apiStats': {
-          ...proxyConfig,
-          configure: (proxy, options) => {
-            proxy.on('proxyReq', (proxyReq, req) => {
-              console.log(
-                'API Stats Proxying:',
-                req.method,
-                req.url,
-                '->',
-                options.target + req.url
-              )
-            })
-          }
-        }
+        // 标准前后端分离：直接代理所有API路由到后端
+        // 使用正则确保精确匹配，避免 /api 匹配到 /api-stats 等前端路由
+        '^/admin/': proxyConfig,
+        '^/api/': proxyConfig,
+        '^/users/': proxyConfig,
+        '^/users$': proxyConfig,
+        '^/apiStats': proxyConfig,
+        '^/health$': proxyConfig,
+        '^/metrics$': proxyConfig
       }
     },
     build: {

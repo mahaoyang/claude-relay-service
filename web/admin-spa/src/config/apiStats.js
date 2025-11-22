@@ -4,17 +4,11 @@
 class ApiStatsClient {
   constructor() {
     this.baseURL = window.location.origin
-    // 开发环境需要为 admin 路径添加 /webapi 前缀
-    this.isDev = import.meta.env.DEV
   }
 
   async request(url, options = {}) {
     try {
-      // 在开发环境中，为 /admin 路径添加 /webapi 前缀
-      if (this.isDev && url.startsWith('/admin')) {
-        url = '/webapi' + url
-      }
-
+      // 标准前后端分离：Vite 配置了代理，直接使用路径
       const response = await fetch(`${this.baseURL}${url}`, {
         headers: {
           'Content-Type': 'application/json',

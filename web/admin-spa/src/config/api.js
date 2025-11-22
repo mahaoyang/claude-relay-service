@@ -1,7 +1,7 @@
 // API 配置
 import { APP_CONFIG, getLoginUrl } from './app'
 
-// 开发环境使用 /webapi 前缀，生产环境不使用前缀
+// 标准前后端分离：Vite 代理 API 请求，无需前缀
 export const API_PREFIX = APP_CONFIG.apiPrefix
 
 // 创建完整的 API URL
