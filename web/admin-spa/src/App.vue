@@ -1,13 +1,13 @@
 <template>
-  <div id="app">
-    <ScrollArea style="position: fixed; top: 0; left: 0; right: 0; bottom: 0">
-      <router-view />
-    </ScrollArea>
+ <div id="app">
+ <ScrollArea>
+ <router-view />
+ </ScrollArea>
 
-    <!-- 全局组件 -->
-    <ToastNotification ref="toastRef" />
-    <ConfirmDialog ref="confirmRef" />
-  </div>
+ <!-- 全局组件 -->
+ <ToastNotification ref="toastRef" />
+ <ConfirmDialog ref="confirmRef" />
+ </div>
 </template>
 
 <script setup>
@@ -24,22 +24,17 @@ const toastRef = ref()
 const confirmRef = ref()
 
 onMounted(() => {
-  // 初始化主题
-  themeStore.initTheme()
+ // 初始化主题
+ themeStore.initTheme()
 
-  // 监听系统主题变化
-  themeStore.watchSystemTheme()
+ // 监听系统主题变化
+ themeStore.watchSystemTheme()
 
-  // 检查本地存储的认证状态
-  authStore.checkAuth()
+ // 检查本地存储的认证状态
+ authStore.checkAuth()
 
-  // 加载OEM设置（包括网站图标）
-  authStore.loadOemSettings()
+ // 加载OEM设置（包括网站图标）
+ authStore.loadOemSettings()
 })
 </script>
 
-<style scoped>
-#app {
-  min-height: 100vh;
-}
-</style>

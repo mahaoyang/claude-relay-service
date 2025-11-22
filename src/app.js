@@ -85,23 +85,90 @@ class Application {
       const claudeAccountService = require('./services/claudeAccountService')
       await claudeAccountService.initializeSessionWindows()
 
-      // 超早期拦截 /admin-next/ 请求 - 在所有中间件之前
-      this.app.use((req, res, next) => {
-        if (req.path === '/admin-next/' && req.method === 'GET') {
-          logger.warn('🚨 INTERCEPTING /admin-next/ request at the very beginning!')
-          const adminSpaPath = path.join(__dirname, '..', 'web', 'admin-spa', 'dist')
-          const indexPath = path.join(adminSpaPath, 'index.html')
+      // 🔧 开发模式下代理到 Vite 开发服务器
+      const isDev = process.env.NODE_ENV !== 'production'
+      const viteDevServerPort = process.env.VITE_DEV_PORT || 3001
 
-          if (fs.existsSync(indexPath)) {
-            res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate')
-            return res.sendFile(indexPath)
-          } else {
-            logger.error('❌ index.html not found at:', indexPath)
-            return res.status(404).send('index.html not found')
-          }
+      if (isDev) {
+        // 检查 Vite 开发服务器是否运行
+        const axios = require('axios')
+        let viteRunning = false
+
+        try {
+          await axios.get(`http://localhost:${viteDevServerPort}`, { timeout: 1000 })
+          viteRunning = true
+          logger.success(`✅ Vite dev server detected on port ${viteDevServerPort}`)
+        } catch (err) {
+          logger.warn(`⚠️  Vite dev server not detected, using dist folder`)
         }
-        next()
-      })
+
+        if (viteRunning) {
+          // 代理所有 /admin-next/* 请求到 Vite
+          this.app.use('/admin-next', async (req, res, next) => {
+            try {
+              const targetUrl = `http://localhost:${viteDevServerPort}${req.path.replace('/admin-next', '')}`
+              logger.info(`🔀 Proxying to Vite: ${req.path} -> ${targetUrl}`)
+
+              const response = await axios({
+                method: req.method,
+                url: targetUrl,
+                headers: {
+                  ...req.headers,
+                  host: `localhost:${viteDevServerPort}`
+                },
+                data: req.body,
+                responseType: 'stream',
+                validateStatus: () => true
+              })
+
+              res.status(response.status)
+              Object.keys(response.headers).forEach((key) => {
+                res.setHeader(key, response.headers[key])
+              })
+              response.data.pipe(res)
+            } catch (error) {
+              logger.error('❌ Vite proxy error:', error.message)
+              next()
+            }
+          })
+        } else {
+          // Vite 未运行，使用 dist 目录
+          this.app.use((req, res, next) => {
+            if (req.path === '/admin-next/' && req.method === 'GET') {
+              logger.warn('🚨 INTERCEPTING /admin-next/ request - serving from dist')
+              const adminSpaPath = path.join(__dirname, '..', 'web', 'admin-spa', 'dist')
+              const indexPath = path.join(adminSpaPath, 'index.html')
+
+              if (fs.existsSync(indexPath)) {
+                res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate')
+                return res.sendFile(indexPath)
+              } else {
+                logger.error('❌ index.html not found at:', indexPath)
+                return res.status(404).send('index.html not found')
+              }
+            }
+            next()
+          })
+        }
+      } else {
+        // 生产模式，使用 dist 目录
+        this.app.use((req, res, next) => {
+          if (req.path === '/admin-next/' && req.method === 'GET') {
+            logger.warn('🚨 INTERCEPTING /admin-next/ request - serving from dist')
+            const adminSpaPath = path.join(__dirname, '..', 'web', 'admin-spa', 'dist')
+            const indexPath = path.join(adminSpaPath, 'index.html')
+
+            if (fs.existsSync(indexPath)) {
+              res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate')
+              return res.sendFile(indexPath)
+            } else {
+              logger.error('❌ index.html not found at:', indexPath)
+              return res.status(404).send('index.html not found')
+            }
+          }
+          next()
+        })
+      }
 
       // 🛡️ 安全中间件
       this.app.use(
