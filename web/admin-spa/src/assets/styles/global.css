@@ -15,34 +15,6 @@ button, input, select, textarea {
   font-family: inherit;
 }
 
-.tab-btn {
-  padding: 0.75rem 1.5rem;
-  cursor: pointer;
-  border: 1px solid;
-}
-
-.tab-btn.active {
-  font-weight: 600;
-}
-
-.card {
-  padding: 1rem;
-}
-
-.loading-spinner {
-  display: inline-block;
-  width: 20px;
-  height: 20px;
-  border: 2px solid;
-  border-radius: 50%;
-  border-top-color: transparent;
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
 
 [v-cloak] {
   display: none;
