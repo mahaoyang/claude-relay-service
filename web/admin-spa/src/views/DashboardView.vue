@@ -662,7 +662,7 @@
           </span>
         </p>
         <div
-          v-if="!accountUsageTrendData.data || accountUsageTrendData.data.length === 0"
+          v-if="!accountUsageTrendData.labels || accountUsageTrendData.labels.length === 0"
           class="flex h-[400px] items-center justify-center text-gray-500 dark:text-gray-400"
         >
           暂无账号使用数据
@@ -1156,8 +1156,15 @@ onMounted(async () => {
   // 初始化主题
   themeStore.initTheme()
 
-  // 加载数据
+  // 设置默认时间范围（7天）
+  setDateFilterPreset('7days')
+
+  // 加载基础数据
   await loadDashboardData()
+
+  // 加载所有图表数据（使用默认时间范围）
+  await refreshChartsData()
+
   await nextTick()
 
   // 创建图表

@@ -420,153 +420,251 @@
         </div>
 
         <!-- 通知类型设置 -->
-        <div>
-          <h2>通知类型</h2>
-          <div>
-            <div v-for="(enabled, type) in webhookConfig.notificationTypes" :key="type">
-              <div>
-                <span>
+        <div class="border-b border-gray-200 p-6 dark:border-gray-700">
+          <h2 class="mb-4 text-lg font-semibold text-gray-900 dark:text-white">通知类型</h2>
+          <div class="space-y-3">
+            <div
+              v-for="(enabled, type) in webhookConfig.notificationTypes"
+              :key="type"
+              class="flex items-center justify-between rounded-lg border border-gray-200 p-4 dark:border-gray-700"
+            >
+              <div class="flex-1">
+                <span class="block text-sm font-medium text-gray-900 dark:text-white">
                   {{ getNotificationTypeName(type) }}
                 </span>
-                <span>
+                <span class="mt-1 block text-xs text-gray-500 dark:text-gray-400">
                   {{ getNotificationTypeDescription(type) }}
                 </span>
               </div>
-              <label>
+              <label class="flex cursor-pointer items-center gap-3">
                 <input
                   v-model="webhookConfig.notificationTypes[type]"
+                  class="peer sr-only"
                   type="checkbox"
                   @change="saveWebhookConfig"
                 />
-                <div></div>
+                <div
+                  class="relative h-6 w-11 rounded-full bg-gray-200 transition-colors peer-checked:bg-primary-600 dark:bg-gray-700"
+                >
+                  <div
+                    class="absolute left-1 top-1 h-4 w-4 rounded-full bg-white transition-transform peer-checked:translate-x-5"
+                  ></div>
+                </div>
               </label>
             </div>
           </div>
         </div>
 
         <!-- 平台列表 -->
-        <div>
-          <div>
-            <h2>通知平台</h2>
-            <button @click="showAddPlatformModal = true">
-              <Icon name="Plus" />
+        <div class="border-b border-gray-200 p-6 dark:border-gray-700">
+          <div class="mb-4 flex items-center justify-between">
+            <h2 class="text-lg font-semibold text-gray-900 dark:text-white">通知平台</h2>
+            <button
+              class="inline-flex items-center gap-2 rounded-lg bg-primary-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-primary-700 dark:bg-primary-500 dark:hover:bg-primary-600"
+              @click="showAddPlatformModal = true"
+            >
+              <Icon class="h-4 w-4" name="Plus" />
               添加平台
             </button>
           </div>
 
           <!-- 平台卡片列表 -->
-          <div v-if="webhookConfig.platforms && webhookConfig.platforms.length > 0">
-            <div v-for="platform in webhookConfig.platforms" :key="platform.id">
-              <div>
-                <div>
-                  <div>
-                    <i></i>
-                    <div>
-                      <h3>
+          <div
+            v-if="webhookConfig.platforms && webhookConfig.platforms.length > 0"
+            class="space-y-4"
+          >
+            <div
+              v-for="platform in webhookConfig.platforms"
+              :key="platform.id"
+              class="rounded-lg border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-800"
+            >
+              <div class="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+                <div class="flex-1 space-y-3">
+                  <div class="flex items-start gap-3">
+                    <div
+                      class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-primary-50 dark:bg-primary-900/20"
+                    >
+                      <Icon class="h-5 w-5 text-primary-600 dark:text-primary-400" name="Bell" />
+                    </div>
+                    <div class="min-w-0 flex-1">
+                      <h3 class="text-base font-semibold text-gray-900 dark:text-white">
                         {{ platform.name || getPlatformName(platform.type) }}
                       </h3>
-                      <p>
+                      <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
                         {{ getPlatformName(platform.type) }}
                       </p>
                     </div>
                   </div>
-                  <div>
-                    <div v-if="platform.type !== 'smtp' && platform.type !== 'telegram'">
-                      <Icon name="Link" />
-                      <span>{{ platform.url }}</span>
+                  <div class="space-y-2">
+                    <div
+                      v-if="platform.type !== 'smtp' && platform.type !== 'telegram'"
+                      class="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400"
+                    >
+                      <Icon class="h-4 w-4 flex-shrink-0" name="Link" />
+                      <span class="truncate">{{ platform.url }}</span>
                     </div>
-                    <div v-if="platform.type === 'telegram'">
-                      <Icon name="MessagesSquare" />
+                    <div
+                      v-if="platform.type === 'telegram'"
+                      class="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400"
+                    >
+                      <Icon class="h-4 w-4 flex-shrink-0" name="MessagesSquare" />
                       <span>Chat ID: {{ platform.chatId || '未配置' }}</span>
                     </div>
-                    <div v-if="platform.type === 'telegram' && platform.botToken">
-                      <Icon name="Key" />
+                    <div
+                      v-if="platform.type === 'telegram' && platform.botToken"
+                      class="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400"
+                    >
+                      <Icon class="h-4 w-4 flex-shrink-0" name="Key" />
                       <span>Token: {{ formatTelegramToken(platform.botToken) }}</span>
                     </div>
-                    <div v-if="platform.type === 'telegram' && platform.apiBaseUrl">
-                      <Icon name="Globe" />
-                      <span>API: {{ platform.apiBaseUrl }}</span>
+                    <div
+                      v-if="platform.type === 'telegram' && platform.apiBaseUrl"
+                      class="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400"
+                    >
+                      <Icon class="h-4 w-4 flex-shrink-0" name="Globe" />
+                      <span class="truncate">API: {{ platform.apiBaseUrl }}</span>
                     </div>
-                    <div v-if="platform.type === 'telegram' && platform.proxyUrl">
-                      <Icon name="Route" />
-                      <span>代理: {{ platform.proxyUrl }}</span>
+                    <div
+                      v-if="platform.type === 'telegram' && platform.proxyUrl"
+                      class="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400"
+                    >
+                      <Icon class="h-4 w-4 flex-shrink-0" name="Route" />
+                      <span class="truncate">代理: {{ platform.proxyUrl }}</span>
                     </div>
-                    <div v-if="platform.type === 'smtp' && platform.to">
-                      <Icon name="Mail" />
-                      <span>{{
+                    <div
+                      v-if="platform.type === 'smtp' && platform.to"
+                      class="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400"
+                    >
+                      <Icon class="h-4 w-4 flex-shrink-0" name="Mail" />
+                      <span class="truncate">{{
                         Array.isArray(platform.to) ? platform.to.join(', ') : platform.to
                       }}</span>
                     </div>
-                    <div v-if="platform.enableSign">
-                      <Icon name="Shield" />
+                    <div
+                      v-if="platform.enableSign"
+                      class="flex items-center gap-2 text-sm text-green-600 dark:text-green-400"
+                    >
+                      <Icon class="h-4 w-4 flex-shrink-0" name="Shield" />
                       <span>已启用签名验证</span>
                     </div>
                   </div>
                 </div>
-                <div>
+                <div class="flex flex-row items-center gap-2 md:flex-col md:items-end">
                   <!-- 启用/禁用开关 -->
-                  <label>
+                  <label class="flex cursor-pointer items-center gap-2">
                     <input
                       :checked="platform.enabled"
+                      class="peer sr-only"
                       type="checkbox"
                       @change="togglePlatform(platform.id)"
                     />
-                    <div></div>
+                    <div
+                      class="relative h-6 w-11 rounded-full bg-gray-200 transition-colors peer-checked:bg-primary-600 dark:bg-gray-700"
+                    >
+                      <div
+                        class="absolute left-1 top-1 h-4 w-4 rounded-full bg-white transition-transform peer-checked:translate-x-5"
+                      ></div>
+                    </div>
                   </label>
-                  <!-- 测试按钮 -->
-                  <button title="测试连接" @click="testPlatform(platform)">
-                    <Icon name="TestTube" />
-                  </button>
-                  <!-- 编辑按钮 -->
-                  <button title="编辑" @click="editPlatform(platform)">
-                    <Icon name="Edit" />
-                  </button>
-                  <!-- 删除按钮 -->
-                  <button title="删除" @click="deletePlatform(platform.id)">
-                    <Icon name="Trash" />
-                  </button>
+                  <div class="flex items-center gap-1">
+                    <!-- 测试按钮 -->
+                    <button
+                      class="rounded-lg p-2 text-gray-600 transition-colors hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700"
+                      title="测试连接"
+                      @click="testPlatform(platform)"
+                    >
+                      <Icon class="h-4 w-4" name="TestTube" />
+                    </button>
+                    <!-- 编辑按钮 -->
+                    <button
+                      class="rounded-lg p-2 text-gray-600 transition-colors hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700"
+                      title="编辑"
+                      @click="editPlatform(platform)"
+                    >
+                      <Icon class="h-4 w-4" name="Edit" />
+                    </button>
+                    <!-- 删除按钮 -->
+                    <button
+                      class="rounded-lg p-2 text-red-600 transition-colors hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-900/30"
+                      title="删除"
+                      @click="deletePlatform(platform.id)"
+                    >
+                      <Icon class="h-4 w-4" name="Trash" />
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-          <div v-else>暂无配置的通知平台，请点击"添加平台"按钮添加</div>
+          <div
+            v-else
+            class="rounded-lg border border-dashed border-gray-300 bg-gray-50 p-8 text-center dark:border-gray-600 dark:bg-gray-800/50"
+          >
+            <p class="text-sm text-gray-600 dark:text-gray-400">
+              暂无配置的通知平台，请点击"添加平台"按钮添加
+            </p>
+          </div>
         </div>
 
         <!-- 高级设置 -->
-        <div>
-          <h2>高级设置</h2>
-          <div>
+        <div class="border-b border-gray-200 p-6 dark:border-gray-700">
+          <h2 class="mb-4 text-lg font-semibold text-gray-900 dark:text-white">高级设置</h2>
+          <div class="grid gap-4 sm:grid-cols-3">
             <div>
-              <label> 最大重试次数 </label>
+              <label
+                class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
+                for="maxRetries"
+              >
+                最大重试次数
+              </label>
               <input
+                id="maxRetries"
                 v-model.number="webhookConfig.retrySettings.maxRetries"
+                class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-gray-900 transition-colors focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500/20 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:focus:border-primary-400"
                 max="10"
                 min="0"
                 type="number"
                 @change="saveWebhookConfig"
               />
+              <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">0-10次</p>
             </div>
             <div>
-              <label> 重试延迟 (毫秒) </label>
+              <label
+                class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
+                for="retryDelay"
+              >
+                重试延迟 (毫秒)
+              </label>
               <input
+                id="retryDelay"
                 v-model.number="webhookConfig.retrySettings.retryDelay"
+                class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-gray-900 transition-colors focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500/20 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:focus:border-primary-400"
                 max="10000"
                 min="100"
                 step="100"
                 type="number"
                 @change="saveWebhookConfig"
               />
+              <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">100-10000ms</p>
             </div>
             <div>
-              <label> 超时时间 (毫秒) </label>
+              <label
+                class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
+                for="timeout"
+              >
+                超时时间 (毫秒)
+              </label>
               <input
+                id="timeout"
                 v-model.number="webhookConfig.retrySettings.timeout"
+                class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-gray-900 transition-colors focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500/20 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:focus:border-primary-400"
                 max="30000"
                 min="1000"
                 step="1000"
                 type="number"
                 @change="saveWebhookConfig"
               />
+              <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">1000-30000ms</p>
             </div>
           </div>
         </div>
