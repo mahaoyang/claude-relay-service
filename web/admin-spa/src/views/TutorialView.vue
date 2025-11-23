@@ -1,14 +1,17 @@
 <template>
   <div>
     <div>
-      <h3>Claude Code 使用教程</h3>
-      <p>跟着这个教程，你可以轻松在自己的电脑上安装并使用 Claude Code。</p>
+      <h3 class="mb-4 text-2xl font-bold text-gray-900">Claude Code 使用教程</h3>
+      <p class="mb-3 leading-relaxed text-gray-600">
+        跟着这个教程，你可以轻松在自己的电脑上安装并使用 Claude Code。
+      </p>
     </div>
 
     <!-- 系统选择标签 -->
     <div>
       <div>
         <button
+          class="rounded-lg border border-gray-300 px-4 py-2 text-gray-700 transition-colors hover:bg-gray-50"
           v-for="system in tutorialSystems"
           :key="system.key"
           @click="activeTutorialSystem = system.key"
@@ -23,317 +26,342 @@
     <div v-if="activeTutorialSystem === 'windows'">
       <!-- 第一步：安装 Node.js -->
       <div>
-        <h4>
-          <span>1</span>
+        <h4 class="mb-3 mt-6 text-xl font-semibold text-gray-800">
+          <span
+            class="mr-2 inline-flex h-8 w-8 items-center justify-center rounded-full bg-blue-500 font-bold text-white"
+            >1</span
+          >
           安装 Node.js 环境
         </h4>
-        <p>Claude Code 需要 Node.js 环境才能运行。</p>
+        <p class="mb-3 leading-relaxed text-gray-600">Claude Code 需要 Node.js 环境才能运行。</p>
 
         <div>
-          <h5>Windows 安装方法</h5>
+          <h5 class="mb-2 mt-4 text-lg font-medium text-gray-700">Windows 安装方法</h5>
           <div>
-            <p>方法一：官网下载（推荐）</p>
-            <ol>
-              <li>
+            <p class="mb-3 leading-relaxed text-gray-600">方法一：官网下载（推荐）</p>
+            <ol class="mb-4 list-inside list-decimal space-y-2 text-gray-600">
+              <li class="text-gray-600">
                 打开浏览器访问
-                <code>https://nodejs.org/</code>
+                <code class="rounded bg-gray-100 px-2 py-1 font-mono text-sm text-gray-800"
+                  >https://nodejs.org/</code
+                >
               </li>
-              <li>点击 "LTS" 版本进行下载（推荐长期支持版本）</li>
-              <li>
+              <li class="text-gray-600">点击 "LTS" 版本进行下载（推荐长期支持版本）</li>
+              <li class="text-gray-600">
                 下载完成后双击
-                <code>.msi</code>
+                <code class="rounded bg-gray-100 px-2 py-1 font-mono text-sm text-gray-800"
+                  >.msi</code
+                >
                 文件
               </li>
-              <li>按照安装向导完成安装，保持默认设置即可</li>
+              <li class="text-gray-600">按照安装向导完成安装，保持默认设置即可</li>
             </ol>
           </div>
           <div>
-            <p>方法二：使用包管理器</p>
-            <p>如果你安装了 Chocolatey 或 Scoop，可以使用命令行安装：</p>
-            <div>
-              <div># 使用 Chocolatey</div>
-              <div>choco install nodejs</div>
-              <div># 或使用 Scoop</div>
-              <div>scoop install nodejs</div>
-            </div>
+            <p class="mb-3 leading-relaxed text-gray-600">方法二：使用包管理器</p>
+            <p class="mb-3 leading-relaxed text-gray-600">
+              如果你安装了 Chocolatey 或 Scoop，可以使用命令行安装：
+            </p>
+            <CodeBlock
+              :lines="[
+                '# 使用 Chocolatey',
+                'choco install nodejs',
+                '# 或使用 Scoop',
+                'scoop install nodejs'
+              ]"
+              language="powershell"
+            />
           </div>
           <div>
-            <h6>Windows 注意事项</h6>
-            <ul>
-              <li>• 建议使用 PowerShell 而不是 CMD</li>
-              <li>• 如果遇到权限问题，尝试以管理员身份运行</li>
-              <li>• 某些杀毒软件可能会误报，需要添加白名单</li>
+            <h6 class="mb-2 text-base font-medium text-gray-700">Windows 注意事项</h6>
+            <ul class="mb-4 list-inside list-disc space-y-2 text-gray-600">
+              <li class="text-gray-600">• 建议使用 PowerShell 而不是 CMD</li>
+              <li class="text-gray-600">• 如果遇到权限问题，尝试以管理员身份运行</li>
+              <li class="text-gray-600">• 某些杀毒软件可能会误报，需要添加白名单</li>
             </ul>
           </div>
         </div>
 
         <!-- 验证安装 -->
         <div>
-          <h6>验证安装是否成功</h6>
-          <p>安装完成后，打开 PowerShell 或 CMD，输入以下命令：</p>
-          <div>
-            <div>node --version</div>
-            <div>npm --version</div>
-          </div>
-          <p>如果显示版本号，说明安装成功了！</p>
+          <h6 class="mb-2 text-base font-medium text-gray-700">验证安装是否成功</h6>
+          <p class="mb-3 leading-relaxed text-gray-600">
+            安装完成后，打开 PowerShell 或 CMD，输入以下命令：
+          </p>
+          <CodeBlock :lines="['node --version', 'npm --version']" language="powershell" />
+          <p class="mb-3 leading-relaxed text-gray-600">如果显示版本号，说明安装成功了！</p>
         </div>
       </div>
 
       <!-- 第二步：安装 Claude Code -->
       <div>
-        <h4>
-          <span>2</span>
+        <h4 class="mb-3 mt-6 text-xl font-semibold text-gray-800">
+          <span
+            class="mr-2 inline-flex h-8 w-8 items-center justify-center rounded-full bg-blue-500 font-bold text-white"
+            >2</span
+          >
           安装 Claude Code
         </h4>
 
         <div>
-          <h5>安装 Claude Code</h5>
-          <p>打开 PowerShell 或 CMD，运行以下命令：</p>
-          <div>
-            <div># 全局安装 Claude Code</div>
-            <div>npm install -g @anthropic-ai/claude-code</div>
-          </div>
-          <p>这个命令会从 npm 官方仓库下载并安装最新版本的 Claude Code。</p>
+          <h5 class="mb-2 mt-4 text-lg font-medium text-gray-700">安装 Claude Code</h5>
+          <p class="mb-3 leading-relaxed text-gray-600">打开 PowerShell 或 CMD，运行以下命令：</p>
+          <CodeBlock
+            :lines="['# 全局安装 Claude Code', 'npm install -g @anthropic-ai/claude-code']"
+            language="powershell"
+          />
+          <p class="mb-3 leading-relaxed text-gray-600">
+            这个命令会从 npm 官方仓库下载并安装最新版本的 Claude Code。
+          </p>
 
           <div>
-            <h6>提示</h6>
-            <ul>
-              <li>• 建议使用 PowerShell 而不是 CMD，功能更强大</li>
-              <li>• 如果遇到权限问题，以管理员身份运行 PowerShell</li>
+            <h6 class="mb-2 text-base font-medium text-gray-700">提示</h6>
+            <ul class="mb-4 list-inside list-disc space-y-2 text-gray-600">
+              <li class="text-gray-600">• 建议使用 PowerShell 而不是 CMD，功能更强大</li>
+              <li class="text-gray-600">• 如果遇到权限问题，以管理员身份运行 PowerShell</li>
             </ul>
           </div>
         </div>
 
         <!-- 验证安装 -->
         <div>
-          <h6>验证 Claude Code 安装</h6>
-          <p>安装完成后，输入以下命令检查是否安装成功：</p>
-          <div>
-            <div>claude --version</div>
-          </div>
-          <p>如果显示版本号，恭喜你！Claude Code 已经成功安装了。</p>
+          <h6 class="mb-2 text-base font-medium text-gray-700">验证 Claude Code 安装</h6>
+          <p class="mb-3 leading-relaxed text-gray-600">
+            安装完成后，输入以下命令检查是否安装成功：
+          </p>
+          <CodeBlock :lines="['claude --version']" language="bash" />
+          <p class="mb-3 leading-relaxed text-gray-600">
+            如果显示版本号，恭喜你！Claude Code 已经成功安装了。
+          </p>
         </div>
       </div>
 
       <!-- 第三步：设置环境变量 -->
       <div>
-        <h4>
-          <span>3</span>
+        <h4 class="mb-3 mt-6 text-xl font-semibold text-gray-800">
+          <span
+            class="mr-2 inline-flex h-8 w-8 items-center justify-center rounded-full bg-blue-500 font-bold text-white"
+            >3</span
+          >
           设置环境变量
         </h4>
 
         <div>
-          <h5>配置 Claude Code 环境变量</h5>
-          <p>为了让 Claude Code 连接到你的中转服务，需要设置两个环境变量：</p>
+          <h5 class="mb-2 mt-4 text-lg font-medium text-gray-700">配置 Claude Code 环境变量</h5>
+          <p class="mb-3 leading-relaxed text-gray-600">
+            为了让 Claude Code 连接到你的中转服务，需要设置两个环境变量：
+          </p>
 
           <div>
             <div>
-              <h6>方法一：PowerShell 临时设置（当前会话）</h6>
-              <p>在 PowerShell 中运行以下命令：</p>
-              <div>
-                <div>$env:ANTHROPIC_BASE_URL = "{{ currentBaseUrl }}"</div>
-                <div>$env:ANTHROPIC_AUTH_TOKEN = "你的API密钥"</div>
-              </div>
-              <p>💡 记得将 "你的API密钥" 替换为在上方 "API Keys" 标签页中创建的实际密钥。</p>
+              <h6 class="mb-2 text-base font-medium text-gray-700">
+                方法一：PowerShell 临时设置（当前会话）
+              </h6>
+              <p class="mb-3 leading-relaxed text-gray-600">在 PowerShell 中运行以下命令：</p>
+              <CodeBlock
+                :lines="[
+                  `$env:ANTHROPIC_BASE_URL = '${currentBaseUrl}'`,
+                  `$env:ANTHROPIC_AUTH_TOKEN = '你的API密钥'`
+                ]"
+                language="powershell"
+              />
+              <p class="mb-3 leading-relaxed text-gray-600">
+                💡 记得将 "你的API密钥" 替换为在上方 "API Keys" 标签页中创建的实际密钥。
+              </p>
             </div>
 
             <div>
-              <h6>方法二：PowerShell 永久设置（用户级）</h6>
-              <p>在 PowerShell 中运行以下命令设置用户级环境变量：</p>
-              <div>
-                <div># 设置用户级环境变量（永久生效）</div>
-                <div>
-                  [System.Environment]::SetEnvironmentVariable("ANTHROPIC_BASE_URL", "{{
-                    currentBaseUrl
-                  }}", [System.EnvironmentVariableTarget]::User)
-                </div>
-                <div>
-                  [System.Environment]::SetEnvironmentVariable("ANTHROPIC_AUTH_TOKEN",
-                  "你的API密钥", [System.EnvironmentVariableTarget]::User)
-                </div>
-              </div>
-              <p>查看已设置的环境变量：</p>
-              <div>
-                <div># 查看用户级环境变量</div>
-                <div>
-                  [System.Environment]::GetEnvironmentVariable("ANTHROPIC_BASE_URL",
-                  [System.EnvironmentVariableTarget]::User)
-                </div>
-                <div>
-                  [System.Environment]::GetEnvironmentVariable("ANTHROPIC_AUTH_TOKEN",
-                  [System.EnvironmentVariableTarget]::User)
-                </div>
-              </div>
-              <p>💡 设置后需要重新打开 PowerShell 窗口才能生效。</p>
+              <h6 class="mb-2 text-base font-medium text-gray-700">
+                方法二：PowerShell 永久设置（用户级）
+              </h6>
+              <p class="mb-3 leading-relaxed text-gray-600">
+                在 PowerShell 中运行以下命令设置用户级环境变量：
+              </p>
+              <CodeBlock
+                :lines="[
+                  '# 设置用户级环境变量（永久生效）',
+                  psSetEnvAnthropicBase,
+                  psSetEnvAnthropicToken
+                ]"
+                language="powershell"
+              />
+              <p class="mb-3 leading-relaxed text-gray-600">查看已设置的环境变量：</p>
+              <CodeBlock
+                :lines="['# 查看用户级环境变量', psGetEnvAnthropicBase, psGetEnvAnthropicToken]"
+                language="powershell"
+              />
+              <p class="mb-3 leading-relaxed text-gray-600">
+                💡 设置后需要重新打开 PowerShell 窗口才能生效。
+              </p>
             </div>
           </div>
         </div>
 
         <!-- VSCode 插件配置 -->
         <div>
-          <h6>VSCode Claude 插件配置</h6>
-          <p>如果使用 VSCode 的 Claude 插件，需要在配置文件中进行设置：</p>
+          <h6 class="mb-2 text-base font-medium text-gray-700">VSCode Claude 插件配置</h6>
+          <p class="mb-3 leading-relaxed text-gray-600">
+            如果使用 VSCode 的 Claude 插件，需要在配置文件中进行设置：
+          </p>
           <div>
-            <p>
+            <p class="mb-3 leading-relaxed text-gray-600">
               <strong>配置文件位置：</strong>
-              <code>C:\Users\你的用户名\.claude\config.json</code>
+              <code class="rounded bg-gray-100 px-2 py-1 font-mono text-sm text-gray-800"
+                >C:\Users\你的用户名\.claude\config.json</code
+              >
             </p>
-            <p>💡 如果该文件不存在，请手动创建。</p>
+            <p class="mb-3 leading-relaxed text-gray-600">💡 如果该文件不存在，请手动创建。</p>
           </div>
-          <div>
-            <div>{</div>
-            <div>"primaryApiKey": "crs"</div>
-            <div>}</div>
-          </div>
+          <CodeBlock :lines="vscodeClaudeConfigJson" language="json" />
         </div>
 
         <!-- 验证环境变量设置 -->
         <div>
-          <h6>验证环境变量设置</h6>
-          <p>设置完环境变量后，可以通过以下命令验证是否设置成功：</p>
+          <h6 class="mb-2 text-base font-medium text-gray-700">验证环境变量设置</h6>
+          <p class="mb-3 leading-relaxed text-gray-600">
+            设置完环境变量后，可以通过以下命令验证是否设置成功：
+          </p>
 
           <div>
             <div>
-              <h6>在 PowerShell 中验证：</h6>
-              <div>
-                <div>echo $env:ANTHROPIC_BASE_URL</div>
-                <div>echo $env:ANTHROPIC_AUTH_TOKEN</div>
-              </div>
+              <h6 class="mb-2 text-base font-medium text-gray-700">在 PowerShell 中验证：</h6>
+              <CodeBlock
+                :lines="['echo $env:ANTHROPIC_BASE_URL', 'echo $env:ANTHROPIC_AUTH_TOKEN']"
+                language="powershell"
+              />
             </div>
 
             <div>
-              <h6>在 CMD 中验证：</h6>
-              <div>
-                <div>echo %ANTHROPIC_BASE_URL%</div>
-                <div>echo %ANTHROPIC_AUTH_TOKEN%</div>
-              </div>
+              <h6 class="mb-2 text-base font-medium text-gray-700">在 CMD 中验证：</h6>
+              <CodeBlock
+                :lines="['echo %ANTHROPIC_BASE_URL%', 'echo %ANTHROPIC_AUTH_TOKEN%']"
+                language="cmd"
+              />
             </div>
           </div>
 
           <div>
-            <p>
+            <p class="mb-3 leading-relaxed text-gray-600">
               <strong>预期输出示例：</strong>
             </p>
-            <div>
-              <div>{{ currentBaseUrl }}</div>
-              <div>cr_xxxxxxxxxxxxxxxxxx</div>
-            </div>
-            <p>💡 如果输出为空或显示变量名本身，说明环境变量设置失败，请重新设置。</p>
+            <CodeBlock :lines="[currentBaseUrl, 'cr_xxxxxxxxxxxxxxxxxx']" language="bash" />
+            <p class="mb-3 leading-relaxed text-gray-600">
+              💡 如果输出为空或显示变量名本身，说明环境变量设置失败，请重新设置。
+            </p>
           </div>
         </div>
 
         <!-- Gemini CLI 环境变量设置 -->
         <div>
-          <h5>配置 Gemini CLI 环境变量</h5>
-          <p>如果你使用 Gemini CLI，需要设置以下环境变量：</p>
+          <h5 class="mb-2 mt-4 text-lg font-medium text-gray-700">配置 Gemini CLI 环境变量</h5>
+          <p class="mb-3 leading-relaxed text-gray-600">
+            如果你使用 Gemini CLI，需要设置以下环境变量：
+          </p>
 
           <div>
             <div>
-              <h6>PowerShell 设置方法</h6>
-              <p>在 PowerShell 中运行以下命令：</p>
-              <div>
-                <div>$env:GOOGLE_GEMINI_BASE_URL = "{{ geminiBaseUrl }}"</div>
-                <div>$env:GEMINI_API_KEY = "你的API密钥"</div>
-                <div>$env:GEMINI_MODEL = "gemini-2.5-pro"</div>
-              </div>
-              <p>💡 使用与 Claude Code 相同的 API 密钥即可。</p>
+              <h6 class="mb-2 text-base font-medium text-gray-700">PowerShell 设置方法</h6>
+              <p class="mb-3 leading-relaxed text-gray-600">在 PowerShell 中运行以下命令：</p>
+              <CodeBlock :lines="psSetEnvGeminiTemp" language="powershell" />
+              <p class="mb-3 leading-relaxed text-gray-600">
+                💡 使用与 Claude Code 相同的 API 密钥即可。
+              </p>
             </div>
 
             <div>
-              <h6>PowerShell 永久设置（用户级）</h6>
-              <p>在 PowerShell 中运行以下命令：</p>
-              <div>
-                <div># 设置用户级环境变量（永久生效）</div>
-                <div>
-                  [System.Environment]::SetEnvironmentVariable("GOOGLE_GEMINI_BASE_URL", "{{
-                    geminiBaseUrl
-                  }}", [System.EnvironmentVariableTarget]::User)
-                </div>
-                <div>
-                  [System.Environment]::SetEnvironmentVariable("GEMINI_API_KEY", "你的API密钥",
-                  [System.EnvironmentVariableTarget]::User)
-                </div>
-                <div>
-                  [System.Environment]::SetEnvironmentVariable("GEMINI_MODEL", "gemini-2.5-pro",
-                  [System.EnvironmentVariableTarget]::User)
-                </div>
-              </div>
-              <p>💡 设置后需要重新打开 PowerShell 窗口才能生效。</p>
+              <h6 class="mb-2 text-base font-medium text-gray-700">
+                PowerShell 永久设置（用户级）
+              </h6>
+              <p class="mb-3 leading-relaxed text-gray-600">在 PowerShell 中运行以下命令：</p>
+              <CodeBlock
+                :lines="[
+                  '# 设置用户级环境变量（永久生效）',
+                  psSetEnvGeminiBase,
+                  psSetEnvGeminiKey,
+                  psSetEnvGeminiModel
+                ]"
+                language="powershell"
+              />
+              <p class="mb-3 leading-relaxed text-gray-600">
+                💡 设置后需要重新打开 PowerShell 窗口才能生效。
+              </p>
             </div>
 
             <div>
-              <h6>验证 Gemini CLI 环境变量</h6>
-              <p>在 PowerShell 中验证：</p>
-              <div>
-                <div>echo $env:GOOGLE_GEMINI_BASE_URL</div>
-                <div>echo $env:GEMINI_API_KEY</div>
-                <div>echo $env:GEMINI_MODEL</div>
-              </div>
+              <h6 class="mb-2 text-base font-medium text-gray-700">验证 Gemini CLI 环境变量</h6>
+              <p class="mb-3 leading-relaxed text-gray-600">在 PowerShell 中验证：</p>
+              <CodeBlock
+                :lines="[
+                  'echo $env:GOOGLE_GEMINI_BASE_URL',
+                  'echo $env:GEMINI_API_KEY',
+                  'echo $env:GEMINI_MODEL'
+                ]"
+                language="powershell"
+              />
             </div>
           </div>
         </div>
 
         <!-- Codex 环境变量设置 -->
         <div>
-          <h5>配置 Codex 环境变量</h5>
-          <p>如果你使用支持 OpenAI API 的工具（如 Codex），需要设置以下环境变量：</p>
+          <h5 class="mb-2 mt-4 text-lg font-medium text-gray-700">配置 Codex 环境变量</h5>
+          <p class="mb-3 leading-relaxed text-gray-600">
+            如果你使用支持 OpenAI API 的工具（如 Codex），需要设置以下环境变量：
+          </p>
 
           <div>
             <div>
-              <h6>Codex 配置文件</h6>
-              <p>
+              <h6 class="mb-2 text-base font-medium text-gray-700">Codex 配置文件</h6>
+              <p class="mb-3 leading-relaxed text-gray-600">
                 在
-                <code>~/.codex/config.toml</code>
+                <code class="rounded bg-gray-100 px-2 py-1 font-mono text-sm text-gray-800"
+                  >~/.codex/config.toml</code
+                >
                 文件开头添加以下配置：
               </p>
-              <div>
-                <div v-for="line in codexConfigContent.configToml" :key="line">
-                  {{ line }}
-                </div>
-              </div>
-              <p>
+              <CodeBlock :lines="codexConfigContent.configToml" language="toml" />
+              <p class="mb-3 leading-relaxed text-gray-600">
                 在
-                <code>~/.codex/auth.json</code>
+                <code class="rounded bg-gray-100 px-2 py-1 font-mono text-sm text-gray-800"
+                  >~/.codex/auth.json</code
+                >
                 文件中配置API密钥：
               </p>
-              <div>
-                <div v-for="line in codexConfigContent.authJson" :key="line">
-                  {{ line }}
-                </div>
-              </div>
+              <CodeBlock :lines="codexConfigContent.authJson" language="json" />
               <div>
                 <!-- 描述文字 -->
-                <p>{{ codexConfigContent.authInstructions.description }}</p>
+                <p class="mb-3 leading-relaxed text-gray-600">
+                  {{ codexConfigContent.authInstructions.description }}
+                </p>
 
                 <!-- 标题 -->
-                <h6>
+                <h6 class="mb-2 text-base font-medium text-gray-700">
                   {{ codexConfigContent.authInstructions.title }}
                 </h6>
 
                 <!-- 当前平台对应的环境变量设置 -->
                 <div>
-                  <p>{{ codexConfigContent.authInstructions.platform.title }}:</p>
-                  <div>
-                    <div>
-                      {{ codexConfigContent.authInstructions.platform.command }}
-                    </div>
-                  </div>
+                  <p class="mb-3 leading-relaxed text-gray-600">
+                    {{ codexConfigContent.authInstructions.platform.title }}:
+                  </p>
+                  <CodeBlock
+                    :lines="[codexConfigContent.authInstructions.platform.command]"
+                    :language="activeTutorialSystem === 'windows' ? 'cmd' : 'bash'"
+                  />
                 </div>
 
                 <!-- Shell 配置文件（仅对于 macOS/Linux 显示） -->
                 <div v-if="codexConfigContent.authInstructions.persistent">
-                  <p>{{ codexConfigContent.authInstructions.persistent.title }}:</p>
-                  <p>
+                  <p class="mb-3 leading-relaxed text-gray-600">
+                    {{ codexConfigContent.authInstructions.persistent.title }}:
+                  </p>
+                  <p class="mb-3 leading-relaxed text-gray-600">
                     {{ codexConfigContent.authInstructions.persistent.description }}
                   </p>
-                  <div>
-                    <div
-                      v-for="command in codexConfigContent.authInstructions.persistent.commands"
-                      :key="command"
-                    >
-                      {{ command }}
-                    </div>
-                  </div>
+                  <CodeBlock
+                    :lines="codexConfigContent.authInstructions.persistent.commands"
+                    language="bash"
+                  />
                 </div>
               </div>
             </div>
@@ -343,51 +371,57 @@
 
       <!-- Droid CLI 配置 -->
       <div>
-        <h5>配置 Droid CLI</h5>
-        <p>
+        <h5 class="mb-2 mt-4 text-lg font-medium text-gray-700">配置 Droid CLI</h5>
+        <p class="mb-3 leading-relaxed text-gray-600">
           Droid CLI 使用
-          <code>~/.factory/config.json</code>
+          <code class="rounded bg-gray-100 px-2 py-1 font-mono text-sm text-gray-800"
+            >~/.factory/config.json</code
+          >
           保存自定义模型；在 Windows 中可直接编辑
-          <code>C:\Users\你的用户名\.factory\config.json</code>。
+          <code class="rounded bg-gray-100 px-2 py-1 font-mono text-sm text-gray-800"
+            >C:\Users\你的用户名\.factory\config.json</code
+          >。
         </p>
         <div>
-          <h6>配置文件示例</h6>
-          <p>将以下内容追加到配置文件中，并替换示例中的域名和 API 密钥：</p>
-          <div>
-            <div v-for="(line, index) in droidCliConfigLines" :key="line + index">
-              {{ line }}
-            </div>
-          </div>
-          <p>
+          <h6 class="mb-2 text-base font-medium text-gray-700">配置文件示例</h6>
+          <p class="mb-3 leading-relaxed text-gray-600">
+            将以下内容追加到配置文件中，并替换示例中的域名和 API 密钥：
+          </p>
+          <CodeBlock :lines="droidCliConfigLines" language="json" />
+          <p class="mb-3 leading-relaxed text-gray-600">
             💡 在 Droid CLI 中选择自定义模型即可使用新的 Droid 账号池；确保服务地址可被本地访问。
           </p>
         </div>
       </div>
       <!-- 第四步：开始使用 -->
       <div>
-        <h4>
-          <span>4</span>
+        <h4 class="mb-3 mt-6 text-xl font-semibold text-gray-800">
+          <span
+            class="mr-2 inline-flex h-8 w-8 items-center justify-center rounded-full bg-blue-500 font-bold text-white"
+            >4</span
+          >
           开始使用 Claude Code
         </h4>
         <div>
-          <p>现在你可以开始使用 Claude Code 了！</p>
+          <p class="mb-3 leading-relaxed text-gray-600">现在你可以开始使用 Claude Code 了！</p>
 
           <div>
             <div>
-              <h6>启动 Claude Code</h6>
-              <div>
-                <div>claude</div>
-              </div>
+              <h6 class="mb-2 text-base font-medium text-gray-700">启动 Claude Code</h6>
+              <CodeBlock :lines="['claude']" language="bash" />
             </div>
 
             <div>
-              <h6>在特定项目中使用</h6>
-              <div>
-                <div># 进入你的项目目录</div>
-                <div>cd C:\path\to\your\project</div>
-                <div># 启动 Claude Code</div>
-                <div>claude</div>
-              </div>
+              <h6 class="mb-2 text-base font-medium text-gray-700">在特定项目中使用</h6>
+              <CodeBlock
+                :lines="[
+                  '# 进入你的项目目录',
+                  'cd C:\\\\path\\\\to\\\\your\\\\project',
+                  '# 启动 Claude Code',
+                  'claude'
+                ]"
+                language="powershell"
+              />
             </div>
           </div>
         </div>
@@ -395,15 +429,20 @@
 
       <!-- Windows 故障排除 -->
       <div>
-        <h4>Windows 常见问题解决</h4>
+        <h4 class="mb-3 mt-6 text-xl font-semibold text-gray-800">Windows 常见问题解决</h4>
         <div>
           <details>
             <summary>安装时提示 "permission denied" 错误</summary>
             <div>
-              <p>这通常是权限问题，尝试以下解决方法：</p>
-              <ul>
-                <li>以管理员身份运行 PowerShell</li>
-                <li>或者配置 npm 使用用户目录：<code>npm config set prefix %APPDATA%\npm</code></li>
+              <p class="mb-3 leading-relaxed text-gray-600">这通常是权限问题，尝试以下解决方法：</p>
+              <ul class="mb-4 list-inside list-disc space-y-2 text-gray-600">
+                <li class="text-gray-600">以管理员身份运行 PowerShell</li>
+                <li class="text-gray-600">
+                  或者配置 npm 使用用户目录：<code
+                    class="rounded bg-gray-100 px-2 py-1 font-mono text-sm text-gray-800"
+                    >npm config set prefix %APPDATA%\npm</code
+                  >
+                </li>
               </ul>
             </div>
           </details>
@@ -411,21 +450,27 @@
           <details>
             <summary>PowerShell 执行策略错误</summary>
             <div>
-              <p>如果遇到执行策略限制，运行：</p>
-              <div>
-                <div>Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser</div>
-              </div>
+              <p class="mb-3 leading-relaxed text-gray-600">如果遇到执行策略限制，运行：</p>
+              <CodeBlock
+                :lines="['Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser']"
+                language="powershell"
+              />
             </div>
           </details>
 
           <details>
             <summary>环境变量设置后不生效</summary>
             <div>
-              <p>设置永久环境变量后需要：</p>
-              <ul>
-                <li>重新启动 PowerShell 或 CMD</li>
-                <li>或者注销并重新登录 Windows</li>
-                <li>验证设置：<code>echo $env:ANTHROPIC_BASE_URL</code></li>
+              <p class="mb-3 leading-relaxed text-gray-600">设置永久环境变量后需要：</p>
+              <ul class="mb-4 list-inside list-disc space-y-2 text-gray-600">
+                <li class="text-gray-600">重新启动 PowerShell 或 CMD</li>
+                <li class="text-gray-600">或者注销并重新登录 Windows</li>
+                <li class="text-gray-600">
+                  验证设置：<code
+                    class="rounded bg-gray-100 px-2 py-1 font-mono text-sm text-gray-800"
+                    >echo $env:ANTHROPIC_BASE_URL</code
+                  >
+                </li>
               </ul>
             </div>
           </details>
@@ -437,268 +482,273 @@
     <div v-else-if="activeTutorialSystem === 'macos'">
       <!-- 第一步：安装 Node.js -->
       <div>
-        <h4>
-          <span>1</span>
+        <h4 class="mb-3 mt-6 text-xl font-semibold text-gray-800">
+          <span
+            class="mr-2 inline-flex h-8 w-8 items-center justify-center rounded-full bg-blue-500 font-bold text-white"
+            >1</span
+          >
           安装 Node.js 环境
         </h4>
-        <p>Claude Code 需要 Node.js 环境才能运行。</p>
+        <p class="mb-3 leading-relaxed text-gray-600">Claude Code 需要 Node.js 环境才能运行。</p>
 
         <div>
-          <h5>macOS 安装方法</h5>
+          <h5 class="mb-2 mt-4 text-lg font-medium text-gray-700">macOS 安装方法</h5>
           <div>
-            <p>方法一：使用 Homebrew（推荐）</p>
-            <p>如果你已经安装了 Homebrew，使用它安装 Node.js 会更方便：</p>
-            <div>
-              <div># 更新 Homebrew</div>
-              <div>brew update</div>
-              <div># 安装 Node.js</div>
-              <div>brew install node</div>
-            </div>
+            <p class="mb-3 leading-relaxed text-gray-600">方法一：使用 Homebrew（推荐）</p>
+            <p class="mb-3 leading-relaxed text-gray-600">
+              如果你已经安装了 Homebrew，使用它安装 Node.js 会更方便：
+            </p>
+            <CodeBlock
+              :lines="['# 更新 Homebrew', 'brew update', '# 安装 Node.js', 'brew install node']"
+              language="bash"
+            />
           </div>
           <div>
-            <p>方法二：官网下载</p>
-            <ol>
-              <li>
+            <p class="mb-3 leading-relaxed text-gray-600">方法二：官网下载</p>
+            <ol class="mb-4 list-inside list-decimal space-y-2 text-gray-600">
+              <li class="text-gray-600">
                 访问
-                <code>https://nodejs.org/</code>
+                <code class="rounded bg-gray-100 px-2 py-1 font-mono text-sm text-gray-800"
+                  >https://nodejs.org/</code
+                >
               </li>
-              <li>下载适合 macOS 的 LTS 版本</li>
-              <li>
+              <li class="text-gray-600">下载适合 macOS 的 LTS 版本</li>
+              <li class="text-gray-600">
                 打开下载的
-                <code>.pkg</code>
+                <code class="rounded bg-gray-100 px-2 py-1 font-mono text-sm text-gray-800"
+                  >.pkg</code
+                >
                 文件
               </li>
-              <li>按照安装程序指引完成安装</li>
+              <li class="text-gray-600">按照安装程序指引完成安装</li>
             </ol>
           </div>
           <div>
-            <h6>macOS 注意事项</h6>
-            <ul>
-              <li>
+            <h6 class="mb-2 text-base font-medium text-gray-700">macOS 注意事项</h6>
+            <ul class="mb-4 list-inside list-disc space-y-2 text-gray-600">
+              <li class="text-gray-600">
                 • 如果遇到权限问题，可能需要使用
-                <code>sudo</code>
+                <code class="rounded bg-gray-100 px-2 py-1 font-mono text-sm text-gray-800"
+                  >sudo</code
+                >
               </li>
-              <li>• 首次运行可能需要在系统偏好设置中允许</li>
-              <li>• 建议使用 Terminal 或 iTerm2</li>
+              <li class="text-gray-600">• 首次运行可能需要在系统偏好设置中允许</li>
+              <li class="text-gray-600">• 建议使用 Terminal 或 iTerm2</li>
             </ul>
           </div>
         </div>
 
         <!-- 验证安装 -->
         <div>
-          <h6>验证安装是否成功</h6>
-          <p>安装完成后，打开 Terminal，输入以下命令：</p>
-          <div>
-            <div>node --version</div>
-            <div>npm --version</div>
-          </div>
-          <p>如果显示版本号，说明安装成功了！</p>
+          <h6 class="mb-2 text-base font-medium text-gray-700">验证安装是否成功</h6>
+          <p class="mb-3 leading-relaxed text-gray-600">
+            安装完成后，打开 Terminal，输入以下命令：
+          </p>
+          <CodeBlock :lines="['node --version', 'npm --version']" language="bash" />
+          <p class="mb-3 leading-relaxed text-gray-600">如果显示版本号，说明安装成功了！</p>
         </div>
       </div>
 
       <!-- 第二步：安装 Claude Code -->
       <div>
-        <h4>
-          <span>2</span>
+        <h4 class="mb-3 mt-6 text-xl font-semibold text-gray-800">
+          <span
+            class="mr-2 inline-flex h-8 w-8 items-center justify-center rounded-full bg-blue-500 font-bold text-white"
+            >2</span
+          >
           安装 Claude Code
         </h4>
 
         <div>
-          <h5>安装 Claude Code</h5>
-          <p>打开 Terminal，运行以下命令：</p>
-          <div>
-            <div># 全局安装 Claude Code</div>
-            <div>npm install -g @anthropic-ai/claude-code</div>
-          </div>
-          <p>如果遇到权限问题，可以使用 sudo：</p>
-          <div>
-            <div>sudo npm install -g @anthropic-ai/claude-code</div>
-          </div>
+          <h5 class="mb-2 mt-4 text-lg font-medium text-gray-700">安装 Claude Code</h5>
+          <p class="mb-3 leading-relaxed text-gray-600">打开 Terminal，运行以下命令：</p>
+          <CodeBlock
+            :lines="['# 全局安装 Claude Code', 'npm install -g @anthropic-ai/claude-code']"
+            language="bash"
+          />
+          <p class="mb-3 leading-relaxed text-gray-600">如果遇到权限问题，可以使用 sudo：</p>
+          <CodeBlock :lines="['sudo npm install -g @anthropic-ai/claude-code']" language="bash" />
         </div>
 
         <!-- 验证安装 -->
         <div>
-          <h6>验证 Claude Code 安装</h6>
-          <p>安装完成后，输入以下命令检查是否安装成功：</p>
-          <div>
-            <div>claude --version</div>
-          </div>
-          <p>如果显示版本号，恭喜你！Claude Code 已经成功安装了。</p>
+          <h6 class="mb-2 text-base font-medium text-gray-700">验证 Claude Code 安装</h6>
+          <p class="mb-3 leading-relaxed text-gray-600">
+            安装完成后，输入以下命令检查是否安装成功：
+          </p>
+          <CodeBlock :lines="['claude --version']" language="bash" />
+          <p class="mb-3 leading-relaxed text-gray-600">
+            如果显示版本号，恭喜你！Claude Code 已经成功安装了。
+          </p>
         </div>
       </div>
 
       <!-- 第三步：设置环境变量 -->
       <div>
-        <h4>
-          <span>3</span>
+        <h4 class="mb-3 mt-6 text-xl font-semibold text-gray-800">
+          <span
+            class="mr-2 inline-flex h-8 w-8 items-center justify-center rounded-full bg-blue-500 font-bold text-white"
+            >3</span
+          >
           设置环境变量
         </h4>
 
         <div>
-          <h5>配置 Claude Code 环境变量</h5>
-          <p>为了让 Claude Code 连接到你的中转服务，需要设置两个环境变量：</p>
+          <h5 class="mb-2 mt-4 text-lg font-medium text-gray-700">配置 Claude Code 环境变量</h5>
+          <p class="mb-3 leading-relaxed text-gray-600">
+            为了让 Claude Code 连接到你的中转服务，需要设置两个环境变量：
+          </p>
 
           <div>
             <div>
-              <h6>方法一：临时设置（当前会话）</h6>
-              <p>在 Terminal 中运行以下命令：</p>
-              <div>
-                <div>export ANTHROPIC_BASE_URL="{{ currentBaseUrl }}"</div>
-                <div>export ANTHROPIC_AUTH_TOKEN="你的API密钥"</div>
-              </div>
-              <p>💡 记得将 "你的API密钥" 替换为在上方 "API Keys" 标签页中创建的实际密钥。</p>
+              <h6 class="mb-2 text-base font-medium text-gray-700">方法一：临时设置（当前会话）</h6>
+              <p class="mb-3 leading-relaxed text-gray-600">在 Terminal 中运行以下命令：</p>
+              <CodeBlock
+                :lines="bashSetEnvAnthropicTemp"
+                language="bash"
+              />
+              <p class="mb-3 leading-relaxed text-gray-600">
+                💡 记得将 "你的API密钥" 替换为在上方 "API Keys" 标签页中创建的实际密钥。
+              </p>
             </div>
 
             <div>
-              <h6>方法二：永久设置</h6>
-              <p>编辑你的 shell 配置文件（根据你使用的 shell）：</p>
-              <div>
-                <div># 对于 zsh (默认)</div>
-                <div>echo 'export ANTHROPIC_BASE_URL="{{ currentBaseUrl }}"' >> ~/.zshrc</div>
-                <div>echo 'export ANTHROPIC_AUTH_TOKEN="你的API密钥"' >> ~/.zshrc</div>
-                <div>source ~/.zshrc</div>
-              </div>
-              <div>
-                <div># 对于 bash</div>
-                <div>
-                  echo 'export ANTHROPIC_BASE_URL="{{ currentBaseUrl }}"' >> ~/.bash_profile
-                </div>
-                <div>echo 'export ANTHROPIC_AUTH_TOKEN="你的API密钥"' >> ~/.bash_profile</div>
-                <div>source ~/.bash_profile</div>
-              </div>
+              <h6 class="mb-2 text-base font-medium text-gray-700">方法二：永久设置</h6>
+              <p class="mb-3 leading-relaxed text-gray-600">
+                编辑你的 shell 配置文件（根据你使用的 shell）：
+              </p>
+              <CodeBlock :lines="bashPermanentZshAnth" language="bash" />
+              <CodeBlock :lines="bashPermanentBashAnth" language="bash" />
             </div>
           </div>
         </div>
 
         <!-- VSCode 插件配置 (macOS) -->
         <div>
-          <h6>VSCode Claude 插件配置</h6>
-          <p>如果使用 VSCode 的 Claude 插件，需要在配置文件中进行设置：</p>
+          <h6 class="mb-2 text-base font-medium text-gray-700">VSCode Claude 插件配置</h6>
+          <p class="mb-3 leading-relaxed text-gray-600">
+            如果使用 VSCode 的 Claude 插件，需要在配置文件中进行设置：
+          </p>
           <div>
-            <p>
+            <p class="mb-3 leading-relaxed text-gray-600">
               <strong>配置文件位置：</strong>
-              <code>~/.claude/config.json</code>
+              <code class="rounded bg-gray-100 px-2 py-1 font-mono text-sm text-gray-800"
+                >~/.claude/config.json</code
+              >
             </p>
-            <p>💡 如果该文件不存在，请手动创建。</p>
+            <p class="mb-3 leading-relaxed text-gray-600">💡 如果该文件不存在，请手动创建。</p>
           </div>
-          <div>
-            <div>{</div>
-            <div>"primaryApiKey": "crs"</div>
-            <div>}</div>
-          </div>
+          <CodeBlock :lines="vscodeClaudeConfigJson" language="json" />
         </div>
 
         <!-- Gemini CLI 环境变量设置 -->
         <div>
-          <h5>配置 Gemini CLI 环境变量</h5>
-          <p>如果你使用 Gemini CLI，需要设置以下环境变量：</p>
+          <h5 class="mb-2 mt-4 text-lg font-medium text-gray-700">配置 Gemini CLI 环境变量</h5>
+          <p class="mb-3 leading-relaxed text-gray-600">
+            如果你使用 Gemini CLI，需要设置以下环境变量：
+          </p>
 
           <div>
             <div>
-              <h6>Terminal 设置方法</h6>
-              <p>在 Terminal 中运行以下命令：</p>
-              <div>
-                <div>export GOOGLE_GEMINI_BASE_URL="{{ geminiBaseUrl }}"</div>
-                <div>export GEMINI_API_KEY="你的API密钥"</div>
-                <div>export GEMINI_MODEL="gemini-2.5-pro"</div>
-              </div>
-              <p>💡 使用与 Claude Code 相同的 API 密钥即可。</p>
+              <h6 class="mb-2 text-base font-medium text-gray-700">Terminal 设置方法</h6>
+              <p class="mb-3 leading-relaxed text-gray-600">在 Terminal 中运行以下命令：</p>
+              <CodeBlock
+                :lines="bashSetEnvGeminiTemp"
+                language="bash"
+              />
+              <p class="mb-3 leading-relaxed text-gray-600">
+                💡 使用与 Claude Code 相同的 API 密钥即可。
+              </p>
             </div>
 
             <div>
-              <h6>永久设置方法</h6>
-              <p>添加到你的 shell 配置文件：</p>
-              <div>
-                <div># 对于 zsh (默认)</div>
-                <div>echo 'export GOOGLE_GEMINI_BASE_URL="{{ geminiBaseUrl }}"' >> ~/.zshrc</div>
-                <div>echo 'export GEMINI_API_KEY="你的API密钥"' >> ~/.zshrc</div>
-                <div>echo 'export GEMINI_MODEL="gemini-2.5-pro"' >> ~/.zshrc</div>
-                <div>source ~/.zshrc</div>
-              </div>
-              <div>
-                <div># 对于 bash</div>
-                <div>
-                  echo 'export GOOGLE_GEMINI_BASE_URL="{{ geminiBaseUrl }}"' >> ~/.bash_profile
-                </div>
-                <div>echo 'export GEMINI_API_KEY="你的API密钥"' >> ~/.bash_profile</div>
-                <div>echo 'export GEMINI_MODEL="gemini-2.5-pro"' >> ~/.bash_profile</div>
-                <div>source ~/.bash_profile</div>
-              </div>
+              <h6 class="mb-2 text-base font-medium text-gray-700">永久设置方法</h6>
+              <p class="mb-3 leading-relaxed text-gray-600">添加到你的 shell 配置文件：</p>
+              <CodeBlock
+                :lines="bashPermanentZshGemini"
+                language="bash"
+              />
+              <CodeBlock
+                :lines="bashPermanentBashGemini"
+                language="bash"
+              />
             </div>
 
             <div>
-              <h6>验证 Gemini CLI 环境变量</h6>
-              <p>在 Terminal 中验证：</p>
-              <div>
-                <div>echo $GOOGLE_GEMINI_BASE_URL</div>
-                <div>echo $GEMINI_API_KEY</div>
-                <div>echo $GEMINI_MODEL</div>
-              </div>
+              <h6 class="mb-2 text-base font-medium text-gray-700">验证 Gemini CLI 环境变量</h6>
+              <p class="mb-3 leading-relaxed text-gray-600">在 Terminal 中验证：</p>
+              <CodeBlock
+                :lines="[
+                  'echo $GOOGLE_GEMINI_BASE_URL',
+                  'echo $GEMINI_API_KEY',
+                  'echo $GEMINI_MODEL'
+                ]"
+                language="bash"
+              />
             </div>
           </div>
         </div>
 
         <!-- Codex 环境变量设置 -->
         <div>
-          <h5>配置 Codex 环境变量</h5>
-          <p>如果你使用支持 OpenAI API 的工具（如 Codex），需要设置以下环境变量：</p>
+          <h5 class="mb-2 mt-4 text-lg font-medium text-gray-700">配置 Codex 环境变量</h5>
+          <p class="mb-3 leading-relaxed text-gray-600">
+            如果你使用支持 OpenAI API 的工具（如 Codex），需要设置以下环境变量：
+          </p>
 
           <div>
             <div>
-              <h6>Codex 配置文件</h6>
-              <p>
+              <h6 class="mb-2 text-base font-medium text-gray-700">Codex 配置文件</h6>
+              <p class="mb-3 leading-relaxed text-gray-600">
                 在
-                <code>~/.codex/config.toml</code>
+                <code class="rounded bg-gray-100 px-2 py-1 font-mono text-sm text-gray-800"
+                  >~/.codex/config.toml</code
+                >
                 文件开头添加以下配置：
               </p>
-              <div>
-                <div v-for="line in codexConfigContent.configToml" :key="line">
-                  {{ line }}
-                </div>
-              </div>
-              <p>
+              <CodeBlock :lines="codexConfigContent.configToml" language="toml" />
+              <p class="mb-3 leading-relaxed text-gray-600">
                 在
-                <code>~/.codex/auth.json</code>
+                <code class="rounded bg-gray-100 px-2 py-1 font-mono text-sm text-gray-800"
+                  >~/.codex/auth.json</code
+                >
                 文件中配置API密钥：
               </p>
-              <div>
-                <div v-for="line in codexConfigContent.authJson" :key="line">
-                  {{ line }}
-                </div>
-              </div>
+              <CodeBlock :lines="codexConfigContent.authJson" language="json" />
               <div>
                 <!-- 描述文字 -->
-                <p>{{ codexConfigContent.authInstructions.description }}</p>
+                <p class="mb-3 leading-relaxed text-gray-600">
+                  {{ codexConfigContent.authInstructions.description }}
+                </p>
 
                 <!-- 标题 -->
-                <h6>
+                <h6 class="mb-2 text-base font-medium text-gray-700">
                   {{ codexConfigContent.authInstructions.title }}
                 </h6>
 
                 <!-- 当前平台对应的环境变量设置 -->
                 <div>
-                  <p>{{ codexConfigContent.authInstructions.platform.title }}:</p>
-                  <div>
-                    <div>
-                      {{ codexConfigContent.authInstructions.platform.command }}
-                    </div>
-                  </div>
+                  <p class="mb-3 leading-relaxed text-gray-600">
+                    {{ codexConfigContent.authInstructions.platform.title }}:
+                  </p>
+                  <CodeBlock
+                    :lines="[codexConfigContent.authInstructions.platform.command]"
+                    :language="activeTutorialSystem === 'windows' ? 'cmd' : 'bash'"
+                  />
                 </div>
 
                 <!-- Shell 配置文件（仅对于 macOS/Linux 显示） -->
                 <div v-if="codexConfigContent.authInstructions.persistent">
-                  <p>{{ codexConfigContent.authInstructions.persistent.title }}:</p>
-                  <p>
+                  <p class="mb-3 leading-relaxed text-gray-600">
+                    {{ codexConfigContent.authInstructions.persistent.title }}:
+                  </p>
+                  <p class="mb-3 leading-relaxed text-gray-600">
                     {{ codexConfigContent.authInstructions.persistent.description }}
                   </p>
-                  <div>
-                    <div
-                      v-for="command in codexConfigContent.authInstructions.persistent.commands"
-                      :key="command"
-                    >
-                      {{ command }}
-                    </div>
-                  </div>
+                  <CodeBlock
+                    :lines="codexConfigContent.authInstructions.persistent.commands"
+                    language="bash"
+                  />
                 </div>
               </div>
             </div>
@@ -708,25 +758,29 @@
 
       <!-- Droid CLI 配置 -->
       <div>
-        <h5>配置 Droid CLI</h5>
-        <p>
+        <h5 class="mb-2 mt-4 text-lg font-medium text-gray-700">配置 Droid CLI</h5>
+        <p class="mb-3 leading-relaxed text-gray-600">
           Droid CLI 使用
-          <code>~/.factory/config.json</code>
+          <code class="rounded bg-gray-100 px-2 py-1 font-mono text-sm text-gray-800"
+            >~/.factory/config.json</code
+          >
           保存自定义模型；你可以在 Finder 中按
-          <code>⌘ + Shift + G</code>
+          <code class="rounded bg-gray-100 px-2 py-1 font-mono text-sm text-gray-800"
+            >⌘ + Shift + G</code
+          >
           并输入路径，或运行
-          <code>open ~/.factory</code>
+          <code class="rounded bg-gray-100 px-2 py-1 font-mono text-sm text-gray-800"
+            >open ~/.factory</code
+          >
           快速打开配置目录。
         </p>
         <div>
-          <h6>配置文件示例</h6>
-          <p>将以下内容追加到配置文件中，并替换示例中的域名和 API 密钥：</p>
-          <div>
-            <div v-for="(line, index) in droidCliConfigLines" :key="line + index">
-              {{ line }}
-            </div>
-          </div>
-          <p>
+          <h6 class="mb-2 text-base font-medium text-gray-700">配置文件示例</h6>
+          <p class="mb-3 leading-relaxed text-gray-600">
+            将以下内容追加到配置文件中，并替换示例中的域名和 API 密钥：
+          </p>
+          <CodeBlock :lines="droidCliConfigLines" language="json" />
+          <p class="mb-3 leading-relaxed text-gray-600">
             💡 在 Droid CLI 中选择自定义模型即可使用新的 Droid 账号池；确保服务地址可被本地访问。
           </p>
         </div>
@@ -734,29 +788,33 @@
 
       <!-- 第四步：开始使用 -->
       <div>
-        <h4>
-          <span>4</span>
+        <h4 class="mb-3 mt-6 text-xl font-semibold text-gray-800">
+          <span
+            class="mr-2 inline-flex h-8 w-8 items-center justify-center rounded-full bg-blue-500 font-bold text-white"
+            >4</span
+          >
           开始使用 Claude Code
         </h4>
         <div>
-          <p>现在你可以开始使用 Claude Code 了！</p>
+          <p class="mb-3 leading-relaxed text-gray-600">现在你可以开始使用 Claude Code 了！</p>
 
           <div>
             <div>
-              <h6>启动 Claude Code</h6>
-              <div>
-                <div>claude</div>
-              </div>
+              <h6 class="mb-2 text-base font-medium text-gray-700">启动 Claude Code</h6>
+              <CodeBlock :lines="['claude']" language="bash" />
             </div>
 
             <div>
-              <h6>在特定项目中使用</h6>
-              <div>
-                <div># 进入你的项目目录</div>
-                <div>cd /path/to/your/project</div>
-                <div># 启动 Claude Code</div>
-                <div>claude</div>
-              </div>
+              <h6 class="mb-2 text-base font-medium text-gray-700">在特定项目中使用</h6>
+              <CodeBlock
+                :lines="[
+                  '# 进入你的项目目录',
+                  'cd /path/to/your/project',
+                  '# 启动 Claude Code',
+                  'claude'
+                ]"
+                language="bash"
+              />
             </div>
           </div>
         </div>
@@ -764,15 +822,25 @@
 
       <!-- macOS 故障排除 -->
       <div>
-        <h4>macOS 常见问题解决</h4>
+        <h4 class="mb-3 mt-6 text-xl font-semibold text-gray-800">macOS 常见问题解决</h4>
         <div>
           <details>
             <summary>安装时提示权限错误</summary>
             <div>
-              <p>尝试以下解决方法：</p>
-              <ul>
-                <li>使用 sudo 安装：<code>sudo npm install -g @anthropic-ai/claude-code</code></li>
-                <li>或者配置 npm 使用用户目录：<code>npm config set prefix ~/.npm-global</code></li>
+              <p class="mb-3 leading-relaxed text-gray-600">尝试以下解决方法：</p>
+              <ul class="mb-4 list-inside list-disc space-y-2 text-gray-600">
+                <li class="text-gray-600">
+                  使用 sudo 安装：<code
+                    class="rounded bg-gray-100 px-2 py-1 font-mono text-sm text-gray-800"
+                    >sudo npm install -g @anthropic-ai/claude-code</code
+                  >
+                </li>
+                <li class="text-gray-600">
+                  或者配置 npm 使用用户目录：<code
+                    class="rounded bg-gray-100 px-2 py-1 font-mono text-sm text-gray-800"
+                    >npm config set prefix ~/.npm-global</code
+                  >
+                </li>
               </ul>
             </div>
           </details>
@@ -780,11 +848,16 @@
           <details>
             <summary>macOS 安全设置阻止运行</summary>
             <div>
-              <p>如果系统阻止运行 Claude Code：</p>
-              <ul>
-                <li>打开"系统偏好设置" → "安全性与隐私"</li>
-                <li>点击"仍要打开"或"允许"</li>
-                <li>或者在 Terminal 中运行：<code>sudo spctl --master-disable</code></li>
+              <p class="mb-3 leading-relaxed text-gray-600">如果系统阻止运行 Claude Code：</p>
+              <ul class="mb-4 list-inside list-disc space-y-2 text-gray-600">
+                <li class="text-gray-600">打开"系统偏好设置" → "安全性与隐私"</li>
+                <li class="text-gray-600">点击"仍要打开"或"允许"</li>
+                <li class="text-gray-600">
+                  或者在 Terminal 中运行：<code
+                    class="rounded bg-gray-100 px-2 py-1 font-mono text-sm text-gray-800"
+                    >sudo spctl --master-disable</code
+                  >
+                </li>
               </ul>
             </div>
           </details>
@@ -792,11 +865,16 @@
           <details>
             <summary>环境变量不生效</summary>
             <div>
-              <p>检查以下几点：</p>
-              <ul>
-                <li>确认修改了正确的配置文件（.zshrc 或 .bash_profile）</li>
-                <li>重新启动 Terminal</li>
-                <li>验证设置：<code>echo $ANTHROPIC_BASE_URL</code></li>
+              <p class="mb-3 leading-relaxed text-gray-600">检查以下几点：</p>
+              <ul class="mb-4 list-inside list-disc space-y-2 text-gray-600">
+                <li class="text-gray-600">确认修改了正确的配置文件（.zshrc 或 .bash_profile）</li>
+                <li class="text-gray-600">重新启动 Terminal</li>
+                <li class="text-gray-600">
+                  验证设置：<code
+                    class="rounded bg-gray-100 px-2 py-1 font-mono text-sm text-gray-800"
+                    >echo $ANTHROPIC_BASE_URL</code
+                  >
+                </li>
               </ul>
             </div>
           </details>
@@ -808,240 +886,249 @@
     <div v-else-if="activeTutorialSystem === 'linux'">
       <!-- 第一步：安装 Node.js -->
       <div>
-        <h4>
-          <span>1</span>
+        <h4 class="mb-3 mt-6 text-xl font-semibold text-gray-800">
+          <span
+            class="mr-2 inline-flex h-8 w-8 items-center justify-center rounded-full bg-blue-500 font-bold text-white"
+            >1</span
+          >
           安装 Node.js 环境
         </h4>
-        <p>Claude Code 需要 Node.js 环境才能运行。</p>
+        <p class="mb-3 leading-relaxed text-gray-600">Claude Code 需要 Node.js 环境才能运行。</p>
 
         <div>
-          <h5>Linux 安装方法</h5>
+          <h5 class="mb-2 mt-4 text-lg font-medium text-gray-700">Linux 安装方法</h5>
           <div>
-            <p>方法一：使用官方仓库（推荐）</p>
-            <div>
-              <div># 添加 NodeSource 仓库</div>
-              <div>curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -</div>
-              <div># 安装 Node.js</div>
-              <div>sudo apt-get install -y nodejs</div>
-            </div>
+            <p class="mb-3 leading-relaxed text-gray-600">方法一：使用官方仓库（推荐）</p>
+            <CodeBlock
+              :lines="[
+                '# 添加 NodeSource 仓库',
+                'curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -',
+                '# 安装 Node.js',
+                'sudo apt-get install -y nodejs'
+              ]"
+              language="bash"
+            />
           </div>
           <div>
-            <p>方法二：使用系统包管理器</p>
-            <p>虽然版本可能不是最新的，但对于基本使用已经足够：</p>
-            <div>
-              <div># Ubuntu/Debian</div>
-              <div>sudo apt update</div>
-              <div>sudo apt install nodejs npm</div>
-              <div># CentOS/RHEL/Fedora</div>
-              <div>sudo dnf install nodejs npm</div>
-            </div>
+            <p class="mb-3 leading-relaxed text-gray-600">方法二：使用系统包管理器</p>
+            <p class="mb-3 leading-relaxed text-gray-600">
+              虽然版本可能不是最新的，但对于基本使用已经足够：
+            </p>
+            <CodeBlock
+              :lines="[
+                '# Ubuntu/Debian',
+                'sudo apt update',
+                'sudo apt install nodejs npm',
+                '# CentOS/RHEL/Fedora',
+                'sudo dnf install nodejs npm'
+              ]"
+              language="bash"
+            />
           </div>
           <div>
-            <h6>Linux 注意事项</h6>
-            <ul>
-              <li>• 某些发行版可能需要安装额外的依赖</li>
-              <li>
+            <h6 class="mb-2 text-base font-medium text-gray-700">Linux 注意事项</h6>
+            <ul class="mb-4 list-inside list-disc space-y-2 text-gray-600">
+              <li class="text-gray-600">• 某些发行版可能需要安装额外的依赖</li>
+              <li class="text-gray-600">
                 • 如果遇到权限问题，使用
-                <code>sudo</code>
+                <code class="rounded bg-gray-100 px-2 py-1 font-mono text-sm text-gray-800"
+                  >sudo</code
+                >
               </li>
-              <li>• 确保你的用户在 npm 的全局目录有写权限</li>
+              <li class="text-gray-600">• 确保你的用户在 npm 的全局目录有写权限</li>
             </ul>
           </div>
         </div>
 
         <!-- 验证安装 -->
         <div>
-          <h6>验证安装是否成功</h6>
-          <p>安装完成后，打开终端，输入以下命令：</p>
-          <div>
-            <div>node --version</div>
-            <div>npm --version</div>
-          </div>
-          <p>如果显示版本号，说明安装成功了！</p>
+          <h6 class="mb-2 text-base font-medium text-gray-700">验证安装是否成功</h6>
+          <p class="mb-3 leading-relaxed text-gray-600">安装完成后，打开终端，输入以下命令：</p>
+          <CodeBlock :lines="['node --version', 'npm --version']" language="bash" />
+          <p class="mb-3 leading-relaxed text-gray-600">如果显示版本号，说明安装成功了！</p>
         </div>
       </div>
 
       <!-- 第二步：安装 Claude Code -->
       <div>
-        <h4>
-          <span>2</span>
+        <h4 class="mb-3 mt-6 text-xl font-semibold text-gray-800">
+          <span
+            class="mr-2 inline-flex h-8 w-8 items-center justify-center rounded-full bg-blue-500 font-bold text-white"
+            >2</span
+          >
           安装 Claude Code
         </h4>
 
         <div>
-          <h5>安装 Claude Code</h5>
-          <p>打开终端，运行以下命令：</p>
-          <div>
-            <div># 全局安装 Claude Code</div>
-            <div>npm install -g @anthropic-ai/claude-code</div>
-          </div>
-          <p>如果遇到权限问题，可以使用 sudo：</p>
-          <div>
-            <div>sudo npm install -g @anthropic-ai/claude-code</div>
-          </div>
+          <h5 class="mb-2 mt-4 text-lg font-medium text-gray-700">安装 Claude Code</h5>
+          <p class="mb-3 leading-relaxed text-gray-600">打开终端，运行以下命令：</p>
+          <CodeBlock
+            :lines="['# 全局安装 Claude Code', 'npm install -g @anthropic-ai/claude-code']"
+            language="bash"
+          />
+          <p class="mb-3 leading-relaxed text-gray-600">如果遇到权限问题，可以使用 sudo：</p>
+          <CodeBlock :lines="['sudo npm install -g @anthropic-ai/claude-code']" language="bash" />
         </div>
 
         <!-- 验证安装 -->
         <div>
-          <h6>验证 Claude Code 安装</h6>
-          <p>安装完成后，输入以下命令检查是否安装成功：</p>
-          <div>
-            <div>claude --version</div>
-          </div>
-          <p>如果显示版本号，恭喜你！Claude Code 已经成功安装了。</p>
+          <h6 class="mb-2 text-base font-medium text-gray-700">验证 Claude Code 安装</h6>
+          <p class="mb-3 leading-relaxed text-gray-600">
+            安装完成后，输入以下命令检查是否安装成功：
+          </p>
+          <CodeBlock :lines="['claude --version']" language="bash" />
+          <p class="mb-3 leading-relaxed text-gray-600">
+            如果显示版本号，恭喜你！Claude Code 已经成功安装了。
+          </p>
         </div>
       </div>
 
       <!-- 第三步：设置环境变量 -->
       <div>
-        <h4>
-          <span>3</span>
+        <h4 class="mb-3 mt-6 text-xl font-semibold text-gray-800">
+          <span
+            class="mr-2 inline-flex h-8 w-8 items-center justify-center rounded-full bg-blue-500 font-bold text-white"
+            >3</span
+          >
           设置环境变量
         </h4>
 
         <div>
-          <h5>配置 Claude Code 环境变量</h5>
-          <p>为了让 Claude Code 连接到你的中转服务，需要设置两个环境变量：</p>
+          <h5 class="mb-2 mt-4 text-lg font-medium text-gray-700">配置 Claude Code 环境变量</h5>
+          <p class="mb-3 leading-relaxed text-gray-600">
+            为了让 Claude Code 连接到你的中转服务，需要设置两个环境变量：
+          </p>
 
           <div>
             <div>
-              <h6>方法一：临时设置（当前会话）</h6>
-              <p>在终端中运行以下命令：</p>
-              <div>
-                <div>export ANTHROPIC_BASE_URL="{{ currentBaseUrl }}"</div>
-                <div>export ANTHROPIC_AUTH_TOKEN="你的API密钥"</div>
-              </div>
-              <p>💡 记得将 "你的API密钥" 替换为在上方 "API Keys" 标签页中创建的实际密钥。</p>
+              <h6 class="mb-2 text-base font-medium text-gray-700">方法一：临时设置（当前会话）</h6>
+              <p class="mb-3 leading-relaxed text-gray-600">在终端中运行以下命令：</p>
+              <CodeBlock
+                :lines="bashSetEnvAnthropicTemp"
+                language="bash"
+              />
+              <p class="mb-3 leading-relaxed text-gray-600">
+                💡 记得将 "你的API密钥" 替换为在上方 "API Keys" 标签页中创建的实际密钥。
+              </p>
             </div>
 
             <div>
-              <h6>方法二：永久设置</h6>
-              <p>编辑你的 shell 配置文件：</p>
-              <div>
-                <div># 对于 bash (默认)</div>
-                <div>echo 'export ANTHROPIC_BASE_URL="{{ currentBaseUrl }}"' >> ~/.bashrc</div>
-                <div>echo 'export ANTHROPIC_AUTH_TOKEN="你的API密钥"' >> ~/.bashrc</div>
-                <div>source ~/.bashrc</div>
-              </div>
-              <div>
-                <div># 对于 zsh</div>
-                <div>echo 'export ANTHROPIC_BASE_URL="{{ currentBaseUrl }}"' >> ~/.zshrc</div>
-                <div>echo 'export ANTHROPIC_AUTH_TOKEN="你的API密钥"' >> ~/.zshrc</div>
-                <div>source ~/.zshrc</div>
-              </div>
+              <h6 class="mb-2 text-base font-medium text-gray-700">方法二：永久设置</h6>
+              <p class="mb-3 leading-relaxed text-gray-600">编辑你的 shell 配置文件：</p>
+              <CodeBlock :lines="linuxBashrcAnth" language="bash" />
+              <CodeBlock :lines="linuxZshAnth" language="bash" />
             </div>
           </div>
         </div>
 
         <!-- Gemini CLI 环境变量设置 -->
         <div>
-          <h5>配置 Gemini CLI 环境变量</h5>
-          <p>如果你使用 Gemini CLI，需要设置以下环境变量：</p>
+          <h5 class="mb-2 mt-4 text-lg font-medium text-gray-700">配置 Gemini CLI 环境变量</h5>
+          <p class="mb-3 leading-relaxed text-gray-600">
+            如果你使用 Gemini CLI，需要设置以下环境变量：
+          </p>
 
           <div>
             <div>
-              <h6>终端设置方法</h6>
-              <p>在终端中运行以下命令：</p>
-              <div>
-                <div>export GOOGLE_GEMINI_BASE_URL="{{ geminiBaseUrl }}"</div>
-                <div>export GEMINI_API_KEY="你的API密钥"</div>
-                <div>export GEMINI_MODEL="gemini-2.5-pro"</div>
-              </div>
-              <p>💡 使用与 Claude Code 相同的 API 密钥即可。</p>
+              <h6 class="mb-2 text-base font-medium text-gray-700">终端设置方法</h6>
+              <p class="mb-3 leading-relaxed text-gray-600">在终端中运行以下命令：</p>
+              <CodeBlock
+                :lines="bashSetEnvGeminiTemp"
+                language="bash"
+              />
+              <p class="mb-3 leading-relaxed text-gray-600">
+                💡 使用与 Claude Code 相同的 API 密钥即可。
+              </p>
             </div>
 
             <div>
-              <h6>永久设置方法</h6>
-              <p>添加到你的 shell 配置文件：</p>
-              <div>
-                <div># 对于 bash (默认)</div>
-                <div>echo 'export GOOGLE_GEMINI_BASE_URL="{{ geminiBaseUrl }}"' >> ~/.bashrc</div>
-                <div>echo 'export GEMINI_API_KEY="你的API密钥"' >> ~/.bashrc</div>
-                <div>echo 'export GEMINI_MODEL="gemini-2.5-pro"' >> ~/.bashrc</div>
-                <div>source ~/.bashrc</div>
-              </div>
-              <div>
-                <div># 对于 zsh</div>
-                <div>echo 'export GOOGLE_GEMINI_BASE_URL="{{ geminiBaseUrl }}"' >> ~/.zshrc</div>
-                <div>echo 'export GEMINI_API_KEY="你的API密钥"' >> ~/.zshrc</div>
-                <div>echo 'export GEMINI_MODEL="gemini-2.5-pro"' >> ~/.zshrc</div>
-                <div>source ~/.zshrc</div>
-              </div>
+              <h6 class="mb-2 text-base font-medium text-gray-700">永久设置方法</h6>
+              <p class="mb-3 leading-relaxed text-gray-600">添加到你的 shell 配置文件：</p>
+              <CodeBlock
+                :lines="linuxBashrcGemini"
+                language="bash"
+              />
+              <CodeBlock
+                :lines="linuxZshGemini"
+                language="bash"
+              />
             </div>
 
             <div>
-              <h6>验证 Gemini CLI 环境变量</h6>
-              <p>在终端中验证：</p>
-              <div>
-                <div>echo $GOOGLE_GEMINI_BASE_URL</div>
-                <div>echo $GEMINI_API_KEY</div>
-                <div>echo $GEMINI_MODEL</div>
-              </div>
+              <h6 class="mb-2 text-base font-medium text-gray-700">验证 Gemini CLI 环境变量</h6>
+              <p class="mb-3 leading-relaxed text-gray-600">在终端中验证：</p>
+              <CodeBlock
+                :lines="[
+                  'echo $GOOGLE_GEMINI_BASE_URL',
+                  'echo $GEMINI_API_KEY',
+                  'echo $GEMINI_MODEL'
+                ]"
+                language="bash"
+              />
             </div>
           </div>
         </div>
 
         <!-- Codex 环境变量设置 -->
         <div>
-          <h5>配置 Codex 环境变量</h5>
-          <p>如果你使用支持 OpenAI API 的工具（如 Codex），需要设置以下环境变量：</p>
+          <h5 class="mb-2 mt-4 text-lg font-medium text-gray-700">配置 Codex 环境变量</h5>
+          <p class="mb-3 leading-relaxed text-gray-600">
+            如果你使用支持 OpenAI API 的工具（如 Codex），需要设置以下环境变量：
+          </p>
 
           <div>
             <div>
-              <h6>Codex 配置文件</h6>
-              <p>
+              <h6 class="mb-2 text-base font-medium text-gray-700">Codex 配置文件</h6>
+              <p class="mb-3 leading-relaxed text-gray-600">
                 在
-                <code>~/.codex/config.toml</code>
+                <code class="rounded bg-gray-100 px-2 py-1 font-mono text-sm text-gray-800"
+                  >~/.codex/config.toml</code
+                >
                 文件开头添加以下配置：
               </p>
-              <div>
-                <div v-for="line in codexConfigContent.configToml" :key="line">
-                  {{ line }}
-                </div>
-              </div>
-              <p>
+              <CodeBlock :lines="codexConfigContent.configToml" language="toml" />
+              <p class="mb-3 leading-relaxed text-gray-600">
                 在
-                <code>~/.codex/auth.json</code>
+                <code class="rounded bg-gray-100 px-2 py-1 font-mono text-sm text-gray-800"
+                  >~/.codex/auth.json</code
+                >
                 文件中配置API密钥：
               </p>
-              <div>
-                <div v-for="line in codexConfigContent.authJson" :key="line">
-                  {{ line }}
-                </div>
-              </div>
+              <CodeBlock :lines="codexConfigContent.authJson" language="json" />
               <div>
                 <!-- 描述文字 -->
-                <p>{{ codexConfigContent.authInstructions.description }}</p>
+                <p class="mb-3 leading-relaxed text-gray-600">
+                  {{ codexConfigContent.authInstructions.description }}
+                </p>
 
                 <!-- 标题 -->
-                <h6>
+                <h6 class="mb-2 text-base font-medium text-gray-700">
                   {{ codexConfigContent.authInstructions.title }}
                 </h6>
 
                 <!-- 当前平台对应的环境变量设置 -->
                 <div>
-                  <p>{{ codexConfigContent.authInstructions.platform.title }}:</p>
-                  <div>
-                    <div>
-                      {{ codexConfigContent.authInstructions.platform.command }}
-                    </div>
-                  </div>
+                  <p class="mb-3 leading-relaxed text-gray-600">
+                    {{ codexConfigContent.authInstructions.platform.title }}:
+                  </p>
+                  <CodeBlock
+                    :lines="[codexConfigContent.authInstructions.platform.command]"
+                    :language="activeTutorialSystem === 'windows' ? 'cmd' : 'bash'"
+                  />
                 </div>
 
                 <!-- Shell 配置文件（仅对于 macOS/Linux 显示） -->
                 <div v-if="codexConfigContent.authInstructions.persistent">
-                  <p>{{ codexConfigContent.authInstructions.persistent.title }}:</p>
-                  <p>
+                  <p class="mb-3 leading-relaxed text-gray-600">
+                    {{ codexConfigContent.authInstructions.persistent.title }}:
+                  </p>
+                  <p class="mb-3 leading-relaxed text-gray-600">
                     {{ codexConfigContent.authInstructions.persistent.description }}
                   </p>
-                  <div>
-                    <div
-                      v-for="command in codexConfigContent.authInstructions.persistent.commands"
-                      :key="command"
-                    >
-                      {{ command }}
-                    </div>
-                  </div>
+                  <CodeBlock
+                    :lines="codexConfigContent.authInstructions.persistent.commands"
+                    language="bash"
+                  />
                 </div>
               </div>
             </div>
@@ -1049,43 +1136,51 @@
         </div>
         <!-- VSCode 插件配置 (Linux) -->
         <div>
-          <h6>VSCode Claude 插件配置</h6>
-          <p>如果使用 VSCode 的 Claude 插件，需要在配置文件中进行设置：</p>
+          <h6 class="mb-2 text-base font-medium text-gray-700">VSCode Claude 插件配置</h6>
+          <p class="mb-3 leading-relaxed text-gray-600">
+            如果使用 VSCode 的 Claude 插件，需要在配置文件中进行设置：
+          </p>
           <div>
-            <p>
+            <p class="mb-3 leading-relaxed text-gray-600">
               <strong>配置文件位置：</strong>
-              <code>~/.claude/config.json</code>
+              <code class="rounded bg-gray-100 px-2 py-1 font-mono text-sm text-gray-800"
+                >~/.claude/config.json</code
+              >
             </p>
-            <p>💡 如果该文件不存在，请手动创建。</p>
+            <p class="mb-3 leading-relaxed text-gray-600">💡 如果该文件不存在，请手动创建。</p>
           </div>
-          <div>
-            <div>{</div>
-            <div>"primaryApiKey": "crs"</div>
-            <div>}</div>
-          </div>
+          <CodeBlock :lines="vscodeClaudeConfigJson" language="json" />
         </div>
 
         <!-- Droid CLI 配置 -->
         <div>
-          <h5>配置 Droid CLI</h5>
-          <p>
+          <h5 class="mb-2 mt-4 text-lg font-medium text-gray-700">配置 Droid CLI</h5>
+          <p class="mb-3 leading-relaxed text-gray-600">
             Droid CLI 使用
-            <code>~/.factory/config.json</code>
+            <code class="rounded bg-gray-100 px-2 py-1 font-mono text-sm text-gray-800"
+              >~/.factory/config.json</code
+            >
             保存自定义模型；在 Linux 或 WSL2 中，可直接编辑
-            <code>/home/你的用户名/.factory/config.json</code>
+            <code class="rounded bg-gray-100 px-2 py-1 font-mono text-sm text-gray-800"
+              >/home/你的用户名/.factory/config.json</code
+            >
             或在终端运行
-            <code>xdg-open ~/.factory</code>
+            <code class="rounded bg-gray-100 px-2 py-1 font-mono text-sm text-gray-800"
+              >xdg-open ~/.factory</code
+            >
             打开目录。
           </p>
           <div>
-            <h6>配置文件示例</h6>
-            <p>将以下内容追加到配置文件中，并替换示例中的域名和 API 密钥：</p>
+            <h6 class="mb-2 text-base font-medium text-gray-700">配置文件示例</h6>
+            <p class="mb-3 leading-relaxed text-gray-600">
+              将以下内容追加到配置文件中，并替换示例中的域名和 API 密钥：
+            </p>
             <div>
               <div v-for="(line, index) in droidCliConfigLines" :key="line + index">
                 {{ line }}
               </div>
             </div>
-            <p>
+            <p class="mb-3 leading-relaxed text-gray-600">
               💡 在 Droid CLI 中选择自定义模型即可使用新的 Droid 账号池；确保服务地址可被本地访问。
             </p>
           </div>
@@ -1093,29 +1188,35 @@
 
         <!-- 第四步：开始使用 -->
         <div>
-          <h4>
-            <span>4</span>
+          <h4 class="mb-3 mt-6 text-xl font-semibold text-gray-800">
+            <span
+              class="mr-2 inline-flex h-8 w-8 items-center justify-center rounded-full bg-blue-500 font-bold text-white"
+              >4</span
+            >
             开始使用 Claude Code
           </h4>
           <div>
-            <p>现在你可以开始使用 Claude Code 了！</p>
+            <p class="mb-3 leading-relaxed text-gray-600">现在你可以开始使用 Claude Code 了！</p>
 
             <div>
               <div>
-                <h6>启动 Claude Code</h6>
+                <h6 class="mb-2 text-base font-medium text-gray-700">启动 Claude Code</h6>
                 <div>
                   <div>claude</div>
                 </div>
               </div>
 
               <div>
-                <h6>在特定项目中使用</h6>
-                <div>
-                  <div># 进入你的项目目录</div>
-                  <div>cd /path/to/your/project</div>
-                  <div># 启动 Claude Code</div>
-                  <div>claude</div>
-                </div>
+                <h6 class="mb-2 text-base font-medium text-gray-700">在特定项目中使用</h6>
+                <CodeBlock
+                  :lines="[
+                    '# 进入你的项目目录',
+                    'cd /path/to/your/project',
+                    '# 启动 Claude Code',
+                    'claude'
+                  ]"
+                  language="bash"
+                />
               </div>
             </div>
           </div>
@@ -1123,20 +1224,31 @@
 
         <!-- Linux 故障排除 -->
         <div>
-          <h4>Linux 常见问题解决</h4>
+          <h4 class="mb-3 mt-6 text-xl font-semibold text-gray-800">Linux 常见问题解决</h4>
           <div>
             <details>
               <summary>安装时提示权限错误</summary>
               <div>
-                <p>尝试以下解决方法：</p>
-                <ul>
-                  <li>
-                    使用 sudo 安装：<code>sudo npm install -g @anthropic-ai/claude-code</code>
+                <p class="mb-3 leading-relaxed text-gray-600">尝试以下解决方法：</p>
+                <ul class="mb-4 list-inside list-disc space-y-2 text-gray-600">
+                  <li class="text-gray-600">
+                    使用 sudo 安装：<code
+                      class="rounded bg-gray-100 px-2 py-1 font-mono text-sm text-gray-800"
+                      >sudo npm install -g @anthropic-ai/claude-code</code
+                    >
                   </li>
-                  <li>
-                    或者配置 npm 使用用户目录：<code>npm config set prefix ~/.npm-global</code>
+                  <li class="text-gray-600">
+                    或者配置 npm 使用用户目录：<code
+                      class="rounded bg-gray-100 px-2 py-1 font-mono text-sm text-gray-800"
+                      >npm config set prefix ~/.npm-global</code
+                    >
                   </li>
-                  <li>然后添加到 PATH：<code>export PATH=~/.npm-global/bin:$PATH</code></li>
+                  <li class="text-gray-600">
+                    然后添加到 PATH：<code
+                      class="rounded bg-gray-100 px-2 py-1 font-mono text-sm text-gray-800"
+                      >export PATH=~/.npm-global/bin:$PATH</code
+                    >
+                  </li>
                 </ul>
               </div>
             </details>
@@ -1144,27 +1256,31 @@
             <details>
               <summary>缺少依赖库</summary>
               <div>
-                <p>某些 Linux 发行版需要安装额外依赖：</p>
-                <div>
-                  <div># Ubuntu/Debian</div>
-                  <div>sudo apt install build-essential</div>
-                  <div># CentOS/RHEL</div>
-                  <div>sudo dnf groupinstall "Development Tools"</div>
-                </div>
+                <p class="mb-3 leading-relaxed text-gray-600">
+                  某些 Linux 发行版需要安装额外依赖：
+                </p>
+                <CodeBlock :lines="linuxMissingDeps" language="bash" />
               </div>
             </details>
 
             <details>
               <summary>环境变量不生效</summary>
               <div>
-                <p>检查以下几点：</p>
-                <ul>
-                  <li>确认修改了正确的配置文件（.bashrc 或 .zshrc）</li>
-                  <li>
+                <p class="mb-3 leading-relaxed text-gray-600">检查以下几点：</p>
+                <ul class="mb-4 list-inside list-disc space-y-2 text-gray-600">
+                  <li class="text-gray-600">确认修改了正确的配置文件（.bashrc 或 .zshrc）</li>
+                  <li class="text-gray-600">
                     重新启动终端或运行
-                    <code>source ~/.bashrc</code>
+                    <code class="rounded bg-gray-100 px-2 py-1 font-mono text-sm text-gray-800"
+                      >source ~/.bashrc</code
+                    >
                   </li>
-                  <li>验证设置：<code>echo $ANTHROPIC_BASE_URL</code></li>
+                  <li class="text-gray-600">
+                    验证设置：<code
+                      class="rounded bg-gray-100 px-2 py-1 font-mono text-sm text-gray-800"
+                      >echo $ANTHROPIC_BASE_URL</code
+                    >
+                  </li>
                 </ul>
               </div>
             </details>
@@ -1174,9 +1290,13 @@
 
       <!-- 结尾 -->
       <div>
-        <h5>🎉 恭喜你！</h5>
-        <p>你已经成功安装并配置了 Claude Code，现在可以开始享受 AI 编程助手带来的便利了。</p>
-        <p>如果在使用过程中遇到任何问题，可以查看官方文档或社区讨论获取帮助。</p>
+        <h5 class="mb-2 mt-4 text-lg font-medium text-gray-700">🎉 恭喜你！</h5>
+        <p class="mb-3 leading-relaxed text-gray-600">
+          你已经成功安装并配置了 Claude Code，现在可以开始享受 AI 编程助手带来的便利了。
+        </p>
+        <p class="mb-3 leading-relaxed text-gray-600">
+          如果在使用过程中遇到任何问题，可以查看官方文档或社区讨论获取帮助。
+        </p>
       </div>
     </div>
   </div>
@@ -1184,6 +1304,7 @@
 
 <script setup>
 import { computed, ref } from 'vue'
+import CodeBlock from '@/components/common/CodeBlock.vue'
 
 // 当前系统选择
 const activeTutorialSystem = ref('windows')
@@ -1265,6 +1386,160 @@ const droidClaudeBaseUrl = computed(() => {
 
 const droidOpenaiBaseUrl = computed(() => {
   return getBaseUrlPrefix() + '/droid/openai'
+})
+
+// PowerShell SetEnvironmentVariable 命令（Windows）
+const psSetEnvAnthropicBase = computed(() => {
+  return `[System.Environment]::SetEnvironmentVariable('ANTHROPIC_BASE_URL', '${currentBaseUrl.value}', [System.EnvironmentVariableTarget]::User)`
+})
+
+const psSetEnvAnthropicToken = computed(() => {
+  return `[System.Environment]::SetEnvironmentVariable('ANTHROPIC_AUTH_TOKEN', '你的API密钥', [System.EnvironmentVariableTarget]::User)`
+})
+
+const psGetEnvAnthropicBase = computed(() => {
+  return `[System.Environment]::GetEnvironmentVariable('ANTHROPIC_BASE_URL', [System.EnvironmentVariableTarget]::User)`
+})
+
+const psGetEnvAnthropicToken = computed(() => {
+  return `[System.Environment]::GetEnvironmentVariable('ANTHROPIC_AUTH_TOKEN', [System.EnvironmentVariableTarget]::User)`
+})
+
+const psSetEnvGeminiBase = computed(() => {
+  return `[System.Environment]::SetEnvironmentVariable('GOOGLE_GEMINI_BASE_URL', '${geminiBaseUrl.value}', [System.EnvironmentVariableTarget]::User)`
+})
+
+const psSetEnvGeminiKey = computed(() => {
+  return `[System.Environment]::SetEnvironmentVariable('GEMINI_API_KEY', '你的API密钥', [System.EnvironmentVariableTarget]::User)`
+})
+
+const psSetEnvGeminiModel = computed(() => {
+  return `[System.Environment]::SetEnvironmentVariable('GEMINI_MODEL', 'gemini-2.5-pro', [System.EnvironmentVariableTarget]::User)`
+})
+
+// VSCode Claude 插件配置 JSON
+const vscodeClaudeConfigJson = computed(() => {
+  return ['{', '  "primaryApiKey": "crs"', '}']
+})
+
+// PowerShell 临时环境变量设置（Gemini）
+const psSetEnvGeminiTemp = computed(() => {
+  return [
+    `$env:GOOGLE_GEMINI_BASE_URL = "${geminiBaseUrl.value}"`,
+    `$env:GEMINI_API_KEY = "你的API密钥"`,
+    `$env:GEMINI_MODEL = "gemini-2.5-pro"`
+  ]
+})
+
+// Bash/Shell 临时环境变量设置（Anthropic/macOS/Linux）
+const bashSetEnvAnthropicTemp = computed(() => {
+  return [
+    `export ANTHROPIC_BASE_URL="${currentBaseUrl.value}"`,
+    `export ANTHROPIC_AUTH_TOKEN="你的API密钥"`
+  ]
+})
+
+// Bash/Shell 临时环境变量设置（Gemini/macOS/Linux）
+const bashSetEnvGeminiTemp = computed(() => {
+  return [
+    `export GOOGLE_GEMINI_BASE_URL="${geminiBaseUrl.value}"`,
+    `export GEMINI_API_KEY="你的API密钥"`,
+    `export GEMINI_MODEL="gemini-2.5-pro"`
+  ]
+})
+
+// Bash永久设置 - zsh (Anthropic)
+const bashPermanentZshAnth = computed(() => {
+  return [
+    '# 对于 zsh (默认)',
+    `echo 'export ANTHROPIC_BASE_URL="${currentBaseUrl.value}"' >> ~/.zshrc`,
+    `echo 'export ANTHROPIC_AUTH_TOKEN="你的API密钥"' >> ~/.zshrc`,
+    'source ~/.zshrc'
+  ]
+})
+
+// Bash永久设置 - bash (Anthropic)
+const bashPermanentBashAnth = computed(() => {
+  return [
+    '# 对于 bash',
+    `echo 'export ANTHROPIC_BASE_URL="${currentBaseUrl.value}"' >> ~/.bash_profile`,
+    `echo 'export ANTHROPIC_AUTH_TOKEN="你的API密钥"' >> ~/.bash_profile`,
+    'source ~/.bash_profile'
+  ]
+})
+
+// Bash永久设置 - zsh (Gemini)
+const bashPermanentZshGemini = computed(() => {
+  return [
+    '# 对于 zsh (默认)',
+    `echo 'export GOOGLE_GEMINI_BASE_URL="${geminiBaseUrl.value}"' >> ~/.zshrc`,
+    `echo 'export GEMINI_API_KEY="你的API密钥"' >> ~/.zshrc`,
+    `echo 'export GEMINI_MODEL="gemini-2.5-pro"' >> ~/.zshrc`,
+    'source ~/.zshrc'
+  ]
+})
+
+// Bash永久设置 - bash (Gemini)
+const bashPermanentBashGemini = computed(() => {
+  return [
+    '# 对于 bash',
+    `echo 'export GOOGLE_GEMINI_BASE_URL="${geminiBaseUrl.value}"' >> ~/.bash_profile`,
+    `echo 'export GEMINI_API_KEY="你的API密钥"' >> ~/.bash_profile`,
+    `echo 'export GEMINI_MODEL="gemini-2.5-pro"' >> ~/.bash_profile`,
+    'source ~/.bash_profile'
+  ]
+})
+
+// Linux bashrc永久设置 (Anthropic)
+const linuxBashrcAnth = computed(() => {
+  return [
+    '# 对于 bash (默认)',
+    `echo 'export ANTHROPIC_BASE_URL="${currentBaseUrl.value}"' >> ~/.bashrc`,
+    `echo 'export ANTHROPIC_AUTH_TOKEN="你的API密钥"' >> ~/.bashrc`,
+    'source ~/.bashrc'
+  ]
+})
+
+// Linux zsh永久设置 (Anthropic)
+const linuxZshAnth = computed(() => {
+  return [
+    '# 对于 zsh',
+    `echo 'export ANTHROPIC_BASE_URL="${currentBaseUrl.value}"' >> ~/.zshrc`,
+    `echo 'export ANTHROPIC_AUTH_TOKEN="你的API密钥"' >> ~/.zshrc`,
+    'source ~/.zshrc'
+  ]
+})
+
+// Linux bashrc永久设置 (Gemini)
+const linuxBashrcGemini = computed(() => {
+  return [
+    '# 对于 bash (默认)',
+    `echo 'export GOOGLE_GEMINI_BASE_URL="${geminiBaseUrl.value}"' >> ~/.bashrc`,
+    `echo 'export GEMINI_API_KEY="你的API密钥"' >> ~/.bashrc`,
+    `echo 'export GEMINI_MODEL="gemini-2.5-pro"' >> ~/.bashrc`,
+    'source ~/.bashrc'
+  ]
+})
+
+// Linux zsh永久设置 (Gemini)
+const linuxZshGemini = computed(() => {
+  return [
+    '# 对于 zsh',
+    `echo 'export GOOGLE_GEMINI_BASE_URL="${geminiBaseUrl.value}"' >> ~/.zshrc`,
+    `echo 'export GEMINI_API_KEY="你的API密钥"' >> ~/.zshrc`,
+    `echo 'export GEMINI_MODEL="gemini-2.5-pro"' >> ~/.zshrc`,
+    'source ~/.zshrc'
+  ]
+})
+
+// Linux故障排除 - 缺少依赖库
+const linuxMissingDeps = computed(() => {
+  return [
+    '# Ubuntu/Debian',
+    'sudo apt install build-essential',
+    '# CentOS/RHEL',
+    'sudo dnf groupinstall "Development Tools"'
+  ]
 })
 
 // Codex 配置内容
@@ -1377,3 +1652,12 @@ const droidCliConfigLines = computed(() => [
   '}'
 ])
 </script>
+
+<style scoped>
+/* 确保代码有等宽字体 */
+code,
+pre,
+.font-mono {
+  font-family: 'Fira Code', 'Monaco', 'Courier New', monospace;
+}
+</style>
