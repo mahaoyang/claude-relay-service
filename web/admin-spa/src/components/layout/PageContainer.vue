@@ -7,9 +7,9 @@
       ></div>
     </div>
 
-    <div class="relative z-10 container mx-auto px-4 py-8" :class="maxWidthClass">
+    <div class="relative z-10 container mx-auto px-4 py-5" :class="maxWidthClass">
       <!-- 顶部导航/头部 -->
-      <header v-if="$slots.header" class="mb-10">
+      <header v-if="$slots.header" class="mb-3">
         <slot name="header"></slot>
       </header>
 
