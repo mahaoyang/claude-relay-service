@@ -75,7 +75,7 @@ const files = [
   'src/views/DashboardView.vue'
 ]
 
-files.forEach(file => {
+files.forEach((file) => {
   try {
     fixFile(file)
   } catch (e) {

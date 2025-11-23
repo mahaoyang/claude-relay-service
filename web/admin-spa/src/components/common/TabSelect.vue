@@ -1,22 +1,19 @@
 <template>
   <div>
     <div
-      role="tablist"
       :aria-orientation="vertical ? 'vertical' : 'horizontal'"
       class="flex"
       :class="[
         !noBorder && 'border-b border-gray-200 dark:border-gray-700',
         vertical ? 'flex-col border-b-0 border-r' : 'space-x-2'
       ]"
+      role="tablist"
     >
       <button
         v-for="option in options"
         :key="option.value"
-        role="tab"
-        type="button"
         :aria-selected="modelValue === option.value"
-        @click="$emit('update:modelValue', option.value)"
-        class="relative px-4 py-2.5 text-sm font-medium transition-all duration-200 outline-none ring-0 focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0"
+        class="relative px-4 py-2.5 text-sm font-medium outline-none ring-0 transition-all duration-200 focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0"
         :class="[
           modelValue === option.value
             ? 'text-primary-600 dark:text-primary-400'
@@ -24,9 +21,12 @@
           vertical ? 'w-full rounded-l-lg text-left' : 'rounded-t-lg',
           option.icon && 'flex items-center'
         ]"
+        role="tab"
+        type="button"
+        @click="$emit('update:modelValue', option.value)"
       >
         <!-- Icon if provided -->
-        <i v-if="option.icon" :class="option.icon" class="text-sm" />
+        <i v-if="option.icon" class="text-sm" :class="option.icon" />
 
         <!-- Label with responsive text if shortLabel provided and different from label -->
         <template v-if="option.shortLabel && option.shortLabel !== option.label">

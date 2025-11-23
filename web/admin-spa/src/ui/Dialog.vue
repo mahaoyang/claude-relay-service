@@ -38,8 +38,8 @@ const closeDialog = () => {
 </script>
 
 <template>
-  <TransitionRoot :show="modelValue" as="template">
-    <HeadlessDialog @close="closeDialog" class="relative z-50">
+  <TransitionRoot as="template" :show="modelValue">
+    <HeadlessDialog class="relative z-50" @close="closeDialog">
       <!-- Overlay -->
       <TransitionChild
         as="template"
@@ -82,8 +82,8 @@ const closeDialog = () => {
               <!-- Close Button -->
               <button
                 v-if="showClose"
-                @click="closeDialog"
                 class="absolute right-4 top-4 rounded-lg p-1 text-secondary-400 transition-colors hover:text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
+                @click="closeDialog"
               >
                 <X class="h-5 w-5" />
               </button>
@@ -100,7 +100,7 @@ const closeDialog = () => {
 
               <!-- Footer -->
               <div v-if="$slots.footer" class="relative mt-6 flex justify-end gap-3">
-                <slot name="footer" :close="closeDialog"></slot>
+                <slot :close="closeDialog" name="footer"></slot>
               </div>
             </DialogPanel>
           </TransitionChild>

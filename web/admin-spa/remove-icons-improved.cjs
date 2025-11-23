@@ -34,15 +34,21 @@ function cleanFile(filePath) {
 
   // 4. 删除 FontAwesome 图标（包括开闭标签）
   // 先删除自闭合的
-  content = content.replace(/<i\s+[^>]*class="[^"]*\b(?:fa[srbl]?\s+fa-[^"]*|fas|far|fab|fal)"[^>]*\/>/g, () => {
-    changes++
-    return ''
-  })
+  content = content.replace(
+    /<i\s+[^>]*class="[^"]*\b(?:fa[srbl]?\s+fa-[^"]*|fas|far|fab|fal)"[^>]*\/>/g,
+    () => {
+      changes++
+      return ''
+    }
+  )
   // 再删除开闭标签对
-  content = content.replace(/<i\s+[^>]*class="[^"]*\b(?:fa[srbl]?\s+fa-[^"]*|fas|far|fab|fal)"[^>]*>.*?<\/i>/gs, () => {
-    changes++
-    return ''
-  })
+  content = content.replace(
+    /<i\s+[^>]*class="[^"]*\b(?:fa[srbl]?\s+fa-[^"]*|fas|far|fab|fal)"[^>]*>.*?<\/i>/gs,
+    () => {
+      changes++
+      return ''
+    }
+  )
 
   // 5. 删除 component :is 用法（Lucide 图标）
   content = content.replace(/<component\s+:is="[A-Z][a-zA-Z0-9]*"[^>]*\/>/g, () => {

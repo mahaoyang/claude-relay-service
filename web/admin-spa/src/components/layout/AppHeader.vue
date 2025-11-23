@@ -10,8 +10,8 @@
             <template v-if="!oemLoading">
               <img
                 v-if="oemSettings.siteIconData || oemSettings.siteIcon"
-                class="h-10 w-10 rounded-xl object-cover shadow-sm ring-1 ring-gray-200 dark:ring-gray-700"
                 alt="Logo"
+                class="h-10 w-10 rounded-xl object-cover shadow-sm ring-1 ring-gray-200 dark:ring-gray-700"
                 :src="oemSettings.siteIconData || oemSettings.siteIcon"
               />
             </template>
@@ -41,22 +41,22 @@
                 <!-- 更新提示 -->
                 <a
                   v-if="versionInfo.hasUpdate"
+                  class="inline-flex items-center gap-1 rounded-md bg-green-50 px-2 py-0.5 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20 transition-all hover:bg-green-100 dark:bg-green-400/10 dark:text-green-400 dark:ring-green-400/30 dark:hover:bg-green-400/20"
                   :href="versionInfo.releaseInfo?.htmlUrl || '#'"
                   target="_blank"
-                  class="inline-flex items-center gap-1 rounded-md bg-green-50 px-2 py-0.5 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20 transition-all hover:bg-green-100 dark:bg-green-400/10 dark:text-green-400 dark:ring-green-400/30 dark:hover:bg-green-400/20"
                   title="有新版本可用"
                 >
                   <svg
                     class="h-3 w-3"
                     fill="none"
-                    viewBox="0 0 24 24"
-                    stroke-width="2"
                     stroke="currentColor"
+                    stroke-width="2"
+                    viewBox="0 0 24 24"
                   >
                     <path
+                      d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"
                       stroke-linecap="round"
                       stroke-linejoin="round"
-                      d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"
                     />
                   </svg>
                   <span>新版本</span>
@@ -78,8 +78,8 @@
           <!-- 用户菜单 -->
           <div class="user-menu-container relative">
             <button
-              @click="userMenuOpen = !userMenuOpen"
               class="flex items-center gap-2 rounded-lg px-3 py-1.5 text-sm font-medium text-gray-700 transition-all hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800"
+              @click="userMenuOpen = !userMenuOpen"
             >
               <div
                 class="flex h-7 w-7 items-center justify-center rounded-full bg-primary-100 text-xs font-semibold text-primary-700 dark:bg-primary-900/30 dark:text-primary-400"
@@ -91,19 +91,19 @@
                 class="h-4 w-4 transition-transform"
                 :class="{ 'rotate-180': userMenuOpen }"
                 fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="2"
                 stroke="currentColor"
+                stroke-width="2"
+                viewBox="0 0 24 24"
               >
-                <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                <path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round" />
               </svg>
             </button>
 
             <!-- 悬浮菜单 -->
             <div
               v-if="userMenuOpen"
-              @click.stop
               class="absolute right-0 top-full z-50 mt-2 w-72 rounded-xl border border-gray-200 bg-white shadow-lg dark:border-gray-700 dark:bg-gray-800"
+              @click.stop
             >
               <!-- 版本信息卡片 -->
               <div class="border-b border-gray-100 p-4 dark:border-gray-700">
@@ -122,14 +122,14 @@
                     <svg
                       class="h-4 w-4 text-green-600 dark:text-green-400"
                       fill="none"
-                      viewBox="0 0 24 24"
-                      stroke-width="2"
                       stroke="currentColor"
+                      stroke-width="2"
+                      viewBox="0 0 24 24"
                     >
                       <path
+                        d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"
                         stroke-linecap="round"
                         stroke-linejoin="round"
-                        d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"
                       />
                     </svg>
                     <div class="flex-1">
@@ -140,16 +140,16 @@
                     </div>
                   </div>
                   <a
+                    class="inline-flex w-full items-center justify-center gap-1 rounded-lg bg-primary-50 px-3 py-1.5 text-xs font-medium text-primary-700 transition-colors hover:bg-primary-100 dark:bg-primary-900/30 dark:text-primary-400 dark:hover:bg-primary-900/50"
                     :href="versionInfo.releaseInfo?.htmlUrl || '#'"
                     target="_blank"
-                    class="inline-flex w-full items-center justify-center gap-1 rounded-lg bg-primary-50 px-3 py-1.5 text-xs font-medium text-primary-700 transition-colors hover:bg-primary-100 dark:bg-primary-900/30 dark:text-primary-400 dark:hover:bg-primary-900/50"
                   >
-                    <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path
+                        d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
                         stroke-linecap="round"
                         stroke-linejoin="round"
                         stroke-width="2"
-                        d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
                       />
                     </svg>
                     查看更新
@@ -174,8 +174,8 @@
                     <button
                       v-else
                       key="button"
-                      @click="checkForUpdates()"
                       class="w-full rounded-lg px-3 py-1.5 text-xs font-medium text-gray-600 transition-colors hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-700"
+                      @click="checkForUpdates()"
                     >
                       检查更新
                     </button>
@@ -186,15 +186,15 @@
               <!-- 菜单项 -->
               <div class="p-2">
                 <button
-                  @click="openChangePasswordModal"
                   class="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm text-gray-700 transition-colors hover:bg-gray-50 dark:text-gray-200 dark:hover:bg-gray-700"
+                  @click="openChangePasswordModal"
                 >
-                  <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path
+                      d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
                       stroke-linecap="round"
                       stroke-linejoin="round"
                       stroke-width="2"
-                      d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
                     />
                   </svg>
                   <span>修改账户信息</span>
@@ -203,15 +203,15 @@
                 <div class="my-2 h-px bg-gray-100 dark:bg-gray-700" />
 
                 <button
-                  @click="logout"
                   class="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm text-red-600 transition-colors hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-900/20"
+                  @click="logout"
                 >
-                  <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path
+                      d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
                       stroke-linecap="round"
                       stroke-linejoin="round"
                       stroke-width="2"
-                      d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
                     />
                   </svg>
                   <span>退出登录</span>

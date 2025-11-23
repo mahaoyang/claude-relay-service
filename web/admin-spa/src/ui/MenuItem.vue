@@ -17,16 +17,16 @@ const handleClick = (close) => {
 <template>
   <HeadlessMenuItem v-slot="{ active, close }" :disabled="disabled">
     <button
-      @click="handleClick(close)"
       :class="[
         'group flex w-full items-center gap-3 px-4 py-2.5 text-sm transition-colors',
         active ? 'bg-primary-500/20 text-white' : 'text-white',
         disabled ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'
       ]"
+      @click="handleClick(close)"
     >
       <component
-        v-if="icon"
         :is="icon"
+        v-if="icon"
         :class="['h-4 w-4', active ? 'text-primary-400' : 'text-secondary-400']"
       />
       <slot></slot>

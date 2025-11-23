@@ -54,14 +54,14 @@ const borderClassPatterns = [
   /\boutline-\d+\b/g,
   /\boutline-(?:none|dashed|dotted|double|hidden)\b/g,
   /\boutline-offset-\d+\b/g,
-  /\boutline-(?:slate|gray|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose|white|black|transparent|current)-(?:\d+|inherit|transparent)\b/g,
+  /\boutline-(?:slate|gray|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose|white|black|transparent|current)-(?:\d+|inherit|transparent)\b/g
 ]
 
 function cleanClasses(classString) {
   let cleaned = classString
 
   // 应用所有模式
-  borderClassPatterns.forEach(pattern => {
+  borderClassPatterns.forEach((pattern) => {
     cleaned = cleaned.replace(pattern, '')
   })
 
@@ -134,7 +134,7 @@ function cleanFile(filePath) {
 
 console.log('清理所有 border 相关类（改进版）...\n')
 
-vueFiles.forEach(file => {
+vueFiles.forEach((file) => {
   cleanFile(file)
 })
 

@@ -1,13 +1,13 @@
 <template>
-  <div class="min-h-screen bg-gray-50 dark:bg-dark-bg transition-colors duration-300">
+  <div class="min-h-screen bg-gray-50 transition-colors duration-300 dark:bg-dark-bg">
     <!-- 背景装饰 -->
-    <div class="fixed inset-0 z-0 pointer-events-none overflow-hidden">
+    <div class="pointer-events-none fixed inset-0 z-0 overflow-hidden">
       <div
-        class="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[500px] bg-gradient-to-b from-primary-50/50 to-transparent dark:from-primary-900/10 blur-3xl opacity-60"
+        class="absolute left-1/2 top-0 h-[500px] w-full -translate-x-1/2 bg-gradient-to-b from-primary-50/50 to-transparent opacity-60 blur-3xl dark:from-primary-900/10"
       ></div>
     </div>
 
-    <div class="relative z-10 container mx-auto px-4 py-5" :class="maxWidthClass">
+    <div class="container relative z-10 mx-auto px-4 py-5" :class="maxWidthClass">
       <!-- 顶部导航/头部 -->
       <header v-if="$slots.header" class="mb-3">
         <slot name="header"></slot>
@@ -17,7 +17,10 @@
       <slot></slot>
 
       <!-- 页脚 -->
-      <footer v-if="showFooter" class="mt-12 text-center text-sm text-gray-400 dark:text-gray-600 pb-8">
+      <footer
+        v-if="showFooter"
+        class="mt-12 pb-8 text-center text-sm text-gray-400 dark:text-gray-600"
+      >
         <slot name="footer">
           <p>&copy; {{ new Date().getFullYear() }} Claude Relay Service. All rights reserved.</p>
         </slot>

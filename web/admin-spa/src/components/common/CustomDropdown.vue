@@ -3,16 +3,25 @@
     <!-- 触发器 -->
     <div
       ref="triggerRef"
-      class="flex h-10 cursor-pointer items-center gap-2 rounded-lg border border-gray-200 bg-white px-3 text-sm text-gray-700 shadow-sm transition-all duration-200 hover:border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200 dark:hover:border-gray-500"
+      class="flex cursor-pointer items-center rounded-lg border border-gray-200 bg-white shadow-sm transition-all duration-200 hover:border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:hover:border-gray-500"
+      :class="[
+        size === 'small'
+          ? 'h-8 gap-1.5 px-2.5 text-xs text-gray-700 dark:text-gray-200'
+          : 'h-10 gap-2 px-3 text-sm text-gray-700 dark:text-gray-200'
+      ]"
       @click="toggleDropdown"
     >
-      <Icon v-if="icon" class="h-4 w-4" :class="iconColor" :name="icon" />
+      <Icon
+        v-if="icon"
+        :class="[iconColor, size === 'small' ? 'h-3.5 w-3.5' : 'h-4 w-4']"
+        :name="icon"
+      />
       <span class="flex-1 truncate">
         {{ selectedLabel || placeholder }}
       </span>
       <Icon
-        class="h-4 w-4 text-gray-400 transition-transform duration-200"
-        :class="{ 'rotate-180': isOpen }"
+        class="text-gray-400 transition-transform duration-200"
+        :class="[{ 'rotate-180': isOpen }, size === 'small' ? 'h-3.5 w-3.5' : 'h-4 w-4']"
         name="ChevronDown"
       />
     </div>
@@ -37,19 +46,25 @@
             <div
               v-for="option in options"
               :key="option.value"
-              class="flex cursor-pointer items-center gap-2 px-3 py-2 text-sm transition-colors"
+              class="flex cursor-pointer items-center transition-colors"
               :class="[
+                size === 'small' ? 'gap-1.5 px-2.5 py-1.5 text-xs' : 'gap-2 px-3 py-2 text-sm',
                 option.value === modelValue
                   ? 'bg-primary-50 text-primary-600 dark:bg-primary-900/30 dark:text-primary-400'
                   : 'text-gray-700 hover:bg-gray-50 dark:text-gray-200 dark:hover:bg-gray-700'
               ]"
               @click="selectOption(option)"
             >
-              <Icon v-if="option.icon" class="h-4 w-4" :name="option.icon" />
+              <Icon
+                v-if="option.icon"
+                :class="size === 'small' ? 'h-3.5 w-3.5' : 'h-4 w-4'"
+                :name="option.icon"
+              />
               <span class="flex-1">{{ option.label }}</span>
               <Icon
                 v-if="option.value === modelValue"
-                class="h-4 w-4 text-primary-600 dark:text-primary-400"
+                class="text-primary-600 dark:text-primary-400"
+                :class="size === 'small' ? 'h-3.5 w-3.5' : 'h-4 w-4'"
                 name="Check"
               />
             </div>
@@ -84,6 +99,11 @@ const props = defineProps({
   iconColor: {
     type: String,
     default: ''
+  },
+  size: {
+    type: String,
+    default: 'default',
+    validator: (value) => ['default', 'small'].includes(value)
   }
 })
 

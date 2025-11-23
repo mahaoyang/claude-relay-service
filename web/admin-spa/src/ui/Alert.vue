@@ -43,8 +43,8 @@ const icon = computed(() => icons[props.variant])
       </div>
       <button
         v-if="closable"
-        @click="emit('close')"
         class="rounded p-1 text-current transition-opacity hover:opacity-70 focus:outline-none focus:ring-2 focus:ring-current"
+        @click="emit('close')"
       >
         <X class="h-4 w-4" />
       </button>

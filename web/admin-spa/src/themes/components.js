@@ -6,8 +6,7 @@
 export const componentStyles = {
   // Dialog 对话框
   dialog: {
-    overlay:
-      'fixed inset-0 bg-black/50 dark:bg-black/70 backdrop-blur-sm transition-opacity',
+    overlay: 'fixed inset-0 bg-black/50 dark:bg-black/70 backdrop-blur-sm transition-opacity',
     container: 'fixed inset-0 overflow-y-auto p-4 flex items-center justify-center',
     panel:
       'relative w-full max-w-md transform overflow-hidden rounded-lg bg-white dark:bg-gray-800 p-6 text-left align-middle shadow-xl transition-all',
@@ -131,8 +130,7 @@ export const componentStyles = {
     buttonIcon: 'pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2',
     options:
       'absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white dark:bg-gray-800 py-1 shadow-lg ring-1 ring-black/5 dark:ring-white/10 focus:outline-none z-50',
-    option:
-      'relative cursor-pointer select-none py-2 pl-10 pr-4 text-gray-900 dark:text-gray-100',
+    option: 'relative cursor-pointer select-none py-2 pl-10 pr-4 text-gray-900 dark:text-gray-100',
     optionActive: 'bg-teal-100 dark:bg-indigo-900/30 text-teal-900 dark:text-indigo-200',
     optionSelected: 'font-semibold',
     optionCheck: 'absolute inset-y-0 left-0 flex items-center pl-3'
@@ -145,8 +143,7 @@ export const componentStyles = {
       'relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-teal-500 dark:focus:ring-indigo-500 focus:ring-offset-2',
     buttonOff: 'bg-gray-200 dark:bg-gray-700',
     buttonOn: 'bg-teal-600 dark:bg-indigo-500',
-    toggle:
-      'inline-block h-4 w-4 transform rounded-full bg-white transition-transform shadow-sm',
+    toggle: 'inline-block h-4 w-4 transform rounded-full bg-white transition-transform shadow-sm',
     toggleOff: 'translate-x-1',
     toggleOn: 'translate-x-6',
     label: 'text-sm font-medium text-gray-700 dark:text-gray-300'
@@ -156,8 +153,7 @@ export const componentStyles = {
   tabs: {
     list: 'flex gap-2 border-b border-gray-200 dark:border-gray-700',
     tab: 'px-4 py-2 text-sm font-medium transition-colors focus:outline-none',
-    tabDefault:
-      'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100',
+    tabDefault: 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100',
     tabSelected:
       'text-teal-600 dark:text-indigo-400 border-b-2 border-teal-600 dark:border-indigo-400',
     panel: 'py-4'

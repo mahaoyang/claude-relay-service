@@ -21,17 +21,16 @@ const toastRef = ref()
 const confirmRef = ref()
 
 onMounted(() => {
- // 初始化主题
- themeStore.initTheme()
+  // 初始化主题
+  themeStore.initTheme()
 
- // 监听系统主题变化
- themeStore.watchSystemTheme()
+  // 监听系统主题变化
+  themeStore.watchSystemTheme()
 
- // 检查本地存储的认证状态
- authStore.checkAuth()
+  // 检查本地存储的认证状态
+  authStore.checkAuth()
 
- // 加载OEM设置（包括网站图标）
- authStore.loadOemSettings()
+  // 加载OEM设置（包括网站图标）
+  authStore.loadOemSettings()
 })
 </script>
-

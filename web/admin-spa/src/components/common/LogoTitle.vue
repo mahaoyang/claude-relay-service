@@ -5,8 +5,8 @@
       <template v-if="!loading">
         <img
           v-if="logoSrc"
-          class="h-10 w-10 rounded-lg object-cover"
           alt="Logo"
+          class="h-10 w-10 rounded-lg object-cover"
           :src="logoSrc"
           @error="handleLogoError"
         />

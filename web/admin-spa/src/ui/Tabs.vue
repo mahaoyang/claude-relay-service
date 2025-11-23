@@ -16,7 +16,7 @@ defineEmits(['update:modelValue'])
 <template>
   <TabGroup
     as="div"
-    :selectedIndex="tabs.findIndex((tab) => tab.key === modelValue)"
+    :selected-index="tabs.findIndex((tab) => tab.key === modelValue)"
     @change="(index) => $emit('update:modelValue', tabs[index].key)"
   >
     <TabList
@@ -28,7 +28,7 @@ defineEmits(['update:modelValue'])
         :key="tab.key"
         v-slot="{ selected }"
         :class="[
-          'relative px-4 py-2.5 text-sm font-medium transition-all duration-200 outline-none ring-0 focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0',
+          'relative px-4 py-2.5 text-sm font-medium outline-none ring-0 transition-all duration-200 focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0',
           selected
             ? 'text-gray-900 dark:text-white'
             : 'text-gray-600 hover:text-gray-900 dark:text-secondary-400 dark:hover:bg-secondary-800/30 dark:hover:text-white',

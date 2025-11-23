@@ -39,7 +39,7 @@ const colorPatterns = [
   /\bring-red-\d+\b/g,
 
   // Border-l colors (for Alert)
-  /\bborder-l-\d+\s+border-[a-z]+-\d+\b/g,
+  /\bborder-l-\d+\s+border-[a-z]+-\d+\b/g
 ]
 
 function cleanFile(filePath) {
@@ -47,7 +47,7 @@ function cleanFile(filePath) {
   const original = content
 
   // Apply all color patterns
-  colorPatterns.forEach(pattern => {
+  colorPatterns.forEach((pattern) => {
     content = content.replace(pattern, '')
   })
 
@@ -74,10 +74,10 @@ function cleanFile(filePath) {
 }
 
 // Process all .vue files in ui directory
-const files = fs.readdirSync(uiDir).filter(f => f.endsWith('.vue'))
+const files = fs.readdirSync(uiDir).filter((f) => f.endsWith('.vue'))
 let changedCount = 0
 
-files.forEach(file => {
+files.forEach((file) => {
   const filePath = path.join(uiDir, file)
   if (cleanFile(filePath)) {
     console.log(`✓ Cleaned ${file}`)

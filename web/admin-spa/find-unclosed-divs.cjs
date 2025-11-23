@@ -35,7 +35,16 @@ for (let i = 0; i < lines.length; i++) {
 
   if (openCount > 0 || closeCount > 0) {
     const indicator = depth > prevDepth ? 'OPEN' : depth < prevDepth ? 'CLOSE' : 'SAME'
-    console.log('Line', lineNum, ':', prevDepth, '->', depth, indicator, line.trim().substring(0, 60))
+    console.log(
+      'Line',
+      lineNum,
+      ':',
+      prevDepth,
+      '->',
+      depth,
+      indicator,
+      line.trim().substring(0, 60)
+    )
   }
 
   if (depth < 0) {

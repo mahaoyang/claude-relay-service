@@ -80,7 +80,7 @@ function cleanFile(filePath) {
 
 console.log('清理所有 icon...\n')
 
-vueFiles.forEach(file => {
+vueFiles.forEach((file) => {
   cleanFile(file)
 })
 

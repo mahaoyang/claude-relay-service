@@ -57,14 +57,14 @@ const stylePatterns = [
   // === Divide ===
   /\bdivide-[xy](?:-\d+)?\b/g,
   /\bdivide-(?:solid|dashed|dotted|double|none)\b/g,
-  /\bdivide-(?:slate|gray|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)-(?:\d+)\b/g,
+  /\bdivide-(?:slate|gray|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)-(?:\d+)\b/g
 ]
 
 function cleanClasses(classString) {
   let cleaned = classString
 
   // 应用所有模式
-  stylePatterns.forEach(pattern => {
+  stylePatterns.forEach((pattern) => {
     cleaned = cleaned.replace(pattern, '')
   })
 
@@ -106,9 +106,9 @@ function cleanFile(filePath) {
 
   // 4. 清理 CSS 样式中的相关属性
   const cssPatterns = [
-    /^ *(?:background|bg|background-color|border|border-[a-z]+|box-shadow|text-shadow|outline|color|border-radius): [^;]+;?\s*$/gm,
+    /^ *(?:background|bg|background-color|border|border-[a-z]+|box-shadow|text-shadow|outline|color|border-radius): [^;]+;?\s*$/gm
   ]
-  cssPatterns.forEach(pattern => {
+  cssPatterns.forEach((pattern) => {
     content = content.replace(pattern, (match) => {
       changes++
       return ''
@@ -136,7 +136,7 @@ function cleanFile(filePath) {
 
 console.log('开始清理...\n')
 
-vueFiles.forEach(file => {
+vueFiles.forEach((file) => {
   cleanFile(file)
 })
 
