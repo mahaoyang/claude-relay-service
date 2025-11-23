@@ -43,7 +43,7 @@ for (let i = 0; i < lines.length; i++) {
 if (linesToRemove.length > 0) {
   const fixed = lines.filter((line, i) => {
     if (linesToRemove.includes(i) && line.trim() === '</div>') {
-      console.log(`删除第 ${i+1} 行: ${line}`)
+      console.log(`删除第 ${i + 1} 行: ${line}`)
       return false
     }
     return true

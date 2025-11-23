@@ -95,7 +95,7 @@ function cleanFile(filePath) {
 
 console.log('开始清理...\n')
 
-vueFiles.forEach(file => {
+vueFiles.forEach((file) => {
   cleanFile(file)
 })
 

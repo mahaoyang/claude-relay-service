@@ -34,19 +34,19 @@
                 viewBox="0 0 24 24"
               >
                 <path
+                  d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"
                   stroke-linecap="round"
                   stroke-linejoin="round"
                   stroke-width="2"
-                  d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"
                 />
               </svg>
             </div>
             <input
               v-model="apiKey"
-              :disabled="loading"
-              type="password"
               class="block w-full rounded-lg border border-transparent bg-transparent py-4 pl-11 pr-32 text-gray-900 outline-none ring-0 placeholder:text-gray-400 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 dark:text-white sm:text-sm sm:leading-6"
+              :disabled="loading"
               placeholder="输入您的 API Key (cr_...)"
+              type="password"
               @keyup.enter="queryStats"
             />
           </div>
@@ -55,10 +55,10 @@
           <div v-else class="relative">
             <textarea
               v-model="apiKey"
-              :disabled="loading"
-              rows="4"
               class="block w-full resize-none rounded-lg border border-transparent bg-transparent p-4 text-gray-900 outline-none ring-0 placeholder:text-gray-400 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 dark:text-white sm:text-sm sm:leading-6"
+              :disabled="loading"
               placeholder="输入多个 API Keys，每行一个..."
+              rows="4"
               @keyup.ctrl.enter="queryStats"
             />
             <!-- 计数器 -->
@@ -70,18 +70,18 @@
           </div>
 
           <!-- 查询按钮 (绝对定位在输入框右侧) -->
-          <div class="absolute bottom-2 right-2 top-2" v-if="!multiKeyMode">
+          <div v-if="!multiKeyMode" class="absolute bottom-2 right-2 top-2">
             <button
-              @click="queryStats"
-              :disabled="loading || !hasValidInput"
               class="flex h-full items-center gap-2 rounded-lg bg-primary-600 px-6 text-sm font-medium text-white transition-colors duration-200 hover:bg-primary-700 disabled:bg-gray-300 dark:disabled:bg-gray-700"
+              :disabled="loading || !hasValidInput"
+              @click="queryStats"
             >
               <svg
                 v-if="loading"
                 class="h-4 w-4 animate-spin text-white"
-                xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
               >
                 <circle
                   class="opacity-25"
@@ -93,8 +93,8 @@
                 ></circle>
                 <path
                   class="opacity-75"
-                  fill="currentColor"
                   d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  fill="currentColor"
                 ></path>
               </svg>
               <span v-else>查询</span>
@@ -106,16 +106,16 @@
       <!-- 多行模式下的独立查询按钮 -->
       <div v-if="multiKeyMode" class="mt-4 flex justify-end">
         <button
-          @click="queryStats"
-          :disabled="loading || !hasValidInput"
           class="flex items-center gap-2 rounded-lg bg-primary-600 px-8 py-2.5 font-medium text-white shadow-lg shadow-primary-500/30 transition-all duration-200 hover:bg-primary-700 disabled:bg-gray-300 dark:disabled:bg-gray-700"
+          :disabled="loading || !hasValidInput"
+          @click="queryStats"
         >
           <svg
             v-if="loading"
             class="h-4 w-4 animate-spin text-white"
-            xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
           >
             <circle
               class="opacity-25"
@@ -127,8 +127,8 @@
             ></circle>
             <path
               class="opacity-75"
-              fill="currentColor"
               d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+              fill="currentColor"
             ></path>
           </svg>
           <span>查询统计</span>
@@ -146,10 +146,10 @@
           viewBox="0 0 24 24"
         >
           <path
+            d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
             stroke-linecap="round"
             stroke-linejoin="round"
             stroke-width="2"
-            d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
           />
         </svg>
         <p class="text-left leading-relaxed">

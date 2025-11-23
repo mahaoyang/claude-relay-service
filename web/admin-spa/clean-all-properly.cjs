@@ -8,7 +8,7 @@ const vueFiles = glob.sync('src/**/*.vue', { cwd: __dirname })
 let totalChanges = 0
 let totalFiles = 0
 
-vueFiles.forEach(file => {
+vueFiles.forEach((file) => {
   const filePath = path.join(__dirname, file)
   let content = fs.readFileSync(filePath, 'utf-8')
   const original = content

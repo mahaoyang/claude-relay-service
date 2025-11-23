@@ -1,6 +1,10 @@
 <template>
-  <TransitionRoot :show="isOpen" as="template">
-    <HeadlessDialog :open="isOpen" @close="handleClose" :class="cn(styles.container, tokens.zIndex.modal)">
+  <TransitionRoot as="template" :show="isOpen">
+    <HeadlessDialog
+      :class="cn(styles.container, tokens.zIndex.modal)"
+      :open="isOpen"
+      @close="handleClose"
+    >
       <!-- 背景遮罩 -->
       <TransitionChild
         as="template"
@@ -11,7 +15,7 @@
         leave-from="opacity-100"
         leave-to="opacity-0"
       >
-        <div :class="styles.overlay" aria-hidden="true" />
+        <div aria-hidden="true" :class="styles.overlay" />
       </TransitionChild>
 
       <!-- 对话框内容 -->
@@ -30,10 +34,10 @@
               <!-- 关闭按钮 -->
               <button
                 v-if="showClose"
-                type="button"
-                :class="styles.closeButton"
-                @click="handleClose"
                 aria-label="关闭"
+                :class="styles.closeButton"
+                type="button"
+                @click="handleClose"
               >
                 <X :size="20" />
               </button>
@@ -55,7 +59,7 @@
 
               <!-- 底部操作 -->
               <div v-if="$slots.footer" :class="styles.footer">
-                <slot name="footer" :close="handleClose" />
+                <slot :close="handleClose" name="footer" />
               </div>
             </DialogPanel>
           </TransitionChild>
@@ -67,7 +71,14 @@
 
 <script setup>
 import { computed } from 'vue'
-import { Dialog as HeadlessDialog, DialogPanel, DialogTitle, DialogDescription, TransitionRoot, TransitionChild } from '@headlessui/vue'
+import {
+  Dialog as HeadlessDialog,
+  DialogPanel,
+  DialogTitle,
+  DialogDescription,
+  TransitionRoot,
+  TransitionChild
+} from '@headlessui/vue'
 import { X } from 'lucide-vue-next'
 import { useTheme } from '@/composables/ui/useTheme'
 

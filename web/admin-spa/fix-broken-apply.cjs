@@ -18,7 +18,7 @@ function fixFile(filePath) {
     // Remove empty @apply
     /@apply\s*;/g,
     // Remove isolated prefixes in the middle
-    /(@apply[^;]*?)\s+(?:focus:|hover:|dark:|sm:|md:|lg:|xl:|2xl:)\s+(\w)/g,
+    /(@apply[^;]*?)\s+(?:focus:|hover:|dark:|sm:|md:|lg:|xl:|2xl:)\s+(\w)/g
   ]
 
   // First pass: remove trailing orphaned prefixes
@@ -27,7 +27,10 @@ function fixFile(filePath) {
     (match, applyPart, prefixPart) => {
       // Check if prefix part contains valid classes (more than just prefix)
       const validClasses = prefixPart.match(/(?:focus:|hover:|dark:|sm:|md:|lg:|xl:|2xl:)(\S+)/g)
-      if (!validClasses || validClasses.every(c => c.match(/^(focus:|hover:|dark:|sm:|md:|lg:|xl:|2xl:)$/))) {
+      if (
+        !validClasses ||
+        validClasses.every((c) => c.match(/^(focus:|hover:|dark:|sm:|md:|lg:|xl:|2xl:)$/))
+      ) {
         changes++
         return applyPart.trim() ? applyPart.trim() + ';' : ''
       }

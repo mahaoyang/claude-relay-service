@@ -295,38 +295,41 @@ function replaceIconsInContent(content, filePath) {
   const iconPattern =
     /<i\s+([^>]*?)class="([^"]*?)\b(?:fas|far|fab|fa)\s+fa-([\w-]+)([^"]*?)"([^>]*?)>(?:<\/i>)?/gs
 
-  modified = modified.replace(iconPattern, (match, before, classList, iconName, afterIcon, after) => {
-    const lucideIcon = iconMapping[iconName]
+  modified = modified.replace(
+    iconPattern,
+    (match, before, classList, iconName, afterIcon, after) => {
+      const lucideIcon = iconMapping[iconName]
 
-    if (lucideIcon) {
-      // Extract other classes (not fa-related)
-      const otherClasses = classList
-        .split(/\s+/)
-        .concat(afterIcon.split(/\s+/))
-        .filter((c) => c && !c.match(/^(fa|fas|far|fab|fa-[\w-]+)$/))
-        .join(' ')
+      if (lucideIcon) {
+        // Extract other classes (not fa-related)
+        const otherClasses = classList
+          .split(/\s+/)
+          .concat(afterIcon.split(/\s+/))
+          .filter((c) => c && !c.match(/^(fa|fas|far|fab|fa-[\w-]+)$/))
+          .join(' ')
 
-      // Build the Icon component
-      const classAttr = otherClasses ? ` class="${otherClasses}"` : ''
-      const beforeAttrs = before.trim()
-      const afterAttrs = after.trim()
-      const allAttrs = [beforeAttrs, afterAttrs].filter(Boolean).join(' ')
+        // Build the Icon component
+        const classAttr = otherClasses ? ` class="${otherClasses}"` : ''
+        const beforeAttrs = before.trim()
+        const afterAttrs = after.trim()
+        const allAttrs = [beforeAttrs, afterAttrs].filter(Boolean).join(' ')
 
-      const iconComponent = `<Icon name="${lucideIcon}"${classAttr}${allAttrs ? ' ' + allAttrs : ''} />`
+        const iconComponent = `<Icon name="${lucideIcon}"${classAttr}${allAttrs ? ' ' + allAttrs : ''} />`
 
-      replacements.push({
-        from: iconName,
-        to: lucideIcon,
-        fullMatch: match.substring(0, 50) + '...'
-      })
+        replacements.push({
+          from: iconName,
+          to: lucideIcon,
+          fullMatch: match.substring(0, 50) + '...'
+        })
 
-      return iconComponent
+        return iconComponent
+      }
+
+      // If no mapping found, keep original but warn
+      console.warn(`  ⚠ No mapping for icon: fa-${iconName} in ${filePath}`)
+      return match
     }
-
-    // If no mapping found, keep original but warn
-    console.warn(`  ⚠ No mapping for icon: fa-${iconName} in ${filePath}`)
-    return match
-  })
+  )
 
   return { modified, replacements }
 }

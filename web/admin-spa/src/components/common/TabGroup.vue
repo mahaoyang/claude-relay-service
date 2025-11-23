@@ -5,9 +5,9 @@
     <button
       v-for="option in options"
       :key="option.value"
-      @click="handleClick(option.value)"
       class="relative flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium transition-all duration-200"
       :class="getButtonClass(option.value)"
+      @click="handleClick(option.value)"
     >
       <!-- SVG 图标 -->
       <svg

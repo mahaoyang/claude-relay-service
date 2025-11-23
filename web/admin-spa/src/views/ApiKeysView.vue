@@ -64,18 +64,19 @@
       <!-- 活跃 API Keys Tab Panel -->
       <div v-if="activeTab === 'active'" class="p-6">
         <!-- 工具栏区域 -->
-        <div class="mb-6 flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+        <div class="mb-4 flex flex-col gap-2 lg:flex-row lg:items-start lg:justify-between">
           <!-- 左侧：查询筛选器组 -->
-          <div class="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+          <div class="flex flex-col gap-2 sm:flex-row sm:flex-wrap">
             <!-- 时间范围筛选 -->
-            <div class="flex items-center gap-2">
-              <div class="text-xs font-medium text-gray-500 dark:text-gray-400">时间范围</div>
+            <div class="flex items-center gap-1.5">
+              <div class="text-[10px] font-medium text-gray-500 dark:text-gray-400">时间范围</div>
               <CustomDropdown
                 v-model="globalDateFilter.preset"
                 icon="Calendar"
                 icon-color="text-primary-500"
                 :options="timeRangeDropdownOptions"
                 placeholder="选择时间范围"
+                size="small"
                 @change="handleTimeRangeChange"
               />
             </div>
@@ -100,20 +101,21 @@
             </div>
 
             <!-- 标签筛选器 -->
-            <div class="flex items-center gap-2">
-              <div class="text-xs font-medium text-gray-500 dark:text-gray-400">标签</div>
-              <div class="flex items-center gap-2">
+            <div class="flex items-center gap-1.5">
+              <div class="text-[10px] font-medium text-gray-500 dark:text-gray-400">标签</div>
+              <div class="flex items-center gap-1.5">
                 <CustomDropdown
                   v-model="selectedTagFilter"
                   icon="Tags"
                   icon-color="text-purple-500"
                   :options="tagOptions"
                   placeholder="所有标签"
+                  size="small"
                   @change="currentPage = 1"
                 />
                 <span
                   v-if="selectedTagFilter"
-                  class="rounded-full bg-primary-100 px-2 py-0.5 text-xs font-medium text-primary-700 dark:bg-primary-900/30 dark:text-primary-300"
+                  class="rounded-full bg-primary-100 px-1.5 py-0.5 text-[10px] font-medium text-primary-700 dark:bg-primary-900/30 dark:text-primary-300"
                 >
                   {{ selectedTagCount }}
                 </span>
@@ -121,7 +123,7 @@
             </div>
 
             <!-- 搜索模式与搜索框 -->
-            <div class="flex flex-col gap-2 sm:flex-row sm:items-center">
+            <div class="flex flex-col gap-1.5 sm:flex-row sm:items-center">
               <div>
                 <CustomDropdown
                   v-model="searchMode"
@@ -129,16 +131,17 @@
                   icon-color="text-cyan-500"
                   :options="searchModeOptions"
                   placeholder="选择搜索类型"
+                  size="small"
                   @change="currentPage = 1"
                 />
               </div>
-              <div class="relative w-full sm:w-64">
-                <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                  <Icon class="h-4 w-4 text-gray-400" name="Search" />
+              <div class="relative w-full sm:w-56">
+                <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-2">
+                  <Icon class="h-3.5 w-3.5 text-gray-400" name="Search" />
                 </div>
                 <input
                   v-model="searchKeyword"
-                  class="block w-full rounded-lg border border-gray-300 bg-white py-2 pl-10 pr-10 text-sm text-gray-900 placeholder-gray-500 transition-colors focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:placeholder-gray-400 dark:focus:border-primary-400 dark:focus:ring-primary-400"
+                  class="block w-full rounded-lg border border-gray-300 bg-white py-1.5 pl-8 pr-8 text-xs text-gray-900 placeholder-gray-500 transition-colors focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:placeholder-gray-400 dark:focus:border-primary-400 dark:focus:ring-primary-400"
                   :placeholder="
                     searchMode === 'bindingAccount'
                       ? '搜索所属账号...'
@@ -151,71 +154,75 @@
                 />
                 <button
                   v-if="searchKeyword"
-                  class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200"
+                  class="absolute inset-y-0 right-0 flex items-center pr-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200"
                   @click="clearSearch"
                 >
-                  <Icon class="h-4 w-4" name="X" />
+                  <Icon class="h-3.5 w-3.5" name="X" />
                 </button>
               </div>
             </div>
           </div>
 
           <!-- 右侧：操作按钮组 -->
-          <div class="flex flex-wrap gap-2">
+          <div class="flex flex-wrap gap-1.5">
             <!-- 刷新按钮 -->
             <button
-              class="inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-700 shadow-sm transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700"
+              class="inline-flex items-center gap-1.5 rounded-lg border border-gray-300 bg-white px-2.5 py-1.5 text-xs font-medium text-gray-700 shadow-sm transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700"
               :disabled="apiKeysLoading"
               @click="loadApiKeys()"
             >
-              <Icon class="h-4 w-4" :class="{ 'animate-spin': apiKeysLoading }" name="RefreshCw" />
+              <Icon
+                class="h-3.5 w-3.5"
+                :class="{ 'animate-spin': apiKeysLoading }"
+                name="RefreshCw"
+              />
               <span>刷新</span>
             </button>
 
             <!-- 选择/取消选择按钮 -->
             <button
-              class="inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-700 shadow-sm transition-colors hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700"
+              class="inline-flex items-center gap-1.5 rounded-lg border border-gray-300 bg-white px-2.5 py-1.5 text-xs font-medium text-gray-700 shadow-sm transition-colors hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700"
               @click="toggleSelectionMode"
             >
-              <Icon class="h-4 w-4" :name="showCheckboxes ? 'X' : 'CheckSquare'" />
+              <Icon class="h-3.5 w-3.5" :name="showCheckboxes ? 'X' : 'CheckSquare'" />
               <span>{{ showCheckboxes ? '取消选择' : '选择' }}</span>
             </button>
 
             <!-- 导出数据按钮 -->
             <button
-              class="inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-700 shadow-sm transition-colors hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700"
+              class="inline-flex items-center gap-1.5 rounded-lg border border-gray-300 bg-white px-2.5 py-1.5 text-xs font-medium text-gray-700 shadow-sm transition-colors hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700"
               @click="exportToExcel"
             >
-              <Icon class="h-4 w-4" name="FileSpreadsheet" />
+              <Icon class="h-3.5 w-3.5" name="FileSpreadsheet" />
               <span>导出数据</span>
             </button>
 
             <!-- 批量编辑按钮 -->
             <button
               v-if="selectedApiKeys.length > 0"
-              class="inline-flex items-center gap-2 rounded-lg border border-blue-300 bg-blue-50 px-3 py-2 text-sm font-medium text-blue-700 shadow-sm transition-colors hover:bg-blue-100 dark:border-blue-700 dark:bg-blue-900/30 dark:text-blue-300 dark:hover:bg-blue-900/50"
+              class="inline-flex items-center gap-1.5 rounded-lg border border-blue-300 bg-blue-50 px-2.5 py-1.5 text-xs font-medium text-blue-700 shadow-sm transition-colors hover:bg-blue-100 dark:border-blue-700 dark:bg-blue-900/30 dark:text-blue-300 dark:hover:bg-blue-900/50"
               @click="openBatchEditModal()"
             >
-              <Icon class="h-4 w-4" name="Edit" />
+              <Icon class="h-3.5 w-3.5" name="Edit" />
               <span>编辑选中 ({{ selectedApiKeys.length }})</span>
             </button>
 
             <!-- 批量删除按钮 -->
             <button
               v-if="selectedApiKeys.length > 0"
-              class="inline-flex items-center gap-2 rounded-lg border border-red-300 bg-red-50 px-3 py-2 text-sm font-medium text-red-700 shadow-sm transition-colors hover:bg-red-100 dark:border-red-700 dark:bg-red-900/30 dark:text-red-300 dark:hover:bg-red-900/50"
+              class="inline-flex items-center gap-1.5 rounded-lg border border-red-300 bg-red-50 px-2.5 py-1.5 text-xs font-medium text-red-700 shadow-sm transition-colors hover:bg-red-100 dark:border-red-700 dark:bg-red-900/30 dark:text-red-300 dark:hover:bg-red-900/50"
               @click="batchDeleteApiKeys()"
             >
-              <Icon class="h-4 w-4" name="Trash" />
+              <Icon class="h-3.5 w-3.5" name="Trash" />
               <span>删除选中 ({{ selectedApiKeys.length }})</span>
             </button>
 
             <!-- 创建按钮 -->
             <button
-              class="inline-flex items-center gap-2 rounded-lg bg-primary-600 px-3 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-primary-700 dark:bg-primary-500 dark:hover:bg-primary-600"
+              class="inline-flex items-center gap-1.5 rounded-lg bg-primary-600 px-2.5 py-1.5 text-xs font-medium text-white shadow-sm transition-colors hover:bg-primary-700 dark:bg-primary-500 dark:hover:bg-primary-600"
               @click.stop="openCreateApiKeyModal"
             >
-              <Icon class="h-4 w-4" name="Plus" />
+              <Icon class="h-3.5 w-3.5" name="Plus" />
               <span>创建新 Key</span>
             </button>
           </div>
@@ -244,7 +251,10 @@
         </div>
 
         <!-- 桌面端表格视图 -->
-        <div v-else class="overflow-hidden rounded-lg border border-gray-200 dark:border-gray-700">
+        <div
+          v-else
+          class="hidden overflow-hidden rounded-lg border border-gray-200 dark:border-gray-700 lg:block"
+        >
           <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
               <thead class="bg-gray-50 dark:bg-gray-800">
@@ -721,30 +731,30 @@
                     </td>
                     <!-- 操作列 -->
                     <td class="whitespace-nowrap px-4 py-3">
-                      <div class="flex flex-wrap gap-1">
+                      <div class="flex flex-wrap gap-0.5">
                         <button
-                          class="inline-flex items-center gap-1 rounded px-2 py-1 text-xs font-medium text-blue-600 transition-colors hover:bg-blue-50 dark:text-blue-400 dark:hover:bg-blue-900/30"
+                          class="inline-flex items-center gap-0.5 rounded px-1.5 py-0.5 text-[11px] font-medium text-blue-600 transition-colors hover:bg-blue-50 dark:text-blue-400 dark:hover:bg-blue-900/30"
                           title="查看详细统计"
                           @click="showUsageDetails(key)"
                         >
-                          <Icon class="h-3.5 w-3.5" name="LineChart" />
+                          <Icon class="h-3 w-3" name="LineChart" />
                           <span>详情</span>
                         </button>
                         <button
                           v-if="key && key.id"
-                          class="inline-flex items-center gap-1 rounded px-2 py-1 text-xs font-medium text-purple-600 transition-colors hover:bg-purple-50 dark:text-purple-400 dark:hover:bg-purple-900/30"
+                          class="inline-flex items-center gap-0.5 rounded px-1.5 py-0.5 text-[11px] font-medium text-purple-600 transition-colors hover:bg-purple-50 dark:text-purple-400 dark:hover:bg-purple-900/30"
                           title="模型使用分布"
                           @click="toggleApiKeyModelStats(key.id)"
                         >
-                          <Icon class="h-3.5 w-3.5" name="PieChart" />
+                          <Icon class="h-3 w-3" name="PieChart" />
                           <span>模型</span>
                         </button>
                         <button
-                          class="inline-flex items-center gap-1 rounded px-2 py-1 text-xs font-medium text-gray-600 transition-colors hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-800"
+                          class="inline-flex items-center gap-0.5 rounded px-1.5 py-0.5 text-[11px] font-medium text-gray-600 transition-colors hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-800"
                           title="编辑"
                           @click="openEditApiKeyModal(key)"
                         >
-                          <Icon class="h-3.5 w-3.5" name="Edit" />
+                          <Icon class="h-3 w-3" name="Edit" />
                           <span>编辑</span>
                         </button>
                         <button
@@ -752,15 +762,15 @@
                             key.expiresAt &&
                             (isApiKeyExpired(key.expiresAt) || isApiKeyExpiringSoon(key.expiresAt))
                           "
-                          class="inline-flex items-center gap-1 rounded px-2 py-1 text-xs font-medium text-orange-600 transition-colors hover:bg-orange-50 dark:text-orange-400 dark:hover:bg-orange-900/30"
+                          class="inline-flex items-center gap-0.5 rounded px-1.5 py-0.5 text-[11px] font-medium text-orange-600 transition-colors hover:bg-orange-50 dark:text-orange-400 dark:hover:bg-orange-900/30"
                           title="续期"
                           @click="openRenewApiKeyModal(key)"
                         >
-                          <Icon class="h-3.5 w-3.5" name="Clock" />
+                          <Icon class="h-3 w-3" name="Clock" />
                           <span>续期</span>
                         </button>
                         <button
-                          class="inline-flex items-center gap-1 rounded px-2 py-1 text-xs font-medium transition-colors"
+                          class="inline-flex items-center gap-0.5 rounded px-1.5 py-0.5 text-[11px] font-medium transition-colors"
                           :class="
                             key.isActive
                               ? 'text-gray-600 hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-800'
@@ -769,15 +779,15 @@
                           :title="key.isActive ? '禁用' : '激活'"
                           @click="toggleApiKeyStatus(key)"
                         >
-                          <Icon class="h-3.5 w-3.5" :name="key.isActive ? 'Ban' : 'CheckCircle'" />
+                          <Icon class="h-3 w-3" :name="key.isActive ? 'Ban' : 'CheckCircle'" />
                           <span>{{ key.isActive ? '禁用' : '激活' }}</span>
                         </button>
                         <button
-                          class="inline-flex items-center gap-1 rounded px-2 py-1 text-xs font-medium text-red-600 transition-colors hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-900/30"
+                          class="inline-flex items-center gap-0.5 rounded px-1.5 py-0.5 text-[11px] font-medium text-red-600 transition-colors hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-900/30"
                           title="删除"
                           @click="deleteApiKey(key.id)"
                         >
-                          <Icon class="h-3.5 w-3.5" name="Trash" />
+                          <Icon class="h-3 w-3" name="Trash" />
                           <span>删除</span>
                         </button>
                       </div>
@@ -785,8 +795,11 @@
                   </tr>
 
                   <!-- 模型统计展开区域 -->
-                  <tr v-if="key && key.id && expandedApiKeys[key.id]">
-                    <td class="bg-gray-50 px-4 py-4 dark:bg-gray-800/50" colspan="13">
+                  <tr
+                    v-if="key && key.id && expandedApiKeys[key.id]"
+                    class="bg-gray-50 dark:bg-gray-800/50"
+                  >
+                    <td class="px-4 py-4" :colspan="shouldShowCheckboxes ? 13 : 12">
                       <!-- 加载中状态 -->
                       <div
                         v-if="!apiKeyModelStats[key.id]"
@@ -799,38 +812,38 @@
                       </div>
 
                       <!-- 内容区域 -->
-                      <div class="space-y-4">
+                      <div class="space-y-3">
                         <!-- 标题和筛选器 -->
                         <div
-                          class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between"
+                          class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between"
                         >
                           <h5
-                            class="flex items-center gap-2 text-sm font-semibold text-gray-900 dark:text-white"
+                            class="flex items-center gap-1.5 text-xs font-semibold text-gray-900 dark:text-white"
                           >
                             <Icon
-                              class="h-4 w-4 text-purple-600 dark:text-purple-400"
+                              class="h-3.5 w-3.5 text-purple-600 dark:text-purple-400"
                               name="PieChart"
                             />
                             模型使用分布
                           </h5>
-                          <div class="flex flex-wrap items-center gap-2">
+                          <div class="flex flex-wrap items-center gap-1.5">
                             <span
                               v-if="apiKeyModelStats[key.id] && apiKeyModelStats[key.id].length > 0"
-                              class="rounded-full bg-purple-100 px-2.5 py-0.5 text-xs font-medium text-purple-700 dark:bg-purple-900/30 dark:text-purple-300"
+                              class="rounded-full bg-purple-100 px-2 py-0.5 text-[10px] font-medium text-purple-700 dark:bg-purple-900/30 dark:text-purple-300"
                             >
                               {{ apiKeyModelStats[key.id].length }} 个模型
                             </span>
 
                             <!-- 日期筛选器 -->
-                            <div class="flex items-center gap-2">
+                            <div class="flex items-center gap-1.5">
                               <!-- 快捷选择 -->
                               <div
-                                class="flex gap-1 rounded-lg bg-white p-1 shadow-sm dark:bg-gray-900"
+                                class="flex gap-0.5 rounded-lg bg-white p-0.5 shadow-sm dark:bg-gray-900"
                               >
                                 <button
                                   v-for="option in getApiKeyDateFilter(key.id).presetOptions"
                                   :key="option.value"
-                                  class="rounded-md px-3 py-1 text-xs font-medium transition-colors"
+                                  class="rounded-md px-2 py-0.5 text-[10px] font-medium transition-colors"
                                   :class="
                                     getApiKeyDateFilter(key.id).preset === option.value &&
                                     getApiKeyDateFilter(key.id).type === 'preset'
@@ -869,28 +882,28 @@
                         <!-- 空数据状态 -->
                         <div
                           v-if="apiKeyModelStats[key.id] && apiKeyModelStats[key.id].length === 0"
-                          class="flex flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 py-12 dark:border-gray-600"
+                          class="flex flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 py-8 dark:border-gray-600"
                         >
                           <div
-                            class="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800"
+                            class="mb-3 flex h-10 w-10 items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800"
                           >
                             <Icon
-                              class="h-6 w-6 text-gray-400 dark:text-gray-500"
+                              class="h-5 w-5 text-gray-400 dark:text-gray-500"
                               name="LineChart"
                             />
                           </div>
-                          <p class="mb-2 text-base font-medium text-gray-900 dark:text-white">
+                          <p class="mb-1.5 text-sm font-medium text-gray-900 dark:text-white">
                             暂无模型使用数据
                           </p>
-                          <p class="mb-4 text-sm text-gray-600 dark:text-gray-400">
+                          <p class="mb-3 text-xs text-gray-600 dark:text-gray-400">
                             尝试调整时间范围或点击刷新重新加载数据
                           </p>
                           <button
-                            class="inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm transition-colors hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700"
+                            class="inline-flex items-center gap-1.5 rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-xs font-medium text-gray-700 shadow-sm transition-colors hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700"
                             title="重置筛选条件并刷新"
                             @click="resetApiKeyDateFilter(key.id)"
                           >
-                            <Icon class="h-4 w-4" name="RefreshCcw" />
+                            <Icon class="h-3.5 w-3.5" name="RefreshCcw" />
                             <span>刷新</span>
                           </button>
                         </div>
@@ -899,31 +912,31 @@
                           v-else-if="
                             apiKeyModelStats[key.id] && apiKeyModelStats[key.id].length > 0
                           "
-                          class="grid gap-4 sm:grid-cols-2"
+                          class="grid gap-3 sm:grid-cols-2"
                         >
                           <div
                             v-for="stat in apiKeyModelStats[key.id]"
                             :key="stat.model"
-                            class="rounded-lg border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-900"
+                            class="rounded-lg border border-gray-200 bg-white p-3 dark:border-gray-700 dark:bg-gray-900"
                           >
                             <!-- 卡片头部 -->
-                            <div class="mb-3 flex items-start justify-between">
+                            <div class="mb-2 flex items-start justify-between">
                               <div class="flex-1">
-                                <span class="font-semibold text-gray-900 dark:text-white">
+                                <span class="text-xs font-semibold text-gray-900 dark:text-white">
                                   {{ stat.model }}
                                 </span>
-                                <div class="mt-0.5 text-xs text-gray-500 dark:text-gray-400">
+                                <div class="mt-0.5 text-[10px] text-gray-500 dark:text-gray-400">
                                   {{ stat.requests }} 次请求
                                 </div>
                               </div>
                             </div>
 
                             <!-- 统计指标网格 -->
-                            <div class="space-y-3">
-                              <div class="grid grid-cols-2 gap-3 text-sm">
-                                <div class="flex items-center gap-1.5">
+                            <div class="space-y-2">
+                              <div class="grid grid-cols-2 gap-2 text-xs">
+                                <div class="flex items-center gap-1">
                                   <Icon
-                                    class="h-4 w-4 text-yellow-600 dark:text-yellow-400"
+                                    class="h-3 w-3 text-yellow-600 dark:text-yellow-400"
                                     name="Coins"
                                   />
                                   <span class="text-gray-600 dark:text-gray-400">总Token:</span>
@@ -931,9 +944,9 @@
                                     {{ formatTokenCount(stat.allTokens) }}
                                   </span>
                                 </div>
-                                <div class="flex items-center gap-1.5">
+                                <div class="flex items-center gap-1">
                                   <Icon
-                                    class="h-4 w-4 text-green-600 dark:text-green-400"
+                                    class="h-3 w-3 text-green-600 dark:text-green-400"
                                     name="DollarSign"
                                   />
                                   <span class="text-gray-600 dark:text-gray-400">费用:</span>
@@ -944,10 +957,10 @@
                               </div>
 
                               <!-- Token明细 -->
-                              <div class="grid grid-cols-2 gap-2 text-xs">
-                                <div class="flex items-center gap-1">
+                              <div class="grid grid-cols-2 gap-1.5 text-[10px]">
+                                <div class="flex items-center gap-0.5">
                                   <Icon
-                                    class="h-3 w-3 text-blue-600 dark:text-blue-400"
+                                    class="h-2.5 w-2.5 text-blue-600 dark:text-blue-400"
                                     name="ArrowDown"
                                   />
                                   <span class="text-gray-600 dark:text-gray-400">输入:</span>
@@ -955,9 +968,9 @@
                                     {{ formatTokenCount(stat.inputTokens) }}
                                   </span>
                                 </div>
-                                <div class="flex items-center gap-1">
+                                <div class="flex items-center gap-0.5">
                                   <Icon
-                                    class="h-3 w-3 text-purple-600 dark:text-purple-400"
+                                    class="h-2.5 w-2.5 text-purple-600 dark:text-purple-400"
                                     name="ArrowUp"
                                   />
                                   <span class="text-gray-600 dark:text-gray-400">输出:</span>
@@ -967,10 +980,10 @@
                                 </div>
                                 <div
                                   v-if="stat.cacheCreateTokens > 0"
-                                  class="flex items-center gap-1"
+                                  class="flex items-center gap-0.5"
                                 >
                                   <Icon
-                                    class="h-3 w-3 text-orange-600 dark:text-orange-400"
+                                    class="h-2.5 w-2.5 text-orange-600 dark:text-orange-400"
                                     name="Save"
                                   />
                                   <span class="text-gray-600 dark:text-gray-400">缓存创建:</span>
@@ -980,10 +993,10 @@
                                 </div>
                                 <div
                                   v-if="stat.cacheReadTokens > 0"
-                                  class="flex items-center gap-1"
+                                  class="flex items-center gap-0.5"
                                 >
                                   <Icon
-                                    class="h-3 w-3 text-cyan-600 dark:text-cyan-400"
+                                    class="h-2.5 w-2.5 text-cyan-600 dark:text-cyan-400"
                                     name="Download"
                                   />
                                   <span class="text-gray-600 dark:text-gray-400">缓存读取:</span>
@@ -1070,84 +1083,91 @@
         </div>
 
         <!-- 移动端卡片视图 -->
-        <div v-if="!apiKeysLoading && sortedApiKeys.length > 0">
-          <div v-for="key in paginatedApiKeys" :key="key.id">
+        <div v-if="!apiKeysLoading && sortedApiKeys.length > 0" class="space-y-4 lg:hidden">
+          <div
+            v-for="key in paginatedApiKeys"
+            :key="key.id"
+            class="rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800"
+          >
             <!-- 卡片头部 -->
-            <div>
-              <div>
+            <div
+              class="mb-3 flex items-start justify-between border-b border-gray-200 pb-3 dark:border-gray-700"
+            >
+              <div class="flex items-start gap-3">
                 <input
                   v-if="shouldShowCheckboxes"
                   v-model="selectedApiKeys"
+                  class="mt-1 h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700"
                   type="checkbox"
                   :value="key.id"
                   @change="updateSelectAllState"
                 />
                 <div>
-                  <h4>
+                  <h4 class="text-sm font-semibold text-gray-900 dark:text-white">
                     {{ key.name }}
                   </h4>
-                  <p>
+                  <p class="mt-0.5 text-xs text-gray-500 dark:text-gray-400">
                     {{ key.id }}
                   </p>
                 </div>
               </div>
-              <span>
-                <div />
+              <span
+                class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-medium"
+                :class="
+                  key.isActive
+                    ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'
+                    : 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-400'
+                "
+              >
+                <div
+                  class="h-1.5 w-1.5 rounded-full"
+                  :class="key.isActive ? 'bg-green-600 dark:bg-green-400' : 'bg-gray-400'"
+                />
                 {{ key.isActive ? '活跃' : '已停用' }}
               </span>
             </div>
 
             <!-- 账户绑定信息 -->
-            <div>
+            <div class="mb-3 flex flex-wrap gap-2 text-xs">
               <!-- Claude 绑定 -->
-              <div v-if="key.claudeAccountId || key.claudeConsoleAccountId">
-                <span>
-                  <Icon name="Brain" />
-                  Claude
-                </span>
-                <span>
-                  {{ getClaudeBindingInfo(key) }}
-                </span>
+              <div
+                v-if="key.claudeAccountId || key.claudeConsoleAccountId"
+                class="flex items-center gap-1 rounded-full bg-orange-100 px-2 py-1 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400"
+              >
+                <Icon class="h-3 w-3" name="Brain" />
+                <span>Claude: {{ getClaudeBindingInfo(key) }}</span>
               </div>
               <!-- Gemini 绑定 -->
-              <div v-if="key.geminiAccountId">
-                <span>
-                  <Icon name="Bot" />
-                  Gemini
-                </span>
-                <span>
-                  {{ getGeminiBindingInfo(key) }}
-                </span>
+              <div
+                v-if="key.geminiAccountId"
+                class="flex items-center gap-1 rounded-full bg-blue-100 px-2 py-1 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400"
+              >
+                <Icon class="h-3 w-3" name="Bot" />
+                <span>Gemini: {{ getGeminiBindingInfo(key) }}</span>
               </div>
               <!-- OpenAI 绑定 -->
-              <div v-if="key.openaiAccountId">
-                <span>
-                  <i />
-                  OpenAI
-                </span>
-                <span>
-                  {{ getOpenAIBindingInfo(key) }}
-                </span>
+              <div
+                v-if="key.openaiAccountId"
+                class="flex items-center gap-1 rounded-full bg-green-100 px-2 py-1 text-green-700 dark:bg-green-900/30 dark:text-green-400"
+              >
+                <Icon class="h-3 w-3" name="Sparkles" />
+                <span>OpenAI: {{ getOpenAIBindingInfo(key) }}</span>
               </div>
               <!-- Bedrock 绑定 -->
-              <div v-if="key.bedrockAccountId">
-                <span>
-                  <Icon name="Cloud" />
-                  Bedrock
-                </span>
-                <span>
-                  {{ getBedrockBindingInfo(key) }}
-                </span>
+              <div
+                v-if="key.bedrockAccountId"
+                class="flex items-center gap-1 rounded-full bg-purple-100 px-2 py-1 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400"
+              >
+                <Icon class="h-3 w-3" name="Cloud" />
+                <span>Bedrock: {{ getBedrockBindingInfo(key) }}</span>
               </div>
               <!-- Droid 绑定 -->
-              <div v-if="key.droidAccountId">
-                <span>
-                  <Icon name="Bot" />
-                  Droid
-                </span>
-                <span>
-                  {{ getDroidBindingInfo(key) }}
-                </span>
+              <div
+                v-if="key.droidAccountId"
+                class="flex items-center gap-1 rounded-full bg-cyan-100 px-2 py-1 text-cyan-700 dark:bg-cyan-900/30 dark:text-cyan-400"
+              >
+                <Icon class="h-3 w-3" name="Bot" />
+                <span>Droid: {{ getDroidBindingInfo(key) }}</span>
               </div>
               <!-- 无绑定时显示共享池 -->
               <div
@@ -1159,57 +1179,77 @@
                   !key.bedrockAccountId &&
                   !key.droidAccountId
                 "
+                class="flex items-center gap-1 rounded-full bg-gray-100 px-2 py-1 text-gray-600 dark:bg-gray-700 dark:text-gray-400"
               >
-                <Icon name="Share2" />
-                使用共享池
+                <Icon class="h-3 w-3" name="Share2" />
+                <span>使用共享池</span>
               </div>
               <!-- 显示所有者信息 -->
-              <div v-if="isLdapEnabled && key.ownerDisplayName">
-                <Icon name="User" />
-                {{ key.ownerDisplayName }}
+              <div
+                v-if="isLdapEnabled && key.ownerDisplayName"
+                class="flex items-center gap-1 rounded-full bg-indigo-100 px-2 py-1 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-400"
+              >
+                <Icon class="h-3 w-3" name="User" />
+                <span>{{ key.ownerDisplayName }}</span>
               </div>
             </div>
 
             <!-- 统计信息 -->
-            <div>
+            <div class="mb-3 space-y-3">
               <!-- 今日使用 -->
-              <div>
-                <div>
-                  <span>{{ globalDateFilter.type === 'custom' ? '累计统计' : '今日使用' }}</span>
-                  <button @click="showUsageDetails(key)"><Icon name="LineChart" />详情</button>
+              <div class="rounded-lg bg-gray-50 p-3 dark:bg-gray-900">
+                <div class="mb-2 flex items-center justify-between">
+                  <span class="text-xs font-medium text-gray-600 dark:text-gray-400">
+                    {{ globalDateFilter.type === 'custom' ? '累计统计' : '今日使用' }}
+                  </span>
+                  <button
+                    class="inline-flex items-center gap-1 rounded px-2 py-1 text-xs text-primary-600 transition-colors hover:bg-primary-50 dark:text-primary-400 dark:hover:bg-primary-900/30"
+                    @click="showUsageDetails(key)"
+                  >
+                    <Icon class="h-3 w-3" name="LineChart" />
+                    详情
+                  </button>
                 </div>
-                <div>
-                  <div>
-                    <p>{{ formatNumber(key.usage?.daily?.requests || 0) }} 次</p>
-                    <p>请求</p>
+                <div class="mb-2 grid grid-cols-2 gap-3">
+                  <div class="text-center">
+                    <p class="text-lg font-bold text-gray-900 dark:text-white">
+                      {{ formatNumber(key.usage?.daily?.requests || 0) }} 次
+                    </p>
+                    <p class="text-xs text-gray-500 dark:text-gray-400">请求</p>
                   </div>
-                  <div>
-                    <p>${{ (key.dailyCost || 0).toFixed(2) }}</p>
-                    <p>费用</p>
+                  <div class="text-center">
+                    <p class="text-lg font-bold text-green-600 dark:text-green-400">
+                      ${{ (key.dailyCost || 0).toFixed(2) }}
+                    </p>
+                    <p class="text-xs text-gray-500 dark:text-gray-400">费用</p>
                   </div>
                 </div>
-                <div>
-                  <div>
-                    <span>最后使用</span>
-                    <span>
+                <div class="grid grid-cols-2 gap-2 text-xs">
+                  <div class="flex justify-between">
+                    <span class="text-gray-500 dark:text-gray-400">最后使用</span>
+                    <span class="font-medium text-gray-700 dark:text-gray-300">
                       {{ key.lastUsedAt ? formatLastUsed(key.lastUsedAt) : '从未使用' }}
                     </span>
                   </div>
-                  <div>
-                    <span>账号</span>
-                    <span v-if="hasLastUsageAccount(key)" :title="getLastUsageFullName(key)">
+                  <div class="flex justify-between">
+                    <span class="text-gray-500 dark:text-gray-400">账号</span>
+                    <span
+                      v-if="hasLastUsageAccount(key)"
+                      class="font-medium text-gray-700 dark:text-gray-300"
+                      :title="getLastUsageFullName(key)"
+                    >
                       {{ getLastUsageDisplayName(key) }}
-                      <span v-if="!isLastUsageDeleted(key)">
+                      <span v-if="!isLastUsageDeleted(key)" class="text-gray-500">
                         ({{ getLastUsageTypeLabel(key) }})
                       </span>
                     </span>
-                    <span v-else>暂无使用账号</span>
+                    <span v-else class="text-gray-500">暂无使用账号</span>
                   </div>
                 </div>
               </div>
 
               <!-- 限制进度条 -->
-              <div>
+              <div class="space-y-2">
                 <!-- 每日费用限制 -->
                 <LimitProgressBar
                   v-if="key.dailyCostLimit > 0"
@@ -1238,6 +1278,7 @@
                     (!key.dailyCostLimit || key.dailyCostLimit === 0) &&
                     (!key.totalCostLimit || key.totalCostLimit === 0)
                   "
+                  class="space-y-2"
                 >
                   <!-- 费用进度条 -->
                   <LimitProgressBar
@@ -1248,12 +1289,12 @@
                     variant="compact"
                   />
                   <!-- 重置倒计时 -->
-                  <div>
-                    <div>
-                      <Icon name="Clock" />
+                  <div class="flex items-center justify-between text-xs">
+                    <div class="flex items-center gap-1 text-gray-500 dark:text-gray-400">
+                      <Icon class="h-3 w-3" name="Clock" />
                       <span>{{ key.rateLimitWindow }}分钟窗口</span>
                     </div>
-                    <span>
+                    <span class="font-medium text-gray-700 dark:text-gray-300">
                       {{
                         key.windowRemainingSeconds > 0
                           ? formatWindowTime(key.windowRemainingSeconds)
@@ -1264,54 +1305,75 @@
                 </div>
 
                 <!-- 无限制显示 -->
-                <div v-else>
-                  <Icon name="Infinity" />
+                <div
+                  v-else
+                  class="flex items-center gap-1 text-xs text-gray-500 dark:text-gray-400"
+                >
+                  <Icon class="h-3 w-3" name="Infinity" />
                   <span>无限制</span>
                 </div>
               </div>
             </div>
 
             <!-- 时间信息 -->
-            <div>
-              <div>
-                <span>创建时间</span>
-                <span>{{ formatDate(key.createdAt) }}</span>
+            <div class="mb-3 grid grid-cols-2 gap-3 text-xs">
+              <div class="flex flex-col gap-1">
+                <span class="text-gray-500 dark:text-gray-400">创建时间</span>
+                <span class="font-medium text-gray-700 dark:text-gray-300">{{
+                  formatDate(key.createdAt)
+                }}</span>
               </div>
-              <div>
-                <span>过期时间</span>
-                <div>
-                  <span>
+              <div class="flex flex-col gap-1">
+                <span class="text-gray-500 dark:text-gray-400">过期时间</span>
+                <div class="flex items-center gap-1.5">
+                  <span
+                    class="font-medium"
+                    :class="
+                      key.expiresAt && isApiKeyExpired(key.expiresAt)
+                        ? 'text-red-600 dark:text-red-400'
+                        : key.expiresAt && isApiKeyExpiringSoon(key.expiresAt)
+                          ? 'text-amber-600 dark:text-amber-400'
+                          : 'text-gray-700 dark:text-gray-300'
+                    "
+                  >
                     {{ key.expiresAt ? formatDate(key.expiresAt) : '永不过期' }}
                   </span>
-                  <button title="编辑过期时间" @click.stop="startEditExpiry(key)">
-                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path
-                        d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                      ></path>
-                    </svg>
+                  <button
+                    class="rounded p-0.5 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600 dark:hover:bg-gray-700 dark:hover:text-gray-300"
+                    title="编辑过期时间"
+                    @click.stop="startEditExpiry(key)"
+                  >
+                    <Icon class="h-3 w-3" name="Pencil" />
                   </button>
                 </div>
               </div>
             </div>
 
             <!-- 标签 -->
-            <div v-if="key.tags && key.tags.length > 0">
-              <span v-for="tag in key.tags" :key="tag">
+            <div v-if="key.tags && key.tags.length > 0" class="mb-3 flex flex-wrap gap-1.5">
+              <span
+                v-for="tag in key.tags"
+                :key="tag"
+                class="inline-flex items-center rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-600 dark:bg-gray-700 dark:text-gray-400"
+              >
                 {{ tag }}
               </span>
             </div>
 
             <!-- 操作按钮 -->
-            <div>
-              <button @click="showUsageDetails(key)">
-                <Icon name="LineChart" />
-                查看详情
+            <div class="flex flex-wrap gap-2 border-t border-gray-200 pt-3 dark:border-gray-700">
+              <button
+                class="inline-flex items-center gap-1.5 rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-xs font-medium text-gray-700 transition-colors hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
+                @click="showUsageDetails(key)"
+              >
+                <Icon class="h-3.5 w-3.5" name="LineChart" />
+                详情
               </button>
-              <button @click="openEditApiKeyModal(key)">
-                <Icon name="Edit" />
+              <button
+                class="inline-flex items-center gap-1.5 rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-xs font-medium text-gray-700 transition-colors hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
+                @click="openEditApiKeyModal(key)"
+              >
+                <Icon class="h-3.5 w-3.5" name="Edit" />
                 编辑
               </button>
               <button
@@ -1319,17 +1381,30 @@
                   key.expiresAt &&
                   (isApiKeyExpired(key.expiresAt) || isApiKeyExpiringSoon(key.expiresAt))
                 "
+                class="inline-flex items-center gap-1.5 rounded-lg border border-amber-200 bg-amber-50 px-3 py-1.5 text-xs font-medium text-amber-700 transition-colors hover:bg-amber-100 dark:border-amber-800 dark:bg-amber-900/30 dark:text-amber-400 dark:hover:bg-amber-900/50"
                 @click="openRenewApiKeyModal(key)"
               >
-                <Icon name="Clock" />
+                <Icon class="h-3.5 w-3.5" name="Clock" />
                 续期
               </button>
-              <button @click="toggleApiKeyStatus(key)">
-                <i />
-                {{ key.isActive ? '禁用' : '激活' }}
+              <button
+                class="inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-colors"
+                :class="
+                  key.isActive
+                    ? 'border border-gray-200 bg-white text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700'
+                    : 'border border-green-200 bg-green-50 text-green-700 hover:bg-green-100 dark:border-green-800 dark:bg-green-900/30 dark:text-green-400 dark:hover:bg-green-900/50'
+                "
+                @click="toggleApiKeyStatus(key)"
+              >
+                <Icon class="h-3.5 w-3.5" :name="key.isActive ? 'Pause' : 'Play'" />
+                {{ key.isActive ? '停用' : '激活' }}
               </button>
-              <button @click="deleteApiKey(key.id)">
-                <Icon name="Trash" />
+              <button
+                class="inline-flex items-center gap-1.5 rounded-lg border border-red-200 bg-red-50 px-3 py-1.5 text-xs font-medium text-red-700 transition-colors hover:bg-red-100 dark:border-red-800 dark:bg-red-900/30 dark:text-red-400 dark:hover:bg-red-900/50"
+                @click="deleteApiKey(key.id)"
+              >
+                <Icon class="h-3.5 w-3.5" name="Trash" />
+                删除
               </button>
             </div>
           </div>

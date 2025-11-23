@@ -65,7 +65,7 @@ function fixFile(filePath) {
   return false
 }
 
-vueFiles.forEach(file => {
+vueFiles.forEach((file) => {
   fixFile(file)
 })
 

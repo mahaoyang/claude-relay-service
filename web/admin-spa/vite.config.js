@@ -68,6 +68,7 @@ export default defineConfig(({ mode }) => {
         // 使用正则确保精确匹配，避免 /api 匹配到 /api-stats 等前端路由
         '^/admin/': proxyConfig,
         '^/api/': proxyConfig,
+        '^/web/': proxyConfig,
         '^/users/': proxyConfig,
         '^/users$': proxyConfig,
         '^/apiStats': proxyConfig,

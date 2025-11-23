@@ -1,10 +1,10 @@
 <template>
-  <div class="border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900">
-    <div class="container mx-auto px-4 max-w-7xl">
+  <div class="border-b border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-900">
+    <div class="container mx-auto max-w-7xl px-4">
       <TabSelect
         :model-value="activeTab"
-        :options="tabOptions"
         :no-border="true"
+        :options="tabOptions"
         @update:model-value="$emit('tab-change', $event)"
       />
     </div>

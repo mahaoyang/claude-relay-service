@@ -1,6 +1,6 @@
 <template>
-  <TransitionRoot :show="isOpen" as="template">
-    <HeadlessDialog :open="isOpen" @close="handleCancel" :class="tokens.zIndex.modal">
+  <TransitionRoot as="template" :show="isOpen">
+    <HeadlessDialog :class="tokens.zIndex.modal" :open="isOpen" @close="handleCancel">
       <!-- 背景遮罩 -->
       <TransitionChild
         as="template"
@@ -11,7 +11,7 @@
         leave-from="opacity-100"
         leave-to="opacity-0"
       >
-        <div :class="styles.overlay" aria-hidden="true" />
+        <div aria-hidden="true" :class="styles.overlay" />
       </TransitionChild>
 
       <!-- 对话框内容 -->
@@ -31,7 +31,10 @@
               <div :class="styles.header">
                 <!-- 图标 -->
                 <div :class="cn(styles.iconWrapper, currentVariantStyles.iconWrapper)">
-                  <component :is="iconComponent" :class="cn('w-6 h-6', currentVariantStyles.icon)" />
+                  <component
+                    :is="iconComponent"
+                    :class="cn('h-6 w-6', currentVariantStyles.icon)"
+                  />
                 </div>
 
                 <!-- 标题 -->
@@ -47,18 +50,13 @@
 
               <!-- 操作按钮 -->
               <div :class="styles.footer">
-                <Button
-                  variant="ghost"
-                  size="md"
-                  :disabled="isLoading"
-                  @click="handleCancel"
-                >
+                <Button :disabled="isLoading" size="md" variant="ghost" @click="handleCancel">
                   {{ cancelText }}
                 </Button>
                 <Button
-                  :variant="confirmButtonVariant"
-                  size="md"
                   :loading="isLoading"
+                  size="md"
+                  :variant="confirmButtonVariant"
                   @click="handleConfirm"
                 >
                   {{ confirmText }}
@@ -74,7 +72,14 @@
 
 <script setup>
 import { ref, computed } from 'vue'
-import { Dialog as HeadlessDialog, DialogPanel, DialogTitle, DialogDescription, TransitionRoot, TransitionChild } from '@headlessui/vue'
+import {
+  Dialog as HeadlessDialog,
+  DialogPanel,
+  DialogTitle,
+  DialogDescription,
+  TransitionRoot,
+  TransitionChild
+} from '@headlessui/vue'
 import { AlertCircle, CheckCircle, Info, AlertTriangle, HelpCircle } from 'lucide-vue-next'
 import { useTheme } from '@/composables/ui/useTheme'
 import Button from './Button.vue'
@@ -155,7 +160,7 @@ const handleConfirm = async () => {
   if (resolvePromise) {
     isLoading.value = true
     try {
-      await new Promise(resolve => setTimeout(resolve, 100))
+      await new Promise((resolve) => setTimeout(resolve, 100))
       isOpen.value = false
       resolvePromise(true)
       resolvePromise = null

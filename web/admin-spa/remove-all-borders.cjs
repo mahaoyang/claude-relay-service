@@ -10,16 +10,16 @@ let totalFiles = 0
 // Border 相关的 Tailwind 类模式
 const borderPatterns = [
   // Border width
-  /\bborder\s/g,           // border (单独的类，后面有空格)
+  /\bborder\s/g, // border (单独的类，后面有空格)
   /\bborder-0\b/g,
   /\bborder-2\b/g,
   /\bborder-4\b/g,
   /\bborder-8\b/g,
-  /\bborder\b(?!-none)/g,  // border 但不是 border-none
+  /\bborder\b(?!-none)/g, // border 但不是 border-none
 
   // Border sides
-  /\bborder-[trblxy]-\d+\b/g,  // border-t-2, border-r-4, etc.
-  /\bborder-[trblxy]\b/g,       // border-t, border-r, etc.
+  /\bborder-[trblxy]-\d+\b/g, // border-t-2, border-r-4, etc.
+  /\bborder-[trblxy]\b/g, // border-t, border-r, etc.
 
   // Border style
   /\bborder-solid\b/g,
@@ -28,7 +28,7 @@ const borderPatterns = [
   /\bborder-double\b/g,
 
   // Border radius (rounded)
-  /\brounded(?:-[a-z]+)?\b/g,  // rounded, rounded-md, rounded-lg, etc.
+  /\brounded(?:-[a-z]+)?\b/g, // rounded, rounded-md, rounded-lg, etc.
 
   // Divide (between elements)
   /\bdivide-[xy]-\d+\b/g,
@@ -39,7 +39,7 @@ const borderPatterns = [
   // Ring (focus rings)
   /\bring(?:-\d+)?\b/g,
   /\bring-offset-\d+\b/g,
-  /\bring-inset\b/g,
+  /\bring-inset\b/g
 ]
 
 function cleanFile(filePath) {
@@ -49,7 +49,7 @@ function cleanFile(filePath) {
   let changes = 0
 
   // 应用所有 border 模式清理
-  borderPatterns.forEach(pattern => {
+  borderPatterns.forEach((pattern) => {
     const matches = content.match(pattern)
     if (matches) {
       content = content.replace(pattern, '')
@@ -86,7 +86,7 @@ function cleanFile(filePath) {
 
 console.log('清理所有 border 相关类...\n')
 
-vueFiles.forEach(file => {
+vueFiles.forEach((file) => {
   cleanFile(file)
 })
 

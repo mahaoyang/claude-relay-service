@@ -79,6 +79,10 @@ class ModelService {
         provider: 'openai',
         description: 'OpenAI GPT models',
         models: [
+          'gpt-5.1',
+          'gpt-5.1-codex',
+          'gpt-5.1-codex-max',
+          'gpt-5.1-codex-mini',
           'gpt-4o',
           'gpt-4o-mini',
           'gpt-4.1',

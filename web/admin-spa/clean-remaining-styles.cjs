@@ -53,7 +53,7 @@ const patterns = [
   /\bbackdrop-[\w]+-[\w]+\b/g,
 
   // 圆角 (保留基本的 rounded)
-  /\brounded-[\w]+\b/g,
+  /\brounded-[\w]+\b/g
 ]
 
 // 处理文件
@@ -72,9 +72,7 @@ function processFile(filePath) {
 
   // 清理多余空格
   content = content.replace(/class="([^"]*)"/g, (match, classes) => {
-    const cleaned = classes
-      .replace(/\s+/g, ' ')
-      .trim()
+    const cleaned = classes.replace(/\s+/g, ' ').trim()
     return `class="${cleaned}"`
   })
 

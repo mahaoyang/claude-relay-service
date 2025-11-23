@@ -45,9 +45,9 @@ const displayLabel = computed(() => {
       {{ label }}
     </label>
     <Listbox
+      :disabled="disabled"
       :model-value="modelValue"
       @update:model-value="emit('update:modelValue', $event)"
-      :disabled="disabled"
     >
       <div class="relative">
         <ListboxButton
@@ -71,9 +71,9 @@ const displayLabel = computed(() => {
             <ListboxOption
               v-for="(option, index) in options"
               :key="index"
+              as="template"
               :value="option[valueKey] || option"
               v-slot="{ active, selected }"
-              as="template"
             >
               <li
                 class="relative cursor-pointer select-none py-2.5 pl-10 pr-4 transition-colors"
