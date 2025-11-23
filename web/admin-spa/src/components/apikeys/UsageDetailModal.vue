@@ -1,250 +1,253 @@
 <template>
- <Teleport to="body">
- <div v-if="show">
- <!-- 背景遮罩 -->
- <div @click="close" />
+  <BaseModal
+    icon="LineChart"
+    icon-bg-class="bg-primary-100 dark:bg-primary-900/30"
+    icon-color-class="text-primary-600 dark:text-primary-400"
+    :show="show"
+    size="lg"
+    :title="`使用统计详情 - ${apiKey.name}`"
+    @close="close"
+  >
+    <template #default>
+      <div class="space-y-6">
+        <!-- 总体统计卡片 -->
+        <div class="grid grid-cols-2 gap-4 md:grid-cols-4">
+          <!-- 请求统计卡片 -->
+          <div
+            class="rounded-lg border border-gray-200 bg-gray-50 p-4 dark:border-gray-700 dark:bg-gray-900"
+          >
+            <div class="mb-2 flex items-center gap-2">
+              <Icon class="h-4 w-4 text-blue-500" name="Activity" />
+              <span class="text-sm font-medium text-gray-600 dark:text-gray-400">总请求数</span>
+            </div>
+            <div class="text-2xl font-bold text-gray-900 dark:text-white">
+              {{ formatNumber(totalRequests) }}
+            </div>
+            <div class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+              今日: {{ formatNumber(dailyRequests) }} 次
+            </div>
+          </div>
 
- <!-- 模态框 -->
- <div
- >
- <!-- 标题栏 -->
- <div>
- <div>
- <div
- >
- 
- </div>
- <h3>
- 使用统计详情 - {{ apiKey.name }}
- </h3>
- </div>
- <button @click="close">
- 
- </button>
- </div>
+          <!-- Token统计卡片 -->
+          <div
+            class="rounded-lg border border-gray-200 bg-gray-50 p-4 dark:border-gray-700 dark:bg-gray-900"
+          >
+            <div class="mb-2 flex items-center gap-2">
+              <Icon class="h-4 w-4 text-purple-500" name="Hash" />
+              <span class="text-sm font-medium text-gray-600 dark:text-gray-400">总Token数</span>
+            </div>
+            <div class="text-2xl font-bold text-gray-900 dark:text-white">
+              {{ formatTokenCount(totalTokens) }}
+            </div>
+            <div class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+              今日: {{ formatTokenCount(dailyTokens) }}
+            </div>
+          </div>
 
- <!-- 内容区 -->
- <div>
- <!-- 总体统计卡片 -->
- <div>
- <!-- 请求统计卡片 -->
- <div
- >
- <div>
- <span>总请求数</span>
- 
- </div>
- <div>
- {{ formatNumber(totalRequests) }}
- </div>
- <div>
- 今日: {{ formatNumber(dailyRequests) }} 次
- </div>
- </div>
+          <!-- 费用统计卡片 -->
+          <div
+            class="rounded-lg border border-gray-200 bg-gray-50 p-4 dark:border-gray-700 dark:bg-gray-900"
+          >
+            <div class="mb-2 flex items-center gap-2">
+              <Icon class="h-4 w-4 text-green-500" name="DollarSign" />
+              <span class="text-sm font-medium text-gray-600 dark:text-gray-400">总费用</span>
+            </div>
+            <div class="text-2xl font-bold text-green-600 dark:text-green-400">
+              ${{ totalCost.toFixed(4) }}
+            </div>
+            <div class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+              今日: ${{ dailyCost.toFixed(4) }}
+            </div>
+          </div>
 
- <!-- Token统计卡片 -->
- <div
- >
- <div>
- <span>总Token数</span>
- 
- </div>
- <div>
- {{ formatTokenCount(totalTokens) }}
- </div>
- <div>
- 今日: {{ formatTokenCount(dailyTokens) }}
- </div>
- </div>
+          <!-- 平均统计卡片 -->
+          <div
+            class="rounded-lg border border-gray-200 bg-gray-50 p-4 dark:border-gray-700 dark:bg-gray-900"
+          >
+            <div class="mb-2 flex items-center gap-2">
+              <Icon class="h-4 w-4 text-amber-500" name="Gauge" />
+              <span class="text-sm font-medium text-gray-600 dark:text-gray-400">平均速率</span>
+            </div>
+            <div class="space-y-1">
+              <div class="flex items-center justify-between">
+                <span class="text-xs text-gray-500 dark:text-gray-400">RPM:</span>
+                <span class="text-sm font-semibold text-gray-900 dark:text-white">{{ rpm }}</span>
+              </div>
+              <div class="flex items-center justify-between">
+                <span class="text-xs text-gray-500 dark:text-gray-400">TPM:</span>
+                <span class="text-sm font-semibold text-gray-900 dark:text-white">{{ tpm }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
 
- <!-- 费用统计卡片 -->
- <div
- >
- <div>
- <span>总费用</span>
- 
- </div>
- <div>
- ${{ totalCost.toFixed(4) }}
- </div>
- <div>
- 今日: ${{ dailyCost.toFixed(4) }}
- </div>
- </div>
+        <!-- Token详细分布 -->
+        <div class="rounded-lg border border-gray-200 p-4 dark:border-gray-700">
+          <h4
+            class="mb-4 flex items-center gap-2 text-sm font-semibold text-gray-900 dark:text-white"
+          >
+            <Icon class="h-4 w-4 text-primary-500" name="PieChart" />
+            Token 使用分布
+          </h4>
+          <div class="grid grid-cols-2 gap-3 md:grid-cols-4">
+            <div
+              class="flex items-center justify-between rounded-lg bg-blue-50 px-3 py-2 dark:bg-blue-900/20"
+            >
+              <div class="flex items-center gap-2">
+                <div class="h-2 w-2 rounded-full bg-blue-500"></div>
+                <span class="text-xs text-gray-600 dark:text-gray-400">输入 Token</span>
+              </div>
+              <span class="text-sm font-semibold text-blue-600 dark:text-blue-400">
+                {{ formatTokenCount(inputTokens) }}
+              </span>
+            </div>
+            <div
+              class="flex items-center justify-between rounded-lg bg-green-50 px-3 py-2 dark:bg-green-900/20"
+            >
+              <div class="flex items-center gap-2">
+                <div class="h-2 w-2 rounded-full bg-green-500"></div>
+                <span class="text-xs text-gray-600 dark:text-gray-400">输出 Token</span>
+              </div>
+              <span class="text-sm font-semibold text-green-600 dark:text-green-400">
+                {{ formatTokenCount(outputTokens) }}
+              </span>
+            </div>
+            <div
+              v-if="cacheCreateTokens > 0"
+              class="flex items-center justify-between rounded-lg bg-purple-50 px-3 py-2 dark:bg-purple-900/20"
+            >
+              <div class="flex items-center gap-2">
+                <div class="h-2 w-2 rounded-full bg-purple-500"></div>
+                <span class="text-xs text-gray-600 dark:text-gray-400">缓存创建</span>
+              </div>
+              <span class="text-sm font-semibold text-purple-600 dark:text-purple-400">
+                {{ formatTokenCount(cacheCreateTokens) }}
+              </span>
+            </div>
+            <div
+              v-if="cacheReadTokens > 0"
+              class="flex items-center justify-between rounded-lg bg-amber-50 px-3 py-2 dark:bg-amber-900/20"
+            >
+              <div class="flex items-center gap-2">
+                <div class="h-2 w-2 rounded-full bg-amber-500"></div>
+                <span class="text-xs text-gray-600 dark:text-gray-400">缓存读取</span>
+              </div>
+              <span class="text-sm font-semibold text-amber-600 dark:text-amber-400">
+                {{ formatTokenCount(cacheReadTokens) }}
+              </span>
+            </div>
+          </div>
+        </div>
 
- <!-- 平均统计卡片 -->
- <div
- >
- <div>
- <span>平均速率</span>
- 
- </div>
- <div>
- <div>
- <span >RPM:</span>
- <span>{{ rpm }}</span>
- </div>
- <div>
- <span >TPM:</span>
- <span>{{ tpm }}</span>
- </div>
- </div>
- </div>
- </div>
+        <!-- 限制信息 -->
+        <div v-if="hasLimits" class="rounded-lg border border-gray-200 p-4 dark:border-gray-700">
+          <h4
+            class="mb-4 flex items-center gap-2 text-sm font-semibold text-gray-900 dark:text-white"
+          >
+            <Icon class="h-4 w-4 text-red-500" name="Shield" />
+            限制设置
+          </h4>
+          <div class="space-y-4">
+            <div v-if="apiKey.dailyCostLimit > 0" class="space-y-2">
+              <LimitProgressBar
+                :current="dailyCost"
+                label="每日费用限制"
+                :limit="apiKey.dailyCostLimit"
+                :show-shine="true"
+                type="daily"
+              />
+              <div class="text-right text-xs text-gray-500 dark:text-gray-400">
+                已使用 {{ Math.min(dailyCostPercentage, 100).toFixed(1) }}%
+              </div>
+            </div>
 
- <!-- Token详细分布 -->
- <div>
- <h4
- >
- 
- Token 使用分布
- </h4>
- <div>
- <div>
- <div>
- 
- <span>输入 Token</span>
- </div>
- <span>
- {{ formatTokenCount(inputTokens) }}
- </span>
- </div>
- <div>
- <div>
- 
- <span>输出 Token</span>
- </div>
- <span>
- {{ formatTokenCount(outputTokens) }}
- </span>
- </div>
- <div v-if="cacheCreateTokens > 0">
- <div>
- 
- <span>缓存创建 Token</span>
- </div>
- <span>
- {{ formatTokenCount(cacheCreateTokens) }}
- </span>
- </div>
- <div v-if="cacheReadTokens > 0">
- <div>
- 
- <span>缓存读取 Token</span>
- </div>
- <span>
- {{ formatTokenCount(cacheReadTokens) }}
- </span>
- </div>
- </div>
- </div>
+            <div v-if="apiKey.weeklyOpusCostLimit > 0" class="space-y-2">
+              <LimitProgressBar
+                :current="weeklyOpusCost"
+                label="Opus 周费用限制"
+                :limit="apiKey.weeklyOpusCostLimit"
+                :show-shine="true"
+                type="opus"
+              />
+              <div class="text-right text-xs text-gray-500 dark:text-gray-400">
+                已使用 {{ Math.min(opusUsagePercentage, 100).toFixed(1) }}%
+              </div>
+            </div>
 
- <!-- 限制信息 -->
- <div v-if="hasLimits">
- <h4
- >
- 
- 限制设置
- </h4>
- <div>
- <div v-if="apiKey.dailyCostLimit > 0">
- <LimitProgressBar
- :current="dailyCost"
- label="每日费用限制"
- :limit="apiKey.dailyCostLimit"
- :show-shine="true"
- type="daily"
- />
- <div>
- 已使用 {{ Math.min(dailyCostPercentage, 100).toFixed(1) }}%
- </div>
- </div>
+            <div v-if="apiKey.totalCostLimit > 0" class="space-y-2">
+              <LimitProgressBar
+                :current="totalCost"
+                label="总费用限制"
+                :limit="apiKey.totalCostLimit"
+                :show-shine="true"
+                type="total"
+              />
+              <div class="text-right text-xs text-gray-500 dark:text-gray-400">
+                已使用 {{ Math.min(totalUsagePercentage, 100).toFixed(1) }}%
+              </div>
+            </div>
 
- <div v-if="apiKey.weeklyOpusCostLimit > 0">
- <LimitProgressBar
- :current="weeklyOpusCost"
- label="Opus 周费用限制"
- :limit="apiKey.weeklyOpusCostLimit"
- :show-shine="true"
- type="opus"
- />
- <div>
- 已使用 {{ Math.min(opusUsagePercentage, 100).toFixed(1) }}%
- </div>
- </div>
+            <div
+              v-if="apiKey.concurrencyLimit > 0"
+              class="flex items-center justify-between rounded-lg bg-gray-50 px-4 py-3 dark:bg-gray-900"
+            >
+              <span class="text-sm text-gray-600 dark:text-gray-400">并发限制</span>
+              <span class="text-sm font-semibold text-gray-900 dark:text-white">
+                {{ apiKey.currentConcurrency || 0 }} / {{ apiKey.concurrencyLimit }}
+              </span>
+            </div>
 
- <div v-if="apiKey.totalCostLimit > 0">
- <LimitProgressBar
- :current="totalCost"
- label="总费用限制"
- :limit="apiKey.totalCostLimit"
- :show-shine="true"
- type="total"
- />
- <div>
- 已使用 {{ Math.min(totalUsagePercentage, 100).toFixed(1) }}%
- </div>
- </div>
+            <div v-if="apiKey.rateLimitWindow > 0" class="space-y-3">
+              <h5 class="text-xs font-medium text-gray-700 dark:text-gray-300">时间窗口限制</h5>
+              <WindowCountdown
+                :cost-limit="apiKey.rateLimitCost"
+                :current-cost="apiKey.currentWindowCost"
+                :current-requests="apiKey.currentWindowRequests"
+                :current-tokens="apiKey.currentWindowTokens"
+                label="窗口状态"
+                :rate-limit-window="apiKey.rateLimitWindow"
+                :request-limit="apiKey.rateLimitRequests"
+                :show-progress="true"
+                :show-tooltip="true"
+                :token-limit="apiKey.tokenLimit"
+                :window-end-time="apiKey.windowEndTime"
+                :window-remaining-seconds="apiKey.windowRemainingSeconds"
+                :window-start-time="apiKey.windowStartTime"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </template>
 
- <div
- v-if="apiKey.concurrencyLimit > 0"
- >
- <span >并发限制</span>
- <span>
- {{ apiKey.currentConcurrency || 0 }} / {{ apiKey.concurrencyLimit }}
- </span>
- </div>
-
- <div v-if="apiKey.rateLimitWindow > 0">
- <h5>
- 
- 时间窗口限制
- </h5>
- <WindowCountdown
- :cost-limit="apiKey.rateLimitCost"
- :current-cost="apiKey.currentWindowCost"
- :current-requests="apiKey.currentWindowRequests"
- :current-tokens="apiKey.currentWindowTokens"
- label="窗口状态"
- :rate-limit-window="apiKey.rateLimitWindow"
- :request-limit="apiKey.rateLimitRequests"
- :show-progress="true"
- :show-tooltip="true"
- :token-limit="apiKey.tokenLimit"
- :window-end-time="apiKey.windowEndTime"
- :window-remaining-seconds="apiKey.windowRemainingSeconds"
- :window-start-time="apiKey.windowStartTime"
- />
- </div>
- </div>
- </div>
- </div>
-
- <!-- 底部按钮 -->
- <div>
- <button type="button" @click="close">
- 关闭
- </button>
- </div>
- </div>
- </div>
- </Teleport>
+    <template #footer>
+      <button
+        class="rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
+        type="button"
+        @click="close"
+      >
+        关闭
+      </button>
+    </template>
+  </BaseModal>
 </template>
 
 <script setup>
 import { computed } from 'vue'
+import BaseModal from '@/components/common/BaseModal.vue'
+import Icon from '@/components/common/Icon.vue'
 import LimitProgressBar from './LimitProgressBar.vue'
 import WindowCountdown from './WindowCountdown.vue'
 
 const props = defineProps({
- show: {
- type: Boolean,
- required: true
- },
- apiKey: {
- type: Object,
- required: true
- }
+  show: {
+    type: Boolean,
+    required: true
+  },
+  apiKey: {
+    type: Object,
+    required: true
+  }
 })
 
 const emit = defineEmits(['close'])
@@ -267,49 +270,48 @@ const rpm = computed(() => props.apiKey.usage?.averages?.rpm || 0)
 const tpm = computed(() => props.apiKey.usage?.averages?.tpm || 0)
 
 const hasLimits = computed(() => {
- return (
- props.apiKey.dailyCostLimit > 0 ||
- props.apiKey.totalCostLimit > 0 ||
- props.apiKey.concurrencyLimit > 0 ||
- props.apiKey.weeklyOpusCostLimit > 0 ||
- props.apiKey.rateLimitWindow > 0 ||
- props.apiKey.tokenLimit > 0
- )
+  return (
+    props.apiKey.dailyCostLimit > 0 ||
+    props.apiKey.totalCostLimit > 0 ||
+    props.apiKey.concurrencyLimit > 0 ||
+    props.apiKey.weeklyOpusCostLimit > 0 ||
+    props.apiKey.rateLimitWindow > 0 ||
+    props.apiKey.tokenLimit > 0
+  )
 })
 
 const dailyCostPercentage = computed(() => {
- if (!props.apiKey.dailyCostLimit || props.apiKey.dailyCostLimit === 0) return 0
- return (dailyCost.value / props.apiKey.dailyCostLimit) * 100
+  if (!props.apiKey.dailyCostLimit || props.apiKey.dailyCostLimit === 0) return 0
+  return (dailyCost.value / props.apiKey.dailyCostLimit) * 100
 })
 
 const totalUsagePercentage = computed(() => {
- if (!totalCostLimit.value || totalCostLimit.value === 0) return 0
- return (totalCost.value / totalCostLimit.value) * 100
+  if (!totalCostLimit.value || totalCostLimit.value === 0) return 0
+  return (totalCost.value / totalCostLimit.value) * 100
 })
 
 const opusUsagePercentage = computed(() => {
- if (!weeklyOpusCostLimit.value || weeklyOpusCostLimit.value === 0) return 0
- return (weeklyOpusCost.value / weeklyOpusCostLimit.value) * 100
+  if (!weeklyOpusCostLimit.value || weeklyOpusCostLimit.value === 0) return 0
+  return (weeklyOpusCost.value / weeklyOpusCostLimit.value) * 100
 })
 
 // 方法
 const formatNumber = (num) => {
- if (!num && num !== 0) return '0'
- return num.toLocaleString('zh-CN')
+  if (!num && num !== 0) return '0'
+  return num.toLocaleString('zh-CN')
 }
 
 // 格式化Token数量（使用K/M单位）
 const formatTokenCount = (count) => {
- if (count >= 1000000) {
- return (count / 1000000).toFixed(1) + 'M'
- } else if (count >= 1000) {
- return (count / 1000).toFixed(1) + 'K'
- }
- return count.toString()
+  if (count >= 1000000) {
+    return (count / 1000000).toFixed(1) + 'M'
+  } else if (count >= 1000) {
+    return (count / 1000).toFixed(1) + 'K'
+  }
+  return count.toString()
 }
 
 const close = () => {
- emit('close')
+  emit('close')
 }
 </script>
-

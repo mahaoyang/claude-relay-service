@@ -1,293 +1,405 @@
 <template>
- <Teleport to="body">
- <div
- v-if="show"
- >
- <div @click="handleClose" />
- <div
- >
- <!-- 顶部栏 -->
- <div
- >
- <div>
- <div
- >
- <Icon name="AreaChart" />
- </div>
- <div>
- <div>
- <h3>
- {{ account?.name || account?.email || '账号使用详情' }}
- </h3>
- <span
- v-if="account?.platform"
- >
- <Icon name="Layers" />{{ platformLabel }}
- </span>
- <span
- v-if="account?.accountType"
- >
- <Icon name="UserCog" />{{ accountTypeLabel }}
- </span>
- </div>
- <p>
- 近 {{ summary?.days || 30 }} 天内的费用与请求趋势
- <span v-if="summary?.actualDaysUsed && summary?.actualDaysUsed < summary?.days">
- (日均基于实际使用 {{ summary.actualDaysUsed }} 天)
- </span>
- </p>
- </div>
- </div>
- <button
- @click="handleClose"
- >
- <Icon name="X" />
- </button>
- </div>
+  <BaseModal content-class="p-0" :show="show" :show-close="false" size="4xl" @close="handleClose">
+    <!-- Custom Header -->
+    <template #header>
+      <div class="flex items-center gap-3">
+        <div
+          class="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-blue-600 shadow-lg"
+        >
+          <Icon class="h-5 w-5 text-white" name="AreaChart" />
+        </div>
+        <div class="flex-1">
+          <div class="flex items-center gap-2">
+            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+              {{ account?.name || account?.email || '账号使用详情' }}
+            </h3>
+            <span
+              v-if="account?.platform"
+              class="inline-flex items-center gap-1 rounded-full bg-gradient-to-r from-blue-50 to-indigo-50 px-2.5 py-0.5 text-xs font-medium text-blue-700 dark:from-blue-900/30 dark:to-indigo-900/30 dark:text-blue-400"
+            >
+              <Icon class="h-3 w-3" name="Layers" />
+              {{ platformLabel }}
+            </span>
+            <span
+              v-if="account?.accountType"
+              class="inline-flex items-center gap-1 rounded-full bg-gradient-to-r from-purple-50 to-pink-50 px-2.5 py-0.5 text-xs font-medium text-purple-700 dark:from-purple-900/30 dark:to-pink-900/30 dark:text-purple-400"
+            >
+              <Icon class="h-3 w-3" name="UserCog" />
+              {{ accountTypeLabel }}
+            </span>
+          </div>
+          <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+            近 {{ summary?.days || 30 }} 天内的费用与请求趋势
+            <span
+              v-if="summary?.actualDaysUsed && summary?.actualDaysUsed < summary?.days"
+              class="text-amber-600 dark:text-amber-400"
+            >
+              (日均基于实际使用 {{ summary.actualDaysUsed }} 天)
+            </span>
+          </p>
+        </div>
+      </div>
+    </template>
 
- <!-- 内容区域 -->
- <div>
- <div v-if="loading">
- <div />
- </div>
- <template v-else>
- <!-- 关键指标 -->
- <div>
- <div
- v-for="metric in primaryMetrics"
- :key="metric.key"
- >
- <div>
- <div>
- <p
- >
- {{ metric.label }}
- </p>
- <p>
- {{ metric.value }}
- </p>
- <p>
- {{ metric.subtitle }}
- </p>
- </div>
- <div
- >
- <i></i>
- </div>
- </div>
- </div>
- </div>
+    <!-- Content Area -->
+    <div class="space-y-6 p-6">
+      <!-- Loading State -->
+      <div v-if="loading" class="flex items-center justify-center py-20">
+        <div
+          class="h-12 w-12 animate-spin rounded-full border-4 border-blue-200 border-t-blue-600 dark:border-blue-800 dark:border-t-blue-400"
+        />
+      </div>
 
- <!-- 今日与峰值 -->
- <div>
- <div
- >
- <div
- >
- <Icon name="Sun" />
- 今日概览
- </div>
- <div
- >
- <div>
- <span>费用</span>
- <span>{{
- summary?.today?.costFormatted || '$0.000000'
- }}</span>
- </div>
- <div>
- <span>请求</span>
- <span>{{
- formatNumber(summary?.today?.requests || 0)
- }}</span>
- </div>
- <div
- >
- <span>Tokens</span>
- <span>{{ formatNumber(summary?.today?.tokens || 0) }}</span>
- </div>
- </div>
- </div>
+      <template v-else>
+        <!-- Primary Metrics Cards -->
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <div
+            v-for="metric in primaryMetrics"
+            :key="metric.key"
+            class="group relative overflow-hidden rounded-lg border border-gray-200 bg-white p-4 shadow-sm transition-all hover:shadow-md dark:border-gray-700 dark:bg-gray-800"
+            :class="{
+              'hover:border-blue-300 dark:hover:border-blue-600': metric.key === 'totalCost',
+              'hover:border-purple-300 dark:hover:border-purple-600':
+                metric.key === 'totalRequests',
+              'hover:border-green-300 dark:hover:border-green-600': metric.key === 'avgCost',
+              'hover:border-amber-300 dark:hover:border-amber-600': metric.key === 'avgRequests'
+            }"
+          >
+            <div class="flex items-start justify-between">
+              <div class="flex-1">
+                <p class="text-sm font-medium text-gray-600 dark:text-gray-400">
+                  {{ metric.label }}
+                </p>
+                <p
+                  class="mt-2 text-2xl font-bold"
+                  :class="{
+                    'bg-gradient-to-r from-blue-600 to-blue-700 bg-clip-text text-transparent dark:from-blue-400 dark:to-blue-500':
+                      metric.key === 'totalCost',
+                    'bg-gradient-to-r from-purple-600 to-purple-700 bg-clip-text text-transparent dark:from-purple-400 dark:to-purple-500':
+                      metric.key === 'totalRequests',
+                    'bg-gradient-to-r from-green-600 to-green-700 bg-clip-text text-transparent dark:from-green-400 dark:to-green-500':
+                      metric.key === 'avgCost',
+                    'bg-gradient-to-r from-amber-600 to-amber-700 bg-clip-text text-transparent dark:from-amber-400 dark:to-amber-500':
+                      metric.key === 'avgRequests'
+                  }"
+                >
+                  {{ metric.value }}
+                </p>
+                <p class="mt-1 text-xs text-gray-500 dark:text-gray-500">
+                  {{ metric.subtitle }}
+                </p>
+              </div>
+              <div
+                class="flex h-12 w-12 items-center justify-center rounded-full transition-transform group-hover:scale-110"
+                :class="{
+                  'bg-gradient-to-br from-blue-100 to-blue-200 dark:from-blue-900/30 dark:to-blue-800/30':
+                    metric.key === 'totalCost',
+                  'bg-gradient-to-br from-purple-100 to-purple-200 dark:from-purple-900/30 dark:to-purple-800/30':
+                    metric.key === 'totalRequests',
+                  'bg-gradient-to-br from-green-100 to-green-200 dark:from-green-900/30 dark:to-green-800/30':
+                    metric.key === 'avgCost',
+                  'bg-gradient-to-br from-amber-100 to-amber-200 dark:from-amber-900/30 dark:to-amber-800/30':
+                    metric.key === 'avgRequests'
+                }"
+              >
+                <div
+                  class="h-6 w-6 rounded-full"
+                  :class="{
+                    'bg-blue-500 dark:bg-blue-400': metric.key === 'totalCost',
+                    'bg-purple-500 dark:bg-purple-400': metric.key === 'totalRequests',
+                    'bg-green-500 dark:bg-green-400': metric.key === 'avgCost',
+                    'bg-amber-500 dark:bg-amber-400': metric.key === 'avgRequests'
+                  }"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
 
- <div
- >
- <div
- >
- <Icon name="Crown" />
- 最高费用日
- </div>
- <div
- >
- <div>
- <span>日期</span>
- <span>{{
- formatDate(summary?.highestCostDay?.date)
- }}</span>
- </div>
- <div>
- <span>费用</span>
- <span>{{
- summary?.highestCostDay?.formattedCost || '$0.000000'
- }}</span>
- </div>
- <div
- >
- <span>请求</span>
- <span>{{
- formatNumber(findHistoryValue(summary?.highestCostDay?.date, 'requests'))
- }}</span>
- </div>
- </div>
- </div>
+        <!-- Today and Peak Stats Cards -->
+        <div class="grid grid-cols-1 gap-4 lg:grid-cols-3">
+          <!-- Today Overview -->
+          <div
+            class="rounded-lg border border-gray-200 bg-gradient-to-br from-white to-gray-50 p-4 shadow-sm dark:border-gray-700 dark:from-gray-800 dark:to-gray-800/50"
+          >
+            <div
+              class="mb-3 flex items-center gap-2 text-sm font-semibold text-gray-900 dark:text-white"
+            >
+              <div
+                class="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-amber-100 to-amber-200 dark:from-amber-900/30 dark:to-amber-800/30"
+              >
+                <Icon class="h-4 w-4 text-amber-600 dark:text-amber-400" name="Sun" />
+              </div>
+              今日概览
+            </div>
+            <div class="space-y-2">
+              <div
+                class="flex items-center justify-between rounded-md bg-white px-3 py-2 dark:bg-gray-800/80"
+              >
+                <span class="text-sm text-gray-600 dark:text-gray-400">费用</span>
+                <span class="font-semibold text-green-600 dark:text-green-400">{{
+                  summary?.today?.costFormatted || '$0.000000'
+                }}</span>
+              </div>
+              <div
+                class="flex items-center justify-between rounded-md bg-white px-3 py-2 dark:bg-gray-800/80"
+              >
+                <span class="text-sm text-gray-600 dark:text-gray-400">请求</span>
+                <span class="font-semibold text-blue-600 dark:text-blue-400">{{
+                  formatNumber(summary?.today?.requests || 0)
+                }}</span>
+              </div>
+              <div
+                class="flex items-center justify-between rounded-md bg-white px-3 py-2 dark:bg-gray-800/80"
+              >
+                <span class="text-sm text-gray-600 dark:text-gray-400">Tokens</span>
+                <span class="font-semibold text-purple-600 dark:text-purple-400">{{
+                  formatNumber(summary?.today?.tokens || 0)
+                }}</span>
+              </div>
+            </div>
+          </div>
 
- <div
- >
- <div
- >
- <Icon name="BarChart3" />
- 最高请求日
- </div>
- <div
- >
- <div>
- <span>日期</span>
- <span>{{
- formatDate(summary?.highestRequestDay?.date)
- }}</span>
- </div>
- <div>
- <span>请求</span>
- <span>{{
- formatNumber(summary?.highestRequestDay?.requests || 0)
- }}</span>
- </div>
- <div
- >
- <span>费用</span>
- <span>{{
- formatCost(findHistoryValue(summary?.highestRequestDay?.date, 'cost'))
- }}</span>
- </div>
- </div>
- </div>
- </div>
+          <!-- Highest Cost Day -->
+          <div
+            class="rounded-lg border border-gray-200 bg-gradient-to-br from-white to-gray-50 p-4 shadow-sm dark:border-gray-700 dark:from-gray-800 dark:to-gray-800/50"
+          >
+            <div
+              class="mb-3 flex items-center gap-2 text-sm font-semibold text-gray-900 dark:text-white"
+            >
+              <div
+                class="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-yellow-100 to-amber-200 dark:from-yellow-900/30 dark:to-amber-800/30"
+              >
+                <Icon class="h-4 w-4 text-amber-600 dark:text-amber-400" name="Crown" />
+              </div>
+              最高费用日
+            </div>
+            <div class="space-y-2">
+              <div
+                class="flex items-center justify-between rounded-md bg-white px-3 py-2 dark:bg-gray-800/80"
+              >
+                <span class="text-sm text-gray-600 dark:text-gray-400">日期</span>
+                <span class="font-semibold text-gray-900 dark:text-white">{{
+                  formatDate(summary?.highestCostDay?.date)
+                }}</span>
+              </div>
+              <div
+                class="flex items-center justify-between rounded-md bg-white px-3 py-2 dark:bg-gray-800/80"
+              >
+                <span class="text-sm text-gray-600 dark:text-gray-400">费用</span>
+                <span class="font-semibold text-green-600 dark:text-green-400">{{
+                  summary?.highestCostDay?.formattedCost || '$0.000000'
+                }}</span>
+              </div>
+              <div
+                class="flex items-center justify-between rounded-md bg-white px-3 py-2 dark:bg-gray-800/80"
+              >
+                <span class="text-sm text-gray-600 dark:text-gray-400">请求</span>
+                <span class="font-semibold text-blue-600 dark:text-blue-400">{{
+                  formatNumber(findHistoryValue(summary?.highestCostDay?.date, 'requests'))
+                }}</span>
+              </div>
+            </div>
+          </div>
 
- <!-- 综合统计 -->
- <div>
- <div
- >
- <h4
- >
- <Icon name="Database" /> 累计 Token
- </h4>
- <div>
- <div>
- <span>30天总计</span>
- <span>{{
- formatNumber(totalTokens)
- }}</span>
- </div>
- <div>
- <span>日均 Token</span>
- <span>{{
- formatNumber(Math.round(summary?.avgDailyTokens || 0))
- }}</span>
- </div>
- <div
- >
- <span>输入 / 输出</span>
- <span
- >{{ formatNumber(overviewInputTokens) }} /
- {{ formatNumber(overviewOutputTokens) }}</span
- >
- </div>
- </div>
- </div>
- <div
- >
- <h4
- >
- <Icon name="Gauge" /> 平均速率
- </h4>
- <div>
- <div>
- <span>RPM</span>
- <span>{{
- overview?.averages?.rpm ?? 0
- }}</span>
- </div>
- <div>
- <span>TPM</span>
- <span>{{
- overview?.averages?.tpm ?? 0
- }}</span>
- </div>
- <div
- >
- <span>日均请求 / Token</span>
- <span
- >{{
- formatNumber(
- Math.round((overview?.averages?.dailyRequests || 0) * 100) / 100
- )
- }}
- /
- {{
- formatNumber(Math.round((overview?.averages?.dailyTokens || 0) * 100) / 100)
- }}</span
- >
- </div>
- </div>
- </div>
- <div
- >
- <h4
- >
- <Icon name="Layers" /> 最近统计
- </h4>
- <div>
- <div>
- <span>今日请求</span>
- <span>{{
- formatNumber(overview?.daily?.requests || 0)
- }}</span>
- </div>
- <div>
- <span>今日 Token</span>
- <span>{{
- formatNumber(overview?.daily?.allTokens || 0)
- }}</span>
- </div>
- <div
- >
- <span>今日费用</span>
- <span>{{ formatCost(overview?.daily?.cost || 0) }}</span>
- </div>
- </div>
- </div>
- </div>
+          <!-- Highest Request Day -->
+          <div
+            class="rounded-lg border border-gray-200 bg-gradient-to-br from-white to-gray-50 p-4 shadow-sm dark:border-gray-700 dark:from-gray-800 dark:to-gray-800/50"
+          >
+            <div
+              class="mb-3 flex items-center gap-2 text-sm font-semibold text-gray-900 dark:text-white"
+            >
+              <div
+                class="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-blue-100 to-indigo-200 dark:from-blue-900/30 dark:to-indigo-800/30"
+              >
+                <Icon class="h-4 w-4 text-blue-600 dark:text-blue-400" name="BarChart3" />
+              </div>
+              最高请求日
+            </div>
+            <div class="space-y-2">
+              <div
+                class="flex items-center justify-between rounded-md bg-white px-3 py-2 dark:bg-gray-800/80"
+              >
+                <span class="text-sm text-gray-600 dark:text-gray-400">日期</span>
+                <span class="font-semibold text-gray-900 dark:text-white">{{
+                  formatDate(summary?.highestRequestDay?.date)
+                }}</span>
+              </div>
+              <div
+                class="flex items-center justify-between rounded-md bg-white px-3 py-2 dark:bg-gray-800/80"
+              >
+                <span class="text-sm text-gray-600 dark:text-gray-400">请求</span>
+                <span class="font-semibold text-blue-600 dark:text-blue-400">{{
+                  formatNumber(summary?.highestRequestDay?.requests || 0)
+                }}</span>
+              </div>
+              <div
+                class="flex items-center justify-between rounded-md bg-white px-3 py-2 dark:bg-gray-800/80"
+              >
+                <span class="text-sm text-gray-600 dark:text-gray-400">费用</span>
+                <span class="font-semibold text-green-600 dark:text-green-400">{{
+                  formatCost(findHistoryValue(summary?.highestRequestDay?.date, 'cost'))
+                }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
 
- <!-- 折线图 -->
- <div
- >
- <div>
- <h4
- >
- <Icon name="LineChart" /> 30天费用与请求趋势
- </h4>
- <span>
- 最新更新时间：{{ formatDateTime(generatedAtDisplay) }}
- </span>
- </div>
- <div>
- <canvas ref="chartCanvas" />
- </div>
- </div>
- </template>
- </div>
- </div>
- </div>
- </Teleport>
+        <!-- Comprehensive Statistics -->
+        <div class="grid grid-cols-1 gap-4 lg:grid-cols-3">
+          <!-- Token Statistics -->
+          <div
+            class="rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800"
+          >
+            <h4
+              class="mb-3 flex items-center gap-2 text-sm font-semibold text-gray-900 dark:text-white"
+            >
+              <div
+                class="flex h-7 w-7 items-center justify-center rounded-full bg-gradient-to-br from-purple-100 to-purple-200 dark:from-purple-900/30 dark:to-purple-800/30"
+              >
+                <Icon class="h-4 w-4 text-purple-600 dark:text-purple-400" name="Database" />
+              </div>
+              累计 Token
+            </h4>
+            <div class="space-y-2">
+              <div class="flex items-center justify-between py-1.5">
+                <span class="text-sm text-gray-600 dark:text-gray-400">30天总计</span>
+                <span class="font-semibold text-purple-600 dark:text-purple-400">{{
+                  formatNumber(totalTokens)
+                }}</span>
+              </div>
+              <div class="flex items-center justify-between py-1.5">
+                <span class="text-sm text-gray-600 dark:text-gray-400">日均 Token</span>
+                <span class="font-semibold text-purple-600 dark:text-purple-400">{{
+                  formatNumber(Math.round(summary?.avgDailyTokens || 0))
+                }}</span>
+              </div>
+              <div class="flex items-center justify-between py-1.5">
+                <span class="text-sm text-gray-600 dark:text-gray-400">输入 / 输出</span>
+                <span class="font-semibold text-purple-600 dark:text-purple-400"
+                  >{{ formatNumber(overviewInputTokens) }} /
+                  {{ formatNumber(overviewOutputTokens) }}</span
+                >
+              </div>
+            </div>
+          </div>
+
+          <!-- Average Rates -->
+          <div
+            class="rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800"
+          >
+            <h4
+              class="mb-3 flex items-center gap-2 text-sm font-semibold text-gray-900 dark:text-white"
+            >
+              <div
+                class="flex h-7 w-7 items-center justify-center rounded-full bg-gradient-to-br from-amber-100 to-amber-200 dark:from-amber-900/30 dark:to-amber-800/30"
+              >
+                <Icon class="h-4 w-4 text-amber-600 dark:text-amber-400" name="Gauge" />
+              </div>
+              平均速率
+            </h4>
+            <div class="space-y-2">
+              <div class="flex items-center justify-between py-1.5">
+                <span class="text-sm text-gray-600 dark:text-gray-400">RPM</span>
+                <span class="font-semibold text-amber-600 dark:text-amber-400">{{
+                  overview?.averages?.rpm ?? 0
+                }}</span>
+              </div>
+              <div class="flex items-center justify-between py-1.5">
+                <span class="text-sm text-gray-600 dark:text-gray-400">TPM</span>
+                <span class="font-semibold text-amber-600 dark:text-amber-400">{{
+                  overview?.averages?.tpm ?? 0
+                }}</span>
+              </div>
+              <div class="flex items-center justify-between py-1.5">
+                <span class="text-sm text-gray-600 dark:text-gray-400">日均请求 / Token</span>
+                <span class="font-semibold text-amber-600 dark:text-amber-400"
+                  >{{
+                    formatNumber(Math.round((overview?.averages?.dailyRequests || 0) * 100) / 100)
+                  }}
+                  /
+                  {{
+                    formatNumber(Math.round((overview?.averages?.dailyTokens || 0) * 100) / 100)
+                  }}</span
+                >
+              </div>
+            </div>
+          </div>
+
+          <!-- Recent Statistics -->
+          <div
+            class="rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800"
+          >
+            <h4
+              class="mb-3 flex items-center gap-2 text-sm font-semibold text-gray-900 dark:text-white"
+            >
+              <div
+                class="flex h-7 w-7 items-center justify-center rounded-full bg-gradient-to-br from-blue-100 to-blue-200 dark:from-blue-900/30 dark:to-blue-800/30"
+              >
+                <Icon class="h-4 w-4 text-blue-600 dark:text-blue-400" name="Layers" />
+              </div>
+              最近统计
+            </h4>
+            <div class="space-y-2">
+              <div class="flex items-center justify-between py-1.5">
+                <span class="text-sm text-gray-600 dark:text-gray-400">今日请求</span>
+                <span class="font-semibold text-blue-600 dark:text-blue-400">{{
+                  formatNumber(overview?.daily?.requests || 0)
+                }}</span>
+              </div>
+              <div class="flex items-center justify-between py-1.5">
+                <span class="text-sm text-gray-600 dark:text-gray-400">今日 Token</span>
+                <span class="font-semibold text-blue-600 dark:text-blue-400">{{
+                  formatNumber(overview?.daily?.allTokens || 0)
+                }}</span>
+              </div>
+              <div class="flex items-center justify-between py-1.5">
+                <span class="text-sm text-gray-600 dark:text-gray-400">今日费用</span>
+                <span class="font-semibold text-blue-600 dark:text-blue-400">{{
+                  formatCost(overview?.daily?.cost || 0)
+                }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Chart Section -->
+        <div
+          class="rounded-lg border border-gray-200 bg-white p-5 shadow-sm dark:border-gray-700 dark:bg-gray-800"
+        >
+          <div class="mb-4 flex items-center justify-between">
+            <h4
+              class="flex items-center gap-2 text-base font-semibold text-gray-900 dark:text-white"
+            >
+              <div
+                class="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-blue-100 to-indigo-200 dark:from-blue-900/30 dark:to-indigo-800/30"
+              >
+                <Icon class="h-4 w-4 text-blue-600 dark:text-blue-400" name="LineChart" />
+              </div>
+              30天费用与请求趋势
+            </h4>
+            <span class="text-xs text-gray-500 dark:text-gray-400">
+              最新更新时间：{{ formatDateTime(generatedAtDisplay) }}
+            </span>
+          </div>
+          <div class="relative h-80 w-full">
+            <canvas ref="chartCanvas" />
+          </div>
+        </div>
+      </template>
+    </div>
+
+    <!-- Footer -->
+    <template #footer>
+      <button
+        class="rounded-lg bg-gray-200 px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
+        type="button"
+        @click="handleClose"
+      >
+        关闭
+      </button>
+    </template>
+  </BaseModal>
 </template>
 
 <script setup>
@@ -295,15 +407,17 @@ import { computed, nextTick, onUnmounted, ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import Chart from 'chart.js/auto'
 import { useThemeStore } from '@/stores/theme'
+import BaseModal from '@/components/common/BaseModal.vue'
+import Icon from '@/components/common/Icon.vue'
 
 const props = defineProps({
- show: { type: Boolean, default: false },
- account: { type: Object, default: () => ({}) },
- history: { type: Array, default: () => [] },
- summary: { type: Object, default: () => ({}) },
- overview: { type: Object, default: () => ({}) },
- generatedAt: { type: String, default: '' },
- loading: { type: Boolean, default: false }
+  show: { type: Boolean, default: false },
+  account: { type: Object, default: () => ({}) },
+  history: { type: Array, default: () => [] },
+  summary: { type: Object, default: () => ({}) },
+  overview: { type: Object, default: () => ({}) },
+  generatedAt: { type: String, default: '' },
+  loading: { type: Boolean, default: false }
 })
 
 const emit = defineEmits(['close'])
@@ -315,29 +429,29 @@ const chartCanvas = ref(null)
 let chartInstance = null
 
 const platformLabelMap = {
- claude: 'Claude',
- 'claude-console': 'Claude Console',
- openai: 'OpenAI',
- 'openai-responses': 'OpenAI Responses',
- gemini: 'Gemini',
- droid: 'Droid'
+  claude: 'Claude',
+  'claude-console': 'Claude Console',
+  openai: 'OpenAI',
+  'openai-responses': 'OpenAI Responses',
+  gemini: 'Gemini',
+  droid: 'Droid'
 }
 
 const platformLabel = computed(() => platformLabelMap[props.account?.platform] || '未知平台')
 
 const accountTypeLabel = computed(() => {
- if (!props.account?.accountType) return '共享'
- if (props.account.accountType === 'dedicated') return '专属'
- if (props.account.accountType === 'group') return '分组'
- return '共享'
+  if (!props.account?.accountType) return '共享'
+  if (props.account.accountType === 'dedicated') return '专属'
+  if (props.account.accountType === 'group') return '分组'
+  return '共享'
 })
 
 const chartColors = computed(() => ({
- text: isDarkMode.value ? '#e5e7eb' : '#374151',
- grid: isDarkMode.value ? 'rgba(75, 85, 99, 0.25)' : 'rgba(209, 213, 219, 0.4)',
- cost: '#3b82f6',
- costFill: 'rgba(59, 130, 246, 0.15)',
- requests: '#f97316'
+  text: isDarkMode.value ? '#e5e7eb' : '#374151',
+  grid: isDarkMode.value ? 'rgba(75, 85, 99, 0.25)' : 'rgba(209, 213, 219, 0.4)',
+  cost: '#3b82f6',
+  costFill: 'rgba(59, 130, 246, 0.15)',
+  requests: '#f97316'
 }))
 
 const totalTokens = computed(() => props.summary?.totalTokens || 0)
@@ -345,247 +459,246 @@ const overviewInputTokens = computed(() => props.overview?.total?.inputTokens ||
 const overviewOutputTokens = computed(() => props.overview?.total?.outputTokens || 0)
 
 const formatNumber = (value) => {
- const num = Number(value || 0)
- if (num >= 1_000_000) return `${(num / 1_000_000).toFixed(2)}M`
- if (num >= 1_000) return `${(num / 1_000).toFixed(2)}K`
- return num.toLocaleString()
+  const num = Number(value || 0)
+  if (num >= 1_000_000) return `${(num / 1_000_000).toFixed(2)}M`
+  if (num >= 1_000) return `${(num / 1_000).toFixed(2)}K`
+  return num.toLocaleString()
 }
 
 const formatCost = (value) => {
- const num = Number(value || 0)
- if (Number.isNaN(num)) return '$0.000000'
- if (num >= 1) return `$${num.toFixed(2)}`
- if (num >= 0.01) return `$${num.toFixed(3)}`
- return `$${num.toFixed(6)}`
+  const num = Number(value || 0)
+  if (Number.isNaN(num)) return '$0.000000'
+  if (num >= 1) return `$${num.toFixed(2)}`
+  if (num >= 0.01) return `$${num.toFixed(3)}`
+  return `$${num.toFixed(6)}`
 }
 
 const roundToTwo = (value) => Math.round((Number(value) || 0) * 100) / 100
 
 const formatDate = (value) => {
- if (!value) return '-'
- const date = new Date(value)
- if (Number.isNaN(date.getTime())) {
- const parts = value.split('-')
- if (parts.length === 3) {
- return `${parts[1]}-${parts[2]}`
- }
- return value
- }
- const month = String(date.getMonth() + 1).padStart(2, '0')
- const day = String(date.getDate()).padStart(2, '0')
- return `${month}-${day}`
+  if (!value) return '-'
+  const date = new Date(value)
+  if (Number.isNaN(date.getTime())) {
+    const parts = value.split('-')
+    if (parts.length === 3) {
+      return `${parts[1]}-${parts[2]}`
+    }
+    return value
+  }
+  const month = String(date.getMonth() + 1).padStart(2, '0')
+  const day = String(date.getDate()).padStart(2, '0')
+  return `${month}-${day}`
 }
 
 const formatDateTime = (value) => {
- if (!value) return '暂无'
- const date = new Date(value)
- if (Number.isNaN(date.getTime())) return value
- return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')} ${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`
+  if (!value) return '暂无'
+  const date = new Date(value)
+  if (Number.isNaN(date.getTime())) return value
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')} ${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`
 }
 
 const findHistoryValue = (date, field) => {
- if (!date) return 0
- const target = props.history.find((item) => item.date === date)
- return target ? target[field] || 0 : 0
+  if (!date) return 0
+  const target = props.history.find((item) => item.date === date)
+  return target ? target[field] || 0 : 0
 }
 
 const generatedAtDisplay = computed(
- () => props.generatedAt || props.summary?.generatedAt || props.summary?.generated_at || ''
+  () => props.generatedAt || props.summary?.generatedAt || props.summary?.generated_at || ''
 )
 
 const primaryMetrics = computed(() => [
- {
- key: 'totalCost',
- label: '30天总费用',
- value: props.summary?.totalCostFormatted || '$0.000000',
- subtitle: '累计成本',
- icon: 'fa-file-invoice-dollar',
- iconClass: ''
- },
- {
- key: 'totalRequests',
- label: '30天总请求',
- value: formatNumber(props.summary?.totalRequests || 0),
- subtitle: '调用次数',
- icon: 'fa-paper-plane',
- iconClass: ''
- },
- {
- key: 'avgCost',
- label: '日均费用',
- value: props.summary?.avgDailyCostFormatted || formatCost(props.summary?.avgDailyCost || 0),
- subtitle:
- props.summary?.actualDaysUsed && props.summary?.actualDaysUsed < props.summary?.days
- ? `基于 ${props.summary.actualDaysUsed} 天实际使用`
- : '平均每日成本',
- icon: 'fa-wave-square',
- iconClass: ''
- },
- {
- key: 'avgRequests',
- label: '日均请求',
- value: formatNumber(roundToTwo(props.summary?.avgDailyRequests || 0)),
- subtitle: '平均每日调用',
- icon: 'fa-chart-line',
- iconClass: ''
- }
+  {
+    key: 'totalCost',
+    label: '30天总费用',
+    value: props.summary?.totalCostFormatted || '$0.000000',
+    subtitle: '累计成本',
+    icon: 'fa-file-invoice-dollar',
+    iconClass: ''
+  },
+  {
+    key: 'totalRequests',
+    label: '30天总请求',
+    value: formatNumber(props.summary?.totalRequests || 0),
+    subtitle: '调用次数',
+    icon: 'fa-paper-plane',
+    iconClass: ''
+  },
+  {
+    key: 'avgCost',
+    label: '日均费用',
+    value: props.summary?.avgDailyCostFormatted || formatCost(props.summary?.avgDailyCost || 0),
+    subtitle:
+      props.summary?.actualDaysUsed && props.summary?.actualDaysUsed < props.summary?.days
+        ? `基于 ${props.summary.actualDaysUsed} 天实际使用`
+        : '平均每日成本',
+    icon: 'fa-wave-square',
+    iconClass: ''
+  },
+  {
+    key: 'avgRequests',
+    label: '日均请求',
+    value: formatNumber(roundToTwo(props.summary?.avgDailyRequests || 0)),
+    subtitle: '平均每日调用',
+    icon: 'fa-chart-line',
+    iconClass: ''
+  }
 ])
 
 const renderChart = async () => {
- await nextTick()
+  await nextTick()
 
- if (!props.show || !chartCanvas.value) {
- return
- }
+  if (!props.show || !chartCanvas.value) {
+    return
+  }
 
- if (chartInstance) {
- chartInstance.destroy()
- }
+  if (chartInstance) {
+    chartInstance.destroy()
+  }
 
- if (!props.history || props.history.length === 0) {
- chartInstance = null
- return
- }
+  if (!props.history || props.history.length === 0) {
+    chartInstance = null
+    return
+  }
 
- const labels = props.history.map((item) => item.label)
- const costs = props.history.map((item) => item.cost || 0)
- const requests = props.history.map((item) => item.requests || 0)
+  const labels = props.history.map((item) => item.label)
+  const costs = props.history.map((item) => item.cost || 0)
+  const requests = props.history.map((item) => item.requests || 0)
 
- chartInstance = new Chart(chartCanvas.value, {
- type: 'line',
- data: {
- labels,
- datasets: [
- {
- label: '费用 (USD)',
- data: costs,
- borderColor: chartColors.value.cost,
- backgroundColor: chartColors.value.costFill,
- tension: 0.35,
- fill: true,
- yAxisID: 'y'
- },
- {
- label: '请求次数',
- data: requests,
- borderColor: chartColors.value.requests,
- backgroundColor: 'transparent',
- tension: 0.35,
- yAxisID: 'y1'
- }
- ]
- },
- options: {
- responsive: true,
- maintainAspectRatio: false,
- interaction: {
- mode: 'index',
- intersect: false
- },
- plugins: {
- legend: {
- labels: {
- color: chartColors.value.text
- }
- },
- tooltip: {
- callbacks: {
- label(context) {
- if (context.dataset.label === '费用 (USD)') {
- return `${context.dataset.label}: ${formatCost(context.parsed.y)}`
- }
- return `${context.dataset.label}: ${formatNumber(context.parsed.y)} 次`
- }
- }
- }
- },
- scales: {
- x: {
- ticks: {
- color: chartColors.value.text
- },
- grid: {
- display: false,
- drawBorder: false
- }
- },
- y: {
- position: 'left',
- ticks: {
- color: chartColors.value.text,
- callback: (value) => formatCost(value)
- },
- grid: {
- display: false,
- drawBorder: false
- }
- },
- y1: {
- position: 'right',
- ticks: {
- color: chartColors.value.text,
- callback: (value) => formatNumber(value)
- },
- grid: {
- display: false,
- drawBorder: false
- }
- }
- }
- }
- })
+  chartInstance = new Chart(chartCanvas.value, {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [
+        {
+          label: '费用 (USD)',
+          data: costs,
+          borderColor: chartColors.value.cost,
+          backgroundColor: chartColors.value.costFill,
+          tension: 0.35,
+          fill: true,
+          yAxisID: 'y'
+        },
+        {
+          label: '请求次数',
+          data: requests,
+          borderColor: chartColors.value.requests,
+          backgroundColor: 'transparent',
+          tension: 0.35,
+          yAxisID: 'y1'
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: {
+        mode: 'index',
+        intersect: false
+      },
+      plugins: {
+        legend: {
+          labels: {
+            color: chartColors.value.text
+          }
+        },
+        tooltip: {
+          callbacks: {
+            label(context) {
+              if (context.dataset.label === '费用 (USD)') {
+                return `${context.dataset.label}: ${formatCost(context.parsed.y)}`
+              }
+              return `${context.dataset.label}: ${formatNumber(context.parsed.y)} 次`
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          ticks: {
+            color: chartColors.value.text
+          },
+          grid: {
+            display: false,
+            drawBorder: false
+          }
+        },
+        y: {
+          position: 'left',
+          ticks: {
+            color: chartColors.value.text,
+            callback: (value) => formatCost(value)
+          },
+          grid: {
+            display: false,
+            drawBorder: false
+          }
+        },
+        y1: {
+          position: 'right',
+          ticks: {
+            color: chartColors.value.text,
+            callback: (value) => formatNumber(value)
+          },
+          grid: {
+            display: false,
+            drawBorder: false
+          }
+        }
+      }
+    }
+  })
 }
 
 const cleanupChart = () => {
- if (chartInstance) {
- chartInstance.destroy()
- chartInstance = null
- }
+  if (chartInstance) {
+    chartInstance.destroy()
+    chartInstance = null
+  }
 }
 
 const handleClose = () => {
- cleanupChart()
- emit('close')
+  cleanupChart()
+  emit('close')
 }
 
 watch(
- () => props.show,
- (visible) => {
- if (visible && !props.loading) {
- renderChart()
- } else if (!visible) {
- cleanupChart()
- }
- }
+  () => props.show,
+  (visible) => {
+    if (visible && !props.loading) {
+      renderChart()
+    } else if (!visible) {
+      cleanupChart()
+    }
+  }
 )
 
 watch(
- () => props.loading,
- (loading) => {
- if (!loading && props.show) {
- renderChart()
- }
- }
+  () => props.loading,
+  (loading) => {
+    if (!loading && props.show) {
+      renderChart()
+    }
+  }
 )
 
 watch(
- () => props.history,
- () => {
- if (props.show && !props.loading) {
- renderChart()
- }
- },
- { deep: true }
+  () => props.history,
+  () => {
+    if (props.show && !props.loading) {
+      renderChart()
+    }
+  },
+  { deep: true }
 )
 
 watch(isDarkMode, () => {
- if (props.show && !props.loading) {
- renderChart()
- }
+  if (props.show && !props.loading) {
+    renderChart()
+  }
 })
 
 onUnmounted(() => {
- cleanupChart()
+  cleanupChart()
 })
 </script>
-
