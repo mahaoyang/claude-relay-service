@@ -72,8 +72,8 @@
               <div class="text-xs font-medium text-gray-500 dark:text-gray-400">时间范围</div>
               <CustomDropdown
                 v-model="globalDateFilter.preset"
-                icon="fa-calendar-alt"
-                icon-color=""
+                icon="Calendar"
+                icon-color="text-primary-500"
                 :options="timeRangeDropdownOptions"
                 placeholder="选择时间范围"
                 @change="handleTimeRangeChange"
@@ -105,8 +105,8 @@
               <div class="flex items-center gap-2">
                 <CustomDropdown
                   v-model="selectedTagFilter"
-                  icon="fa-tags"
-                  icon-color=""
+                  icon="Tags"
+                  icon-color="text-purple-500"
                   :options="tagOptions"
                   placeholder="所有标签"
                   @change="currentPage = 1"
@@ -125,8 +125,8 @@
               <div>
                 <CustomDropdown
                   v-model="searchMode"
-                  icon="fa-filter"
-                  icon-color=""
+                  icon="Filter"
+                  icon-color="text-cyan-500"
                   :options="searchModeOptions"
                   placeholder="选择搜索类型"
                   @change="currentPage = 1"
@@ -168,9 +168,7 @@
               :disabled="apiKeysLoading"
               @click="loadApiKeys()"
             >
-              <div class="h-4 w-4" :class="{ 'animate-spin': apiKeysLoading }">
-                <i class="fas fa-sync-alt" />
-              </div>
+              <Icon name="RefreshCw" class="h-4 w-4" :class="{ 'animate-spin': apiKeysLoading }" />
               <span>刷新</span>
             </button>
 
@@ -268,10 +266,10 @@
                   >
                     <div class="flex items-center gap-1">
                       名称
-                      <i
-                        v-if="apiKeysSortBy === 'name'"
-                        class="fas"
-                        :class="apiKeysSortOrder === 'asc' ? 'fa-sort-up' : 'fa-sort-down'"
+                      <Icon
+                        v-if="apiKeysSortBy === \'name\'"
+                        :name="apiKeysSortOrder === \'asc\' ? \'ChevronUp\' : \'ChevronDown\'"
+                        class="h-3 w-3"
                       />
                       <Icon name="ArrowUpDown" v-else class="h-3 w-3" />
                     </div>
@@ -292,10 +290,10 @@
                   >
                     <div class="flex items-center gap-1">
                       状态
-                      <i
-                        v-if="apiKeysSortBy === 'status'"
-                        class="fas"
-                        :class="apiKeysSortOrder === 'asc' ? 'fa-sort-up' : 'fa-sort-down'"
+                      <Icon
+                        v-if="apiKeysSortBy === \'status\'"
+                        :name="apiKeysSortOrder === \'asc\' ? \'ChevronUp\' : \'ChevronDown\'"
+                        class="h-3 w-3"
                       />
                       <Icon name="ArrowUpDown" v-else class="h-3 w-3" />
                     </div>
@@ -306,10 +304,10 @@
                   >
                     <div class="flex items-center gap-1">
                       费用
-                      <i
-                        v-if="apiKeysSortBy === 'periodCost'"
-                        class="fas"
-                        :class="apiKeysSortOrder === 'asc' ? 'fa-sort-up' : 'fa-sort-down'"
+                      <Icon
+                        v-if="apiKeysSortBy === \'periodCost\'"
+                        :name="apiKeysSortOrder === \'asc\' ? \'ChevronUp\' : \'ChevronDown\'"
+                        class="h-3 w-3"
                       />
                       <Icon name="ArrowUpDown" v-else class="h-3 w-3" />
                     </div>
@@ -325,10 +323,10 @@
                   >
                     <div class="flex items-center gap-1">
                       Token
-                      <i
-                        v-if="apiKeysSortBy === 'periodTokens'"
-                        class="fas"
-                        :class="apiKeysSortOrder === 'asc' ? 'fa-sort-up' : 'fa-sort-down'"
+                      <Icon
+                        v-if="apiKeysSortBy === \'periodTokens\'"
+                        :name="apiKeysSortOrder === \'asc\' ? \'ChevronUp\' : \'ChevronDown\'"
+                        class="h-3 w-3"
                       />
                       <Icon name="ArrowUpDown" v-else class="h-3 w-3" />
                     </div>
@@ -339,10 +337,10 @@
                   >
                     <div class="flex items-center gap-1">
                       请求数
-                      <i
-                        v-if="apiKeysSortBy === 'periodRequests'"
-                        class="fas"
-                        :class="apiKeysSortOrder === 'asc' ? 'fa-sort-up' : 'fa-sort-down'"
+                      <Icon
+                        v-if="apiKeysSortBy === \'periodRequests\'"
+                        :name="apiKeysSortOrder === \'asc\' ? \'ChevronUp\' : \'ChevronDown\'"
+                        class="h-3 w-3"
                       />
                       <Icon name="ArrowUpDown" v-else class="h-3 w-3" />
                     </div>
@@ -353,10 +351,10 @@
                   >
                     <div class="flex items-center gap-1">
                       最后使用
-                      <i
-                        v-if="apiKeysSortBy === 'lastUsedAt'"
-                        class="fas"
-                        :class="apiKeysSortOrder === 'asc' ? 'fa-sort-up' : 'fa-sort-down'"
+                      <Icon
+                        v-if="apiKeysSortBy === \'lastUsedAt\'"
+                        :name="apiKeysSortOrder === \'asc\' ? \'ChevronUp\' : \'ChevronDown\'"
+                        class="h-3 w-3"
                       />
                       <Icon name="ArrowUpDown" v-else class="h-3 w-3" />
                     </div>
@@ -367,10 +365,10 @@
                   >
                     <div class="flex items-center gap-1">
                       创建时间
-                      <i
-                        v-if="apiKeysSortBy === 'createdAt'"
-                        class="fas"
-                        :class="apiKeysSortOrder === 'asc' ? 'fa-sort-up' : 'fa-sort-down'"
+                      <Icon
+                        v-if="apiKeysSortBy === \'createdAt\'"
+                        :name="apiKeysSortOrder === \'asc\' ? \'ChevronUp\' : \'ChevronDown\'"
+                        class="h-3 w-3"
                       />
                       <Icon name="ArrowUpDown" v-else class="h-3 w-3" />
                     </div>
@@ -381,10 +379,10 @@
                   >
                     <div class="flex items-center gap-1">
                       过期时间
-                      <i
-                        v-if="apiKeysSortBy === 'expiresAt'"
-                        class="fas"
-                        :class="apiKeysSortOrder === 'asc' ? 'fa-sort-up' : 'fa-sort-down'"
+                      <Icon
+                        v-if="apiKeysSortBy === \'expiresAt\'"
+                        :name="apiKeysSortOrder === \'asc\' ? \'ChevronUp\' : \'ChevronDown\'"
+                        class="h-3 w-3"
                       />
                       <Icon name="ArrowUpDown" v-else class="h-3 w-3" />
                     </div>
@@ -464,7 +462,7 @@
                           <span
                             class="flex items-center gap-1 font-medium text-green-600 dark:text-green-400"
                           >
-                            <i class="fas fa-robot text-xs" />
+                            <Icon name="Bot" class="h-3 w-3" />
                             OpenAI
                           </span>
                           <span class="text-gray-600 dark:text-gray-400">
@@ -738,7 +736,7 @@
                           title="模型使用分布"
                           @click="toggleApiKeyModelStats(key.id)"
                         >
-                          <i class="fas fa-chart-pie text-xs" />
+                          <Icon name="PieChart" class="h-3.5 w-3.5" />
                           <span>模型</span>
                         </button>
                         <button
@@ -771,10 +769,7 @@
                           :title="key.isActive ? '禁用' : '激活'"
                           @click="toggleApiKeyStatus(key)"
                         >
-                          <i
-                            class="fas text-xs"
-                            :class="key.isActive ? 'fa-ban' : 'fa-check-circle'"
-                          />
+                          <Icon :name="key.isActive ? 'Ban' : 'CheckCircle'" class="h-3.5 w-3.5" />
                           <span>{{ key.isActive ? '禁用' : '激活' }}</span>
                         </button>
                         <button
@@ -1620,17 +1615,22 @@
                       </div>
                     </td>
                     <td>
-                      <div>
+                      <div class="flex flex-wrap gap-1">
                         <button
                           v-if="key.canRestore"
+                          class="inline-flex items-center gap-1 rounded px-2 py-1 text-xs font-medium text-green-600 transition-colors hover:bg-green-50 dark:text-green-400 dark:hover:bg-green-900/30"
                           title="恢复 API Key"
                           @click="restoreApiKey(key.id)"
                         >
-                          <Icon name="RotateCcw" />
+                          <Icon name="RotateCcw" class="h-3.5 w-3.5" />
                           恢复
                         </button>
-                        <button title="彻底删除 API Key" @click="permanentDeleteApiKey(key.id)">
-                          <Icon name="X" />
+                        <button
+                          class="inline-flex items-center gap-1 rounded px-2 py-1 text-xs font-medium text-red-600 transition-colors hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-900/30"
+                          title="彻底删除 API Key"
+                          @click="permanentDeleteApiKey(key.id)"
+                        >
+                          <Icon name="X" class="h-3.5 w-3.5" />
                           彻底删除
                         </button>
                       </div>
@@ -1724,6 +1724,7 @@ import UsageDetailModal from '@/components/apikeys/UsageDetailModal.vue'
 import LimitProgressBar from '@/components/apikeys/LimitProgressBar.vue'
 import CustomDropdown from '@/components/common/CustomDropdown.vue'
 import PageContainer from '@/components/layout/PageContainer.vue'
+import Icon from '@/components/common/Icon.vue'
 import { Card } from '@/ui'
 
 // 响应式数据
@@ -1769,11 +1770,11 @@ const toggleSelectionMode = () => {
 
 // 时间范围下拉选项
 const timeRangeDropdownOptions = computed(() => [
-  { value: 'today', label: '今日', icon: 'fa-calendar-day' },
-  { value: '7days', label: '最近7天', icon: 'fa-calendar-week' },
-  { value: '30days', label: '最近30天', icon: 'fa-calendar-alt' },
-  { value: 'all', label: '全部时间', icon: 'fa-infinity' },
-  { value: 'custom', label: '自定义范围', icon: 'fa-calendar-check' }
+  { value: 'today', label: '今日', icon: 'CalendarDays' },
+  { value: '7days', label: '最近7天', icon: 'CalendarRange' },
+  { value: '30days', label: '最近30天', icon: 'Calendar' },
+  { value: 'all', label: '全部时间', icon: 'Infinity' },
+  { value: 'custom', label: '自定义范围', icon: 'CalendarCheck' }
 ])
 
 // Tab management
@@ -1811,14 +1812,14 @@ const availableTags = ref([])
 const searchKeyword = ref('')
 const searchMode = ref('apiKey')
 const searchModeOptions = computed(() => [
-  { value: 'apiKey', label: '按Key名称', icon: 'fa-key' },
-  { value: 'bindingAccount', label: '按所属账号', icon: 'fa-id-badge' }
+  { value: 'apiKey', label: '按Key名称', icon: 'Key' },
+  { value: 'bindingAccount', label: '按所属账号', icon: 'IdCard' }
 ])
 
 const tagOptions = computed(() => {
-  const options = [{ value: '', label: '所有标签', icon: 'fa-asterisk' }]
+  const options = [{ value: '', label: '所有标签', icon: 'Asterisk' }]
   availableTags.value.forEach((tag) => {
-    options.push({ value: tag, label: tag, icon: 'fa-tag' })
+    options.push({ value: tag, label: tag, icon: 'Tag' })
   })
   return options
 })
@@ -3164,9 +3165,11 @@ const deleteApiKey = async (keyId) => {
 
 // 恢复API Key
 const restoreApiKey = async (keyId) => {
+  console.log('[DEBUG] restoreApiKey called with keyId:', keyId)
   let confirmed = false
 
   if (window.showConfirm) {
+    console.log('[DEBUG] Using window.showConfirm')
     confirmed = await window.showConfirm(
       '恢复 API Key',
       '确定要恢复这个 API Key 吗？恢复后可以重新使用。',
@@ -3174,14 +3177,18 @@ const restoreApiKey = async (keyId) => {
       '取消'
     )
   } else {
+    console.log('[DEBUG] Using fallback confirm()')
     // 降级方案
     confirmed = confirm('确定要恢复这个 API Key 吗？恢复后可以重新使用。')
   }
 
+  console.log('[DEBUG] User confirmed:', confirmed)
   if (!confirmed) return
 
   try {
+    console.log('[DEBUG] Calling API:', `/admin/api-keys/${keyId}/restore`)
     const data = await apiClient.post(`/admin/api-keys/${keyId}/restore`)
+    console.log('[DEBUG] API response:', data)
     if (data.success) {
       showToast('API Key 已成功恢复', 'success')
       // 刷新已删除列表
@@ -3192,6 +3199,7 @@ const restoreApiKey = async (keyId) => {
       showToast(data.error || '恢复失败', 'error')
     }
   } catch (error) {
+    console.error('[DEBUG] API error:', error)
     showToast(error.response?.data?.error || '恢复失败', 'error')
   }
 }

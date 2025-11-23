@@ -1,278 +1,440 @@
 <template>
-  <div>
-    <div>
-      <!-- 页面标题 -->
-      <div>
-        <h3>系统设置</h3>
-        <p>网站定制和通知配置</p>
+  <PageContainer max-width="7xl">
+    <template #header>
+      <div class="flex items-center justify-between">
+        <div>
+          <h1 class="text-lg font-bold tracking-tight text-gray-900 dark:text-white">系统设置</h1>
+          <p class="mt-1 text-[10px] text-gray-600 dark:text-gray-400">网站定制和通知配置</p>
+        </div>
       </div>
+    </template>
 
-      <!-- 设置分类导航 -->
-      <div>
-        <nav>
-          <button @click="activeSection = 'branding'">
-            <Icon name="Palette" />
-            品牌设置
-          </button>
-          <button @click="activeSection = 'webhook'">
-            <Icon name="Bell" />
-            通知设置
-          </button>
-        </nav>
+    <!-- 设置分类导航 -->
+    <Card class="mb-6">
+      <nav class="flex gap-2 p-2">
+        <button
+          @click="activeSection = 'branding'"
+          class="flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors"
+          :class="
+            activeSection === 'branding'
+              ? 'bg-primary-50 text-primary-600 dark:bg-primary-900/30 dark:text-primary-400'
+              : 'text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700'
+          "
+        >
+          <Icon name="Palette" class="h-4 w-4" />
+          品牌设置
+        </button>
+        <button
+          @click="activeSection = 'webhook'"
+          class="flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors"
+          :class="
+            activeSection === 'webhook'
+              ? 'bg-primary-50 text-primary-600 dark:bg-primary-900/30 dark:text-primary-400'
+              : 'text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700'
+          "
+        >
+          <Icon name="Bell" class="h-4 w-4" />
+          通知设置
+        </button>
+      </nav>
+    </Card>
+
+    <!-- 加载状态 -->
+    <Card v-if="loading" class="mb-8">
+      <div class="flex items-center justify-center p-12">
+        <div
+          class="h-8 w-8 animate-spin rounded-full border-4 border-gray-200 border-t-primary-600 dark:border-gray-700 dark:border-t-primary-400"
+        ></div>
+        <p class="ml-3 text-gray-600 dark:text-gray-400">正在加载设置...</p>
       </div>
+    </Card>
 
-      <!-- 加载状态 -->
-      <div v-if="loading">
-        <div></div>
-        <p>正在加载设置...</p>
-      </div>
-
-      <!-- 内容区域 -->
-      <div v-else>
-        <!-- 品牌设置部分 -->
-        <div v-show="activeSection === 'branding'">
-          <!-- 桌面端表格视图 -->
-          <div>
-            <table>
-              <tbody>
-                <!-- 网站名称 -->
-                <tr>
-                  <td>
-                    <div>
-                      <div>
-                        <Icon name="Type" />
-                      </div>
-                      <div>
-                        <div>网站名称</div>
-                        <div>品牌标识</div>
-                      </div>
+    <!-- 内容区域 -->
+    <div v-else>
+      <!-- 品牌设置部分 -->
+      <Card v-show="activeSection === 'branding'" class="mb-8">
+        <!-- 桌面端表格视图 -->
+        <div class="hidden overflow-hidden md:block">
+          <table class="w-full">
+            <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+              <!-- 网站名称 -->
+              <tr>
+                <td class="w-1/3 p-6">
+                  <div class="flex items-start gap-3">
+                    <div
+                      class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-primary-50 dark:bg-primary-900/20"
+                    >
+                      <Icon name="Type" class="h-5 w-5 text-primary-600 dark:text-primary-400" />
                     </div>
-                  </td>
-                  <td>
-                    <input
-                      v-model="oemSettings.siteName"
-                      maxlength="100"
-                      placeholder="Claude Relay Service"
-                      type="text"
-                    />
-                    <p>将显示在浏览器标题和页面头部</p>
-                  </td>
-                </tr>
-
-                <!-- 网站图标 -->
-                <tr>
-                  <td>
                     <div>
-                      <div>
-                        <Icon name="Image" />
-                      </div>
-                      <div>
-                        <div>网站图标</div>
-                        <div>Favicon</div>
-                      </div>
+                      <div class="font-medium text-gray-900 dark:text-white">网站名称</div>
+                      <div class="mt-1 text-sm text-gray-500 dark:text-gray-400">品牌标识</div>
                     </div>
-                  </td>
-                  <td>
+                  </div>
+                </td>
+                <td class="p-6">
+                  <input
+                    v-model="oemSettings.siteName"
+                    maxlength="100"
+                    placeholder="Claude Relay Service"
+                    type="text"
+                    class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-gray-900 transition-colors focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500/20 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:focus:border-primary-400"
+                  />
+                  <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">
+                    将显示在浏览器标题和页面头部
+                  </p>
+                </td>
+              </tr>
+
+              <!-- 网站图标 -->
+              <tr>
+                <td class="w-1/3 p-6">
+                  <div class="flex items-start gap-3">
+                    <div
+                      class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-primary-50 dark:bg-primary-900/20"
+                    >
+                      <Icon name="Image" class="h-5 w-5 text-primary-600 dark:text-primary-400" />
+                    </div>
                     <div>
-                      <!-- 图标预览 -->
-                      <div v-if="oemSettings.siteIconData || oemSettings.siteIcon">
-                        <img
-                          alt="图标预览"
-                          :src="oemSettings.siteIconData || oemSettings.siteIcon"
-                          @error="handleIconError"
-                        />
-                        <span>当前图标</span>
-                        <button @click="removeIcon"><Icon name="Trash" />删除</button>
-                      </div>
-
-                      <!-- 文件上传 -->
-                      <div>
-                        <input
-                          ref="iconFileInput"
-                          accept=".ico,.png,.jpg,.jpeg,.svg"
-                          type="file"
-                          @change="handleIconUpload"
-                        />
-                        <button @click="$refs.iconFileInput.click()">
-                          <Icon name="Upload" />
-                          上传图标
-                        </button>
-                        <span>支持 .ico, .png, .jpg, .svg 格式，最大 350KB</span>
-                      </div>
+                      <div class="font-medium text-gray-900 dark:text-white">网站图标</div>
+                      <div class="mt-1 text-sm text-gray-500 dark:text-gray-400">Favicon</div>
                     </div>
-                  </td>
-                </tr>
+                  </div>
+                </td>
+                <td class="p-6">
+                  <div class="space-y-4">
+                    <!-- 图标预览 -->
+                    <div
+                      v-if="oemSettings.siteIconData || oemSettings.siteIcon"
+                      class="flex items-center gap-3 rounded-lg border border-gray-200 bg-gray-50 p-3 dark:border-gray-700 dark:bg-gray-800"
+                    >
+                      <img
+                        alt="图标预览"
+                        :src="oemSettings.siteIconData || oemSettings.siteIcon"
+                        @error="handleIconError"
+                        class="h-8 w-8 rounded"
+                      />
+                      <span class="flex-1 text-sm text-gray-600 dark:text-gray-400">当前图标</span>
+                      <button
+                        @click="removeIcon"
+                        class="flex items-center gap-2 rounded-lg bg-red-50 px-3 py-1.5 text-sm font-medium text-red-600 transition-colors hover:bg-red-100 dark:bg-red-900/20 dark:text-red-400 dark:hover:bg-red-900/30"
+                      >
+                        <Icon name="Trash" class="h-4 w-4" />
+                        删除
+                      </button>
+                    </div>
 
-                <!-- 管理后台按钮显示控制 -->
-                <tr>
-                  <td>
+                    <!-- 文件上传 -->
+                    <div class="space-y-2">
+                      <input
+                        ref="iconFileInput"
+                        accept=".ico,.png,.jpg,.jpeg,.svg"
+                        type="file"
+                        @change="handleIconUpload"
+                        class="hidden"
+                      />
+                      <button
+                        @click="$refs.iconFileInput.click()"
+                        class="flex items-center gap-2 rounded-lg bg-primary-50 px-4 py-2 text-sm font-medium text-primary-600 transition-colors hover:bg-primary-100 dark:bg-primary-900/20 dark:text-primary-400 dark:hover:bg-primary-900/30"
+                      >
+                        <Icon name="Upload" class="h-4 w-4" />
+                        上传图标
+                      </button>
+                      <p class="text-sm text-gray-500 dark:text-gray-400">
+                        支持 .ico, .png, .jpg, .svg 格式，最大 350KB
+                      </p>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- 管理后台按钮显示控制 -->
+              <tr>
+                <td class="w-1/3 p-6">
+                  <div class="flex items-start gap-3">
+                    <div
+                      class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-primary-50 dark:bg-primary-900/20"
+                    >
+                      <Icon name="EyeOff" class="h-5 w-5 text-primary-600 dark:text-primary-400" />
+                    </div>
                     <div>
-                      <div>
-                        <Icon name="EyeOff" />
-                      </div>
-                      <div>
-                        <div>管理入口</div>
-                        <div>登录按钮显示</div>
-                      </div>
+                      <div class="font-medium text-gray-900 dark:text-white">管理入口</div>
+                      <div class="mt-1 text-sm text-gray-500 dark:text-gray-400">登录按钮显示</div>
                     </div>
-                  </td>
-                  <td>
-                    <div>
-                      <label>
-                        <input v-model="hideAdminButton" type="checkbox" />
-                        <div></div>
-                        <span>{{ hideAdminButton ? '隐藏登录按钮' : '显示登录按钮' }}</span>
-                      </label>
-                    </div>
-                    <p>隐藏后，用户需要直接访问 /admin/login 页面登录</p>
-                  </td>
-                </tr>
-
-                <!-- 操作按钮 -->
-                <tr>
-                  <td colspan="2">
-                    <div>
-                      <div>
-                        <button :disabled="saving" @click="saveOemSettings">
-                          <div v-if="saving"></div>
-                          <Icon name="Save" v-else />
-                          {{ saving ? '保存中...' : '保存设置' }}
-                        </button>
-
-                        <button :disabled="saving" @click="resetOemSettings">
-                          <Icon name="RotateCcw" />
-                          重置为默认
-                        </button>
+                  </div>
+                </td>
+                <td class="p-6">
+                  <div class="space-y-3">
+                    <label class="flex cursor-pointer items-center gap-3">
+                      <input v-model="hideAdminButton" type="checkbox" class="peer sr-only" />
+                      <div
+                        class="relative h-6 w-11 rounded-full bg-gray-200 transition-colors peer-checked:bg-primary-600 dark:bg-gray-700"
+                      >
+                        <div
+                          class="absolute left-1 top-1 h-4 w-4 rounded-full bg-white transition-transform peer-checked:translate-x-5"
+                        ></div>
                       </div>
+                      <span class="font-medium text-gray-700 dark:text-gray-300">
+                        {{ hideAdminButton ? '隐藏登录按钮' : '显示登录按钮' }}
+                      </span>
+                    </label>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">
+                      隐藏后，用户需要直接访问 /admin/login 页面登录
+                    </p>
+                  </div>
+                </td>
+              </tr>
 
-                      <div v-if="oemSettings.updatedAt">
-                        <Icon name="Clock" />
-                        最后更新：{{ formatDateTime(oemSettings.updatedAt) }}
-                      </div>
+              <!-- 操作按钮 -->
+              <tr>
+                <td colspan="2" class="bg-gray-50 p-6 dark:bg-gray-800/50">
+                  <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                    <div class="flex flex-wrap gap-3">
+                      <button
+                        :disabled="saving"
+                        @click="saveOemSettings"
+                        class="flex items-center gap-2 rounded-lg bg-primary-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-primary-700 disabled:bg-gray-300 dark:disabled:bg-gray-700"
+                      >
+                        <div
+                          v-if="saving"
+                          class="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"
+                        ></div>
+                        <Icon name="Save" v-else class="h-4 w-4" />
+                        {{ saving ? '保存中...' : '保存设置' }}
+                      </button>
+
+                      <button
+                        :disabled="saving"
+                        @click="resetOemSettings"
+                        class="flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 disabled:bg-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 dark:disabled:bg-gray-800"
+                      >
+                        <Icon name="RotateCcw" class="h-4 w-4" />
+                        重置为默认
+                      </button>
                     </div>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+
+                    <div
+                      v-if="oemSettings.updatedAt"
+                      class="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400"
+                    >
+                      <Icon name="Clock" class="h-4 w-4" />
+                      最后更新：{{ formatDateTime(oemSettings.updatedAt) }}
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- 移动端卡片视图 -->
+        <div class="space-y-4 md:hidden">
+          <!-- 站点名称卡片 -->
+          <div
+            class="rounded-lg border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-800"
+          >
+            <div class="mb-3 flex items-start gap-3">
+              <div
+                class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-primary-50 dark:bg-primary-900/20"
+              >
+                <Icon name="Tag" class="h-5 w-5 text-primary-600 dark:text-primary-400" />
+              </div>
+              <div class="flex-1">
+                <h3 class="font-medium text-gray-900 dark:text-white">站点名称</h3>
+                <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">自定义您的站点品牌名称</p>
+              </div>
+            </div>
+            <input
+              v-model="oemSettings.siteName"
+              maxlength="100"
+              placeholder="Claude Relay Service"
+              type="text"
+              class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-gray-900 transition-colors focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500/20 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:focus:border-primary-400"
+            />
           </div>
 
-          <!-- 移动端卡片视图 -->
-          <div>
-            <!-- 站点名称卡片 -->
-            <div>
-              <div>
-                <div>
-                  <Icon name="Tag" />
-                </div>
-                <div>
-                  <h3>站点名称</h3>
-                  <p>自定义您的站点品牌名称</p>
-                </div>
+          <!-- 站点图标卡片 -->
+          <div
+            class="rounded-lg border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-800"
+          >
+            <div class="mb-3 flex items-start gap-3">
+              <div
+                class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-primary-50 dark:bg-primary-900/20"
+              >
+                <Icon name="Image" class="h-5 w-5 text-primary-600 dark:text-primary-400" />
               </div>
-              <input
-                v-model="oemSettings.siteName"
-                maxlength="100"
-                placeholder="Claude Relay Service"
-                type="text"
-              />
-            </div>
-
-            <!-- 站点图标卡片 -->
-            <div>
-              <div>
-                <div>
-                  <Icon name="Image" />
-                </div>
-                <div>
-                  <h3>站点图标</h3>
-                  <p>上传自定义图标或输入图标URL</p>
-                </div>
-              </div>
-              <div>
-                <!-- 图标预览 -->
-                <div v-if="oemSettings.siteIconData || oemSettings.siteIcon">
-                  <img
-                    alt="图标预览"
-                    :src="oemSettings.siteIconData || oemSettings.siteIcon"
-                    @error="handleIconError"
-                  />
-                  <span>当前图标</span>
-                  <button @click="removeIcon">删除</button>
-                </div>
-
-                <!-- 上传按钮 -->
-                <div>
-                  <input
-                    ref="iconFileInputMobile"
-                    accept=".ico,.png,.jpg,.jpeg,.svg"
-                    type="file"
-                    @change="handleIconUpload"
-                  />
-                  <button @click="$refs.iconFileInputMobile.click()">
-                    <Icon name="Upload" />
-                    上传图标
-                  </button>
-                  <p>支持 .ico, .png, .jpg, .svg 格式，最大 350KB</p>
-                </div>
+              <div class="flex-1">
+                <h3 class="font-medium text-gray-900 dark:text-white">站点图标</h3>
+                <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                  上传自定义图标或输入图标URL
+                </p>
               </div>
             </div>
-
-            <!-- 管理后台按钮显示控制卡片 -->
-            <div>
-              <div>
-                <div>
-                  <Icon name="EyeOff" />
-                </div>
-                <div>
-                  <h3>管理入口</h3>
-                  <p>控制登录按钮在首页的显示</p>
-                </div>
-              </div>
-              <div>
-                <label>
-                  <input v-model="hideAdminButton" type="checkbox" />
-                  <div></div>
-                  <span>{{ hideAdminButton ? '隐藏登录按钮' : '显示登录按钮' }}</span>
-                </label>
-                <p>隐藏后，用户需要直接访问 /admin/login 页面登录</p>
-              </div>
-            </div>
-
-            <!-- 操作按钮卡片 -->
-            <div>
-              <div>
-                <button :disabled="saving" @click="saveOemSettings">
-                  <div v-if="saving"></div>
-                  <Icon name="Save" v-else />
-                  {{ saving ? '保存中...' : '保存设置' }}
+            <div class="space-y-3">
+              <!-- 图标预览 -->
+              <div
+                v-if="oemSettings.siteIconData || oemSettings.siteIcon"
+                class="flex items-center gap-3 rounded-lg border border-gray-200 bg-gray-50 p-3 dark:border-gray-700 dark:bg-gray-900"
+              >
+                <img
+                  alt="图标预览"
+                  :src="oemSettings.siteIconData || oemSettings.siteIcon"
+                  @error="handleIconError"
+                  class="h-8 w-8 rounded"
+                />
+                <span class="flex-1 text-sm text-gray-600 dark:text-gray-400">当前图标</span>
+                <button
+                  @click="removeIcon"
+                  class="rounded-lg bg-red-50 px-3 py-1.5 text-sm font-medium text-red-600 transition-colors hover:bg-red-100 dark:bg-red-900/20 dark:text-red-400 dark:hover:bg-red-900/30"
+                >
+                  删除
                 </button>
+              </div>
 
-                <button :disabled="saving" @click="resetOemSettings">
-                  <Icon name="RotateCcw" />
-                  重置为默认
+              <!-- 上传按钮 -->
+              <div class="space-y-2">
+                <input
+                  ref="iconFileInputMobile"
+                  accept=".ico,.png,.jpg,.jpeg,.svg"
+                  type="file"
+                  @change="handleIconUpload"
+                  class="hidden"
+                />
+                <button
+                  @click="$refs.iconFileInputMobile.click()"
+                  class="flex w-full items-center justify-center gap-2 rounded-lg bg-primary-50 px-4 py-2 text-sm font-medium text-primary-600 transition-colors hover:bg-primary-100 dark:bg-primary-900/20 dark:text-primary-400 dark:hover:bg-primary-900/30"
+                >
+                  <Icon name="Upload" class="h-4 w-4" />
+                  上传图标
                 </button>
+                <p class="text-sm text-gray-500 dark:text-gray-400">
+                  支持 .ico, .png, .jpg, .svg 格式，最大 350KB
+                </p>
+              </div>
+            </div>
+          </div>
 
-                <div v-if="oemSettings.updatedAt">
-                  <Icon name="Clock" />
-                  上次更新: {{ formatDateTime(oemSettings.updatedAt) }}
+          <!-- 管理后台按钮显示控制卡片 -->
+          <div
+            class="rounded-lg border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-800"
+          >
+            <div class="mb-3 flex items-start gap-3">
+              <div
+                class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-primary-50 dark:bg-primary-900/20"
+              >
+                <Icon name="EyeOff" class="h-5 w-5 text-primary-600 dark:text-primary-400" />
+              </div>
+              <div class="flex-1">
+                <h3 class="font-medium text-gray-900 dark:text-white">管理入口</h3>
+                <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                  控制登录按钮在首页的显示
+                </p>
+              </div>
+            </div>
+            <div class="space-y-2">
+              <label class="flex cursor-pointer items-center gap-3">
+                <input v-model="hideAdminButton" type="checkbox" class="peer sr-only" />
+                <div
+                  class="relative h-6 w-11 rounded-full bg-gray-200 transition-colors peer-checked:bg-primary-600 dark:bg-gray-700"
+                >
+                  <div
+                    class="absolute left-1 top-1 h-4 w-4 rounded-full bg-white transition-transform peer-checked:translate-x-5"
+                  ></div>
                 </div>
+                <span class="font-medium text-gray-700 dark:text-gray-300">
+                  {{ hideAdminButton ? '隐藏登录按钮' : '显示登录按钮' }}
+                </span>
+              </label>
+              <p class="text-sm text-gray-500 dark:text-gray-400">
+                隐藏后，用户需要直接访问 /admin/login 页面登录
+              </p>
+            </div>
+          </div>
+
+          <!-- 操作按钮卡片 -->
+          <div
+            class="rounded-lg border border-gray-200 bg-gray-50 p-4 dark:border-gray-700 dark:bg-gray-800/50"
+          >
+            <div class="space-y-3">
+              <button
+                :disabled="saving"
+                @click="saveOemSettings"
+                class="flex w-full items-center justify-center gap-2 rounded-lg bg-primary-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-primary-700 disabled:bg-gray-300 dark:disabled:bg-gray-700"
+              >
+                <div
+                  v-if="saving"
+                  class="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"
+                ></div>
+                <Icon name="Save" v-else class="h-4 w-4" />
+                {{ saving ? '保存中...' : '保存设置' }}
+              </button>
+
+              <button
+                :disabled="saving"
+                @click="resetOemSettings"
+                class="flex w-full items-center justify-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 disabled:bg-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 dark:disabled:bg-gray-800"
+              >
+                <Icon name="RotateCcw" class="h-4 w-4" />
+                重置为默认
+              </button>
+
+              <div
+                v-if="oemSettings.updatedAt"
+                class="flex items-center justify-center gap-2 text-sm text-gray-500 dark:text-gray-400"
+              >
+                <Icon name="Clock" class="h-4 w-4" />
+                上次更新: {{ formatDateTime(oemSettings.updatedAt) }}
               </div>
             </div>
           </div>
         </div>
+      </Card>
 
-        <!-- Webhook 设置部分 -->
-        <div v-show="activeSection === 'webhook'">
-          <!-- 主开关 -->
+      <!-- Webhook 设置部分 -->
+      <Card v-show="activeSection === 'webhook'" class="mb-8">
+        <!-- 主开关 -->
+        <div class="border-b border-gray-200 p-6 dark:border-gray-700">
+          <div class="flex items-center justify-between">
+            <div class="flex-1">
+              <h2 class="text-lg font-semibold text-gray-900 dark:text-white">启用通知</h2>
+              <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                开启后，系统将按配置发送通知到指定平台
+              </p>
+            </div>
+            <label class="flex cursor-pointer items-center gap-3">
+              <input
+                v-model="webhookConfig.enabled"
+                type="checkbox"
+                @change="saveWebhookConfig"
+                class="peer sr-only"
+              />
+              <div
+                class="relative h-7 w-12 rounded-full bg-gray-200 transition-colors peer-checked:bg-primary-600 dark:bg-gray-700"
+              >
+                <div
+                  class="absolute left-1 top-1 h-5 w-5 rounded-full bg-white transition-transform peer-checked:translate-x-5"
+                ></div>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <!-- 通知类型设置 -->
+        <div>
+          <h2>通知类型</h2>
           <div>
-            <div>
+            <div v-for="(enabled, type) in webhookConfig.notificationTypes" :key="type">
               <div>
-                <h2>启用通知</h2>
-                <p>开启后，系统将按配置发送通知到指定平台</p>
+                <span>
+                  {{ getNotificationTypeName(type) }}
+                </span>
+                <span>
+                  {{ getNotificationTypeDescription(type) }}
+                </span>
               </div>
               <label>
                 <input
-                  v-model="webhookConfig.enabled"
+                  v-model="webhookConfig.notificationTypes[type]"
                   type="checkbox"
                   @change="saveWebhookConfig"
                 />
@@ -280,170 +442,148 @@
               </label>
             </div>
           </div>
+        </div>
 
-          <!-- 通知类型设置 -->
+        <!-- 平台列表 -->
+        <div>
           <div>
-            <h2>通知类型</h2>
-            <div>
-              <div v-for="(enabled, type) in webhookConfig.notificationTypes" :key="type">
-                <div>
-                  <span>
-                    {{ getNotificationTypeName(type) }}
-                  </span>
-                  <span>
-                    {{ getNotificationTypeDescription(type) }}
-                  </span>
-                </div>
-                <label>
-                  <input
-                    v-model="webhookConfig.notificationTypes[type]"
-                    type="checkbox"
-                    @change="saveWebhookConfig"
-                  />
-                  <div></div>
-                </label>
-              </div>
-            </div>
-          </div>
-
-          <!-- 平台列表 -->
-          <div>
-            <div>
-              <h2>通知平台</h2>
-              <button @click="showAddPlatformModal = true">
-                <Icon name="Plus" />
-                添加平台
-              </button>
-            </div>
-
-            <!-- 平台卡片列表 -->
-            <div v-if="webhookConfig.platforms && webhookConfig.platforms.length > 0">
-              <div v-for="platform in webhookConfig.platforms" :key="platform.id">
-                <div>
-                  <div>
-                    <div>
-                      <i></i>
-                      <div>
-                        <h3>
-                          {{ platform.name || getPlatformName(platform.type) }}
-                        </h3>
-                        <p>
-                          {{ getPlatformName(platform.type) }}
-                        </p>
-                      </div>
-                    </div>
-                    <div>
-                      <div v-if="platform.type !== 'smtp' && platform.type !== 'telegram'">
-                        <Icon name="Link" />
-                        <span>{{ platform.url }}</span>
-                      </div>
-                      <div v-if="platform.type === 'telegram'">
-                        <Icon name="MessagesSquare" />
-                        <span>Chat ID: {{ platform.chatId || '未配置' }}</span>
-                      </div>
-                      <div v-if="platform.type === 'telegram' && platform.botToken">
-                        <Icon name="Key" />
-                        <span>Token: {{ formatTelegramToken(platform.botToken) }}</span>
-                      </div>
-                      <div v-if="platform.type === 'telegram' && platform.apiBaseUrl">
-                        <Icon name="Globe" />
-                        <span>API: {{ platform.apiBaseUrl }}</span>
-                      </div>
-                      <div v-if="platform.type === 'telegram' && platform.proxyUrl">
-                        <Icon name="Route" />
-                        <span>代理: {{ platform.proxyUrl }}</span>
-                      </div>
-                      <div v-if="platform.type === 'smtp' && platform.to">
-                        <Icon name="Mail" />
-                        <span>{{
-                          Array.isArray(platform.to) ? platform.to.join(', ') : platform.to
-                        }}</span>
-                      </div>
-                      <div v-if="platform.enableSign">
-                        <Icon name="Shield" />
-                        <span>已启用签名验证</span>
-                      </div>
-                    </div>
-                  </div>
-                  <div>
-                    <!-- 启用/禁用开关 -->
-                    <label>
-                      <input
-                        :checked="platform.enabled"
-                        type="checkbox"
-                        @change="togglePlatform(platform.id)"
-                      />
-                      <div></div>
-                    </label>
-                    <!-- 测试按钮 -->
-                    <button title="测试连接" @click="testPlatform(platform)">
-                      <Icon name="TestTube" />
-                    </button>
-                    <!-- 编辑按钮 -->
-                    <button title="编辑" @click="editPlatform(platform)">
-                      <Icon name="Edit" />
-                    </button>
-                    <!-- 删除按钮 -->
-                    <button title="删除" @click="deletePlatform(platform.id)">
-                      <Icon name="Trash" />
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div v-else>暂无配置的通知平台，请点击"添加平台"按钮添加</div>
-          </div>
-
-          <!-- 高级设置 -->
-          <div>
-            <h2>高级设置</h2>
-            <div>
-              <div>
-                <label> 最大重试次数 </label>
-                <input
-                  v-model.number="webhookConfig.retrySettings.maxRetries"
-                  max="10"
-                  min="0"
-                  type="number"
-                  @change="saveWebhookConfig"
-                />
-              </div>
-              <div>
-                <label> 重试延迟 (毫秒) </label>
-                <input
-                  v-model.number="webhookConfig.retrySettings.retryDelay"
-                  max="10000"
-                  min="100"
-                  step="100"
-                  type="number"
-                  @change="saveWebhookConfig"
-                />
-              </div>
-              <div>
-                <label> 超时时间 (毫秒) </label>
-                <input
-                  v-model.number="webhookConfig.retrySettings.timeout"
-                  max="30000"
-                  min="1000"
-                  step="1000"
-                  type="number"
-                  @change="saveWebhookConfig"
-                />
-              </div>
-            </div>
-          </div>
-
-          <!-- 测试通知按钮 -->
-          <div>
-            <button @click="sendTestNotification">
-              <Icon name="Send" />
-              发送测试通知
+            <h2>通知平台</h2>
+            <button @click="showAddPlatformModal = true">
+              <Icon name="Plus" />
+              添加平台
             </button>
           </div>
+
+          <!-- 平台卡片列表 -->
+          <div v-if="webhookConfig.platforms && webhookConfig.platforms.length > 0">
+            <div v-for="platform in webhookConfig.platforms" :key="platform.id">
+              <div>
+                <div>
+                  <div>
+                    <i></i>
+                    <div>
+                      <h3>
+                        {{ platform.name || getPlatformName(platform.type) }}
+                      </h3>
+                      <p>
+                        {{ getPlatformName(platform.type) }}
+                      </p>
+                    </div>
+                  </div>
+                  <div>
+                    <div v-if="platform.type !== 'smtp' && platform.type !== 'telegram'">
+                      <Icon name="Link" />
+                      <span>{{ platform.url }}</span>
+                    </div>
+                    <div v-if="platform.type === 'telegram'">
+                      <Icon name="MessagesSquare" />
+                      <span>Chat ID: {{ platform.chatId || '未配置' }}</span>
+                    </div>
+                    <div v-if="platform.type === 'telegram' && platform.botToken">
+                      <Icon name="Key" />
+                      <span>Token: {{ formatTelegramToken(platform.botToken) }}</span>
+                    </div>
+                    <div v-if="platform.type === 'telegram' && platform.apiBaseUrl">
+                      <Icon name="Globe" />
+                      <span>API: {{ platform.apiBaseUrl }}</span>
+                    </div>
+                    <div v-if="platform.type === 'telegram' && platform.proxyUrl">
+                      <Icon name="Route" />
+                      <span>代理: {{ platform.proxyUrl }}</span>
+                    </div>
+                    <div v-if="platform.type === 'smtp' && platform.to">
+                      <Icon name="Mail" />
+                      <span>{{
+                        Array.isArray(platform.to) ? platform.to.join(', ') : platform.to
+                      }}</span>
+                    </div>
+                    <div v-if="platform.enableSign">
+                      <Icon name="Shield" />
+                      <span>已启用签名验证</span>
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <!-- 启用/禁用开关 -->
+                  <label>
+                    <input
+                      :checked="platform.enabled"
+                      type="checkbox"
+                      @change="togglePlatform(platform.id)"
+                    />
+                    <div></div>
+                  </label>
+                  <!-- 测试按钮 -->
+                  <button title="测试连接" @click="testPlatform(platform)">
+                    <Icon name="TestTube" />
+                  </button>
+                  <!-- 编辑按钮 -->
+                  <button title="编辑" @click="editPlatform(platform)">
+                    <Icon name="Edit" />
+                  </button>
+                  <!-- 删除按钮 -->
+                  <button title="删除" @click="deletePlatform(platform.id)">
+                    <Icon name="Trash" />
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div v-else>暂无配置的通知平台，请点击"添加平台"按钮添加</div>
         </div>
-      </div>
+
+        <!-- 高级设置 -->
+        <div>
+          <h2>高级设置</h2>
+          <div>
+            <div>
+              <label> 最大重试次数 </label>
+              <input
+                v-model.number="webhookConfig.retrySettings.maxRetries"
+                max="10"
+                min="0"
+                type="number"
+                @change="saveWebhookConfig"
+              />
+            </div>
+            <div>
+              <label> 重试延迟 (毫秒) </label>
+              <input
+                v-model.number="webhookConfig.retrySettings.retryDelay"
+                max="10000"
+                min="100"
+                step="100"
+                type="number"
+                @change="saveWebhookConfig"
+              />
+            </div>
+            <div>
+              <label> 超时时间 (毫秒) </label>
+              <input
+                v-model.number="webhookConfig.retrySettings.timeout"
+                max="30000"
+                min="1000"
+                step="1000"
+                type="number"
+                @change="saveWebhookConfig"
+              />
+            </div>
+          </div>
+        </div>
+
+        <!-- 测试通知按钮 -->
+        <div class="border-t border-gray-200 p-6 dark:border-gray-700">
+          <button
+            @click="sendTestNotification"
+            class="flex items-center gap-2 rounded-lg bg-primary-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-primary-700"
+          >
+            <Icon name="Send" class="h-4 w-4" />
+            发送测试通知
+          </button>
+        </div>
+      </Card>
     </div>
-  </div>
+  </PageContainer>
 
   <!-- 添加/编辑平台模态框 -->
   <div v-if="showAddPlatformModal" @click="closePlatformModal">
@@ -868,6 +1008,8 @@ import { storeToRefs } from 'pinia'
 import { showToast } from '@/utils/toast'
 import { useSettingsStore } from '@/stores/settings'
 import { apiClient } from '@/config/api'
+import { Card } from '@/ui'
+import PageContainer from '@/components/layout/PageContainer.vue'
 
 // 定义组件名称，用于keep-alive排除
 defineOptions({
