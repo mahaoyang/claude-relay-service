@@ -1,13 +1,11 @@
 <template>
- <div id="app">
- <ScrollArea>
- <router-view />
- </ScrollArea>
+  <div id="app" class="min-h-screen font-sans">
+    <router-view />
 
- <!-- 全局组件 -->
- <ToastNotification ref="toastRef" />
- <ConfirmDialog ref="confirmRef" />
- </div>
+    <!-- Global Components -->
+    <ToastNotification ref="toastRef" />
+    <ConfirmDialog ref="confirmRef" />
+  </div>
 </template>
 
 <script setup>
@@ -16,7 +14,6 @@ import { useAuthStore } from '@/stores/auth'
 import { useThemeStore } from '@/stores/theme'
 import ToastNotification from '@/components/common/ToastNotification.vue'
 import ConfirmDialog from '@/components/common/ConfirmDialog.vue'
-import ScrollArea from '@/components/common/ScrollArea.vue'
 
 const authStore = useAuthStore()
 const themeStore = useThemeStore()

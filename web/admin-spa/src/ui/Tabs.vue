@@ -15,6 +15,7 @@ defineEmits(['update:modelValue'])
 
 <template>
   <TabGroup
+    as="div"
     :selectedIndex="tabs.findIndex((tab) => tab.key === modelValue)"
     @change="(index) => $emit('update:modelValue', tabs[index].key)"
   >
@@ -22,25 +23,26 @@ defineEmits(['update:modelValue'])
       class="flex border-b border-gray-200 dark:border-secondary-700/50"
       :class="vertical ? 'flex-col border-b-0 border-r' : 'space-x-2'"
     >
-      <Tab v-for="tab in tabs" :key="tab.key" v-slot="{ selected }" as="template">
-        <button
-          class="relative px-4 py-2.5 text-sm font-medium transition-all duration-200 focus:outline-none"
+      <Tab
+        v-for="tab in tabs"
+        :key="tab.key"
+        v-slot="{ selected }"
+        :class="[
+          'relative px-4 py-2.5 text-sm font-medium transition-all duration-200 outline-none ring-0 focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0',
+          selected
+            ? 'text-gray-900 dark:text-white'
+            : 'text-gray-600 hover:text-gray-900 dark:text-secondary-400 dark:hover:bg-secondary-800/30 dark:hover:text-white',
+          vertical ? 'w-full rounded-l-lg text-left' : 'rounded-t-lg'
+        ]"
+      >
+        <span class="relative z-10">{{ tab.label }}</span>
+        <div
+          v-if="selected"
           :class="[
-            selected
-              ? 'text-gray-900 dark:text-white'
-              : 'text-gray-600 hover:text-gray-900 dark:text-secondary-400 dark:hover:bg-secondary-800/30 dark:hover:text-white',
-            vertical ? 'w-full rounded-l-lg text-left' : 'rounded-t-lg'
+            'absolute rounded-full bg-primary-500',
+            vertical ? 'right-0 top-0 h-full w-0.5' : 'bottom-0 left-0 h-0.5 w-full'
           ]"
-        >
-          <span class="relative z-10">{{ tab.label }}</span>
-          <div
-            v-if="selected"
-            :class="[
-              'absolute rounded-full bg-blue-500',
-              vertical ? 'right-0 top-0 h-full w-0.5' : 'bottom-0 left-0 h-0.5 w-full'
-            ]"
-          ></div>
-        </button>
+        ></div>
       </Tab>
     </TabList>
 

@@ -8,27 +8,19 @@
     </div>
 
     <!-- 系统选择标签 -->
-    <div>
-      <div>
-        <button
-          class="rounded-lg border border-gray-300 px-4 py-2 text-gray-700 transition-colors hover:bg-gray-50"
-          v-for="system in tutorialSystems"
-          :key="system.key"
-          @click="activeTutorialSystem = system.key"
-        >
-          <i />
-          {{ system.name }}
-        </button>
-      </div>
+    <div class="mb-6">
+      <TabGroup v-model="activeTutorialSystem" :options="systemOptions" />
     </div>
 
     <!-- Windows 教程 -->
     <div v-if="activeTutorialSystem === 'windows'">
       <!-- 第一步：安装 Node.js -->
       <div>
-        <h4 class="mb-3 mt-6 text-xl font-semibold text-gray-800">
+        <h4
+          class="relative mb-3 mt-6 border-b-2 border-gray-100 pb-3 text-xl font-semibold text-gray-800 after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-16 after:bg-primary-500 after:content-['']"
+        >
           <span
-            class="mr-2 inline-flex h-8 w-8 items-center justify-center rounded-full bg-blue-500 font-bold text-white"
+            class="mr-2 inline-flex h-8 w-8 items-center justify-center rounded-full bg-primary-500 font-bold text-white"
             >1</span
           >
           安装 Node.js 环境
@@ -95,9 +87,11 @@
 
       <!-- 第二步：安装 Claude Code -->
       <div>
-        <h4 class="mb-3 mt-6 text-xl font-semibold text-gray-800">
+        <h4
+          class="relative mb-3 mt-6 border-b-2 border-gray-100 pb-3 text-xl font-semibold text-gray-800 after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-16 after:bg-primary-500 after:content-['']"
+        >
           <span
-            class="mr-2 inline-flex h-8 w-8 items-center justify-center rounded-full bg-blue-500 font-bold text-white"
+            class="mr-2 inline-flex h-8 w-8 items-center justify-center rounded-full bg-primary-500 font-bold text-white"
             >2</span
           >
           安装 Claude Code
@@ -138,9 +132,11 @@
 
       <!-- 第三步：设置环境变量 -->
       <div>
-        <h4 class="mb-3 mt-6 text-xl font-semibold text-gray-800">
+        <h4
+          class="relative mb-3 mt-6 border-b-2 border-gray-100 pb-3 text-xl font-semibold text-gray-800 after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-16 after:bg-primary-500 after:content-['']"
+        >
           <span
-            class="mr-2 inline-flex h-8 w-8 items-center justify-center rounded-full bg-blue-500 font-bold text-white"
+            class="mr-2 inline-flex h-8 w-8 items-center justify-center rounded-full bg-primary-500 font-bold text-white"
             >3</span
           >
           设置环境变量
@@ -395,9 +391,11 @@
       </div>
       <!-- 第四步：开始使用 -->
       <div>
-        <h4 class="mb-3 mt-6 text-xl font-semibold text-gray-800">
+        <h4
+          class="relative mb-3 mt-6 border-b-2 border-gray-100 pb-3 text-xl font-semibold text-gray-800 after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-16 after:bg-primary-500 after:content-['']"
+        >
           <span
-            class="mr-2 inline-flex h-8 w-8 items-center justify-center rounded-full bg-blue-500 font-bold text-white"
+            class="mr-2 inline-flex h-8 w-8 items-center justify-center rounded-full bg-primary-500 font-bold text-white"
             >4</span
           >
           开始使用 Claude Code
@@ -429,10 +427,19 @@
 
       <!-- Windows 故障排除 -->
       <div>
-        <h4 class="mb-3 mt-6 text-xl font-semibold text-gray-800">Windows 常见问题解决</h4>
+        <h4
+          class="relative mb-3 mt-6 border-b-2 border-gray-100 pb-3 text-xl font-semibold text-gray-800 after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-16 after:bg-primary-500 after:content-['']"
+        >
+          Windows 常见问题解决
+        </h4>
         <div>
           <details>
-            <summary>安装时提示 "permission denied" 错误</summary>
+            <summary
+              class="flex cursor-pointer items-center gap-2 font-medium text-gray-800 hover:text-primary-500 dark:text-gray-200 dark:hover:text-primary-400"
+            >
+              <ChevronRight :size="18" class="chevron-icon flex-shrink-0 text-primary-500" />
+              安装时提示 "permission denied" 错误
+            </summary>
             <div>
               <p class="mb-3 leading-relaxed text-gray-600">这通常是权限问题，尝试以下解决方法：</p>
               <ul class="mb-4 list-inside list-disc space-y-2 text-gray-600">
@@ -448,7 +455,12 @@
           </details>
 
           <details>
-            <summary>PowerShell 执行策略错误</summary>
+            <summary
+              class="flex cursor-pointer items-center gap-2 font-medium text-gray-800 hover:text-primary-500 dark:text-gray-200 dark:hover:text-primary-400"
+            >
+              <ChevronRight :size="18" class="chevron-icon flex-shrink-0 text-primary-500" />
+              PowerShell 执行策略错误
+            </summary>
             <div>
               <p class="mb-3 leading-relaxed text-gray-600">如果遇到执行策略限制，运行：</p>
               <CodeBlock
@@ -459,7 +471,12 @@
           </details>
 
           <details>
-            <summary>环境变量设置后不生效</summary>
+            <summary
+              class="flex cursor-pointer items-center gap-2 font-medium text-gray-800 hover:text-primary-500 dark:text-gray-200 dark:hover:text-primary-400"
+            >
+              <ChevronRight :size="18" class="chevron-icon flex-shrink-0 text-primary-500" />
+              环境变量设置后不生效
+            </summary>
             <div>
               <p class="mb-3 leading-relaxed text-gray-600">设置永久环境变量后需要：</p>
               <ul class="mb-4 list-inside list-disc space-y-2 text-gray-600">
@@ -482,9 +499,11 @@
     <div v-else-if="activeTutorialSystem === 'macos'">
       <!-- 第一步：安装 Node.js -->
       <div>
-        <h4 class="mb-3 mt-6 text-xl font-semibold text-gray-800">
+        <h4
+          class="relative mb-3 mt-6 border-b-2 border-gray-100 pb-3 text-xl font-semibold text-gray-800 after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-16 after:bg-primary-500 after:content-['']"
+        >
           <span
-            class="mr-2 inline-flex h-8 w-8 items-center justify-center rounded-full bg-blue-500 font-bold text-white"
+            class="mr-2 inline-flex h-8 w-8 items-center justify-center rounded-full bg-primary-500 font-bold text-white"
             >1</span
           >
           安装 Node.js 环境
@@ -551,9 +570,11 @@
 
       <!-- 第二步：安装 Claude Code -->
       <div>
-        <h4 class="mb-3 mt-6 text-xl font-semibold text-gray-800">
+        <h4
+          class="relative mb-3 mt-6 border-b-2 border-gray-100 pb-3 text-xl font-semibold text-gray-800 after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-16 after:bg-primary-500 after:content-['']"
+        >
           <span
-            class="mr-2 inline-flex h-8 w-8 items-center justify-center rounded-full bg-blue-500 font-bold text-white"
+            class="mr-2 inline-flex h-8 w-8 items-center justify-center rounded-full bg-primary-500 font-bold text-white"
             >2</span
           >
           安装 Claude Code
@@ -585,9 +606,11 @@
 
       <!-- 第三步：设置环境变量 -->
       <div>
-        <h4 class="mb-3 mt-6 text-xl font-semibold text-gray-800">
+        <h4
+          class="relative mb-3 mt-6 border-b-2 border-gray-100 pb-3 text-xl font-semibold text-gray-800 after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-16 after:bg-primary-500 after:content-['']"
+        >
           <span
-            class="mr-2 inline-flex h-8 w-8 items-center justify-center rounded-full bg-blue-500 font-bold text-white"
+            class="mr-2 inline-flex h-8 w-8 items-center justify-center rounded-full bg-primary-500 font-bold text-white"
             >3</span
           >
           设置环境变量
@@ -603,10 +626,7 @@
             <div>
               <h6 class="mb-2 text-base font-medium text-gray-700">方法一：临时设置（当前会话）</h6>
               <p class="mb-3 leading-relaxed text-gray-600">在 Terminal 中运行以下命令：</p>
-              <CodeBlock
-                :lines="bashSetEnvAnthropicTemp"
-                language="bash"
-              />
+              <CodeBlock :lines="bashSetEnvAnthropicTemp" language="bash" />
               <p class="mb-3 leading-relaxed text-gray-600">
                 💡 记得将 "你的API密钥" 替换为在上方 "API Keys" 标签页中创建的实际密钥。
               </p>
@@ -652,10 +672,7 @@
             <div>
               <h6 class="mb-2 text-base font-medium text-gray-700">Terminal 设置方法</h6>
               <p class="mb-3 leading-relaxed text-gray-600">在 Terminal 中运行以下命令：</p>
-              <CodeBlock
-                :lines="bashSetEnvGeminiTemp"
-                language="bash"
-              />
+              <CodeBlock :lines="bashSetEnvGeminiTemp" language="bash" />
               <p class="mb-3 leading-relaxed text-gray-600">
                 💡 使用与 Claude Code 相同的 API 密钥即可。
               </p>
@@ -664,14 +681,8 @@
             <div>
               <h6 class="mb-2 text-base font-medium text-gray-700">永久设置方法</h6>
               <p class="mb-3 leading-relaxed text-gray-600">添加到你的 shell 配置文件：</p>
-              <CodeBlock
-                :lines="bashPermanentZshGemini"
-                language="bash"
-              />
-              <CodeBlock
-                :lines="bashPermanentBashGemini"
-                language="bash"
-              />
+              <CodeBlock :lines="bashPermanentZshGemini" language="bash" />
+              <CodeBlock :lines="bashPermanentBashGemini" language="bash" />
             </div>
 
             <div>
@@ -788,9 +799,11 @@
 
       <!-- 第四步：开始使用 -->
       <div>
-        <h4 class="mb-3 mt-6 text-xl font-semibold text-gray-800">
+        <h4
+          class="relative mb-3 mt-6 border-b-2 border-gray-100 pb-3 text-xl font-semibold text-gray-800 after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-16 after:bg-primary-500 after:content-['']"
+        >
           <span
-            class="mr-2 inline-flex h-8 w-8 items-center justify-center rounded-full bg-blue-500 font-bold text-white"
+            class="mr-2 inline-flex h-8 w-8 items-center justify-center rounded-full bg-primary-500 font-bold text-white"
             >4</span
           >
           开始使用 Claude Code
@@ -822,10 +835,19 @@
 
       <!-- macOS 故障排除 -->
       <div>
-        <h4 class="mb-3 mt-6 text-xl font-semibold text-gray-800">macOS 常见问题解决</h4>
+        <h4
+          class="relative mb-3 mt-6 border-b-2 border-gray-100 pb-3 text-xl font-semibold text-gray-800 after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-16 after:bg-primary-500 after:content-['']"
+        >
+          macOS 常见问题解决
+        </h4>
         <div>
           <details>
-            <summary>安装时提示权限错误</summary>
+            <summary
+              class="flex cursor-pointer items-center gap-2 font-medium text-gray-800 hover:text-primary-500 dark:text-gray-200 dark:hover:text-primary-400"
+            >
+              <ChevronRight :size="18" class="chevron-icon flex-shrink-0 text-primary-500" />
+              安装时提示权限错误
+            </summary>
             <div>
               <p class="mb-3 leading-relaxed text-gray-600">尝试以下解决方法：</p>
               <ul class="mb-4 list-inside list-disc space-y-2 text-gray-600">
@@ -846,7 +868,12 @@
           </details>
 
           <details>
-            <summary>macOS 安全设置阻止运行</summary>
+            <summary
+              class="flex cursor-pointer items-center gap-2 font-medium text-gray-800 hover:text-primary-500 dark:text-gray-200 dark:hover:text-primary-400"
+            >
+              <ChevronRight :size="18" class="chevron-icon flex-shrink-0 text-primary-500" />
+              macOS 安全设置阻止运行
+            </summary>
             <div>
               <p class="mb-3 leading-relaxed text-gray-600">如果系统阻止运行 Claude Code：</p>
               <ul class="mb-4 list-inside list-disc space-y-2 text-gray-600">
@@ -863,7 +890,12 @@
           </details>
 
           <details>
-            <summary>环境变量不生效</summary>
+            <summary
+              class="flex cursor-pointer items-center gap-2 font-medium text-gray-800 hover:text-primary-500 dark:text-gray-200 dark:hover:text-primary-400"
+            >
+              <ChevronRight :size="18" class="chevron-icon flex-shrink-0 text-primary-500" />
+              环境变量不生效
+            </summary>
             <div>
               <p class="mb-3 leading-relaxed text-gray-600">检查以下几点：</p>
               <ul class="mb-4 list-inside list-disc space-y-2 text-gray-600">
@@ -886,9 +918,11 @@
     <div v-else-if="activeTutorialSystem === 'linux'">
       <!-- 第一步：安装 Node.js -->
       <div>
-        <h4 class="mb-3 mt-6 text-xl font-semibold text-gray-800">
+        <h4
+          class="relative mb-3 mt-6 border-b-2 border-gray-100 pb-3 text-xl font-semibold text-gray-800 after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-16 after:bg-primary-500 after:content-['']"
+        >
           <span
-            class="mr-2 inline-flex h-8 w-8 items-center justify-center rounded-full bg-blue-500 font-bold text-white"
+            class="mr-2 inline-flex h-8 w-8 items-center justify-center rounded-full bg-primary-500 font-bold text-white"
             >1</span
           >
           安装 Node.js 环境
@@ -951,9 +985,11 @@
 
       <!-- 第二步：安装 Claude Code -->
       <div>
-        <h4 class="mb-3 mt-6 text-xl font-semibold text-gray-800">
+        <h4
+          class="relative mb-3 mt-6 border-b-2 border-gray-100 pb-3 text-xl font-semibold text-gray-800 after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-16 after:bg-primary-500 after:content-['']"
+        >
           <span
-            class="mr-2 inline-flex h-8 w-8 items-center justify-center rounded-full bg-blue-500 font-bold text-white"
+            class="mr-2 inline-flex h-8 w-8 items-center justify-center rounded-full bg-primary-500 font-bold text-white"
             >2</span
           >
           安装 Claude Code
@@ -985,9 +1021,11 @@
 
       <!-- 第三步：设置环境变量 -->
       <div>
-        <h4 class="mb-3 mt-6 text-xl font-semibold text-gray-800">
+        <h4
+          class="relative mb-3 mt-6 border-b-2 border-gray-100 pb-3 text-xl font-semibold text-gray-800 after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-16 after:bg-primary-500 after:content-['']"
+        >
           <span
-            class="mr-2 inline-flex h-8 w-8 items-center justify-center rounded-full bg-blue-500 font-bold text-white"
+            class="mr-2 inline-flex h-8 w-8 items-center justify-center rounded-full bg-primary-500 font-bold text-white"
             >3</span
           >
           设置环境变量
@@ -1003,10 +1041,7 @@
             <div>
               <h6 class="mb-2 text-base font-medium text-gray-700">方法一：临时设置（当前会话）</h6>
               <p class="mb-3 leading-relaxed text-gray-600">在终端中运行以下命令：</p>
-              <CodeBlock
-                :lines="bashSetEnvAnthropicTemp"
-                language="bash"
-              />
+              <CodeBlock :lines="bashSetEnvAnthropicTemp" language="bash" />
               <p class="mb-3 leading-relaxed text-gray-600">
                 💡 记得将 "你的API密钥" 替换为在上方 "API Keys" 标签页中创建的实际密钥。
               </p>
@@ -1032,10 +1067,7 @@
             <div>
               <h6 class="mb-2 text-base font-medium text-gray-700">终端设置方法</h6>
               <p class="mb-3 leading-relaxed text-gray-600">在终端中运行以下命令：</p>
-              <CodeBlock
-                :lines="bashSetEnvGeminiTemp"
-                language="bash"
-              />
+              <CodeBlock :lines="bashSetEnvGeminiTemp" language="bash" />
               <p class="mb-3 leading-relaxed text-gray-600">
                 💡 使用与 Claude Code 相同的 API 密钥即可。
               </p>
@@ -1044,14 +1076,8 @@
             <div>
               <h6 class="mb-2 text-base font-medium text-gray-700">永久设置方法</h6>
               <p class="mb-3 leading-relaxed text-gray-600">添加到你的 shell 配置文件：</p>
-              <CodeBlock
-                :lines="linuxBashrcGemini"
-                language="bash"
-              />
-              <CodeBlock
-                :lines="linuxZshGemini"
-                language="bash"
-              />
+              <CodeBlock :lines="linuxBashrcGemini" language="bash" />
+              <CodeBlock :lines="linuxZshGemini" language="bash" />
             </div>
 
             <div>
@@ -1188,9 +1214,11 @@
 
         <!-- 第四步：开始使用 -->
         <div>
-          <h4 class="mb-3 mt-6 text-xl font-semibold text-gray-800">
+          <h4
+            class="relative mb-3 mt-6 border-b-2 border-gray-100 pb-3 text-xl font-semibold text-gray-800 after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-16 after:bg-primary-500 after:content-['']"
+          >
             <span
-              class="mr-2 inline-flex h-8 w-8 items-center justify-center rounded-full bg-blue-500 font-bold text-white"
+              class="mr-2 inline-flex h-8 w-8 items-center justify-center rounded-full bg-primary-500 font-bold text-white"
               >4</span
             >
             开始使用 Claude Code
@@ -1224,10 +1252,18 @@
 
         <!-- Linux 故障排除 -->
         <div>
-          <h4 class="mb-3 mt-6 text-xl font-semibold text-gray-800">Linux 常见问题解决</h4>
+          <h4
+            class="relative mb-3 mt-6 border-b-2 border-gray-100 pb-3 text-xl font-semibold text-gray-800 after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-16 after:bg-primary-500 after:content-['']"
+          >
+            Linux 常见问题解决
+          </h4>
           <div>
             <details>
-              <summary>安装时提示权限错误</summary>
+              <summary
+                class="cursor-pointer font-medium text-gray-800 hover:text-primary-500 dark:text-gray-200 dark:hover:text-primary-400"
+              >
+                安装时提示权限错误
+              </summary>
               <div>
                 <p class="mb-3 leading-relaxed text-gray-600">尝试以下解决方法：</p>
                 <ul class="mb-4 list-inside list-disc space-y-2 text-gray-600">
@@ -1254,7 +1290,11 @@
             </details>
 
             <details>
-              <summary>缺少依赖库</summary>
+              <summary
+                class="cursor-pointer font-medium text-gray-800 hover:text-primary-500 dark:text-gray-200 dark:hover:text-primary-400"
+              >
+                缺少依赖库
+              </summary>
               <div>
                 <p class="mb-3 leading-relaxed text-gray-600">
                   某些 Linux 发行版需要安装额外依赖：
@@ -1264,7 +1304,11 @@
             </details>
 
             <details>
-              <summary>环境变量不生效</summary>
+              <summary
+                class="cursor-pointer font-medium text-gray-800 hover:text-primary-500 dark:text-gray-200 dark:hover:text-primary-400"
+              >
+                环境变量不生效
+              </summary>
               <div>
                 <p class="mb-3 leading-relaxed text-gray-600">检查以下几点：</p>
                 <ul class="mb-4 list-inside list-disc space-y-2 text-gray-600">
@@ -1305,15 +1349,17 @@
 <script setup>
 import { computed, ref } from 'vue'
 import CodeBlock from '@/components/common/CodeBlock.vue'
+import TabGroup from '@/components/common/TabGroup.vue'
+import { ChevronRight } from 'lucide-vue-next'
 
 // 当前系统选择
 const activeTutorialSystem = ref('windows')
 
-// 系统列表
-const tutorialSystems = [
-  { key: 'windows', name: 'Windows', icon: 'fab fa-windows' },
-  { key: 'macos', name: 'macOS', icon: 'fab fa-apple' },
-  { key: 'linux', name: 'Linux / WSL2', icon: 'fab fa-linux' }
+// 系统选项
+const systemOptions = [
+  { value: 'windows', label: 'Windows' },
+  { value: 'macos', label: 'macOS' },
+  { value: 'linux', label: 'Linux / WSL2' }
 ]
 
 // 获取基础URL前缀
@@ -1659,5 +1705,23 @@ code,
 pre,
 .font-mono {
   font-family: 'Fira Code', 'Monaco', 'Courier New', monospace;
+}
+
+/* 隐藏默认的 disclosure triangle */
+details summary {
+  list-style: none;
+}
+
+details summary::-webkit-details-marker {
+  display: none;
+}
+
+/* 图标旋转动画 */
+details[open] summary .chevron-icon {
+  transform: rotate(90deg);
+}
+
+.chevron-icon {
+  transition: transform 0.2s ease;
 }
 </style>
