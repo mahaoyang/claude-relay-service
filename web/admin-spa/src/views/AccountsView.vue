@@ -1,151 +1,126 @@
 <template>
-  <div class="min-h-screen bg-gray-50 p-4 dark:bg-gray-900 sm:p-6">
-    <!-- 页面标题区域 -->
-    <div class="mb-6">
-      <h1 class="text-2xl font-bold text-gray-900 dark:text-white sm:text-3xl">账户管理</h1>
-      <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">
-        管理 Claude、Gemini、OpenAI 等账户与代理配置
-      </p>
-    </div>
+  <PageContainer max-width="7xl">
+    <template #header>
+      <div>
+        <h1 class="text-lg font-bold tracking-tight text-gray-900 dark:text-white">账户管理</h1>
+        <p class="mt-1 text-[10px] text-gray-600 dark:text-gray-400">
+          管理 Claude、Gemini、OpenAI 等账户与代理配置
+        </p>
+      </div>
+    </template>
 
-    <!-- 主内容卡片 -->
-    <div
-      class="overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800"
-    >
-      <!-- 筛选器和操作区域 -->
-      <div
-        class="border-b border-gray-200 bg-gray-50 p-4 dark:border-gray-700 dark:bg-gray-800/50 sm:p-6"
-      >
-        <div class="flex flex-col gap-4">
-          <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <!-- 筛选器组 -->
-            <div class="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:gap-3">
+    <Card>
+      <!-- 工具栏区域 -->
+      <div class="p-6">
+        <div class="mb-4 flex flex-col gap-2 lg:flex-row lg:items-start lg:justify-between">
+          <!-- 左侧：查询筛选器组 -->
+          <div class="flex flex-col gap-2 sm:flex-row sm:flex-wrap">
               <!-- 排序选择器 -->
-              <div class="group relative min-w-[160px]">
-                <div
-                  class="absolute -inset-0.5 rounded-lg bg-gradient-to-r from-indigo-500 to-blue-500 opacity-0 blur transition duration-300 group-hover:opacity-20"
-                ></div>
+              <div class="flex items-center gap-1.5">
+                <div class="text-[10px] font-medium text-gray-500 dark:text-gray-400">排序</div>
                 <CustomDropdown
                   v-model="accountSortBy"
-                  icon="fa-sort-amount-down"
-                  icon-color="text-indigo-500"
+                  icon="ArrowUpDown"
+                  icon-color="text-primary-500"
                   :options="sortOptions"
                   placeholder="选择排序"
+                  size="small"
                   @change="sortAccounts()"
                 />
               </div>
 
               <!-- 平台筛选器 -->
-              <div class="group relative min-w-[140px]">
-                <div
-                  class="absolute -inset-0.5 rounded-lg bg-gradient-to-r from-blue-500 to-indigo-500 opacity-0 blur transition duration-300 group-hover:opacity-20"
-                ></div>
+              <div class="flex items-center gap-1.5">
+                <div class="text-[10px] font-medium text-gray-500 dark:text-gray-400">平台</div>
                 <CustomDropdown
                   v-model="platformFilter"
-                  icon="fa-server"
+                  icon="Server"
                   icon-color="text-blue-500"
                   :options="platformOptions"
                   placeholder="选择平台"
+                  size="small"
                   @change="filterByPlatform"
                 />
               </div>
 
               <!-- 分组筛选器 -->
-              <div class="group relative min-w-[160px]">
-                <div
-                  class="absolute -inset-0.5 rounded-lg bg-gradient-to-r from-purple-500 to-pink-500 opacity-0 blur transition duration-300 group-hover:opacity-20"
-                ></div>
+              <div class="flex items-center gap-1.5">
+                <div class="text-[10px] font-medium text-gray-500 dark:text-gray-400">分组</div>
                 <CustomDropdown
                   v-model="groupFilter"
-                  icon="fa-layer-group"
+                  icon="Layers"
                   icon-color="text-purple-500"
                   :options="groupOptions"
                   placeholder="选择分组"
+                  size="small"
                   @change="filterByGroup"
                 />
               </div>
 
               <!-- 搜索框 -->
-              <div class="group relative min-w-[200px]">
-                <div
-                  class="absolute -inset-0.5 rounded-lg bg-gradient-to-r from-cyan-500 to-teal-500 opacity-0 blur transition duration-300 group-hover:opacity-20"
-                ></div>
-                <div class="relative flex items-center">
-                  <input
-                    v-model="searchKeyword"
-                    class="h-10 w-full rounded-lg border border-gray-200 bg-white px-3 pl-9 text-sm text-gray-700 placeholder-gray-400 shadow-sm transition-all duration-200 hover:border-gray-300 focus:border-cyan-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/20 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200 dark:placeholder-gray-500 dark:hover:border-gray-500"
-                    placeholder="搜索账户名称..."
-                    type="text"
-                  />
-                  <i class="fas fa-search absolute left-3 text-sm text-cyan-500" />
-                  <button
-                    v-if="searchKeyword"
-                    class="absolute right-2 flex h-5 w-5 items-center justify-center rounded-full text-gray-400 hover:bg-gray-100 hover:text-gray-600 dark:hover:bg-gray-700 dark:hover:text-gray-300"
-                    @click="clearSearch"
-                  >
-                    <i class="fas fa-times text-xs" />
-                  </button>
+              <div class="relative w-full sm:w-56">
+                <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-2">
+                  <Icon class="h-3.5 w-3.5 text-gray-400" name="Search" />
                 </div>
+                <input
+                  v-model="searchKeyword"
+                  class="block w-full rounded-lg border border-gray-300 bg-white py-1.5 pl-8 pr-8 text-xs text-gray-900 placeholder-gray-500 transition-colors focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:placeholder-gray-400 dark:focus:border-primary-400 dark:focus:ring-primary-400"
+                  placeholder="搜索账户名称..."
+                  type="text"
+                />
+                <button
+                  v-if="searchKeyword"
+                  class="absolute inset-y-0 right-0 flex items-center pr-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200"
+                  @click="clearSearch"
+                >
+                  <Icon class="h-3.5 w-3.5" name="X" />
+                </button>
               </div>
             </div>
 
-            <div class="flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:items-center sm:gap-3">
+            <!-- 右侧：操作按钮组 -->
+            <div class="flex flex-wrap gap-1.5">
               <!-- 刷新按钮 -->
-              <div class="relative">
-                <el-tooltip
-                  content="刷新数据 (Ctrl/⌘+点击强制刷新所有缓存)"
-                  effect="dark"
-                  placement="bottom"
-                >
-                  <button
-                    class="group relative flex items-center justify-center gap-2 rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm transition-all duration-200 hover:border-gray-300 hover:shadow-md disabled:cursor-not-allowed disabled:opacity-50 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:border-gray-500 sm:w-auto"
-                    :disabled="accountsLoading"
-                    @click.ctrl.exact="loadAccounts(true)"
-                    @click.exact="loadAccounts(false)"
-                    @click.meta.exact="loadAccounts(true)"
-                  >
-                    <div
-                      class="absolute -inset-0.5 rounded-lg bg-gradient-to-r from-green-500 to-teal-500 opacity-0 blur transition duration-300 group-hover:opacity-20"
-                    ></div>
-                    <i
-                      :class="[
-                        'fas relative text-green-500',
-                        accountsLoading ? 'fa-spinner fa-spin' : 'fa-sync-alt'
-                      ]"
-                    />
-                    <span class="relative">刷新</span>
-                  </button>
-                </el-tooltip>
-              </div>
+              <button
+                class="inline-flex items-center gap-1.5 rounded-lg border border-gray-300 bg-white px-2.5 py-1.5 text-xs font-medium text-gray-700 shadow-sm transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700"
+                :disabled="accountsLoading"
+                @click.ctrl.exact="loadAccounts(true)"
+                @click.exact="loadAccounts(false)"
+                @click.meta.exact="loadAccounts(true)"
+              >
+                <Icon
+                  class="h-3.5 w-3.5"
+                  :class="{ 'animate-spin': accountsLoading }"
+                  name="RefreshCw"
+                />
+                <span>刷新</span>
+              </button>
 
               <!-- 选择/取消选择按钮 -->
               <button
-                class="flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm transition-all duration-200 hover:border-gray-300 hover:bg-gray-50 hover:shadow-md dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
+                class="inline-flex items-center gap-1.5 rounded-lg border border-gray-300 bg-white px-2.5 py-1.5 text-xs font-medium text-gray-700 shadow-sm transition-colors hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700"
                 @click="toggleSelectionMode"
               >
-                <i :class="showCheckboxes ? 'fas fa-times' : 'fas fa-check-square'"></i>
+                <Icon class="h-3.5 w-3.5" :name="showCheckboxes ? 'X' : 'CheckSquare'" />
                 <span>{{ showCheckboxes ? '取消选择' : '选择' }}</span>
               </button>
 
               <!-- 批量删除按钮 -->
               <button
                 v-if="selectedAccounts.length > 0"
-                class="group relative flex items-center justify-center gap-2 rounded-lg border border-red-200 bg-red-50 px-4 py-2 text-sm font-medium text-red-700 shadow-sm transition-all duration-200 hover:border-red-300 hover:bg-red-100 hover:shadow-md dark:border-red-700 dark:bg-red-900/30 dark:text-red-300 dark:hover:bg-red-900/50 sm:w-auto"
+                class="inline-flex items-center gap-1.5 rounded-lg border border-red-300 bg-red-50 px-2.5 py-1.5 text-xs font-medium text-red-700 shadow-sm transition-colors hover:bg-red-100 dark:border-red-700 dark:bg-red-900/30 dark:text-red-300 dark:hover:bg-red-900/50"
                 @click="batchDeleteAccounts"
               >
-                <div
-                  class="absolute -inset-0.5 rounded-lg bg-gradient-to-r from-red-500 to-pink-500 opacity-0 blur transition duration-300 group-hover:opacity-20"
-                ></div>
-                <i class="fas fa-trash relative text-red-600 dark:text-red-400" />
-                <span class="relative">删除选中 ({{ selectedAccounts.length }})</span>
+                <Icon class="h-3.5 w-3.5" name="Trash" />
+                <span>删除选中 ({{ selectedAccounts.length }})</span>
               </button>
 
               <!-- 添加账户按钮 -->
               <button
-                class="flex w-full items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-green-500 to-green-600 px-5 py-2.5 text-sm font-medium text-white shadow-md transition-all duration-200 hover:from-green-600 hover:to-green-700 hover:shadow-lg sm:w-auto"
+                class="inline-flex items-center gap-1.5 rounded-lg bg-primary-600 px-2.5 py-1.5 text-xs font-medium text-white shadow-sm transition-colors hover:bg-primary-700 dark:bg-primary-500 dark:hover:bg-primary-600"
                 @click.stop="openCreateAccountModal"
               >
-                <i class="fas fa-plus"></i>
+                <Icon class="h-3.5 w-3.5" name="Plus" />
                 <span>添加账户</span>
               </button>
             </div>
@@ -153,22 +128,25 @@
         </div>
 
         <!-- 加载状态 -->
-        <div v-if="accountsLoading" class="p-12 text-center">
-          <div class="loading-spinner mx-auto mb-4" />
-          <p class="text-sm text-gray-500 dark:text-gray-400">正在加载账户...</p>
+        <div v-if="accountsLoading" class="flex flex-col items-center justify-center py-16">
+          <div
+            class="mb-4 h-12 w-12 animate-spin rounded-full border-4 border-gray-200 border-t-primary-600 dark:border-gray-700 dark:border-t-primary-400"
+          />
+          <p class="text-sm text-gray-600 dark:text-gray-400">正在加载账户...</p>
         </div>
 
         <!-- 空状态 -->
-        <div v-else-if="sortedAccounts.length === 0" class="p-12 text-center">
+        <div
+          v-else-if="sortedAccounts.length === 0"
+          class="flex flex-col items-center justify-center py-16"
+        >
           <div
-            class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gray-100 dark:bg-gray-700"
+            class="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800"
           >
-            <i class="fas fa-user-circle text-2xl text-gray-400 dark:text-gray-500" />
+            <Icon class="h-8 w-8 text-gray-400 dark:text-gray-500" name="Users" />
           </div>
-          <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">暂无账户</h3>
-          <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">
-            点击上方按钮添加您的第一个账户
-          </p>
+          <p class="mb-2 text-base font-medium text-gray-900 dark:text-white">暂无账户</p>
+          <p class="text-sm text-gray-600 dark:text-gray-400">点击上方按钮添加您的第一个账户</p>
         </div>
 
         <!-- 表格内容区域 -->

@@ -1168,35 +1168,73 @@
     </div>
 
     <!-- 编辑模式 -->
-    <div v-if="isEdit">
+    <div v-if="isEdit" class="space-y-4">
       <!-- 基本信息 -->
-      <div>
-        <label>账户名称</label>
-        <input v-model="form.name" placeholder="为账户设置一个易识别的名称" required type="text" />
+      <div class="mb-4">
+        <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
+          >账户名称</label
+        >
+        <input
+          v-model="form.name"
+          class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm text-gray-900 placeholder-gray-500 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
+          placeholder="为账户设置一个易识别的名称"
+          required
+          type="text"
+        />
       </div>
 
-      <div>
-        <label>描述 (可选)</label>
-        <textarea v-model="form.description" placeholder="账户用途说明..." rows="3" />
+      <div class="mb-4">
+        <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
+          >描述 (可选)</label
+        >
+        <textarea
+          v-model="form.description"
+          class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm text-gray-900 placeholder-gray-500 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
+          placeholder="账户用途说明..."
+          rows="3"
+        />
       </div>
 
-      <div>
-        <label>账户类型</label>
-        <div>
-          <label>
-            <input v-model="form.accountType" type="radio" value="shared" />
-            <span>共享账户</span>
+      <div class="mb-4">
+        <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
+          >账户类型</label
+        >
+        <div class="flex flex-wrap gap-3">
+          <label
+            class="flex cursor-pointer items-center gap-2 rounded-lg border border-gray-200 px-3 py-2 transition-colors hover:bg-gray-50 dark:border-gray-600 dark:hover:bg-gray-700"
+          >
+            <input
+              v-model="form.accountType"
+              class="h-4 w-4 border-gray-300 text-primary-600 focus:ring-primary-500"
+              type="radio"
+              value="shared"
+            />
+            <span class="text-sm text-gray-700 dark:text-gray-300">共享账户</span>
           </label>
-          <label>
-            <input v-model="form.accountType" type="radio" value="dedicated" />
-            <span>专属账户</span>
+          <label
+            class="flex cursor-pointer items-center gap-2 rounded-lg border border-gray-200 px-3 py-2 transition-colors hover:bg-gray-50 dark:border-gray-600 dark:hover:bg-gray-700"
+          >
+            <input
+              v-model="form.accountType"
+              class="h-4 w-4 border-gray-300 text-primary-600 focus:ring-primary-500"
+              type="radio"
+              value="dedicated"
+            />
+            <span class="text-sm text-gray-700 dark:text-gray-300">专属账户</span>
           </label>
-          <label>
-            <input v-model="form.accountType" type="radio" value="group" />
-            <span>分组调度</span>
+          <label
+            class="flex cursor-pointer items-center gap-2 rounded-lg border border-gray-200 px-3 py-2 transition-colors hover:bg-gray-50 dark:border-gray-600 dark:hover:bg-gray-700"
+          >
+            <input
+              v-model="form.accountType"
+              class="h-4 w-4 border-gray-300 text-primary-600 focus:ring-primary-500"
+              type="radio"
+              value="group"
+            />
+            <span class="text-sm text-gray-700 dark:text-gray-300">分组调度</span>
           </label>
         </div>
-        <p>
+        <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
           共享账户：供所有API Key使用；专属账户：仅供特定API Key使用；分组调度：加入分组供分组内调度
         </p>
       </div>
@@ -1250,26 +1288,53 @@
       </div>
 
       <!-- Gemini 项目 ID 字段 -->
-      <div v-if="form.platform === 'gemini'">
-        <label>项目 ID (可选)</label>
-        <input v-model="form.projectId" placeholder="例如：verdant-wares-464411-k9" type="text" />
-        <p>Google Cloud/Workspace 账号可能需要提供项目 ID</p>
+      <div v-if="form.platform === 'gemini'" class="mb-4">
+        <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
+          >项目 ID (可选)</label
+        >
+        <input
+          v-model="form.projectId"
+          class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm text-gray-900 placeholder-gray-500 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
+          placeholder="例如：verdant-wares-464411-k9"
+          type="text"
+        />
+        <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+          Google Cloud/Workspace 账号可能需要提供项目 ID
+        </p>
       </div>
 
       <!-- Claude 订阅类型选择（编辑模式） -->
-      <div v-if="form.platform === 'claude'">
-        <label>订阅类型</label>
-        <div>
-          <label>
-            <input v-model="form.subscriptionType" type="radio" value="claude_max" />
-            <span>Claude Max</span>
+      <div v-if="form.platform === 'claude'" class="mb-4">
+        <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
+          >订阅类型</label
+        >
+        <div class="flex flex-wrap gap-3">
+          <label
+            class="flex cursor-pointer items-center gap-2 rounded-lg border border-gray-200 px-3 py-2 transition-colors hover:bg-gray-50 dark:border-gray-600 dark:hover:bg-gray-700"
+          >
+            <input
+              v-model="form.subscriptionType"
+              class="h-4 w-4 border-gray-300 text-primary-600 focus:ring-primary-500"
+              type="radio"
+              value="claude_max"
+            />
+            <span class="text-sm text-gray-700 dark:text-gray-300">Claude Max</span>
           </label>
-          <label>
-            <input v-model="form.subscriptionType" type="radio" value="claude_pro" />
-            <span>Claude Pro</span>
+          <label
+            class="flex cursor-pointer items-center gap-2 rounded-lg border border-gray-200 px-3 py-2 transition-colors hover:bg-gray-50 dark:border-gray-600 dark:hover:bg-gray-700"
+          >
+            <input
+              v-model="form.subscriptionType"
+              class="h-4 w-4 border-gray-300 text-primary-600 focus:ring-primary-500"
+              type="radio"
+              value="claude_pro"
+            />
+            <span class="text-sm text-gray-700 dark:text-gray-300">Claude Pro</span>
           </label>
         </div>
-        <p>Pro 账号不支持 Claude Opus 4 模型</p>
+        <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+          Pro 账号不支持 Claude Opus 4 模型
+        </p>
       </div>
 
       <!-- Claude 5小时限制自动停止调度选项（编辑模式） -->
@@ -1344,54 +1409,87 @@
       </div>
 
       <!-- 所有平台的优先级设置（编辑模式） -->
-      <div>
-        <label>调度优先级 (1-100)</label>
+      <div class="mb-4">
+        <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
+          >调度优先级 (1-100)</label
+        >
         <input
           v-model.number="form.priority"
+          class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm text-gray-900 placeholder-gray-500 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
           max="100"
           min="1"
           placeholder="数字越小优先级越高"
           type="number"
         />
-        <p>数字越小优先级越高，建议范围：1-100</p>
+        <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+          数字越小优先级越高，建议范围：1-100
+        </p>
       </div>
 
       <!-- Claude Console 和 CCR 特定字段（编辑模式）-->
       <div v-if="form.platform === 'claude-console' || form.platform === 'ccr'">
-        <div>
-          <label>API URL</label>
+        <div class="mb-4">
+          <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
+            >API URL</label
+          >
           <input
             v-model="form.apiUrl"
+            class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm text-gray-900 placeholder-gray-500 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
             placeholder="例如：https://api.example.com"
             required
             type="text"
           />
         </div>
 
-        <div>
-          <label>API Key</label>
-          <input v-model="form.apiKey" placeholder="留空表示不更新" type="password" />
-          <p>留空表示不更新 API Key</p>
+        <div class="mb-4">
+          <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
+            >API Key</label
+          >
+          <input
+            v-model="form.apiKey"
+            class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm text-gray-900 placeholder-gray-500 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
+            placeholder="留空表示不更新"
+            type="password"
+          />
+          <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">留空表示不更新 API Key</p>
         </div>
 
         <!-- 额度管理字段 -->
-        <div>
-          <div>
-            <label> 每日额度限制 ($) </label>
-            <input
-              v-model.number="form.dailyQuota"
-              min="0"
-              placeholder="0 表示不限制"
-              step="0.01"
-              type="number"
-            />
-            <p>设置每日使用额度，0 表示不限制</p>
+        <div class="mb-4 rounded-lg border border-gray-200 p-4 dark:border-gray-700">
+          <div class="mb-3 flex items-center gap-2">
+            <Icon class="h-4 w-4 text-amber-500" name="DollarSign" />
+            <h4 class="text-sm font-semibold text-gray-900 dark:text-white">额度管理</h4>
           </div>
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="mb-1 block text-xs font-medium text-gray-700 dark:text-gray-300">
+                每日额度限制 ($)
+              </label>
+              <input
+                v-model.number="form.dailyQuota"
+                class="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 placeholder-gray-500 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
+                min="0"
+                placeholder="0 表示不限制"
+                step="0.01"
+                type="number"
+              />
+              <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                设置每日使用额度，0 表示不限制
+              </p>
+            </div>
 
-          <div>
-            <label> 额度重置时间 </label>
-            <input v-model="form.quotaResetTime" placeholder="00:00" type="time" />
-            <p>每日自动重置额度的时间</p>
+            <div>
+              <label class="mb-1 block text-xs font-medium text-gray-700 dark:text-gray-300">
+                额度重置时间
+              </label>
+              <input
+                v-model="form.quotaResetTime"
+                class="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 placeholder-gray-500 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
+                placeholder="00:00"
+                type="time"
+              />
+              <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">每日自动重置额度的时间</p>
+            </div>
           </div>
         </div>
 
@@ -1415,15 +1513,20 @@
         </div>
 
         <!-- 并发控制字段（编辑模式）-->
-        <div>
-          <label> 最大并发任务数 </label>
+        <div class="mb-4">
+          <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
+            最大并发任务数
+          </label>
           <input
             v-model.number="form.maxConcurrentTasks"
+            class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm text-gray-900 placeholder-gray-500 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
             min="0"
             placeholder="0 表示不限制"
             type="number"
           />
-          <p>限制该账户的并发请求数量，0 表示不限制</p>
+          <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+            限制该账户的并发请求数量，0 表示不限制
+          </p>
         </div>
 
         <div>
@@ -1849,10 +1952,24 @@
       <!-- 代理设置 -->
       <ProxyConfig v-model="form.proxy" />
 
-      <div>
-        <button type="button" @click="$emit('close')">取消</button>
-        <button :disabled="loading" type="button" @click="updateAccount">
-          <div v-if="loading" />
+      <div class="flex justify-end gap-3">
+        <button
+          class="rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700"
+          type="button"
+          @click="$emit('close')"
+        >
+          取消
+        </button>
+        <button
+          class="inline-flex items-center gap-2 rounded-lg bg-primary-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-primary-700 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-primary-500 dark:hover:bg-primary-600"
+          :disabled="loading"
+          type="button"
+          @click="updateAccount"
+        >
+          <div
+            v-if="loading"
+            class="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"
+          />
           {{ loading ? '更新中...' : '更新' }}
         </button>
       </div>
