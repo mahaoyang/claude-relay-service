@@ -4,7 +4,7 @@
     <template #header>
       <div class="flex items-center gap-3">
         <div
-          class="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-blue-600 shadow-lg"
+          class="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-primary-500 to-primary-600 shadow-lg"
         >
           <Icon class="h-5 w-5 text-white" name="AreaChart" />
         </div>
@@ -15,20 +15,20 @@
             </h3>
             <span
               v-if="account?.platform"
-              class="inline-flex items-center gap-1 rounded-full bg-gradient-to-r from-blue-50 to-indigo-50 px-2.5 py-0.5 text-xs font-medium text-blue-700 dark:from-blue-900/30 dark:to-indigo-900/30 dark:text-blue-400"
+              class="inline-flex items-center gap-1 rounded-full bg-gradient-to-r from-primary-50 to-primary-100 px-2.5 py-0.5 text-xs font-medium text-primary-700 dark:from-primary-900/30 dark:to-primary-800/30 dark:text-primary-400"
             >
               <Icon class="h-3 w-3" name="Layers" />
               {{ platformLabel }}
             </span>
             <span
               v-if="account?.accountType"
-              class="inline-flex items-center gap-1 rounded-full bg-gradient-to-r from-purple-50 to-pink-50 px-2.5 py-0.5 text-xs font-medium text-purple-700 dark:from-purple-900/30 dark:to-pink-900/30 dark:text-purple-400"
+              class="inline-flex items-center gap-1 rounded-full bg-gradient-to-r from-primary-100 to-primary-200 px-2.5 py-0.5 text-xs font-medium text-primary-800 dark:from-primary-900/30 dark:to-primary-800/30 dark:text-primary-500"
             >
               <Icon class="h-3 w-3" name="UserCog" />
               {{ accountTypeLabel }}
             </span>
           </div>
-          <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+          <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
             近 {{ summary?.days || 30 }} 天内的费用与请求趋势
             <span
               v-if="summary?.actualDaysUsed && summary?.actualDaysUsed < summary?.days"
@@ -58,28 +58,28 @@
             :key="metric.key"
             class="group relative overflow-hidden rounded-lg border border-gray-200 bg-white p-4 shadow-sm transition-all hover:shadow-md dark:border-gray-700 dark:bg-gray-800"
             :class="{
-              'hover:border-blue-300 dark:hover:border-blue-600': metric.key === 'totalCost',
-              'hover:border-purple-300 dark:hover:border-purple-600':
+              'hover:border-primary-300 dark:hover:border-primary-600': metric.key === 'totalCost',
+              'hover:border-primary-400 dark:hover:border-primary-700':
                 metric.key === 'totalRequests',
-              'hover:border-green-300 dark:hover:border-green-600': metric.key === 'avgCost',
-              'hover:border-amber-300 dark:hover:border-amber-600': metric.key === 'avgRequests'
+              'hover:border-primary-500 dark:hover:border-primary-800': metric.key === 'avgCost',
+              'hover:border-primary-600 dark:hover:border-primary-900': metric.key === 'avgRequests'
             }"
           >
             <div class="flex items-start justify-between">
               <div class="flex-1">
-                <p class="text-sm font-medium text-gray-600 dark:text-gray-400">
+                <p class="text-xs font-medium text-gray-600 dark:text-gray-400">
                   {{ metric.label }}
                 </p>
                 <p
-                  class="mt-2 text-2xl font-bold"
+                  class="mt-2 text-xl font-bold"
                   :class="{
-                    'bg-gradient-to-r from-blue-600 to-blue-700 bg-clip-text text-transparent dark:from-blue-400 dark:to-blue-500':
+                    'bg-gradient-to-r from-primary-600 to-primary-700 bg-clip-text text-transparent dark:from-primary-400 dark:to-primary-500':
                       metric.key === 'totalCost',
-                    'bg-gradient-to-r from-purple-600 to-purple-700 bg-clip-text text-transparent dark:from-purple-400 dark:to-purple-500':
+                    'bg-gradient-to-r from-primary-700 to-primary-800 bg-clip-text text-transparent dark:from-primary-500 dark:to-primary-600':
                       metric.key === 'totalRequests',
-                    'bg-gradient-to-r from-green-600 to-green-700 bg-clip-text text-transparent dark:from-green-400 dark:to-green-500':
+                    'bg-gradient-to-r from-primary-500 to-primary-600 bg-clip-text text-transparent dark:from-primary-300 dark:to-primary-400':
                       metric.key === 'avgCost',
-                    'bg-gradient-to-r from-amber-600 to-amber-700 bg-clip-text text-transparent dark:from-amber-400 dark:to-amber-500':
+                    'bg-gradient-to-r from-primary-800 to-primary-900 bg-clip-text text-transparent dark:from-primary-600 dark:to-primary-700':
                       metric.key === 'avgRequests'
                   }"
                 >
@@ -92,23 +92,23 @@
               <div
                 class="flex h-12 w-12 items-center justify-center rounded-full transition-transform group-hover:scale-110"
                 :class="{
-                  'bg-gradient-to-br from-blue-100 to-blue-200 dark:from-blue-900/30 dark:to-blue-800/30':
+                  'bg-gradient-to-br from-primary-100 to-primary-200 dark:from-primary-900/30 dark:to-primary-800/30':
                     metric.key === 'totalCost',
-                  'bg-gradient-to-br from-purple-100 to-purple-200 dark:from-purple-900/30 dark:to-purple-800/30':
+                  'bg-gradient-to-br from-primary-200 to-primary-300 dark:from-primary-900/30 dark:to-primary-800/30':
                     metric.key === 'totalRequests',
-                  'bg-gradient-to-br from-green-100 to-green-200 dark:from-green-900/30 dark:to-green-800/30':
+                  'bg-gradient-to-br from-primary-300 to-primary-400 dark:from-primary-900/30 dark:to-primary-800/30':
                     metric.key === 'avgCost',
-                  'bg-gradient-to-br from-amber-100 to-amber-200 dark:from-amber-900/30 dark:to-amber-800/30':
+                  'bg-gradient-to-br from-primary-400 to-primary-500 dark:from-primary-900/30 dark:to-primary-800/30':
                     metric.key === 'avgRequests'
                 }"
               >
                 <div
                   class="h-6 w-6 rounded-full"
                   :class="{
-                    'bg-blue-500 dark:bg-blue-400': metric.key === 'totalCost',
-                    'bg-purple-500 dark:bg-purple-400': metric.key === 'totalRequests',
-                    'bg-green-500 dark:bg-green-400': metric.key === 'avgCost',
-                    'bg-amber-500 dark:bg-amber-400': metric.key === 'avgRequests'
+                    'bg-primary-500 dark:bg-primary-400': metric.key === 'totalCost',
+                    'bg-primary-600 dark:bg-primary-500': metric.key === 'totalRequests',
+                    'bg-primary-700 dark:bg-primary-600': metric.key === 'avgCost',
+                    'bg-primary-800 dark:bg-primary-700': metric.key === 'avgRequests'
                   }"
                 />
               </div>
@@ -123,12 +123,12 @@
             class="rounded-lg border border-gray-200 bg-gradient-to-br from-white to-gray-50 p-4 shadow-sm dark:border-gray-700 dark:from-gray-800 dark:to-gray-800/50"
           >
             <div
-              class="mb-3 flex items-center gap-2 text-sm font-semibold text-gray-900 dark:text-white"
+              class="mb-3 flex items-center gap-2 text-xs font-semibold text-gray-900 dark:text-white"
             >
               <div
-                class="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-amber-100 to-amber-200 dark:from-amber-900/30 dark:to-amber-800/30"
+                class="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-primary-100 to-primary-200 dark:from-primary-900/30 dark:to-primary-800/30"
               >
-                <Icon class="h-4 w-4 text-amber-600 dark:text-amber-400" name="Sun" />
+                <Icon class="h-4 w-4 text-primary-600 dark:text-primary-400" name="Sun" />
               </div>
               今日概览
             </div>
@@ -136,24 +136,24 @@
               <div
                 class="flex items-center justify-between rounded-md bg-white px-3 py-2 dark:bg-gray-800/80"
               >
-                <span class="text-sm text-gray-600 dark:text-gray-400">费用</span>
-                <span class="font-semibold text-green-600 dark:text-green-400">{{
+                <span class="text-xs text-gray-600 dark:text-gray-400">费用</span>
+                <span class="font-semibold text-primary-600 dark:text-primary-400">{{
                   summary?.today?.costFormatted || '$0.000000'
                 }}</span>
               </div>
               <div
                 class="flex items-center justify-between rounded-md bg-white px-3 py-2 dark:bg-gray-800/80"
               >
-                <span class="text-sm text-gray-600 dark:text-gray-400">请求</span>
-                <span class="font-semibold text-blue-600 dark:text-blue-400">{{
+                <span class="text-xs text-gray-600 dark:text-gray-400">请求</span>
+                <span class="font-semibold text-primary-700 dark:text-primary-500">{{
                   formatNumber(summary?.today?.requests || 0)
                 }}</span>
               </div>
               <div
                 class="flex items-center justify-between rounded-md bg-white px-3 py-2 dark:bg-gray-800/80"
               >
-                <span class="text-sm text-gray-600 dark:text-gray-400">Tokens</span>
-                <span class="font-semibold text-purple-600 dark:text-purple-400">{{
+                <span class="text-xs text-gray-600 dark:text-gray-400">Tokens</span>
+                <span class="font-semibold text-primary-800 dark:text-primary-600">{{
                   formatNumber(summary?.today?.tokens || 0)
                 }}</span>
               </div>
@@ -165,12 +165,12 @@
             class="rounded-lg border border-gray-200 bg-gradient-to-br from-white to-gray-50 p-4 shadow-sm dark:border-gray-700 dark:from-gray-800 dark:to-gray-800/50"
           >
             <div
-              class="mb-3 flex items-center gap-2 text-sm font-semibold text-gray-900 dark:text-white"
+              class="mb-3 flex items-center gap-2 text-xs font-semibold text-gray-900 dark:text-white"
             >
               <div
-                class="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-yellow-100 to-amber-200 dark:from-yellow-900/30 dark:to-amber-800/30"
+                class="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-primary-200 to-primary-300 dark:from-primary-900/30 dark:to-primary-800/30"
               >
-                <Icon class="h-4 w-4 text-amber-600 dark:text-amber-400" name="Crown" />
+                <Icon class="h-4 w-4 text-primary-700 dark:text-primary-500" name="Crown" />
               </div>
               最高费用日
             </div>
@@ -178,7 +178,7 @@
               <div
                 class="flex items-center justify-between rounded-md bg-white px-3 py-2 dark:bg-gray-800/80"
               >
-                <span class="text-sm text-gray-600 dark:text-gray-400">日期</span>
+                <span class="text-xs text-gray-600 dark:text-gray-400">日期</span>
                 <span class="font-semibold text-gray-900 dark:text-white">{{
                   formatDate(summary?.highestCostDay?.date)
                 }}</span>
@@ -186,16 +186,16 @@
               <div
                 class="flex items-center justify-between rounded-md bg-white px-3 py-2 dark:bg-gray-800/80"
               >
-                <span class="text-sm text-gray-600 dark:text-gray-400">费用</span>
-                <span class="font-semibold text-green-600 dark:text-green-400">{{
+                <span class="text-xs text-gray-600 dark:text-gray-400">费用</span>
+                <span class="font-semibold text-primary-600 dark:text-primary-400">{{
                   summary?.highestCostDay?.formattedCost || '$0.000000'
                 }}</span>
               </div>
               <div
                 class="flex items-center justify-between rounded-md bg-white px-3 py-2 dark:bg-gray-800/80"
               >
-                <span class="text-sm text-gray-600 dark:text-gray-400">请求</span>
-                <span class="font-semibold text-blue-600 dark:text-blue-400">{{
+                <span class="text-xs text-gray-600 dark:text-gray-400">请求</span>
+                <span class="font-semibold text-primary-700 dark:text-primary-500">{{
                   formatNumber(findHistoryValue(summary?.highestCostDay?.date, 'requests'))
                 }}</span>
               </div>
@@ -207,12 +207,12 @@
             class="rounded-lg border border-gray-200 bg-gradient-to-br from-white to-gray-50 p-4 shadow-sm dark:border-gray-700 dark:from-gray-800 dark:to-gray-800/50"
           >
             <div
-              class="mb-3 flex items-center gap-2 text-sm font-semibold text-gray-900 dark:text-white"
+              class="mb-3 flex items-center gap-2 text-xs font-semibold text-gray-900 dark:text-white"
             >
               <div
-                class="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-blue-100 to-indigo-200 dark:from-blue-900/30 dark:to-indigo-800/30"
+                class="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-primary-300 to-primary-400 dark:from-primary-900/30 dark:to-primary-800/30"
               >
-                <Icon class="h-4 w-4 text-blue-600 dark:text-blue-400" name="BarChart3" />
+                <Icon class="h-4 w-4 text-primary-800 dark:text-primary-600" name="BarChart3" />
               </div>
               最高请求日
             </div>
@@ -220,7 +220,7 @@
               <div
                 class="flex items-center justify-between rounded-md bg-white px-3 py-2 dark:bg-gray-800/80"
               >
-                <span class="text-sm text-gray-600 dark:text-gray-400">日期</span>
+                <span class="text-xs text-gray-600 dark:text-gray-400">日期</span>
                 <span class="font-semibold text-gray-900 dark:text-white">{{
                   formatDate(summary?.highestRequestDay?.date)
                 }}</span>
@@ -228,16 +228,16 @@
               <div
                 class="flex items-center justify-between rounded-md bg-white px-3 py-2 dark:bg-gray-800/80"
               >
-                <span class="text-sm text-gray-600 dark:text-gray-400">请求</span>
-                <span class="font-semibold text-blue-600 dark:text-blue-400">{{
+                <span class="text-xs text-gray-600 dark:text-gray-400">请求</span>
+                <span class="font-semibold text-primary-700 dark:text-primary-500">{{
                   formatNumber(summary?.highestRequestDay?.requests || 0)
                 }}</span>
               </div>
               <div
                 class="flex items-center justify-between rounded-md bg-white px-3 py-2 dark:bg-gray-800/80"
               >
-                <span class="text-sm text-gray-600 dark:text-gray-400">费用</span>
-                <span class="font-semibold text-green-600 dark:text-green-400">{{
+                <span class="text-xs text-gray-600 dark:text-gray-400">费用</span>
+                <span class="font-semibold text-primary-600 dark:text-primary-400">{{
                   formatCost(findHistoryValue(summary?.highestRequestDay?.date, 'cost'))
                 }}</span>
               </div>
@@ -252,31 +252,31 @@
             class="rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800"
           >
             <h4
-              class="mb-3 flex items-center gap-2 text-sm font-semibold text-gray-900 dark:text-white"
+              class="mb-3 flex items-center gap-2 text-xs font-semibold text-gray-900 dark:text-white"
             >
               <div
-                class="flex h-7 w-7 items-center justify-center rounded-full bg-gradient-to-br from-purple-100 to-purple-200 dark:from-purple-900/30 dark:to-purple-800/30"
+                class="flex h-7 w-7 items-center justify-center rounded-full bg-gradient-to-br from-primary-400 to-primary-500 dark:from-primary-900/30 dark:to-primary-800/30"
               >
-                <Icon class="h-4 w-4 text-purple-600 dark:text-purple-400" name="Database" />
+                <Icon class="h-4 w-4 text-primary-900 dark:text-primary-700" name="Database" />
               </div>
               累计 Token
             </h4>
             <div class="space-y-2">
               <div class="flex items-center justify-between py-1.5">
-                <span class="text-sm text-gray-600 dark:text-gray-400">30天总计</span>
-                <span class="font-semibold text-purple-600 dark:text-purple-400">{{
+                <span class="text-xs text-gray-600 dark:text-gray-400">30天总计</span>
+                <span class="font-semibold text-primary-600 dark:text-primary-400">{{
                   formatNumber(totalTokens)
                 }}</span>
               </div>
               <div class="flex items-center justify-between py-1.5">
-                <span class="text-sm text-gray-600 dark:text-gray-400">日均 Token</span>
-                <span class="font-semibold text-purple-600 dark:text-purple-400">{{
+                <span class="text-xs text-gray-600 dark:text-gray-400">日均 Token</span>
+                <span class="font-semibold text-primary-600 dark:text-primary-400">{{
                   formatNumber(Math.round(summary?.avgDailyTokens || 0))
                 }}</span>
               </div>
               <div class="flex items-center justify-between py-1.5">
-                <span class="text-sm text-gray-600 dark:text-gray-400">输入 / 输出</span>
-                <span class="font-semibold text-purple-600 dark:text-purple-400"
+                <span class="text-xs text-gray-600 dark:text-gray-400">输入 / 输出</span>
+                <span class="font-semibold text-primary-600 dark:text-primary-400"
                   >{{ formatNumber(overviewInputTokens) }} /
                   {{ formatNumber(overviewOutputTokens) }}</span
                 >
@@ -289,31 +289,31 @@
             class="rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800"
           >
             <h4
-              class="mb-3 flex items-center gap-2 text-sm font-semibold text-gray-900 dark:text-white"
+              class="mb-3 flex items-center gap-2 text-xs font-semibold text-gray-900 dark:text-white"
             >
               <div
-                class="flex h-7 w-7 items-center justify-center rounded-full bg-gradient-to-br from-amber-100 to-amber-200 dark:from-amber-900/30 dark:to-amber-800/30"
+                class="flex h-7 w-7 items-center justify-center rounded-full bg-gradient-to-br from-primary-500 to-primary-600 dark:from-primary-900/30 dark:to-primary-800/30"
               >
-                <Icon class="h-4 w-4 text-amber-600 dark:text-amber-400" name="Gauge" />
+                <Icon class="h-4 w-4 text-primary-950 dark:text-primary-800" name="Gauge" />
               </div>
               平均速率
             </h4>
             <div class="space-y-2">
               <div class="flex items-center justify-between py-1.5">
-                <span class="text-sm text-gray-600 dark:text-gray-400">RPM</span>
-                <span class="font-semibold text-amber-600 dark:text-amber-400">{{
+                <span class="text-xs text-gray-600 dark:text-gray-400">RPM</span>
+                <span class="font-semibold text-primary-700 dark:text-primary-500">{{
                   overview?.averages?.rpm ?? 0
                 }}</span>
               </div>
               <div class="flex items-center justify-between py-1.5">
-                <span class="text-sm text-gray-600 dark:text-gray-400">TPM</span>
-                <span class="font-semibold text-amber-600 dark:text-amber-400">{{
+                <span class="text-xs text-gray-600 dark:text-gray-400">TPM</span>
+                <span class="font-semibold text-primary-700 dark:text-primary-500">{{
                   overview?.averages?.tpm ?? 0
                 }}</span>
               </div>
               <div class="flex items-center justify-between py-1.5">
-                <span class="text-sm text-gray-600 dark:text-gray-400">日均请求 / Token</span>
-                <span class="font-semibold text-amber-600 dark:text-amber-400"
+                <span class="text-xs text-gray-600 dark:text-gray-400">日均请求 / Token</span>
+                <span class="font-semibold text-primary-700 dark:text-primary-500"
                   >{{
                     formatNumber(Math.round((overview?.averages?.dailyRequests || 0) * 100) / 100)
                   }}
@@ -331,31 +331,31 @@
             class="rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800"
           >
             <h4
-              class="mb-3 flex items-center gap-2 text-sm font-semibold text-gray-900 dark:text-white"
+              class="mb-3 flex items-center gap-2 text-xs font-semibold text-gray-900 dark:text-white"
             >
               <div
-                class="flex h-7 w-7 items-center justify-center rounded-full bg-gradient-to-br from-blue-100 to-blue-200 dark:from-blue-900/30 dark:to-blue-800/30"
+                class="flex h-7 w-7 items-center justify-center rounded-full bg-gradient-to-br from-primary-600 to-primary-700 dark:from-primary-900/30 dark:to-primary-800/30"
               >
-                <Icon class="h-4 w-4 text-blue-600 dark:text-blue-400" name="Layers" />
+                <Icon class="h-4 w-4 text-primary-950 dark:text-primary-900" name="Layers" />
               </div>
               最近统计
             </h4>
             <div class="space-y-2">
               <div class="flex items-center justify-between py-1.5">
-                <span class="text-sm text-gray-600 dark:text-gray-400">今日请求</span>
-                <span class="font-semibold text-blue-600 dark:text-blue-400">{{
+                <span class="text-xs text-gray-600 dark:text-gray-400">今日请求</span>
+                <span class="font-semibold text-primary-700 dark:text-primary-500">{{
                   formatNumber(overview?.daily?.requests || 0)
                 }}</span>
               </div>
               <div class="flex items-center justify-between py-1.5">
-                <span class="text-sm text-gray-600 dark:text-gray-400">今日 Token</span>
-                <span class="font-semibold text-blue-600 dark:text-blue-400">{{
+                <span class="text-xs text-gray-600 dark:text-gray-400">今日 Token</span>
+                <span class="font-semibold text-primary-700 dark:text-primary-500">{{
                   formatNumber(overview?.daily?.allTokens || 0)
                 }}</span>
               </div>
               <div class="flex items-center justify-between py-1.5">
-                <span class="text-sm text-gray-600 dark:text-gray-400">今日费用</span>
-                <span class="font-semibold text-blue-600 dark:text-blue-400">{{
+                <span class="text-xs text-gray-600 dark:text-gray-400">今日费用</span>
+                <span class="font-semibold text-primary-700 dark:text-primary-500">{{
                   formatCost(overview?.daily?.cost || 0)
                 }}</span>
               </div>
@@ -367,19 +367,10 @@
         <div
           class="rounded-lg border border-gray-200 bg-white p-5 shadow-sm dark:border-gray-700 dark:bg-gray-800"
         >
-          <div class="mb-4 flex items-center justify-between">
-            <h4
-              class="flex items-center gap-2 text-base font-semibold text-gray-900 dark:text-white"
-            >
-              <div
-                class="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-blue-100 to-indigo-200 dark:from-blue-900/30 dark:to-indigo-800/30"
-              >
-                <Icon class="h-4 w-4 text-blue-600 dark:text-blue-400" name="LineChart" />
-              </div>
-              30天费用与请求趋势
-            </h4>
-            <span class="text-xs text-gray-500 dark:text-gray-400">
-              最新更新时间：{{ formatDateTime(generatedAtDisplay) }}
+          <div class="mb-4">
+            <h4 class="text-sm font-semibold text-gray-900 dark:text-white">费用与请求趋势</h4>
+            <span class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+              最新更新：{{ formatDateTime(generatedAtDisplay) }}
             </span>
           </div>
           <div class="relative h-80 w-full">
@@ -392,7 +383,7 @@
     <!-- Footer -->
     <template #footer>
       <button
-        class="rounded-lg bg-gray-200 px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
+        class="rounded-lg bg-gray-200 px-3 py-1.5 text-xs font-medium text-gray-700 transition-colors hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
         type="button"
         @click="handleClose"
       >
@@ -449,9 +440,9 @@ const accountTypeLabel = computed(() => {
 const chartColors = computed(() => ({
   text: isDarkMode.value ? '#e5e7eb' : '#374151',
   grid: isDarkMode.value ? 'rgba(75, 85, 99, 0.25)' : 'rgba(209, 213, 219, 0.4)',
-  cost: '#3b82f6',
-  costFill: 'rgba(59, 130, 246, 0.15)',
-  requests: '#f97316'
+  cost: 'rgb(204, 95, 61)', // primary-600
+  costFill: 'rgba(204, 95, 61, 0.15)',
+  requests: 'rgb(168, 78, 50)' // primary-700
 }))
 
 const totalTokens = computed(() => props.summary?.totalTokens || 0)
