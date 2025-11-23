@@ -45,6 +45,7 @@ const props = defineProps({
   }
 })
 
+// eslint-disable-next-line no-unused-vars
 const iconBgClass = computed(() => {
   const colorMap = {
     primary: ' ',

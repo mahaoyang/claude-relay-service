@@ -39,6 +39,7 @@ const props = defineProps({
   }
 })
 
+// eslint-disable-next-line no-unused-vars
 const progress = computed(() => {
   if (!props.limit || props.limit === 0) return 0
   const percentage = (props.current / props.limit) * 100

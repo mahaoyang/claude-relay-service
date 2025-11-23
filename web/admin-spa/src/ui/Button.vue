@@ -12,10 +12,22 @@ const props = defineProps({
     default: 'md',
     validator: (value) => ['sm', 'md', 'lg'].includes(value)
   },
-  block: Boolean,
-  loading: Boolean,
-  disabled: Boolean,
-  icon: String
+  block: {
+    type: Boolean,
+    default: false
+  },
+  loading: {
+    type: Boolean,
+    default: false
+  },
+  disabled: {
+    type: Boolean,
+    default: false
+  },
+  icon: {
+    type: String,
+    default: undefined
+  }
 })
 
 const emit = defineEmits(['click'])

@@ -21,7 +21,7 @@
 
       <!-- 数据列表 -->
       <div>
-        <div v-for="(stat, index) in sortedStats" :key="stat.model">
+        <div v-for="stat in sortedStats" :key="stat.model">
           <div>
             <div />
             <span>{{ stat.model }}</span>
@@ -53,6 +53,7 @@ const sortedStats = computed(() => {
   return [...dashboardStore.dashboardModelStats].sort((a, b) => b.requests - a.requests)
 })
 
+// eslint-disable-next-line no-unused-vars
 const getColor = (index) => {
   const { colorSchemes } = useChartConfig()
   const colors = colorSchemes.primary

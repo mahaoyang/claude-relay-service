@@ -256,7 +256,7 @@ const getDailyCostProgress = () => {
   return Math.min(percentage, 100)
 }
 
-// 获取每日费用进度条颜色
+// eslint-disable-next-line no-unused-vars
 const getDailyCostProgressColor = () => {
   const progress = getDailyCostProgress()
   if (progress >= 100) return ''
@@ -264,7 +264,7 @@ const getDailyCostProgressColor = () => {
   return ''
 }
 
-// 获取总费用进度
+// eslint-disable-next-line no-unused-vars
 const getTotalCostProgress = () => {
   if (!statsData.value.limits.totalCostLimit || statsData.value.limits.totalCostLimit === 0)
     return 0
@@ -273,7 +273,7 @@ const getTotalCostProgress = () => {
   return Math.min(percentage, 100)
 }
 
-// 获取总费用进度条颜色
+// eslint-disable-next-line no-unused-vars
 const getTotalCostProgressColor = () => {
   const progress = getTotalCostProgress()
   if (progress >= 100) return ''
@@ -281,7 +281,7 @@ const getTotalCostProgressColor = () => {
   return ''
 }
 
-// 获取Opus周费用进度
+// eslint-disable-next-line no-unused-vars
 const getOpusWeeklyCostProgress = () => {
   if (
     !statsData.value.limits.weeklyOpusCostLimit ||
@@ -293,7 +293,7 @@ const getOpusWeeklyCostProgress = () => {
   return Math.min(percentage, 100)
 }
 
-// 获取Opus周费用进度条颜色
+// eslint-disable-next-line no-unused-vars
 const getOpusWeeklyCostProgressColor = () => {
   const progress = getOpusWeeklyCostProgress()
   if (progress >= 100) return ''

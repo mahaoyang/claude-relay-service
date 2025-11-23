@@ -8,8 +8,14 @@ const props = defineProps({
     default: 'info',
     validator: (value) => ['success', 'warning', 'danger', 'info'].includes(value)
   },
-  title: String,
-  closable: Boolean
+  title: {
+    type: String,
+    default: undefined
+  },
+  closable: {
+    type: Boolean,
+    default: false
+  }
 })
 
 const emit = defineEmits(['close'])

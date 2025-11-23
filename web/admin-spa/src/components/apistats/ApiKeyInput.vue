@@ -172,7 +172,7 @@ import TabGroup from '@/components/common/TabGroup.vue'
 
 const apiStatsStore = useApiStatsStore()
 const { apiKey, loading, multiKeyMode } = storeToRefs(apiStatsStore)
-const { queryStats, clearInput } = apiStatsStore
+const { queryStats } = apiStatsStore
 
 // 模式选项
 const modeOptions = [

@@ -24,7 +24,7 @@ defineProps({
 // Store
 const themeStore = useThemeStore()
 
-// 计算当前主题对应的图标
+// eslint-disable-next-line no-unused-vars
 const currentIcon = computed(() => {
   const iconMap = {
     light: 'Sun',
