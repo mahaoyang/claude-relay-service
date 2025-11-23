@@ -662,7 +662,7 @@
           </span>
         </p>
         <div
-          v-if="!accountUsageTrendData.labels || accountUsageTrendData.labels.length === 0"
+          v-if="!accountUsageTrendData.data || accountUsageTrendData.data.length === 0"
           class="flex h-[400px] items-center justify-center text-gray-500 dark:text-gray-400"
         >
           暂无账号使用数据
