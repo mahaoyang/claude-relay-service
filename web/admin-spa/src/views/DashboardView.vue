@@ -789,6 +789,20 @@ function formatNumber(num) {
   return num.toString()
 }
 
+// 格式化成本显示
+function formatCostValue(cost) {
+  if (!Number.isFinite(cost)) {
+    return '$0.000000'
+  }
+  if (cost >= 1) {
+    return `$${cost.toFixed(2)}`
+  }
+  if (cost >= 0.01) {
+    return `$${cost.toFixed(3)}`
+  }
+  return `$${cost.toFixed(6)}`
+}
+
 // 计算百分比
 function calculatePercentage(value, stats) {
   if (!stats || stats.length === 0) return 0
@@ -944,50 +958,185 @@ function createApiKeysUsageTrendChart() {
     apiKeysUsageTrendChartInstance.destroy()
   }
 
-  const data = apiKeysTrendData.value
-  if (!data || !data.labels || data.labels.length === 0) return
+  const data = apiKeysTrendData.value.data || []
+  const metric = apiKeysTrendMetric.value
 
-  const datasets = data.datasets.map((dataset, index) => ({
-    label: dataset.label,
-    data: dataset.data,
-    borderColor: trendLineColors[index % trendLineColors.length],
-    backgroundColor: trendLineColors[index % trendLineColors.length] + '20',
-    tension: 0.4
-  }))
+  // 颜色数组
+  const colors = [
+    '#3B82F6',
+    '#10B981',
+    '#F59E0B',
+    '#EF4444',
+    '#8B5CF6',
+    '#EC4899',
+    '#14B8A6',
+    '#F97316',
+    '#6366F1',
+    '#84CC16'
+  ]
+
+  // 准备数据集
+  const datasets =
+    apiKeysTrendData.value.topApiKeys?.map((apiKeyId, index) => {
+      const data = apiKeysTrendData.value.data.map((item) => {
+        if (!item.apiKeys || !item.apiKeys[apiKeyId]) return 0
+        return metric === 'tokens'
+          ? item.apiKeys[apiKeyId].tokens
+          : item.apiKeys[apiKeyId].requests || 0
+      })
+
+      // 获取API Key名称
+      const apiKeyName =
+        apiKeysTrendData.value.data.find((item) => item.apiKeys && item.apiKeys[apiKeyId])?.apiKeys[
+          apiKeyId
+        ]?.name || `API Key ${apiKeyId}`
+
+      return {
+        label: apiKeyName,
+        data: data,
+        borderColor: colors[index % colors.length],
+        backgroundColor: colors[index % colors.length] + '20',
+        tension: 0.4,
+        fill: false
+      }
+    }) || []
+
+  // 根据数据类型确定标签字段
+  const labelField = data[0]?.date ? 'date' : 'hour'
+
+  const chartData = {
+    labels: data.map((d) => {
+      // 优先使用后端提供的label字段
+      if (d.label) {
+        return d.label
+      }
+
+      if (labelField === 'hour') {
+        // 格式化小时显示
+        const date = new Date(d.hour)
+        const month = String(date.getMonth() + 1).padStart(2, '0')
+        const day = String(date.getDate()).padStart(2, '0')
+        const hour = String(date.getHours()).padStart(2, '0')
+        return `${month}/${day} ${hour}:00`
+      }
+      // 按天显示时，只显示月/日，不显示年份
+      const dateStr = d.date
+      if (dateStr && dateStr.includes('-')) {
+        const parts = dateStr.split('-')
+        if (parts.length >= 3) {
+          return `${parts[1]}/${parts[2]}`
+        }
+      }
+      return d.date
+    }),
+    datasets: datasets
+  }
 
   apiKeysUsageTrendChartInstance = new Chart(apiKeysUsageTrendChart.value, {
     type: 'line',
-    data: {
-      labels: data.labels,
-      datasets: datasets
-    },
+    data: chartData,
     options: {
       responsive: true,
       maintainAspectRatio: false,
-      interaction: {
-        mode: 'index',
-        intersect: false
-      },
       plugins: {
         legend: {
-          position: 'top',
+          position: 'bottom',
           labels: {
+            padding: 20,
             usePointStyle: true,
-            padding: 15,
-            font: { size: 12 },
+            font: {
+              size: 12
+            },
             color: chartColors.value.legend
+          }
+        },
+        tooltip: {
+          mode: 'index',
+          intersect: false,
+          itemSort: function (a, b) {
+            // 按值倒序排列
+            return b.parsed.y - a.parsed.y
+          },
+          callbacks: {
+            label: function (context) {
+              const label = context.dataset.label || ''
+              const value = context.parsed.y
+              const dataIndex = context.dataIndex
+              const dataPoint = apiKeysTrendData.value.data[dataIndex]
+
+              // 获取所有数据集在这个时间点的值，用于排名
+              const allValues = context.chart.data.datasets
+                .map((dataset, idx) => ({
+                  value: dataset.data[dataIndex] || 0,
+                  index: idx
+                }))
+                .sort((a, b) => b.value - a.value)
+
+              // 找出当前数据集的排名
+              const rank = allValues.findIndex((item) => item.index === context.datasetIndex) + 1
+
+              // 准备排名标识
+              let rankIcon = ''
+              if (rank === 1) rankIcon = '🥇 '
+              else if (rank === 2) rankIcon = '🥈 '
+              else if (rank === 3) rankIcon = '🥉 '
+
+              if (apiKeysTrendMetric.value === 'tokens') {
+                // 格式化token显示
+                let formattedValue = ''
+                if (value >= 1000000) {
+                  formattedValue = (value / 1000000).toFixed(2) + 'M'
+                } else if (value >= 1000) {
+                  formattedValue = (value / 1000).toFixed(2) + 'K'
+                } else {
+                  formattedValue = value.toLocaleString()
+                }
+
+                // 获取对应API Key的费用信息
+                const apiKeyId = apiKeysTrendData.value.topApiKeys[context.datasetIndex]
+                const apiKeyData = dataPoint?.apiKeys?.[apiKeyId]
+                const cost = apiKeyData?.formattedCost || '$0.00'
+
+                return `${rankIcon}${label}: ${formattedValue} tokens (${cost})`
+              } else {
+                return `${rankIcon}${label}: ${value.toLocaleString()} 次`
+              }
+            }
           }
         }
       },
       scales: {
+        x: {
+          type: 'category',
+          display: true,
+          title: {
+            display: true,
+            text: trendGranularity.value === 'hour' ? '时间' : '日期',
+            color: chartColors.value.text
+          },
+          ticks: {
+            color: chartColors.value.text
+          },
+          grid: {
+            color: chartColors.value.grid
+          }
+        },
         y: {
           beginAtZero: true,
-          ticks: { color: chartColors.value.text },
-          grid: { color: chartColors.value.grid }
-        },
-        x: {
-          ticks: { color: chartColors.value.text },
-          grid: { color: chartColors.value.grid }
+          title: {
+            display: true,
+            text: apiKeysTrendMetric.value === 'tokens' ? 'Token 数量' : '请求次数',
+            color: chartColors.value.text
+          },
+          ticks: {
+            callback: function (value) {
+              return formatNumber(value)
+            },
+            color: chartColors.value.text
+          },
+          grid: {
+            color: chartColors.value.grid
+          }
         }
       }
     }
@@ -1002,23 +1151,75 @@ function createAccountUsageTrendChart() {
     accountUsageTrendChartInstance.destroy()
   }
 
-  const data = accountUsageTrendData.value
-  if (!data || !data.labels || data.labels.length === 0) return
+  const trend = accountUsageTrendData.value?.data || []
+  const topAccounts = accountUsageTrendData.value?.topAccounts || []
 
-  const datasets = data.datasets.map((dataset, index) => ({
-    label: dataset.label,
-    data: dataset.data,
-    borderColor: trendLineColors[index % trendLineColors.length],
-    backgroundColor: trendLineColors[index % trendLineColors.length] + '20',
-    tension: 0.4
-  }))
+  const colors = [
+    '#2563EB',
+    '#059669',
+    '#D97706',
+    '#DC2626',
+    '#7C3AED',
+    '#F472B6',
+    '#0EA5E9',
+    '#F97316',
+    '#6366F1',
+    '#22C55E'
+  ]
+
+  const datasets = topAccounts.map((accountId, index) => {
+    const dataPoints = trend.map((item) => {
+      if (!item.accounts || !item.accounts[accountId]) return 0
+      return item.accounts[accountId].cost || 0
+    })
+
+    const accountName =
+      trend.find((item) => item.accounts && item.accounts[accountId])?.accounts[accountId]?.name ||
+      `账号 ${String(accountId).slice(0, 6)}`
+
+    return {
+      label: accountName,
+      data: dataPoints,
+      borderColor: colors[index % colors.length],
+      backgroundColor: colors[index % colors.length] + '20',
+      tension: 0.4,
+      fill: false
+    }
+  })
+
+  const labelField = trend[0]?.date ? 'date' : 'hour'
+
+  const chartData = {
+    labels: trend.map((item) => {
+      if (item.label) {
+        return item.label
+      }
+
+      if (labelField === 'hour') {
+        const date = new Date(item.hour)
+        const month = String(date.getMonth() + 1).padStart(2, '0')
+        const day = String(date.getDate()).padStart(2, '0')
+        const hour = String(date.getHours()).padStart(2, '0')
+        return `${month}/${day} ${hour}:00`
+      }
+
+      if (item.date && item.date.includes('-')) {
+        const parts = item.date.split('-')
+        if (parts.length >= 3) {
+          return `${parts[1]}/${parts[2]}`
+        }
+      }
+
+      return item.date
+    }),
+    datasets
+  }
+
+  const topAccountIds = topAccounts
 
   accountUsageTrendChartInstance = new Chart(accountUsageTrendChart.value, {
     type: 'line',
-    data: {
-      labels: data.labels,
-      datasets: datasets
-    },
+    data: chartData,
     options: {
       responsive: true,
       maintainAspectRatio: false,
@@ -1028,24 +1229,81 @@ function createAccountUsageTrendChart() {
       },
       plugins: {
         legend: {
-          position: 'top',
+          position: 'bottom',
           labels: {
+            padding: 20,
             usePointStyle: true,
-            padding: 15,
-            font: { size: 12 },
+            font: {
+              size: 12
+            },
             color: chartColors.value.legend
+          }
+        },
+        tooltip: {
+          mode: 'index',
+          intersect: false,
+          itemSort: (a, b) => b.parsed.y - a.parsed.y,
+          callbacks: {
+            label: function (context) {
+              const label = context.dataset.label || ''
+              const value = context.parsed.y || 0
+              const dataIndex = context.dataIndex
+              const datasetIndex = context.datasetIndex
+              const accountId = topAccountIds[datasetIndex]
+              const dataPoint = accountUsageTrendData.value.data[dataIndex]
+              const accountDetail = dataPoint?.accounts?.[accountId]
+
+              const allValues = context.chart.data.datasets
+                .map((dataset, idx) => ({
+                  value: dataset.data[dataIndex] || 0,
+                  index: idx
+                }))
+                .sort((a, b) => b.value - a.value)
+
+              const rank = allValues.findIndex((item) => item.index === datasetIndex) + 1
+              let rankIcon = ''
+              if (rank === 1) rankIcon = '🥇 '
+              else if (rank === 2) rankIcon = '🥈 '
+              else if (rank === 3) rankIcon = '🥉 '
+
+              const formattedCost = accountDetail?.formattedCost || formatCostValue(value)
+              const requests = accountDetail?.requests || 0
+
+              return `${rankIcon}${label}: ${formattedCost} / ${requests.toLocaleString()} 次`
+            }
           }
         }
       },
       scales: {
+        x: {
+          type: 'category',
+          display: true,
+          title: {
+            display: true,
+            text: trendGranularity.value === 'hour' ? '时间' : '日期',
+            color: chartColors.value.text
+          },
+          ticks: {
+            color: chartColors.value.text
+          },
+          grid: {
+            color: chartColors.value.grid
+          }
+        },
         y: {
           beginAtZero: true,
-          ticks: { color: chartColors.value.text },
-          grid: { color: chartColors.value.grid }
-        },
-        x: {
-          ticks: { color: chartColors.value.text },
-          grid: { color: chartColors.value.grid }
+          title: {
+            display: true,
+            text: '消耗金额 (USD)',
+            color: chartColors.value.text
+          },
+          ticks: {
+            callback: (value) => formatCostValue(Number(value)),
+            color: chartColors.value.text
+          },
+          grid: {
+            color: chartColors.value.grid
+          }
         }
       }
     }
@@ -1054,7 +1312,7 @@ function createAccountUsageTrendChart() {
 
 // 更新 API Keys 使用趋势图
 async function updateApiKeysUsageTrendChart() {
-  await loadApiKeysTrend()
+  await loadApiKeysTrend(apiKeysTrendMetric.value)
   await nextTick()
   createApiKeysUsageTrendChart()
 }
