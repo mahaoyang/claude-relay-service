@@ -1,1244 +1,1648 @@
 <template>
-  <div>
-    <div>
+  <PageContainer max-width="7xl">
+    <template #header>
       <div>
-        <div>
-          <h3>API Keys 管理</h3>
-          <p>管理和监控您的 API 密钥</p>
-        </div>
+        <h1 class="text-lg font-bold tracking-tight text-gray-900 dark:text-white">
+          API Keys 管理
+        </h1>
+        <p class="mt-1 text-[10px] text-gray-600 dark:text-gray-400">管理和监控您的 API 密钥</p>
+      </div>
+    </template>
 
-        <!-- Tab Navigation -->
-        <div>
-          <nav aria-label="Tabs">
-            <button @click="activeTab = 'active'">
-              活跃 API Keys
-              <span v-if="apiKeys.length > 0">
-                {{ apiKeys.length }}
-              </span>
-            </button>
-            <button @click="loadDeletedApiKeys">
-              已删除 API Keys
-              <span v-if="deletedApiKeys.length > 0">
-                {{ deletedApiKeys.length }}
-              </span>
-            </button>
-          </nav>
-        </div>
+    <Card>
+      <!-- Tab Navigation -->
+      <div class="border-b border-gray-200 dark:border-gray-700">
+        <nav aria-label="Tabs" class="flex gap-8 px-6">
+          <button
+            class="relative border-b-2 px-1 pb-4 pt-4 text-sm font-medium transition-colors"
+            :class="
+              activeTab === 'active'
+                ? 'border-primary-600 text-primary-600 dark:border-primary-400 dark:text-primary-400'
+                : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:border-gray-600 dark:hover:text-gray-200'
+            "
+            @click="activeTab = 'active'"
+          >
+            活跃 API Keys
+            <span
+              v-if="apiKeys.length > 0"
+              class="ml-2 rounded-full px-2.5 py-0.5 text-xs font-medium"
+              :class="
+                activeTab === 'active'
+                  ? 'bg-primary-100 text-primary-700 dark:bg-primary-900/30 dark:text-primary-300'
+                  : 'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400'
+              "
+            >
+              {{ apiKeys.length }}
+            </span>
+          </button>
+          <button
+            class="relative border-b-2 px-1 pb-4 pt-4 text-sm font-medium transition-colors"
+            :class="
+              activeTab === 'deleted'
+                ? 'border-primary-600 text-primary-600 dark:border-primary-400 dark:text-primary-400'
+                : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:border-gray-600 dark:hover:text-gray-200'
+            "
+            @click="loadDeletedApiKeys"
+          >
+            已删除 API Keys
+            <span
+              v-if="deletedApiKeys.length > 0"
+              class="ml-2 rounded-full px-2.5 py-0.5 text-xs font-medium"
+              :class="
+                activeTab === 'deleted'
+                  ? 'bg-primary-100 text-primary-700 dark:bg-primary-900/30 dark:text-primary-300'
+                  : 'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400'
+              "
+            >
+              {{ deletedApiKeys.length }}
+            </span>
+          </button>
+        </nav>
+      </div>
 
-        <!-- Tab Content -->
-        <!-- 活跃 API Keys Tab Panel -->
-        <div v-if="activeTab === 'active'">
-          <!-- 工具栏区域 - 添加 mb-4 增加与表格的间距 -->
-          <div>
-            <!-- 左侧：查询筛选器组 -->
-            <div>
-              <!-- 时间范围筛选 -->
-              <div>
-                <div></div>
+      <!-- Tab Content -->
+      <!-- 活跃 API Keys Tab Panel -->
+      <div v-if="activeTab === 'active'" class="p-6">
+        <!-- 工具栏区域 -->
+        <div class="mb-6 flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+          <!-- 左侧：查询筛选器组 -->
+          <div class="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+            <!-- 时间范围筛选 -->
+            <div class="flex items-center gap-2">
+              <div class="text-xs font-medium text-gray-500 dark:text-gray-400">时间范围</div>
+              <CustomDropdown
+                v-model="globalDateFilter.preset"
+                icon="fa-calendar-alt"
+                icon-color=""
+                :options="timeRangeDropdownOptions"
+                placeholder="选择时间范围"
+                @change="handleTimeRangeChange"
+              />
+            </div>
+
+            <!-- 自定义日期范围选择器 - 在选择自定义时显示 -->
+            <div v-if="globalDateFilter.type === 'custom'" class="w-full sm:w-auto">
+              <el-date-picker
+                :clearable="true"
+                :default-time="defaultTime"
+                :disabled-date="disabledDate"
+                end-placeholder="结束日期"
+                format="YYYY-MM-DD HH:mm:ss"
+                :model-value="globalDateFilter.customRange"
+                range-separator="至"
+                size="small"
+                start-placeholder="开始日期"
+                type="datetimerange"
+                :unlink-panels="false"
+                value-format="YYYY-MM-DD HH:mm:ss"
+                @update:model-value="onGlobalCustomDateRangeChange"
+              />
+            </div>
+
+            <!-- 标签筛选器 -->
+            <div class="flex items-center gap-2">
+              <div class="text-xs font-medium text-gray-500 dark:text-gray-400">标签</div>
+              <div class="flex items-center gap-2">
                 <CustomDropdown
-                  v-model="globalDateFilter.preset"
-                  icon="fa-calendar-alt"
+                  v-model="selectedTagFilter"
+                  icon="fa-tags"
                   icon-color=""
-                  :options="timeRangeDropdownOptions"
-                  placeholder="选择时间范围"
-                  @change="handleTimeRangeChange"
+                  :options="tagOptions"
+                  placeholder="所有标签"
+                  @change="currentPage = 1"
+                />
+                <span
+                  v-if="selectedTagFilter"
+                  class="rounded-full bg-primary-100 px-2 py-0.5 text-xs font-medium text-primary-700 dark:bg-primary-900/30 dark:text-primary-300"
+                >
+                  {{ selectedTagCount }}
+                </span>
+              </div>
+            </div>
+
+            <!-- 搜索模式与搜索框 -->
+            <div class="flex flex-col gap-2 sm:flex-row sm:items-center">
+              <div>
+                <CustomDropdown
+                  v-model="searchMode"
+                  icon="fa-filter"
+                  icon-color=""
+                  :options="searchModeOptions"
+                  placeholder="选择搜索类型"
+                  @change="currentPage = 1"
                 />
               </div>
-
-              <!-- 自定义日期范围选择器 - 在选择自定义时显示 -->
-              <div v-if="globalDateFilter.type === 'custom'">
-                <el-date-picker
-                  :clearable="true"
-                  :default-time="defaultTime"
-                  :disabled-date="disabledDate"
-                  end-placeholder="结束日期"
-                  format="YYYY-MM-DD HH:mm:ss"
-                  :model-value="globalDateFilter.customRange"
-                  range-separator="至"
-                  size="small"
-                  start-placeholder="开始日期"
-                  type="datetimerange"
-                  :unlink-panels="false"
-                  value-format="YYYY-MM-DD HH:mm:ss"
-                  @update:model-value="onGlobalCustomDateRangeChange"
+              <div class="relative w-full sm:w-64">
+                <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                  <Icon name="Search" class="h-4 w-4 text-gray-400" />
+                </div>
+                <input
+                  v-model="searchKeyword"
+                  class="block w-full rounded-lg border border-gray-300 bg-white py-2 pl-10 pr-10 text-sm text-gray-900 placeholder-gray-500 transition-colors focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:placeholder-gray-400 dark:focus:border-primary-400 dark:focus:ring-primary-400"
+                  :placeholder="
+                    searchMode === 'bindingAccount'
+                      ? '搜索所属账号...'
+                      : isLdapEnabled
+                        ? '搜索名称或所有者...'
+                        : '搜索名称...'
+                  "
+                  type="text"
+                  @input="currentPage = 1"
                 />
+                <button
+                  v-if="searchKeyword"
+                  class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200"
+                  @click="clearSearch"
+                >
+                  <Icon name="X" class="h-4 w-4" />
+                </button>
               </div>
-
-              <!-- 标签筛选器 -->
-              <div>
-                <div></div>
-                <div>
-                  <CustomDropdown
-                    v-model="selectedTagFilter"
-                    icon="fa-tags"
-                    icon-color=""
-                    :options="tagOptions"
-                    placeholder="所有标签"
-                    @change="currentPage = 1"
-                  />
-                  <span v-if="selectedTagFilter">
-                    {{ selectedTagCount }}
-                  </span>
-                </div>
-              </div>
-
-              <!-- 搜索模式与搜索框 -->
-              <div>
-                <div>
-                  <CustomDropdown
-                    v-model="searchMode"
-                    icon="fa-filter"
-                    icon-color=""
-                    :options="searchModeOptions"
-                    placeholder="选择搜索类型"
-                    @change="currentPage = 1"
-                  />
-                </div>
-                <div>
-                  <div></div>
-                  <div>
-                    <input
-                      v-model="searchKeyword"
-                      :placeholder="
-                        searchMode === 'bindingAccount'
-                          ? '搜索所属账号...'
-                          : isLdapEnabled
-                            ? '搜索名称或所有者...'
-                            : '搜索名称...'
-                      "
-                      type="text"
-                      @input="currentPage = 1"
-                    />
-                    <Icon name="Search" />
-                    <button v-if="searchKeyword" @click="clearSearch">
-                      <Icon name="X" />
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- 右侧：操作按钮组 -->
-            <div>
-              <!-- 刷新按钮 -->
-              <button :disabled="apiKeysLoading" @click="loadApiKeys()">
-                <div></div>
-                <i />
-                <span>刷新</span>
-              </button>
-
-              <!-- 选择/取消选择按钮 -->
-              <button @click="toggleSelectionMode">
-                <Icon :name="showCheckboxes ? 'X' : 'CheckSquare'" />
-                <span>{{ showCheckboxes ? '取消选择' : '选择' }}</span>
-              </button>
-
-              <!-- 导出数据按钮 -->
-              <button @click="exportToExcel">
-                <div></div>
-                <Icon name="FileSpreadsheet" />
-                <span>导出数据</span>
-              </button>
-
-              <!-- 批量编辑按钮 - 移到刷新按钮旁边 -->
-              <button v-if="selectedApiKeys.length > 0" @click="openBatchEditModal()">
-                <div></div>
-                <Icon name="Edit" />
-                <span>编辑选中 ({{ selectedApiKeys.length }})</span>
-              </button>
-
-              <!-- 批量删除按钮 - 移到刷新按钮旁边 -->
-              <button v-if="selectedApiKeys.length > 0" @click="batchDeleteApiKeys()">
-                <div></div>
-                <Icon name="Trash" />
-                <span>删除选中 ({{ selectedApiKeys.length }})</span>
-              </button>
-
-              <!-- 创建按钮 -->
-              <button @click.stop="openCreateApiKeyModal">
-                <Icon name="Plus" />
-                <span>创建新 Key</span>
-              </button>
             </div>
           </div>
 
-          <div v-if="apiKeysLoading">
-            <div />
-            <p>正在加载 API Keys...</p>
-          </div>
+          <!-- 右侧：操作按钮组 -->
+          <div class="flex flex-wrap gap-2">
+            <!-- 刷新按钮 -->
+            <button
+              class="inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-700 shadow-sm transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700"
+              :disabled="apiKeysLoading"
+              @click="loadApiKeys()"
+            >
+              <div class="h-4 w-4" :class="{ 'animate-spin': apiKeysLoading }">
+                <i class="fas fa-sync-alt" />
+              </div>
+              <span>刷新</span>
+            </button>
 
-          <div v-else-if="apiKeys.length === 0">
-            <div>
-              <Icon name="Key" />
-            </div>
-            <p>暂无 API Keys</p>
-            <p>点击上方按钮创建您的第一个 API Key</p>
-          </div>
+            <!-- 选择/取消选择按钮 -->
+            <button
+              class="inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-700 shadow-sm transition-colors hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700"
+              @click="toggleSelectionMode"
+            >
+              <Icon :name="showCheckboxes ? 'X' : 'CheckSquare'" class="h-4 w-4" />
+              <span>{{ showCheckboxes ? '取消选择' : '选择' }}</span>
+            </button>
 
-          <!-- 桌面端表格视图 -->
-          <div v-else>
-            <div>
-              <table>
-                <thead>
-                  <tr>
-                    <th v-if="shouldShowCheckboxes">
-                      <div>
+            <!-- 导出数据按钮 -->
+            <button
+              class="inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-700 shadow-sm transition-colors hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700"
+              @click="exportToExcel"
+            >
+              <Icon name="FileSpreadsheet" class="h-4 w-4" />
+              <span>导出数据</span>
+            </button>
+
+            <!-- 批量编辑按钮 -->
+            <button
+              v-if="selectedApiKeys.length > 0"
+              class="inline-flex items-center gap-2 rounded-lg border border-blue-300 bg-blue-50 px-3 py-2 text-sm font-medium text-blue-700 shadow-sm transition-colors hover:bg-blue-100 dark:border-blue-700 dark:bg-blue-900/30 dark:text-blue-300 dark:hover:bg-blue-900/50"
+              @click="openBatchEditModal()"
+            >
+              <Icon name="Edit" class="h-4 w-4" />
+              <span>编辑选中 ({{ selectedApiKeys.length }})</span>
+            </button>
+
+            <!-- 批量删除按钮 -->
+            <button
+              v-if="selectedApiKeys.length > 0"
+              class="inline-flex items-center gap-2 rounded-lg border border-red-300 bg-red-50 px-3 py-2 text-sm font-medium text-red-700 shadow-sm transition-colors hover:bg-red-100 dark:border-red-700 dark:bg-red-900/30 dark:text-red-300 dark:hover:bg-red-900/50"
+              @click="batchDeleteApiKeys()"
+            >
+              <Icon name="Trash" class="h-4 w-4" />
+              <span>删除选中 ({{ selectedApiKeys.length }})</span>
+            </button>
+
+            <!-- 创建按钮 -->
+            <button
+              class="inline-flex items-center gap-2 rounded-lg bg-primary-600 px-3 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-primary-700 dark:bg-primary-500 dark:hover:bg-primary-600"
+              @click.stop="openCreateApiKeyModal"
+            >
+              <Icon name="Plus" class="h-4 w-4" />
+              <span>创建新 Key</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 加载状态 -->
+        <div v-if="apiKeysLoading" class="flex flex-col items-center justify-center py-16">
+          <div
+            class="mb-4 h-12 w-12 animate-spin rounded-full border-4 border-gray-200 border-t-primary-600 dark:border-gray-700 dark:border-t-primary-400"
+          />
+          <p class="text-sm text-gray-600 dark:text-gray-400">正在加载 API Keys...</p>
+        </div>
+
+        <!-- 空状态 -->
+        <div
+          v-else-if="apiKeys.length === 0"
+          class="flex flex-col items-center justify-center py-16"
+        >
+          <div
+            class="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800"
+          >
+            <Icon name="Key" class="h-8 w-8 text-gray-400 dark:text-gray-500" />
+          </div>
+          <p class="mb-2 text-base font-medium text-gray-900 dark:text-white">暂无 API Keys</p>
+          <p class="text-sm text-gray-600 dark:text-gray-400">点击上方按钮创建您的第一个 API Key</p>
+        </div>
+
+        <!-- 桌面端表格视图 -->
+        <div v-else class="overflow-hidden rounded-lg border border-gray-200 dark:border-gray-700">
+          <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+              <thead class="bg-gray-50 dark:bg-gray-800">
+                <tr>
+                  <th v-if="shouldShowCheckboxes" class="px-4 py-3 text-left">
+                    <div class="flex items-center">
+                      <input
+                        v-model="selectAllChecked"
+                        class="h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700"
+                        :indeterminate="isIndeterminate"
+                        type="checkbox"
+                        @change="handleSelectAll"
+                      />
+                    </div>
+                  </th>
+                  <th
+                    class="cursor-pointer px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 transition-colors hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                    @click="sortApiKeys('name')"
+                  >
+                    <div class="flex items-center gap-1">
+                      名称
+                      <i
+                        v-if="apiKeysSortBy === 'name'"
+                        class="fas"
+                        :class="apiKeysSortOrder === 'asc' ? 'fa-sort-up' : 'fa-sort-down'"
+                      />
+                      <Icon name="ArrowUpDown" v-else class="h-3 w-3" />
+                    </div>
+                  </th>
+                  <th
+                    class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400"
+                  >
+                    所属账号
+                  </th>
+                  <th
+                    class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400"
+                  >
+                    标签
+                  </th>
+                  <th
+                    class="cursor-pointer px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 transition-colors hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                    @click="sortApiKeys('status')"
+                  >
+                    <div class="flex items-center gap-1">
+                      状态
+                      <i
+                        v-if="apiKeysSortBy === 'status'"
+                        class="fas"
+                        :class="apiKeysSortOrder === 'asc' ? 'fa-sort-up' : 'fa-sort-down'"
+                      />
+                      <Icon name="ArrowUpDown" v-else class="h-3 w-3" />
+                    </div>
+                  </th>
+                  <th
+                    class="cursor-pointer px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 transition-colors hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                    @click="sortApiKeys('periodCost')"
+                  >
+                    <div class="flex items-center gap-1">
+                      费用
+                      <i
+                        v-if="apiKeysSortBy === 'periodCost'"
+                        class="fas"
+                        :class="apiKeysSortOrder === 'asc' ? 'fa-sort-up' : 'fa-sort-down'"
+                      />
+                      <Icon name="ArrowUpDown" v-else class="h-3 w-3" />
+                    </div>
+                  </th>
+                  <th
+                    class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400"
+                  >
+                    限制
+                  </th>
+                  <th
+                    class="cursor-pointer px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 transition-colors hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                    @click="sortApiKeys('periodTokens')"
+                  >
+                    <div class="flex items-center gap-1">
+                      Token
+                      <i
+                        v-if="apiKeysSortBy === 'periodTokens'"
+                        class="fas"
+                        :class="apiKeysSortOrder === 'asc' ? 'fa-sort-up' : 'fa-sort-down'"
+                      />
+                      <Icon name="ArrowUpDown" v-else class="h-3 w-3" />
+                    </div>
+                  </th>
+                  <th
+                    class="cursor-pointer px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 transition-colors hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                    @click="sortApiKeys('periodRequests')"
+                  >
+                    <div class="flex items-center gap-1">
+                      请求数
+                      <i
+                        v-if="apiKeysSortBy === 'periodRequests'"
+                        class="fas"
+                        :class="apiKeysSortOrder === 'asc' ? 'fa-sort-up' : 'fa-sort-down'"
+                      />
+                      <Icon name="ArrowUpDown" v-else class="h-3 w-3" />
+                    </div>
+                  </th>
+                  <th
+                    class="cursor-pointer px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 transition-colors hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                    @click="sortApiKeys('lastUsedAt')"
+                  >
+                    <div class="flex items-center gap-1">
+                      最后使用
+                      <i
+                        v-if="apiKeysSortBy === 'lastUsedAt'"
+                        class="fas"
+                        :class="apiKeysSortOrder === 'asc' ? 'fa-sort-up' : 'fa-sort-down'"
+                      />
+                      <Icon name="ArrowUpDown" v-else class="h-3 w-3" />
+                    </div>
+                  </th>
+                  <th
+                    class="cursor-pointer px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 transition-colors hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                    @click="sortApiKeys('createdAt')"
+                  >
+                    <div class="flex items-center gap-1">
+                      创建时间
+                      <i
+                        v-if="apiKeysSortBy === 'createdAt'"
+                        class="fas"
+                        :class="apiKeysSortOrder === 'asc' ? 'fa-sort-up' : 'fa-sort-down'"
+                      />
+                      <Icon name="ArrowUpDown" v-else class="h-3 w-3" />
+                    </div>
+                  </th>
+                  <th
+                    class="cursor-pointer px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 transition-colors hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                    @click="sortApiKeys('expiresAt')"
+                  >
+                    <div class="flex items-center gap-1">
+                      过期时间
+                      <i
+                        v-if="apiKeysSortBy === 'expiresAt'"
+                        class="fas"
+                        :class="apiKeysSortOrder === 'asc' ? 'fa-sort-up' : 'fa-sort-down'"
+                      />
+                      <Icon name="ArrowUpDown" v-else class="h-3 w-3" />
+                    </div>
+                  </th>
+                  <th
+                    class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400"
+                  >
+                    操作
+                  </th>
+                </tr>
+              </thead>
+              <tbody
+                class="divide-y divide-gray-200 bg-white dark:divide-gray-700 dark:bg-gray-900"
+              >
+                <template v-for="(key, index) in paginatedApiKeys" :key="key.id">
+                  <!-- API Key 主行 -->
+                  <tr class="transition-colors hover:bg-gray-50 dark:hover:bg-gray-800/50">
+                    <td v-if="shouldShowCheckboxes" class="whitespace-nowrap px-4 py-3">
+                      <div class="flex items-center">
                         <input
-                          v-model="selectAllChecked"
-                          :indeterminate="isIndeterminate"
+                          v-model="selectedApiKeys"
+                          class="h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700"
                           type="checkbox"
-                          @change="handleSelectAll"
+                          :value="key.id"
+                          @change="updateSelectAllState"
                         />
                       </div>
-                    </th>
-                    <th @click="sortApiKeys('name')">
-                      名称
-                      <i v-if="apiKeysSortBy === 'name'" />
-                      <Icon name="ArrowUpDown" v-else />
-                    </th>
-                    <th>所属账号</th>
-                    <th>标签</th>
-                    <th @click="sortApiKeys('status')">
-                      状态
-                      <i v-if="apiKeysSortBy === 'status'" />
-                      <Icon name="ArrowUpDown" v-else />
-                    </th>
-                    <th @click="sortApiKeys('periodCost')">
-                      费用
-                      <i v-if="apiKeysSortBy === 'periodCost'" />
-                      <Icon name="ArrowUpDown" v-else />
-                    </th>
-                    <th>限制</th>
-                    <th @click="sortApiKeys('periodTokens')">
-                      Token
-                      <i v-if="apiKeysSortBy === 'periodTokens'" />
-                      <Icon name="ArrowUpDown" v-else />
-                    </th>
-                    <th @click="sortApiKeys('periodRequests')">
-                      请求数
-                      <i v-if="apiKeysSortBy === 'periodRequests'" />
-                      <Icon name="ArrowUpDown" v-else />
-                    </th>
-                    <th @click="sortApiKeys('lastUsedAt')">
-                      最后使用
-                      <i v-if="apiKeysSortBy === 'lastUsedAt'" />
-                      <Icon name="ArrowUpDown" v-else />
-                    </th>
-                    <th @click="sortApiKeys('createdAt')">
-                      创建时间
-                      <i v-if="apiKeysSortBy === 'createdAt'" />
-                      <Icon name="ArrowUpDown" v-else />
-                    </th>
-                    <th @click="sortApiKeys('expiresAt')">
-                      过期时间
-                      <i v-if="apiKeysSortBy === 'expiresAt'" />
-                      <Icon name="ArrowUpDown" v-else />
-                    </th>
-                    <th>操作</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <template v-for="(key, index) in paginatedApiKeys" :key="key.id">
-                    <!-- API Key 主行 - 添加斑马条纹和增强分隔 -->
-                    <tr>
-                      <td v-if="shouldShowCheckboxes">
-                        <div>
-                          <input
-                            v-model="selectedApiKeys"
-                            type="checkbox"
-                            :value="key.id"
-                            @change="updateSelectAllState"
-                          />
+                    </td>
+                    <td class="whitespace-nowrap px-4 py-3">
+                      <div class="flex flex-col gap-1">
+                        <!-- 名称 -->
+                        <div class="font-medium text-gray-900 dark:text-white" :title="key.name">
+                          {{ key.name }}
                         </div>
-                      </td>
-                      <td>
-                        <div>
-                          <!-- 名称 -->
-                          <div :title="key.name">
-                            {{ key.name }}
-                          </div>
-                          <!-- 显示所有者信息 -->
-                          <div v-if="isLdapEnabled && key.ownerDisplayName">
-                            <Icon name="User" />
-                            {{ key.ownerDisplayName }}
-                          </div>
+                        <!-- 显示所有者信息 -->
+                        <div
+                          v-if="isLdapEnabled && key.ownerDisplayName"
+                          class="flex items-center gap-1 text-xs text-gray-500 dark:text-gray-400"
+                        >
+                          <Icon name="User" class="h-3 w-3" />
+                          {{ key.ownerDisplayName }}
                         </div>
-                      </td>
-                      <!-- 所属账号列 -->
-                      <td>
-                        <div>
-                          <!-- Claude 绑定 -->
-                          <div v-if="key.claudeAccountId || key.claudeConsoleAccountId">
-                            <span>
-                              <Icon name="Brain" />
-                              Claude
-                            </span>
-                            <span>
-                              {{ getClaudeBindingInfo(key) }}
-                            </span>
-                          </div>
-                          <!-- Gemini 绑定 -->
-                          <div v-if="key.geminiAccountId">
-                            <span>
-                              <Icon name="Bot" />
-                              Gemini
-                            </span>
-                            <span>
-                              {{ getGeminiBindingInfo(key) }}
-                            </span>
-                          </div>
-                          <!-- OpenAI 绑定 -->
-                          <div v-if="key.openaiAccountId">
-                            <span>
-                              <i />
-                              OpenAI
-                            </span>
-                            <span>
-                              {{ getOpenAIBindingInfo(key) }}
-                            </span>
-                          </div>
-                          <!-- Bedrock 绑定 -->
-                          <div v-if="key.bedrockAccountId">
-                            <span>
-                              <Icon name="Cloud" />
-                              Bedrock
-                            </span>
-                            <span>
-                              {{ getBedrockBindingInfo(key) }}
-                            </span>
-                          </div>
-                          <!-- Droid 绑定 -->
-                          <div v-if="key.droidAccountId">
-                            <span>
-                              <Icon name="Bot" />
-                              Droid
-                            </span>
-                            <span>
-                              {{ getDroidBindingInfo(key) }}
-                            </span>
-                          </div>
-                          <!-- 共享池 -->
-                          <div
-                            v-if="
-                              !key.claudeAccountId &&
-                              !key.claudeConsoleAccountId &&
-                              !key.geminiAccountId &&
-                              !key.openaiAccountId &&
-                              !key.bedrockAccountId &&
-                              !key.droidAccountId
-                            "
+                      </div>
+                    </td>
+                    <!-- 所属账号列 -->
+                    <td class="whitespace-nowrap px-4 py-3">
+                      <div class="flex flex-col gap-1 text-sm">
+                        <!-- Claude 绑定 -->
+                        <div
+                          v-if="key.claudeAccountId || key.claudeConsoleAccountId"
+                          class="flex items-center gap-1"
+                        >
+                          <span
+                            class="flex items-center gap-1 font-medium text-purple-600 dark:text-purple-400"
                           >
-                            <Icon name="Share2" />
-                            共享池
-                          </div>
-                        </div>
-                      </td>
-                      <!-- 标签列 -->
-                      <td>
-                        <div>
-                          <span v-for="tag in key.tags || []" :key="tag">
-                            {{ tag }}
+                            <Icon name="Brain" class="h-3.5 w-3.5" />
+                            Claude
                           </span>
-                          <span v-if="!key.tags || key.tags.length === 0">无标签</span>
+                          <span class="text-gray-600 dark:text-gray-400">
+                            {{ getClaudeBindingInfo(key) }}
+                          </span>
                         </div>
-                      </td>
-                      <td>
-                        <span>
-                          <div />
-                          {{ key.isActive ? '活跃' : '禁用' }}
-                        </span>
-                      </td>
-                      <!-- 费用 -->
-                      <td>
-                        <span> ${{ getPeriodCost(key).toFixed(2) }} </span>
-                      </td>
-                      <!-- 限制 -->
-                      <td>
-                        <div>
-                          <!-- 每日费用限制进度条 -->
-                          <LimitProgressBar
-                            v-if="key.dailyCostLimit > 0"
-                            :current="key.dailyCost || 0"
-                            label="每日限制"
-                            :limit="key.dailyCostLimit"
-                            type="daily"
-                            variant="compact"
-                          />
-
-                          <!-- 总费用限制进度条（无每日限制时展示） -->
-                          <LimitProgressBar
-                            v-else-if="key.totalCostLimit > 0"
-                            :current="key.usage?.total?.cost || 0"
-                            label="总费用限制"
-                            :limit="key.totalCostLimit"
-                            type="total"
-                            variant="compact"
-                          />
-
-                          <!-- 时间窗口费用限制（无每日和总费用限制时展示） -->
-                          <div
-                            v-else-if="
-                              key.rateLimitWindow > 0 &&
-                              key.rateLimitCost > 0 &&
-                              (!key.dailyCostLimit || key.dailyCostLimit === 0) &&
-                              (!key.totalCostLimit || key.totalCostLimit === 0)
-                            "
+                        <!-- Gemini 绑定 -->
+                        <div v-if="key.geminiAccountId" class="flex items-center gap-1">
+                          <span
+                            class="flex items-center gap-1 font-medium text-blue-600 dark:text-blue-400"
                           >
-                            <!-- 费用进度条 -->
-                            <LimitProgressBar
-                              :current="key.currentWindowCost || 0"
-                              label="窗口费用"
-                              :limit="key.rateLimitCost"
-                              type="window"
-                              variant="compact"
+                            <Icon name="Bot" class="h-3.5 w-3.5" />
+                            Gemini
+                          </span>
+                          <span class="text-gray-600 dark:text-gray-400">
+                            {{ getGeminiBindingInfo(key) }}
+                          </span>
+                        </div>
+                        <!-- OpenAI 绑定 -->
+                        <div v-if="key.openaiAccountId" class="flex items-center gap-1">
+                          <span
+                            class="flex items-center gap-1 font-medium text-green-600 dark:text-green-400"
+                          >
+                            <i class="fas fa-robot text-xs" />
+                            OpenAI
+                          </span>
+                          <span class="text-gray-600 dark:text-gray-400">
+                            {{ getOpenAIBindingInfo(key) }}
+                          </span>
+                        </div>
+                        <!-- Bedrock 绑定 -->
+                        <div v-if="key.bedrockAccountId" class="flex items-center gap-1">
+                          <span
+                            class="flex items-center gap-1 font-medium text-orange-600 dark:text-orange-400"
+                          >
+                            <Icon name="Cloud" class="h-3.5 w-3.5" />
+                            Bedrock
+                          </span>
+                          <span class="text-gray-600 dark:text-gray-400">
+                            {{ getBedrockBindingInfo(key) }}
+                          </span>
+                        </div>
+                        <!-- Droid 绑定 -->
+                        <div v-if="key.droidAccountId" class="flex items-center gap-1">
+                          <span
+                            class="flex items-center gap-1 font-medium text-cyan-600 dark:text-cyan-400"
+                          >
+                            <Icon name="Bot" class="h-3.5 w-3.5" />
+                            Droid
+                          </span>
+                          <span class="text-gray-600 dark:text-gray-400">
+                            {{ getDroidBindingInfo(key) }}
+                          </span>
+                        </div>
+                        <!-- 共享池 -->
+                        <div
+                          v-if="
+                            !key.claudeAccountId &&
+                            !key.claudeConsoleAccountId &&
+                            !key.geminiAccountId &&
+                            !key.openaiAccountId &&
+                            !key.bedrockAccountId &&
+                            !key.droidAccountId
+                          "
+                          class="flex items-center gap-1 text-gray-600 dark:text-gray-400"
+                        >
+                          <Icon name="Share2" class="h-3.5 w-3.5" />
+                          共享池
+                        </div>
+                      </div>
+                    </td>
+                    <!-- 标签列 -->
+                    <td class="px-4 py-3">
+                      <div class="flex flex-wrap gap-1">
+                        <span
+                          v-for="tag in key.tags || []"
+                          :key="tag"
+                          class="inline-flex rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-700 dark:bg-gray-800 dark:text-gray-300"
+                        >
+                          {{ tag }}
+                        </span>
+                        <span
+                          v-if="!key.tags || key.tags.length === 0"
+                          class="text-sm text-gray-400 dark:text-gray-500"
+                        >
+                          无标签
+                        </span>
+                      </div>
+                    </td>
+                    <!-- 状态 -->
+                    <td class="whitespace-nowrap px-4 py-3">
+                      <span
+                        class="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium"
+                        :class="
+                          key.isActive
+                            ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'
+                            : 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-400'
+                        "
+                      >
+                        <div
+                          class="h-1.5 w-1.5 rounded-full"
+                          :class="key.isActive ? 'bg-green-500' : 'bg-gray-400'"
+                        />
+                        {{ key.isActive ? '活跃' : '禁用' }}
+                      </span>
+                    </td>
+                    <!-- 费用 -->
+                    <td class="whitespace-nowrap px-4 py-3">
+                      <span class="text-sm font-medium text-gray-900 dark:text-white">
+                        ${{ getPeriodCost(key).toFixed(2) }}
+                      </span>
+                    </td>
+                    <!-- 限制 -->
+                    <td class="px-4 py-3">
+                      <div class="min-w-[180px] space-y-2">
+                        <!-- 每日费用限制进度条 -->
+                        <LimitProgressBar
+                          v-if="key.dailyCostLimit > 0"
+                          :current="key.dailyCost || 0"
+                          label="每日限制"
+                          :limit="key.dailyCostLimit"
+                          type="daily"
+                          variant="compact"
+                        />
+
+                        <!-- 总费用限制进度条（无每日限制时展示） -->
+                        <LimitProgressBar
+                          v-else-if="key.totalCostLimit > 0"
+                          :current="key.usage?.total?.cost || 0"
+                          label="总费用限制"
+                          :limit="key.totalCostLimit"
+                          type="total"
+                          variant="compact"
+                        />
+
+                        <!-- 时间窗口费用限制（无每日和总费用限制时展示） -->
+                        <div
+                          v-else-if="
+                            key.rateLimitWindow > 0 &&
+                            key.rateLimitCost > 0 &&
+                            (!key.dailyCostLimit || key.dailyCostLimit === 0) &&
+                            (!key.totalCostLimit || key.totalCostLimit === 0)
+                          "
+                          class="space-y-1"
+                        >
+                          <!-- 费用进度条 -->
+                          <LimitProgressBar
+                            :current="key.currentWindowCost || 0"
+                            label="窗口费用"
+                            :limit="key.rateLimitCost"
+                            type="window"
+                            variant="compact"
+                          />
+                          <!-- 重置倒计时 -->
+                          <div
+                            class="flex items-center justify-between text-xs text-gray-600 dark:text-gray-400"
+                          >
+                            <div class="flex items-center gap-1">
+                              <Icon name="Clock" class="h-3 w-3" />
+                              <span>{{ key.rateLimitWindow }}分钟窗口</span>
+                            </div>
+                            <span class="font-medium">
+                              {{
+                                key.windowRemainingSeconds > 0
+                                  ? formatWindowTime(key.windowRemainingSeconds)
+                                  : '未激活'
+                              }}
+                            </span>
+                          </div>
+                        </div>
+
+                        <!-- 如果没有任何限制 -->
+                        <div
+                          v-else
+                          class="flex items-center gap-1 text-sm text-gray-500 dark:text-gray-400"
+                        >
+                          <Icon name="Infinity" class="h-4 w-4" />
+                          <span>无限制</span>
+                        </div>
+                      </div>
+                    </td>
+                    <!-- Token数量 -->
+                    <td class="whitespace-nowrap px-4 py-3">
+                      <div class="text-sm">
+                        <span class="font-medium text-gray-900 dark:text-white">
+                          {{ formatTokenCount(getPeriodTokens(key)) }}
+                        </span>
+                      </div>
+                    </td>
+                    <!-- 请求数 -->
+                    <td class="whitespace-nowrap px-4 py-3">
+                      <div class="text-sm">
+                        <span class="font-medium text-gray-900 dark:text-white">
+                          {{ formatNumber(getPeriodRequests(key)) }}
+                        </span>
+                        <span class="text-gray-500 dark:text-gray-400">次</span>
+                      </div>
+                    </td>
+                    <!-- 最后使用 -->
+                    <td class="px-4 py-3">
+                      <div class="flex flex-col gap-0.5 text-sm">
+                        <span
+                          v-if="key.lastUsedAt"
+                          class="font-medium text-gray-900 dark:text-white"
+                          :title="new Date(key.lastUsedAt).toLocaleString('zh-CN')"
+                        >
+                          {{ formatLastUsed(key.lastUsedAt) }}
+                        </span>
+                        <span v-else class="text-gray-500 dark:text-gray-400">从未使用</span>
+                        <span
+                          v-if="hasLastUsageAccount(key)"
+                          class="text-xs text-gray-600 dark:text-gray-400"
+                          :title="getLastUsageFullName(key)"
+                        >
+                          {{ getLastUsageDisplayName(key) }}
+                          <span v-if="!isLastUsageDeleted(key)">
+                            ({{ getLastUsageTypeLabel(key) }})
+                          </span>
+                        </span>
+                        <span v-else class="text-xs text-gray-500 dark:text-gray-400">
+                          暂无使用账号
+                        </span>
+                      </div>
+                    </td>
+                    <!-- 创建时间 -->
+                    <td
+                      class="whitespace-nowrap px-4 py-3 text-sm text-gray-600 dark:text-gray-400"
+                    >
+                      {{ new Date(key.createdAt).toLocaleDateString() }}
+                    </td>
+                    <!-- 过期时间 -->
+                    <td class="whitespace-nowrap px-4 py-3">
+                      <div class="text-sm">
+                        <!-- 未激活状态 -->
+                        <span
+                          v-if="key.expirationMode === 'activation' && !key.isActivated"
+                          class="inline-flex items-center gap-1 text-gray-600 dark:text-gray-400"
+                        >
+                          <Icon name="PauseCircle" class="h-4 w-4" />
+                          未激活 (
+                          {{ key.activationDays || (key.activationUnit === 'hours' ? 24 : 30)
+                          }}{{ key.activationUnit === 'hours' ? '小时' : '天' }})
+                        </span>
+                        <!-- 已设置过期时间 -->
+                        <span v-else-if="key.expiresAt">
+                          <span
+                            v-if="isApiKeyExpired(key.expiresAt)"
+                            class="inline-flex cursor-pointer items-center gap-1 text-red-600 dark:text-red-400"
+                            @click.stop="startEditExpiry(key)"
+                          >
+                            <Icon name="AlertCircle" class="h-4 w-4" />
+                            已过期
+                          </span>
+                          <span
+                            v-else-if="isApiKeyExpiringSoon(key.expiresAt)"
+                            class="inline-flex cursor-pointer items-center gap-1 text-orange-600 dark:text-orange-400"
+                            @click.stop="startEditExpiry(key)"
+                          >
+                            <Icon name="Clock" class="h-4 w-4" />
+                            {{ formatExpireDate(key.expiresAt) }}
+                          </span>
+                          <span
+                            v-else
+                            class="cursor-pointer text-gray-600 dark:text-gray-400"
+                            @click.stop="startEditExpiry(key)"
+                          >
+                            {{ formatExpireDate(key.expiresAt) }}
+                          </span>
+                        </span>
+                        <!-- 永不过期 -->
+                        <span
+                          v-else
+                          class="inline-flex cursor-pointer items-center gap-1 text-gray-600 dark:text-gray-400"
+                          @click.stop="startEditExpiry(key)"
+                        >
+                          <Icon name="Infinity" class="h-4 w-4" />
+                          永不过期
+                        </span>
+                      </div>
+                    </td>
+                    <!-- 操作列 -->
+                    <td class="whitespace-nowrap px-4 py-3">
+                      <div class="flex flex-wrap gap-1">
+                        <button
+                          class="inline-flex items-center gap-1 rounded px-2 py-1 text-xs font-medium text-blue-600 transition-colors hover:bg-blue-50 dark:text-blue-400 dark:hover:bg-blue-900/30"
+                          title="查看详细统计"
+                          @click="showUsageDetails(key)"
+                        >
+                          <Icon name="LineChart" class="h-3.5 w-3.5" />
+                          <span>详情</span>
+                        </button>
+                        <button
+                          v-if="key && key.id"
+                          class="inline-flex items-center gap-1 rounded px-2 py-1 text-xs font-medium text-purple-600 transition-colors hover:bg-purple-50 dark:text-purple-400 dark:hover:bg-purple-900/30"
+                          title="模型使用分布"
+                          @click="toggleApiKeyModelStats(key.id)"
+                        >
+                          <i class="fas fa-chart-pie text-xs" />
+                          <span>模型</span>
+                        </button>
+                        <button
+                          class="inline-flex items-center gap-1 rounded px-2 py-1 text-xs font-medium text-gray-600 transition-colors hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-800"
+                          title="编辑"
+                          @click="openEditApiKeyModal(key)"
+                        >
+                          <Icon name="Edit" class="h-3.5 w-3.5" />
+                          <span>编辑</span>
+                        </button>
+                        <button
+                          v-if="
+                            key.expiresAt &&
+                            (isApiKeyExpired(key.expiresAt) || isApiKeyExpiringSoon(key.expiresAt))
+                          "
+                          class="inline-flex items-center gap-1 rounded px-2 py-1 text-xs font-medium text-orange-600 transition-colors hover:bg-orange-50 dark:text-orange-400 dark:hover:bg-orange-900/30"
+                          title="续期"
+                          @click="openRenewApiKeyModal(key)"
+                        >
+                          <Icon name="Clock" class="h-3.5 w-3.5" />
+                          <span>续期</span>
+                        </button>
+                        <button
+                          class="inline-flex items-center gap-1 rounded px-2 py-1 text-xs font-medium transition-colors"
+                          :class="
+                            key.isActive
+                              ? 'text-gray-600 hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-800'
+                              : 'text-green-600 hover:bg-green-50 dark:text-green-400 dark:hover:bg-green-900/30'
+                          "
+                          :title="key.isActive ? '禁用' : '激活'"
+                          @click="toggleApiKeyStatus(key)"
+                        >
+                          <i
+                            class="fas text-xs"
+                            :class="key.isActive ? 'fa-ban' : 'fa-check-circle'"
+                          />
+                          <span>{{ key.isActive ? '禁用' : '激活' }}</span>
+                        </button>
+                        <button
+                          class="inline-flex items-center gap-1 rounded px-2 py-1 text-xs font-medium text-red-600 transition-colors hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-900/30"
+                          title="删除"
+                          @click="deleteApiKey(key.id)"
+                        >
+                          <Icon name="Trash" class="h-3.5 w-3.5" />
+                          <span>删除</span>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+
+                  <!-- 模型统计展开区域 -->
+                  <tr v-if="key && key.id && expandedApiKeys[key.id]">
+                    <td class="bg-gray-50 px-4 py-4 dark:bg-gray-800/50" colspan="13">
+                      <!-- 加载中状态 -->
+                      <div
+                        v-if="!apiKeyModelStats[key.id]"
+                        class="flex flex-col items-center justify-center py-8"
+                      >
+                        <div
+                          class="mb-3 h-8 w-8 animate-spin rounded-full border-4 border-gray-200 border-t-primary-600 dark:border-gray-700 dark:border-t-primary-400"
+                        />
+                        <p class="text-sm text-gray-600 dark:text-gray-400">加载模型统计...</p>
+                      </div>
+
+                      <!-- 内容区域 -->
+                      <div class="space-y-4">
+                        <!-- 标题和筛选器 -->
+                        <div
+                          class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between"
+                        >
+                          <h5
+                            class="flex items-center gap-2 text-sm font-semibold text-gray-900 dark:text-white"
+                          >
+                            <Icon
+                              name="PieChart"
+                              class="h-4 w-4 text-purple-600 dark:text-purple-400"
                             />
-                            <!-- 重置倒计时 -->
-                            <div>
-                              <div>
-                                <Icon name="Clock" />
-                                <span>{{ key.rateLimitWindow }}分钟窗口</span>
+                            模型使用分布
+                          </h5>
+                          <div class="flex flex-wrap items-center gap-2">
+                            <span
+                              v-if="apiKeyModelStats[key.id] && apiKeyModelStats[key.id].length > 0"
+                              class="rounded-full bg-purple-100 px-2.5 py-0.5 text-xs font-medium text-purple-700 dark:bg-purple-900/30 dark:text-purple-300"
+                            >
+                              {{ apiKeyModelStats[key.id].length }} 个模型
+                            </span>
+
+                            <!-- 日期筛选器 -->
+                            <div class="flex items-center gap-2">
+                              <!-- 快捷选择 -->
+                              <div
+                                class="flex gap-1 rounded-lg bg-white p-1 shadow-sm dark:bg-gray-900"
+                              >
+                                <button
+                                  v-for="option in getApiKeyDateFilter(key.id).presetOptions"
+                                  :key="option.value"
+                                  class="rounded-md px-3 py-1 text-xs font-medium transition-colors"
+                                  :class="
+                                    getApiKeyDateFilter(key.id).preset === option.value &&
+                                    getApiKeyDateFilter(key.id).type === 'preset'
+                                      ? 'bg-primary-50 text-primary-600 dark:bg-primary-900/30 dark:text-primary-400'
+                                      : 'text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200'
+                                  "
+                                  @click="setApiKeyDateFilterPreset(option.value, key.id)"
+                                >
+                                  {{ option.label }}
+                                </button>
                               </div>
-                              <span>
-                                {{
-                                  key.windowRemainingSeconds > 0
-                                    ? formatWindowTime(key.windowRemainingSeconds)
-                                    : '未激活'
-                                }}
-                              </span>
+
+                              <!-- 自定义日期范围 -->
+                              <el-date-picker
+                                class="api-key-date-picker"
+                                :clearable="true"
+                                :default-time="defaultTime"
+                                :disabled-date="disabledDate"
+                                end-placeholder="结束日期"
+                                format="YYYY-MM-DD HH:mm:ss"
+                                :model-value="getApiKeyDateFilter(key.id).customRange"
+                                range-separator="至"
+                                size="small"
+                                start-placeholder="开始日期"
+                                type="datetimerange"
+                                :unlink-panels="false"
+                                value-format="YYYY-MM-DD HH:mm:ss"
+                                @update:model-value="
+                                  (value) => onApiKeyCustomDateRangeChange(key.id, value)
+                                "
+                              />
                             </div>
                           </div>
+                        </div>
 
-                          <!-- 如果没有任何限制 -->
-                          <div v-else>
-                            <Icon name="Infinity" />
-                            <span>无限制</span>
+                        <!-- 空数据状态 -->
+                        <div
+                          v-if="apiKeyModelStats[key.id] && apiKeyModelStats[key.id].length === 0"
+                          class="flex flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 py-12 dark:border-gray-600"
+                        >
+                          <div
+                            class="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800"
+                          >
+                            <Icon
+                              name="LineChart"
+                              class="h-6 w-6 text-gray-400 dark:text-gray-500"
+                            />
                           </div>
-                        </div>
-                      </td>
-                      <!-- Token数量 -->
-                      <td>
-                        <div>
-                          <span>
-                            {{ formatTokenCount(getPeriodTokens(key)) }}
-                          </span>
-                        </div>
-                      </td>
-                      <!-- 请求数 -->
-                      <td>
-                        <div>
-                          <span>
-                            {{ formatNumber(getPeriodRequests(key)) }}
-                          </span>
-                          <span>次</span>
-                        </div>
-                      </td>
-                      <!-- 最后使用 -->
-                      <td>
-                        <div>
-                          <span
-                            v-if="key.lastUsedAt"
-                            :title="new Date(key.lastUsedAt).toLocaleString('zh-CN')"
-                          >
-                            {{ formatLastUsed(key.lastUsedAt) }}
-                          </span>
-                          <span v-else>从未使用</span>
-                          <span v-if="hasLastUsageAccount(key)" :title="getLastUsageFullName(key)">
-                            {{ getLastUsageDisplayName(key) }}
-                            <span v-if="!isLastUsageDeleted(key)">
-                              ({{ getLastUsageTypeLabel(key) }})
-                            </span>
-                          </span>
-                          <span v-else> 暂无使用账号 </span>
-                        </div>
-                      </td>
-                      <!-- 创建时间 -->
-                      <td>
-                        {{ new Date(key.createdAt).toLocaleDateString() }}
-                      </td>
-                      <td>
-                        <div>
-                          <!-- 未激活状态 -->
-                          <span v-if="key.expirationMode === 'activation' && !key.isActivated">
-                            <Icon name="PauseCircle" />
-                            未激活 (
-                            {{ key.activationDays || (key.activationUnit === 'hours' ? 24 : 30)
-                            }}{{ key.activationUnit === 'hours' ? '小时' : '天' }})
-                          </span>
-                          <!-- 已设置过期时间 -->
-                          <span v-else-if="key.expiresAt">
-                            <span
-                              v-if="isApiKeyExpired(key.expiresAt)"
-                              @click.stop="startEditExpiry(key)"
-                            >
-                              <Icon name="AlertCircle" />
-                              已过期
-                            </span>
-                            <span
-                              v-else-if="isApiKeyExpiringSoon(key.expiresAt)"
-                              @click.stop="startEditExpiry(key)"
-                            >
-                              <Icon name="Clock" />
-                              {{ formatExpireDate(key.expiresAt) }}
-                            </span>
-                            <span v-else @click.stop="startEditExpiry(key)">
-                              {{ formatExpireDate(key.expiresAt) }}
-                            </span>
-                          </span>
-                          <!-- 永不过期 -->
-                          <span v-else @click.stop="startEditExpiry(key)">
-                            <Icon name="Infinity" />
-                            永不过期
-                          </span>
-                        </div>
-                      </td>
-                      <td>
-                        <div>
-                          <button title="查看详细统计" @click="showUsageDetails(key)">
-                            <Icon name="LineChart" />
-                            <span>详情</span>
-                          </button>
+                          <p class="mb-2 text-base font-medium text-gray-900 dark:text-white">
+                            暂无模型使用数据
+                          </p>
+                          <p class="mb-4 text-sm text-gray-600 dark:text-gray-400">
+                            尝试调整时间范围或点击刷新重新加载数据
+                          </p>
                           <button
-                            v-if="key && key.id"
-                            title="模型使用分布"
-                            @click="toggleApiKeyModelStats(key.id)"
+                            class="inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm transition-colors hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700"
+                            title="重置筛选条件并刷新"
+                            @click="resetApiKeyDateFilter(key.id)"
                           >
-                            <i />
-                            <span>模型</span>
-                          </button>
-                          <button title="编辑" @click="openEditApiKeyModal(key)">
-                            <Icon name="Edit" />
-                            <span>编辑</span>
-                          </button>
-                          <button
-                            v-if="
-                              key.expiresAt &&
-                              (isApiKeyExpired(key.expiresAt) ||
-                                isApiKeyExpiringSoon(key.expiresAt))
-                            "
-                            title="续期"
-                            @click="openRenewApiKeyModal(key)"
-                          >
-                            <Icon name="Clock" />
-                            <span>续期</span>
-                          </button>
-                          <button
-                            :title="key.isActive ? '禁用' : '激活'"
-                            @click="toggleApiKeyStatus(key)"
-                          >
-                            <i />
-                            <span>{{ key.isActive ? '禁用' : '激活' }}</span>
-                          </button>
-                          <button title="删除" @click="deleteApiKey(key.id)">
-                            <Icon name="Trash" />
-                            <span>删除</span>
+                            <Icon name="RefreshCcw" class="h-4 w-4" />
+                            <span>刷新</span>
                           </button>
                         </div>
-                      </td>
-                    </tr>
-
-                    <!-- 模型统计展开区域 -->
-                    <tr v-if="key && key.id && expandedApiKeys[key.id]">
-                      <td colspan="13">
-                        <div v-if="!apiKeyModelStats[key.id]">
-                          <div />
-                          <p>加载模型统计...</p>
-                        </div>
-                        <div>
-                          <!-- 通用的标题和时间筛选器，无论是否有数据都显示 -->
-                          <div>
-                            <h5>
-                              <Icon name="PieChart" />
-                              模型使用分布
-                            </h5>
-                            <div>
-                              <span
-                                v-if="
-                                  apiKeyModelStats[key.id] && apiKeyModelStats[key.id].length > 0
-                                "
-                              >
-                                {{ apiKeyModelStats[key.id].length }} 个模型
-                              </span>
-
-                              <!-- API Keys日期筛选器 -->
-                              <div>
-                                <!-- 快捷日期选择 -->
-                                <div>
-                                  <button
-                                    v-for="option in getApiKeyDateFilter(key.id).presetOptions"
-                                    :key="option.value"
-                                    @click="setApiKeyDateFilterPreset(option.value, key.id)"
-                                  >
-                                    {{ option.label }}
-                                  </button>
+                        <!-- 模型统计卡片 -->
+                        <div
+                          v-else-if="
+                            apiKeyModelStats[key.id] && apiKeyModelStats[key.id].length > 0
+                          "
+                          class="grid gap-4 sm:grid-cols-2"
+                        >
+                          <div
+                            v-for="stat in apiKeyModelStats[key.id]"
+                            :key="stat.model"
+                            class="rounded-lg border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-900"
+                          >
+                            <!-- 卡片头部 -->
+                            <div class="mb-3 flex items-start justify-between">
+                              <div class="flex-1">
+                                <span class="font-semibold text-gray-900 dark:text-white">
+                                  {{ stat.model }}
+                                </span>
+                                <div class="mt-0.5 text-xs text-gray-500 dark:text-gray-400">
+                                  {{ stat.requests }} 次请求
                                 </div>
+                              </div>
+                            </div>
 
-                                <!-- Element Plus 日期范围选择器 -->
-                                <el-date-picker
-                                  :clearable="true"
-                                  :default-time="defaultTime"
-                                  :disabled-date="disabledDate"
-                                  end-placeholder="结束日期"
-                                  format="YYYY-MM-DD HH:mm:ss"
-                                  :model-value="getApiKeyDateFilter(key.id).customRange"
-                                  range-separator="至"
-                                  size="small"
-                                  start-placeholder="开始日期"
-                                  type="datetimerange"
-                                  :unlink-panels="false"
-                                  value-format="YYYY-MM-DD HH:mm:ss"
-                                  @update:model-value="
-                                    (value) => onApiKeyCustomDateRangeChange(key.id, value)
-                                  "
+                            <!-- 统计指标网格 -->
+                            <div class="space-y-3">
+                              <div class="grid grid-cols-2 gap-3 text-sm">
+                                <div class="flex items-center gap-1.5">
+                                  <Icon
+                                    name="Coins"
+                                    class="h-4 w-4 text-yellow-600 dark:text-yellow-400"
+                                  />
+                                  <span class="text-gray-600 dark:text-gray-400">总Token:</span>
+                                  <span class="font-medium text-gray-900 dark:text-white">
+                                    {{ formatTokenCount(stat.allTokens) }}
+                                  </span>
+                                </div>
+                                <div class="flex items-center gap-1.5">
+                                  <Icon
+                                    name="DollarSign"
+                                    class="h-4 w-4 text-green-600 dark:text-green-400"
+                                  />
+                                  <span class="text-gray-600 dark:text-gray-400">费用:</span>
+                                  <span class="font-medium text-gray-900 dark:text-white">
+                                    {{ calculateModelCost(stat) }}
+                                  </span>
+                                </div>
+                              </div>
+
+                              <!-- Token明细 -->
+                              <div class="grid grid-cols-2 gap-2 text-xs">
+                                <div class="flex items-center gap-1">
+                                  <Icon
+                                    name="ArrowDown"
+                                    class="h-3 w-3 text-blue-600 dark:text-blue-400"
+                                  />
+                                  <span class="text-gray-600 dark:text-gray-400">输入:</span>
+                                  <span class="text-gray-900 dark:text-white">
+                                    {{ formatTokenCount(stat.inputTokens) }}
+                                  </span>
+                                </div>
+                                <div class="flex items-center gap-1">
+                                  <Icon
+                                    name="ArrowUp"
+                                    class="h-3 w-3 text-purple-600 dark:text-purple-400"
+                                  />
+                                  <span class="text-gray-600 dark:text-gray-400">输出:</span>
+                                  <span class="text-gray-900 dark:text-white">
+                                    {{ formatTokenCount(stat.outputTokens) }}
+                                  </span>
+                                </div>
+                                <div
+                                  v-if="stat.cacheCreateTokens > 0"
+                                  class="flex items-center gap-1"
+                                >
+                                  <Icon
+                                    name="Save"
+                                    class="h-3 w-3 text-orange-600 dark:text-orange-400"
+                                  />
+                                  <span class="text-gray-600 dark:text-gray-400">缓存创建:</span>
+                                  <span class="text-gray-900 dark:text-white">
+                                    {{ formatTokenCount(stat.cacheCreateTokens) }}
+                                  </span>
+                                </div>
+                                <div
+                                  v-if="stat.cacheReadTokens > 0"
+                                  class="flex items-center gap-1"
+                                >
+                                  <Icon
+                                    name="Download"
+                                    class="h-3 w-3 text-cyan-600 dark:text-cyan-400"
+                                  />
+                                  <span class="text-gray-600 dark:text-gray-400">缓存读取:</span>
+                                  <span class="text-gray-900 dark:text-white">
+                                    {{ formatTokenCount(stat.cacheReadTokens) }}
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+
+                            <!-- 使用百分比进度条 -->
+                            <div class="mt-3">
+                              <div
+                                class="h-2 overflow-hidden rounded-full bg-gray-200 dark:bg-gray-700"
+                              >
+                                <div
+                                  class="h-full rounded-full bg-primary-600 transition-all dark:bg-primary-400"
+                                  :style="{
+                                    width: `${calculateApiKeyModelPercentage(stat.allTokens, apiKeyModelStats[key.id])}%`
+                                  }"
                                 />
                               </div>
+                              <div class="mt-1 text-right text-xs text-gray-500 dark:text-gray-400">
+                                {{
+                                  calculateApiKeyModelPercentage(
+                                    stat.allTokens,
+                                    apiKeyModelStats[key.id]
+                                  )
+                                }}%
+                              </div>
                             </div>
                           </div>
+                        </div>
 
-                          <!-- 数据展示区域 -->
+                        <!-- 总计统计 -->
+                        <div
+                          v-if="apiKeyModelStats[key.id] && apiKeyModelStats[key.id].length > 0"
+                          class="rounded-lg border border-primary-200 bg-primary-50 p-4 dark:border-primary-800 dark:bg-primary-900/20"
+                        >
                           <div
-                            v-if="apiKeyModelStats[key.id] && apiKeyModelStats[key.id].length === 0"
+                            class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between"
                           >
-                            <div>
-                              <Icon name="LineChart" />
-                              <p>暂无模型使用数据</p>
-                              <button
-                                title="重置筛选条件并刷新"
-                                @click="resetApiKeyDateFilter(key.id)"
-                              >
-                                <Icon name="RefreshCcw" />
-                                <span>刷新</span>
-                              </button>
-                            </div>
-                            <p>尝试调整时间范围或点击刷新重新加载数据</p>
-                          </div>
-                          <div
-                            v-else-if="
-                              apiKeyModelStats[key.id] && apiKeyModelStats[key.id].length > 0
-                            "
-                          >
-                            <div v-for="stat in apiKeyModelStats[key.id]" :key="stat.model">
-                              <div>
-                                <div>
-                                  <span>{{ stat.model }}</span>
-                                  <span>{{ stat.requests }} 次请求</span>
-                                </div>
-                              </div>
-
-                              <div>
-                                <div>
-                                  <span>
-                                    <Icon name="Coins" />
-                                    总Token:
-                                  </span>
-                                  <span>{{ formatTokenCount(stat.allTokens) }}</span>
-                                </div>
-                                <div>
-                                  <span>
-                                    <Icon name="DollarSign" />
-                                    费用:
-                                  </span>
-                                  <span>{{ calculateModelCost(stat) }}</span>
-                                </div>
-                                <div>
-                                  <div>
-                                    <span>
-                                      <Icon name="ArrowDown" />
-                                      输入:
-                                    </span>
-                                    <span>{{ formatTokenCount(stat.inputTokens) }}</span>
-                                  </div>
-                                  <div>
-                                    <span>
-                                      <Icon name="ArrowUp" />
-                                      输出:
-                                    </span>
-                                    <span>{{ formatTokenCount(stat.outputTokens) }}</span>
-                                  </div>
-                                  <div v-if="stat.cacheCreateTokens > 0">
-                                    <span>
-                                      <Icon name="Save" />
-                                      缓存创建:
-                                    </span>
-                                    <span>{{ formatTokenCount(stat.cacheCreateTokens) }}</span>
-                                  </div>
-                                  <div v-if="stat.cacheReadTokens > 0">
-                                    <span>
-                                      <Icon name="Download" />
-                                      缓存读取:
-                                    </span>
-                                    <span>{{ formatTokenCount(stat.cacheReadTokens) }}</span>
-                                  </div>
-                                </div>
-                              </div>
-
-                              <!-- 进度条 -->
-                              <div>
-                                <div />
-                              </div>
-                              <div>
-                                <span>
+                            <span
+                              class="flex items-center gap-2 text-sm font-semibold text-primary-900 dark:text-primary-100"
+                            >
+                              <Icon name="Calculator" class="h-4 w-4" />
+                              总计统计
+                            </span>
+                            <div class="flex flex-wrap gap-4 text-sm">
+                              <span class="flex items-center gap-1">
+                                <span class="text-primary-700 dark:text-primary-300">总请求:</span>
+                                <span class="font-semibold text-primary-900 dark:text-primary-100">
                                   {{
-                                    calculateApiKeyModelPercentage(
-                                      stat.allTokens,
-                                      apiKeyModelStats[key.id]
-                                    )
-                                  }}%
-                                </span>
-                              </div>
-                            </div>
-                          </div>
-
-                          <!-- 总计统计，仅在有数据时显示 -->
-                          <div
-                            v-if="apiKeyModelStats[key.id] && apiKeyModelStats[key.id].length > 0"
-                          >
-                            <div>
-                              <span>
-                                <Icon name="Calculator" />
-                                总计统计
-                              </span>
-                              <div>
-                                <span>
-                                  总请求:
-                                  <span>{{
                                     apiKeyModelStats[key.id].reduce(
                                       (sum, stat) => sum + stat.requests,
                                       0
                                     )
-                                  }}</span>
+                                  }}
                                 </span>
-                                <span>
-                                  总Token:
-                                  <span>{{
+                              </span>
+                              <span class="flex items-center gap-1">
+                                <span class="text-primary-700 dark:text-primary-300">总Token:</span>
+                                <span class="font-semibold text-primary-900 dark:text-primary-100">
+                                  {{
                                     formatTokenCount(
                                       apiKeyModelStats[key.id].reduce(
                                         (sum, stat) => sum + stat.allTokens,
                                         0
                                       )
                                     )
-                                  }}</span>
+                                  }}
                                 </span>
-                              </div>
+                              </span>
                             </div>
                           </div>
                         </div>
-                      </td>
-                    </tr>
-                  </template>
+                      </div>
+                    </td>
+                  </tr>
+                </template>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- 移动端卡片视图 -->
+        <div v-if="!apiKeysLoading && sortedApiKeys.length > 0">
+          <div v-for="key in paginatedApiKeys" :key="key.id">
+            <!-- 卡片头部 -->
+            <div>
+              <div>
+                <input
+                  v-if="shouldShowCheckboxes"
+                  v-model="selectedApiKeys"
+                  type="checkbox"
+                  :value="key.id"
+                  @change="updateSelectAllState"
+                />
+                <div>
+                  <h4>
+                    {{ key.name }}
+                  </h4>
+                  <p>
+                    {{ key.id }}
+                  </p>
+                </div>
+              </div>
+              <span>
+                <div />
+                {{ key.isActive ? '活跃' : '已停用' }}
+              </span>
+            </div>
+
+            <!-- 账户绑定信息 -->
+            <div>
+              <!-- Claude 绑定 -->
+              <div v-if="key.claudeAccountId || key.claudeConsoleAccountId">
+                <span>
+                  <Icon name="Brain" />
+                  Claude
+                </span>
+                <span>
+                  {{ getClaudeBindingInfo(key) }}
+                </span>
+              </div>
+              <!-- Gemini 绑定 -->
+              <div v-if="key.geminiAccountId">
+                <span>
+                  <Icon name="Bot" />
+                  Gemini
+                </span>
+                <span>
+                  {{ getGeminiBindingInfo(key) }}
+                </span>
+              </div>
+              <!-- OpenAI 绑定 -->
+              <div v-if="key.openaiAccountId">
+                <span>
+                  <i />
+                  OpenAI
+                </span>
+                <span>
+                  {{ getOpenAIBindingInfo(key) }}
+                </span>
+              </div>
+              <!-- Bedrock 绑定 -->
+              <div v-if="key.bedrockAccountId">
+                <span>
+                  <Icon name="Cloud" />
+                  Bedrock
+                </span>
+                <span>
+                  {{ getBedrockBindingInfo(key) }}
+                </span>
+              </div>
+              <!-- Droid 绑定 -->
+              <div v-if="key.droidAccountId">
+                <span>
+                  <Icon name="Bot" />
+                  Droid
+                </span>
+                <span>
+                  {{ getDroidBindingInfo(key) }}
+                </span>
+              </div>
+              <!-- 无绑定时显示共享池 -->
+              <div
+                v-if="
+                  !key.claudeAccountId &&
+                  !key.claudeConsoleAccountId &&
+                  !key.geminiAccountId &&
+                  !key.openaiAccountId &&
+                  !key.bedrockAccountId &&
+                  !key.droidAccountId
+                "
+              >
+                <Icon name="Share2" />
+                使用共享池
+              </div>
+              <!-- 显示所有者信息 -->
+              <div v-if="isLdapEnabled && key.ownerDisplayName">
+                <Icon name="User" />
+                {{ key.ownerDisplayName }}
+              </div>
+            </div>
+
+            <!-- 统计信息 -->
+            <div>
+              <!-- 今日使用 -->
+              <div>
+                <div>
+                  <span>{{ globalDateFilter.type === 'custom' ? '累计统计' : '今日使用' }}</span>
+                  <button @click="showUsageDetails(key)"><Icon name="LineChart" />详情</button>
+                </div>
+                <div>
+                  <div>
+                    <p>{{ formatNumber(key.usage?.daily?.requests || 0) }} 次</p>
+                    <p>请求</p>
+                  </div>
+                  <div>
+                    <p>${{ (key.dailyCost || 0).toFixed(2) }}</p>
+                    <p>费用</p>
+                  </div>
+                </div>
+                <div>
+                  <div>
+                    <span>最后使用</span>
+                    <span>
+                      {{ key.lastUsedAt ? formatLastUsed(key.lastUsedAt) : '从未使用' }}
+                    </span>
+                  </div>
+                  <div>
+                    <span>账号</span>
+                    <span v-if="hasLastUsageAccount(key)" :title="getLastUsageFullName(key)">
+                      {{ getLastUsageDisplayName(key) }}
+                      <span v-if="!isLastUsageDeleted(key)">
+                        ({{ getLastUsageTypeLabel(key) }})
+                      </span>
+                    </span>
+                    <span v-else>暂无使用账号</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 限制进度条 -->
+              <div>
+                <!-- 每日费用限制 -->
+                <LimitProgressBar
+                  v-if="key.dailyCostLimit > 0"
+                  :current="key.dailyCost || 0"
+                  label="每日限制"
+                  :limit="key.dailyCostLimit"
+                  type="daily"
+                  variant="compact"
+                />
+
+                <!-- 总费用限制（无每日限制时展示） -->
+                <LimitProgressBar
+                  v-else-if="key.totalCostLimit > 0"
+                  :current="key.usage?.total?.cost || 0"
+                  label="总费用限制"
+                  :limit="key.totalCostLimit"
+                  type="total"
+                  variant="compact"
+                />
+
+                <!-- 时间窗口费用限制（无每日和总费用限制时展示） -->
+                <div
+                  v-else-if="
+                    key.rateLimitWindow > 0 &&
+                    key.rateLimitCost > 0 &&
+                    (!key.dailyCostLimit || key.dailyCostLimit === 0) &&
+                    (!key.totalCostLimit || key.totalCostLimit === 0)
+                  "
+                >
+                  <!-- 费用进度条 -->
+                  <LimitProgressBar
+                    :current="key.currentWindowCost || 0"
+                    label="窗口费用"
+                    :limit="key.rateLimitCost"
+                    type="window"
+                    variant="compact"
+                  />
+                  <!-- 重置倒计时 -->
+                  <div>
+                    <div>
+                      <Icon name="Clock" />
+                      <span>{{ key.rateLimitWindow }}分钟窗口</span>
+                    </div>
+                    <span>
+                      {{
+                        key.windowRemainingSeconds > 0
+                          ? formatWindowTime(key.windowRemainingSeconds)
+                          : '未激活'
+                      }}
+                    </span>
+                  </div>
+                </div>
+
+                <!-- 无限制显示 -->
+                <div v-else>
+                  <Icon name="Infinity" />
+                  <span>无限制</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- 时间信息 -->
+            <div>
+              <div>
+                <span>创建时间</span>
+                <span>{{ formatDate(key.createdAt) }}</span>
+              </div>
+              <div>
+                <span>过期时间</span>
+                <div>
+                  <span>
+                    {{ key.expiresAt ? formatDate(key.expiresAt) : '永不过期' }}
+                  </span>
+                  <button title="编辑过期时间" @click.stop="startEditExpiry(key)">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path
+                        d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                      ></path>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- 标签 -->
+            <div v-if="key.tags && key.tags.length > 0">
+              <span v-for="tag in key.tags" :key="tag">
+                {{ tag }}
+              </span>
+            </div>
+
+            <!-- 操作按钮 -->
+            <div>
+              <button @click="showUsageDetails(key)">
+                <Icon name="LineChart" />
+                查看详情
+              </button>
+              <button @click="openEditApiKeyModal(key)">
+                <Icon name="Edit" />
+                编辑
+              </button>
+              <button
+                v-if="
+                  key.expiresAt &&
+                  (isApiKeyExpired(key.expiresAt) || isApiKeyExpiringSoon(key.expiresAt))
+                "
+                @click="openRenewApiKeyModal(key)"
+              >
+                <Icon name="Clock" />
+                续期
+              </button>
+              <button @click="toggleApiKeyStatus(key)">
+                <i />
+                {{ key.isActive ? '禁用' : '激活' }}
+              </button>
+              <button @click="deleteApiKey(key.id)">
+                <Icon name="Trash" />
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 分页组件 -->
+        <div
+          v-if="sortedApiKeys.length > 0"
+          class="mt-6 flex flex-col gap-4 border-t border-gray-200 pt-4 dark:border-gray-700 sm:flex-row sm:items-center sm:justify-between"
+        >
+          <div class="flex items-center gap-4 text-sm text-gray-600 dark:text-gray-400">
+            <span>共 {{ sortedApiKeys.length }} 条记录</span>
+            <div class="flex items-center gap-2">
+              <span>每页显示</span>
+              <select
+                v-model="pageSize"
+                class="rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-sm text-gray-900 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:focus:border-primary-400 dark:focus:ring-primary-400"
+                @change="currentPage = 1"
+              >
+                <option v-for="size in pageSizeOptions" :key="size" :value="size">
+                  {{ size }}
+                </option>
+              </select>
+              <span>条</span>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <!-- 上一页 -->
+            <button
+              class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-gray-300 bg-white text-gray-700 transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700"
+              :disabled="currentPage === 1"
+              @click="currentPage--"
+            >
+              <Icon name="ChevronLeft" class="h-4 w-4" />
+            </button>
+
+            <!-- 页码 -->
+            <div class="flex items-center gap-1">
+              <!-- 第一页 -->
+              <button
+                v-if="shouldShowFirstPage"
+                class="inline-flex h-8 min-w-[2rem] items-center justify-center rounded-lg border border-gray-300 bg-white px-3 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700"
+                :class="
+                  currentPage === 1
+                    ? 'border-primary-500 bg-primary-50 text-primary-600 dark:border-primary-400 dark:bg-primary-900/30 dark:text-primary-400'
+                    : ''
+                "
+                @click="currentPage = 1"
+              >
+                1
+              </button>
+              <span v-if="showLeadingEllipsis" class="px-1 text-gray-500 dark:text-gray-400">
+                ...
+              </span>
+
+              <!-- 中间页码 -->
+              <button
+                v-for="page in pageNumbers"
+                :key="page"
+                class="inline-flex h-8 min-w-[2rem] items-center justify-center rounded-lg border px-3 text-sm font-medium transition-colors"
+                :class="
+                  currentPage === page
+                    ? 'border-primary-500 bg-primary-50 text-primary-600 dark:border-primary-400 dark:bg-primary-900/30 dark:text-primary-400'
+                    : 'border-gray-300 bg-white text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700'
+                "
+                @click="currentPage = page"
+              >
+                {{ page }}
+              </button>
+
+              <!-- 最后一页 -->
+              <span v-if="showTrailingEllipsis" class="px-1 text-gray-500 dark:text-gray-400">
+                ...
+              </span>
+              <button
+                v-if="shouldShowLastPage"
+                class="inline-flex h-8 min-w-[2rem] items-center justify-center rounded-lg border border-gray-300 bg-white px-3 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700"
+                :class="
+                  currentPage === totalPages
+                    ? 'border-primary-500 bg-primary-50 text-primary-600 dark:border-primary-400 dark:bg-primary-900/30 dark:text-primary-400'
+                    : ''
+                "
+                @click="currentPage = totalPages"
+              >
+                {{ totalPages }}
+              </button>
+            </div>
+
+            <!-- 下一页 -->
+            <button
+              class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-gray-300 bg-white text-gray-700 transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700"
+              :disabled="currentPage === totalPages || totalPages === 0"
+              @click="currentPage++"
+            >
+              <Icon name="ChevronRight" class="h-4 w-4" />
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 已删除 API Keys Tab Panel -->
+      <div v-else-if="activeTab === 'deleted'" class="p-6">
+        <!-- 加载状态 -->
+        <div v-if="deletedApiKeysLoading" class="flex flex-col items-center justify-center py-16">
+          <div
+            class="mb-4 h-12 w-12 animate-spin rounded-full border-4 border-gray-200 border-t-primary-600 dark:border-gray-700 dark:border-t-primary-400"
+          />
+          <p class="text-sm text-gray-600 dark:text-gray-400">正在加载已删除的 API Keys...</p>
+        </div>
+
+        <!-- 空状态 -->
+        <div
+          v-else-if="deletedApiKeys.length === 0"
+          class="flex flex-col items-center justify-center py-16"
+        >
+          <div
+            class="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800"
+          >
+            <Icon name="Trash" class="h-8 w-8 text-gray-400 dark:text-gray-500" />
+          </div>
+          <p class="mb-2 text-base font-medium text-gray-900 dark:text-white">
+            暂无已删除的 API Keys
+          </p>
+          <p class="text-sm text-gray-600 dark:text-gray-400">已删除的 API Keys 会出现在这里</p>
+        </div>
+
+        <!-- 已删除的 API Keys 表格 -->
+        <div v-else class="space-y-4">
+          <!-- 工具栏 -->
+          <div class="flex justify-end">
+            <button
+              v-if="deletedApiKeys.length > 0"
+              class="inline-flex items-center gap-2 rounded-lg border border-red-300 bg-red-50 px-3 py-2 text-sm font-medium text-red-700 shadow-sm transition-colors hover:bg-red-100 dark:border-red-700 dark:bg-red-900/30 dark:text-red-300 dark:hover:bg-red-900/50"
+              @click="clearAllDeletedApiKeys"
+            >
+              <Icon name="Trash2" class="h-4 w-4" />
+              清空所有已删除 ({{ deletedApiKeys.length }})
+            </button>
+          </div>
+
+          <div>
+            <div>
+              <table>
+                <thead>
+                  <tr>
+                    <th>名称</th>
+                    <th>所属账号</th>
+                    <th v-if="isLdapEnabled">创建者</th>
+                    <th>创建时间</th>
+                    <th>删除者</th>
+                    <th>删除时间</th>
+                    <th>费用</th>
+                    <th>Token</th>
+                    <th>请求数</th>
+                    <th>最后使用</th>
+                    <th>操作</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="key in deletedApiKeys" :key="key.id">
+                    <td>
+                      <div>
+                        <div>
+                          <Icon name="Trash" />
+                        </div>
+                        <div>
+                          <div :title="key.name">
+                            {{ key.name }}
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                    <!-- 所属账号 -->
+                    <td>
+                      <div>
+                        <!-- Claude OAuth 绑定 -->
+                        <div v-if="key.claudeAccountId">
+                          <span>
+                            <Icon name="Bot" />
+                            Claude OAuth
+                          </span>
+                        </div>
+                        <!-- Claude Console 绑定 -->
+                        <div v-else-if="key.claudeConsoleAccountId">
+                          <span>
+                            <Icon name="Terminal" />
+                            Claude Console
+                          </span>
+                        </div>
+                        <!-- Gemini 绑定 -->
+                        <div v-else-if="key.geminiAccountId">
+                          <span>
+                            <i />
+                            Gemini
+                          </span>
+                        </div>
+                        <!-- 共享池 -->
+                        <div v-else>
+                          <Icon name="Share2" />
+                          共享池
+                        </div>
+                      </div>
+                    </td>
+                    <!-- 创建者 -->
+                    <td v-if="isLdapEnabled">
+                      <div>
+                        <span v-if="key.createdBy === 'admin'">
+                          <Icon name="ShieldCheck" />
+                          管理员
+                        </span>
+                        <span v-else-if="key.userUsername">
+                          <Icon name="User" />
+                          {{ key.userUsername }}
+                        </span>
+                        <span v-else>
+                          <Icon name="HelpCircle" />
+                          未知
+                        </span>
+                      </div>
+                    </td>
+                    <!-- 创建时间 -->
+                    <td>
+                      {{ formatDate(key.createdAt) }}
+                    </td>
+                    <!-- 删除者 -->
+                    <td>
+                      <div>
+                        <span v-if="key.deletedByType === 'admin'">
+                          <Icon name="ShieldCheck" />
+                          {{ key.deletedBy }}
+                        </span>
+                        <span v-else-if="key.deletedByType === 'user'">
+                          <Icon name="User" />
+                          {{ key.deletedBy }}
+                        </span>
+                        <span v-else>
+                          <Icon name="Settings" />
+                          {{ key.deletedBy }}
+                        </span>
+                      </div>
+                    </td>
+                    <!-- 删除时间 -->
+                    <td>
+                      {{ formatDate(key.deletedAt) }}
+                    </td>
+                    <!-- 费用 -->
+                    <td>
+                      <span> ${{ (key.usage?.total?.cost || 0).toFixed(2) }} </span>
+                    </td>
+                    <!-- Token -->
+                    <td>
+                      <span>
+                        {{ formatTokenCount(key.usage?.total?.tokens || 0) }}
+                      </span>
+                    </td>
+                    <!-- 请求数 -->
+                    <td>
+                      <div>
+                        <span>
+                          {{ formatNumber(key.usage?.total?.requests || 0) }}
+                        </span>
+                        <span>次</span>
+                      </div>
+                    </td>
+                    <!-- 最后使用 -->
+                    <td>
+                      <div>
+                        <span
+                          v-if="key.lastUsedAt"
+                          :title="new Date(key.lastUsedAt).toLocaleString('zh-CN')"
+                        >
+                          {{ formatLastUsed(key.lastUsedAt) }}
+                        </span>
+                        <span v-else>从未使用</span>
+                        <span v-if="hasLastUsageAccount(key)" :title="getLastUsageFullName(key)">
+                          {{ getLastUsageDisplayName(key) }}
+                          <span v-if="!isLastUsageDeleted(key)">
+                            ({{ getLastUsageTypeLabel(key) }})
+                          </span>
+                        </span>
+                        <span v-else> 暂无使用账号 </span>
+                      </div>
+                    </td>
+                    <td>
+                      <div>
+                        <button
+                          v-if="key.canRestore"
+                          title="恢复 API Key"
+                          @click="restoreApiKey(key.id)"
+                        >
+                          <Icon name="RotateCcw" />
+                          恢复
+                        </button>
+                        <button title="彻底删除 API Key" @click="permanentDeleteApiKey(key.id)">
+                          <Icon name="X" />
+                          彻底删除
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
                 </tbody>
               </table>
             </div>
           </div>
-
-          <!-- 移动端卡片视图 -->
-          <div v-if="!apiKeysLoading && sortedApiKeys.length > 0">
-            <div v-for="key in paginatedApiKeys" :key="key.id">
-              <!-- 卡片头部 -->
-              <div>
-                <div>
-                  <input
-                    v-if="shouldShowCheckboxes"
-                    v-model="selectedApiKeys"
-                    type="checkbox"
-                    :value="key.id"
-                    @change="updateSelectAllState"
-                  />
-                  <div>
-                    <h4>
-                      {{ key.name }}
-                    </h4>
-                    <p>
-                      {{ key.id }}
-                    </p>
-                  </div>
-                </div>
-                <span>
-                  <div />
-                  {{ key.isActive ? '活跃' : '已停用' }}
-                </span>
-              </div>
-
-              <!-- 账户绑定信息 -->
-              <div>
-                <!-- Claude 绑定 -->
-                <div v-if="key.claudeAccountId || key.claudeConsoleAccountId">
-                  <span>
-                    <Icon name="Brain" />
-                    Claude
-                  </span>
-                  <span>
-                    {{ getClaudeBindingInfo(key) }}
-                  </span>
-                </div>
-                <!-- Gemini 绑定 -->
-                <div v-if="key.geminiAccountId">
-                  <span>
-                    <Icon name="Bot" />
-                    Gemini
-                  </span>
-                  <span>
-                    {{ getGeminiBindingInfo(key) }}
-                  </span>
-                </div>
-                <!-- OpenAI 绑定 -->
-                <div v-if="key.openaiAccountId">
-                  <span>
-                    <i />
-                    OpenAI
-                  </span>
-                  <span>
-                    {{ getOpenAIBindingInfo(key) }}
-                  </span>
-                </div>
-                <!-- Bedrock 绑定 -->
-                <div v-if="key.bedrockAccountId">
-                  <span>
-                    <Icon name="Cloud" />
-                    Bedrock
-                  </span>
-                  <span>
-                    {{ getBedrockBindingInfo(key) }}
-                  </span>
-                </div>
-                <!-- Droid 绑定 -->
-                <div v-if="key.droidAccountId">
-                  <span>
-                    <Icon name="Bot" />
-                    Droid
-                  </span>
-                  <span>
-                    {{ getDroidBindingInfo(key) }}
-                  </span>
-                </div>
-                <!-- 无绑定时显示共享池 -->
-                <div
-                  v-if="
-                    !key.claudeAccountId &&
-                    !key.claudeConsoleAccountId &&
-                    !key.geminiAccountId &&
-                    !key.openaiAccountId &&
-                    !key.bedrockAccountId &&
-                    !key.droidAccountId
-                  "
-                >
-                  <Icon name="Share2" />
-                  使用共享池
-                </div>
-                <!-- 显示所有者信息 -->
-                <div v-if="isLdapEnabled && key.ownerDisplayName">
-                  <Icon name="User" />
-                  {{ key.ownerDisplayName }}
-                </div>
-              </div>
-
-              <!-- 统计信息 -->
-              <div>
-                <!-- 今日使用 -->
-                <div>
-                  <div>
-                    <span>{{ globalDateFilter.type === 'custom' ? '累计统计' : '今日使用' }}</span>
-                    <button @click="showUsageDetails(key)"><Icon name="LineChart" />详情</button>
-                  </div>
-                  <div>
-                    <div>
-                      <p>{{ formatNumber(key.usage?.daily?.requests || 0) }} 次</p>
-                      <p>请求</p>
-                    </div>
-                    <div>
-                      <p>${{ (key.dailyCost || 0).toFixed(2) }}</p>
-                      <p>费用</p>
-                    </div>
-                  </div>
-                  <div>
-                    <div>
-                      <span>最后使用</span>
-                      <span>
-                        {{ key.lastUsedAt ? formatLastUsed(key.lastUsedAt) : '从未使用' }}
-                      </span>
-                    </div>
-                    <div>
-                      <span>账号</span>
-                      <span v-if="hasLastUsageAccount(key)" :title="getLastUsageFullName(key)">
-                        {{ getLastUsageDisplayName(key) }}
-                        <span v-if="!isLastUsageDeleted(key)">
-                          ({{ getLastUsageTypeLabel(key) }})
-                        </span>
-                      </span>
-                      <span v-else>暂无使用账号</span>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- 限制进度条 -->
-                <div>
-                  <!-- 每日费用限制 -->
-                  <LimitProgressBar
-                    v-if="key.dailyCostLimit > 0"
-                    :current="key.dailyCost || 0"
-                    label="每日限制"
-                    :limit="key.dailyCostLimit"
-                    type="daily"
-                    variant="compact"
-                  />
-
-                  <!-- 总费用限制（无每日限制时展示） -->
-                  <LimitProgressBar
-                    v-else-if="key.totalCostLimit > 0"
-                    :current="key.usage?.total?.cost || 0"
-                    label="总费用限制"
-                    :limit="key.totalCostLimit"
-                    type="total"
-                    variant="compact"
-                  />
-
-                  <!-- 时间窗口费用限制（无每日和总费用限制时展示） -->
-                  <div
-                    v-else-if="
-                      key.rateLimitWindow > 0 &&
-                      key.rateLimitCost > 0 &&
-                      (!key.dailyCostLimit || key.dailyCostLimit === 0) &&
-                      (!key.totalCostLimit || key.totalCostLimit === 0)
-                    "
-                  >
-                    <!-- 费用进度条 -->
-                    <LimitProgressBar
-                      :current="key.currentWindowCost || 0"
-                      label="窗口费用"
-                      :limit="key.rateLimitCost"
-                      type="window"
-                      variant="compact"
-                    />
-                    <!-- 重置倒计时 -->
-                    <div>
-                      <div>
-                        <Icon name="Clock" />
-                        <span>{{ key.rateLimitWindow }}分钟窗口</span>
-                      </div>
-                      <span>
-                        {{
-                          key.windowRemainingSeconds > 0
-                            ? formatWindowTime(key.windowRemainingSeconds)
-                            : '未激活'
-                        }}
-                      </span>
-                    </div>
-                  </div>
-
-                  <!-- 无限制显示 -->
-                  <div v-else>
-                    <Icon name="Infinity" />
-                    <span>无限制</span>
-                  </div>
-                </div>
-              </div>
-
-              <!-- 时间信息 -->
-              <div>
-                <div>
-                  <span>创建时间</span>
-                  <span>{{ formatDate(key.createdAt) }}</span>
-                </div>
-                <div>
-                  <span>过期时间</span>
-                  <div>
-                    <span>
-                      {{ key.expiresAt ? formatDate(key.expiresAt) : '永不过期' }}
-                    </span>
-                    <button title="编辑过期时间" @click.stop="startEditExpiry(key)">
-                      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path
-                          d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                        ></path>
-                      </svg>
-                    </button>
-                  </div>
-                </div>
-              </div>
-
-              <!-- 标签 -->
-              <div v-if="key.tags && key.tags.length > 0">
-                <span v-for="tag in key.tags" :key="tag">
-                  {{ tag }}
-                </span>
-              </div>
-
-              <!-- 操作按钮 -->
-              <div>
-                <button @click="showUsageDetails(key)">
-                  <Icon name="LineChart" />
-                  查看详情
-                </button>
-                <button @click="openEditApiKeyModal(key)">
-                  <Icon name="Edit" />
-                  编辑
-                </button>
-                <button
-                  v-if="
-                    key.expiresAt &&
-                    (isApiKeyExpired(key.expiresAt) || isApiKeyExpiringSoon(key.expiresAt))
-                  "
-                  @click="openRenewApiKeyModal(key)"
-                >
-                  <Icon name="Clock" />
-                  续期
-                </button>
-                <button @click="toggleApiKeyStatus(key)">
-                  <i />
-                  {{ key.isActive ? '禁用' : '激活' }}
-                </button>
-                <button @click="deleteApiKey(key.id)">
-                  <Icon name="Trash" />
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <!-- 分页组件 -->
-          <div v-if="sortedApiKeys.length > 0">
-            <div>
-              <span> 共 {{ sortedApiKeys.length }} 条记录 </span>
-              <div>
-                <span>每页显示</span>
-                <select v-model="pageSize" @change="currentPage = 1">
-                  <option v-for="size in pageSizeOptions" :key="size" :value="size">
-                    {{ size }}
-                  </option>
-                </select>
-                <span>条</span>
-              </div>
-            </div>
-
-            <div>
-              <!-- 上一页 -->
-              <button :disabled="currentPage === 1" @click="currentPage--">
-                <Icon name="ChevronLeft" />
-              </button>
-
-              <!-- 页码 -->
-              <div>
-                <!-- 第一页 -->
-                <button v-if="shouldShowFirstPage" @click="currentPage = 1">1</button>
-                <span v-if="showLeadingEllipsis">...</span>
-
-                <!-- 中间页码 -->
-                <button v-for="page in pageNumbers" :key="page" @click="currentPage = page">
-                  {{ page }}
-                </button>
-
-                <!-- 最后一页 -->
-                <span v-if="showTrailingEllipsis">...</span>
-                <button v-if="shouldShowLastPage" @click="currentPage = totalPages">
-                  {{ totalPages }}
-                </button>
-              </div>
-
-              <!-- 下一页 -->
-              <button
-                :disabled="currentPage === totalPages || totalPages === 0"
-                @click="currentPage++"
-              >
-                <Icon name="ChevronRight" />
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <!-- 已删除 API Keys Tab Panel -->
-        <div v-else-if="activeTab === 'deleted'">
-          <div v-if="deletedApiKeysLoading">
-            <div />
-            <p>正在加载已删除的 API Keys...</p>
-          </div>
-
-          <div v-else-if="deletedApiKeys.length === 0">
-            <div>
-              <Icon name="Trash" />
-            </div>
-            <p>暂无已删除的 API Keys</p>
-            <p>已删除的 API Keys 会出现在这里</p>
-          </div>
-
-          <!-- 已删除的 API Keys 表格 -->
-          <div v-else>
-            <!-- 工具栏 -->
-            <div>
-              <button v-if="deletedApiKeys.length > 0" @click="clearAllDeletedApiKeys">
-                <Icon name="Trash2" />
-                清空所有已删除 ({{ deletedApiKeys.length }})
-              </button>
-            </div>
-
-            <div>
-              <div>
-                <table>
-                  <thead>
-                    <tr>
-                      <th>名称</th>
-                      <th>所属账号</th>
-                      <th v-if="isLdapEnabled">创建者</th>
-                      <th>创建时间</th>
-                      <th>删除者</th>
-                      <th>删除时间</th>
-                      <th>费用</th>
-                      <th>Token</th>
-                      <th>请求数</th>
-                      <th>最后使用</th>
-                      <th>操作</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr v-for="key in deletedApiKeys" :key="key.id">
-                      <td>
-                        <div>
-                          <div>
-                            <Icon name="Trash" />
-                          </div>
-                          <div>
-                            <div :title="key.name">
-                              {{ key.name }}
-                            </div>
-                          </div>
-                        </div>
-                      </td>
-                      <!-- 所属账号 -->
-                      <td>
-                        <div>
-                          <!-- Claude OAuth 绑定 -->
-                          <div v-if="key.claudeAccountId">
-                            <span>
-                              <Icon name="Bot" />
-                              Claude OAuth
-                            </span>
-                          </div>
-                          <!-- Claude Console 绑定 -->
-                          <div v-else-if="key.claudeConsoleAccountId">
-                            <span>
-                              <Icon name="Terminal" />
-                              Claude Console
-                            </span>
-                          </div>
-                          <!-- Gemini 绑定 -->
-                          <div v-else-if="key.geminiAccountId">
-                            <span>
-                              <i />
-                              Gemini
-                            </span>
-                          </div>
-                          <!-- 共享池 -->
-                          <div v-else>
-                            <Icon name="Share2" />
-                            共享池
-                          </div>
-                        </div>
-                      </td>
-                      <!-- 创建者 -->
-                      <td v-if="isLdapEnabled">
-                        <div>
-                          <span v-if="key.createdBy === 'admin'">
-                            <Icon name="ShieldCheck" />
-                            管理员
-                          </span>
-                          <span v-else-if="key.userUsername">
-                            <Icon name="User" />
-                            {{ key.userUsername }}
-                          </span>
-                          <span v-else>
-                            <Icon name="HelpCircle" />
-                            未知
-                          </span>
-                        </div>
-                      </td>
-                      <!-- 创建时间 -->
-                      <td>
-                        {{ formatDate(key.createdAt) }}
-                      </td>
-                      <!-- 删除者 -->
-                      <td>
-                        <div>
-                          <span v-if="key.deletedByType === 'admin'">
-                            <Icon name="ShieldCheck" />
-                            {{ key.deletedBy }}
-                          </span>
-                          <span v-else-if="key.deletedByType === 'user'">
-                            <Icon name="User" />
-                            {{ key.deletedBy }}
-                          </span>
-                          <span v-else>
-                            <Icon name="Settings" />
-                            {{ key.deletedBy }}
-                          </span>
-                        </div>
-                      </td>
-                      <!-- 删除时间 -->
-                      <td>
-                        {{ formatDate(key.deletedAt) }}
-                      </td>
-                      <!-- 费用 -->
-                      <td>
-                        <span> ${{ (key.usage?.total?.cost || 0).toFixed(2) }} </span>
-                      </td>
-                      <!-- Token -->
-                      <td>
-                        <span>
-                          {{ formatTokenCount(key.usage?.total?.tokens || 0) }}
-                        </span>
-                      </td>
-                      <!-- 请求数 -->
-                      <td>
-                        <div>
-                          <span>
-                            {{ formatNumber(key.usage?.total?.requests || 0) }}
-                          </span>
-                          <span>次</span>
-                        </div>
-                      </td>
-                      <!-- 最后使用 -->
-                      <td>
-                        <div>
-                          <span
-                            v-if="key.lastUsedAt"
-                            :title="new Date(key.lastUsedAt).toLocaleString('zh-CN')"
-                          >
-                            {{ formatLastUsed(key.lastUsedAt) }}
-                          </span>
-                          <span v-else>从未使用</span>
-                          <span v-if="hasLastUsageAccount(key)" :title="getLastUsageFullName(key)">
-                            {{ getLastUsageDisplayName(key) }}
-                            <span v-if="!isLastUsageDeleted(key)">
-                              ({{ getLastUsageTypeLabel(key) }})
-                            </span>
-                          </span>
-                          <span v-else> 暂无使用账号 </span>
-                        </div>
-                      </td>
-                      <td>
-                        <div>
-                          <button
-                            v-if="key.canRestore"
-                            title="恢复 API Key"
-                            @click="restoreApiKey(key.id)"
-                          >
-                            <Icon name="RotateCcw" />
-                            恢复
-                          </button>
-                          <button title="彻底删除 API Key" @click="permanentDeleteApiKey(key.id)">
-                            <Icon name="X" />
-                            彻底删除
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
-    </div>
+    </Card>
 
     <!-- 模态框组件 -->
     <CreateApiKeyModal
@@ -1299,7 +1703,7 @@
       :show="showUsageDetailModal"
       @close="showUsageDetailModal = false"
     />
-  </div>
+  </PageContainer>
 </template>
 
 <script setup>
@@ -1319,6 +1723,8 @@ import ExpiryEditModal from '@/components/apikeys/ExpiryEditModal.vue'
 import UsageDetailModal from '@/components/apikeys/UsageDetailModal.vue'
 import LimitProgressBar from '@/components/apikeys/LimitProgressBar.vue'
 import CustomDropdown from '@/components/common/CustomDropdown.vue'
+import PageContainer from '@/components/layout/PageContainer.vue'
+import { Card } from '@/ui'
 
 // 响应式数据
 const clientsStore = useClientsStore()
