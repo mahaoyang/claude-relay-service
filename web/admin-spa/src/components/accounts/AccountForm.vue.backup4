@@ -1,1891 +1,1147 @@
 <template>
   <BaseModal
+    :show="show"
+    :title="modalTitle"
+    :icon="isEdit ? 'Settings' : 'Plus'"
+    size="4xl"
     :close-on-backdrop="false"
     content-class="p-6"
-    :icon="isEdit ? 'Settings' : 'Plus'"
-    :show="show"
-    size="4xl"
-    :title="modalTitle"
     @close="$emit('close')"
   >
-    <!-- 步骤指示器 -->
-    <div v-if="!isEdit && (form.addType === 'oauth' || form.addType === 'setup-token')">
+    <!-- Main Content -->
+    <div class="space-y-6">
+      <!-- 步骤指示器 -->
+      <div v-if="!isEdit && (form.addType === 'oauth' || form.addType === 'setup-token')">
       <div>
-        <div>
-          <div>1</div>
-          <span>基本信息</span>
-        </div>
-        <div />
-        <div>
-          <div>2</div>
-          <span>授权认证</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- 步骤1: 基本信息和代理设置 -->
-    <div v-if="oauthStep === 1 && !isEdit">
       <div>
-        <div v-if="!isEdit">
-          <label>选择平台</label>
-          <!-- 平台分组选择器 -->
-          <div>
-            <!-- 分组选择器 -->
-            <div>
-              <!-- Claude 分组 -->
-              <div @click="selectPlatformGroup('claude')">
-                <div>
-                  <div>
-                    <div></div>
-                    <div v-if="platformGroup === 'claude'"></div>
-                  </div>
-                  <h4>Claude</h4>
-                  <p>Anthropic</p>
-                </div>
-              </div>
-
-              <!-- OpenAI 分组 -->
-              <div @click="selectPlatformGroup('openai')">
-                <div>
-                  <div>
-                    <div>
-                      <svg
-                        fill="currentColor"
-                        viewBox="0 0 24 24"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M22.2819 9.8211a5.9847 5.9847 0 0 0-.5157-4.9108 6.0462 6.0462 0 0 0-6.5098-2.9A6.0651 6.0651 0 0 0 4.9807 4.1818a5.9847 5.9847 0 0 0-3.9977 2.9 6.0462 6.0462 0 0 0 .7427 7.0966 5.98 5.98 0 0 0 .511 4.9107 6.051 6.051 0 0 0 6.5146 2.9001A5.9847 5.9847 0 0 0 13.2599 24a6.0557 6.0557 0 0 0 5.7718-4.2058 5.9894 5.9894 0 0 0 3.9977-2.9001 6.0557 6.0557 0 0 0-.7475-7.0729zm-9.022 12.6081a4.4755 4.4755 0 0 1-2.8764-1.0408l.1419-.0804 4.7783-2.7582a.7948.7948 0 0 0 .3927-.6813v-6.7369l2.02 1.1686a.071.071 0 0 1 .038.052v5.5826a4.504 4.504 0 0 1-4.4945 4.4944zm-9.6607-4.1254a4.4708 4.4708 0 0 1-.5346-3.0137l.142.0852 4.783 2.7582a.7712.7712 0 0 0 .7806 0l5.8428-3.3685v2.3324a.0804.0804 0 0 1-.0332.0615L9.74 19.9502a4.4992 4.4992 0 0 1-6.1408-1.6464zM2.3408 7.8956a4.485 4.485 0 0 1 2.3655-1.9728V11.6a.7664.7664 0 0 0 .3879.6765l5.8144 3.3543-2.0201 1.1685a.0757.0757 0 0 1-.071 0l-4.8303-2.7865A4.504 4.504 0 0 1 2.3408 7.8956zm16.5963 3.8558L13.1038 8.364 15.1192 7.2a.0757.0757 0 0 1 .071 0l4.8303 2.7913a4.4944 4.4944 0 0 1-.6765 8.1042v-5.6772a.79.79 0 0 0-.4069-.6813zm2.0107-3.0231l-.142-.0852-4.7735-2.7818a.7759.7759 0 0 0-.7854 0L9.409 9.2297V6.8974a.0662.0662 0 0 1 .0284-.0615l4.8303-2.7866a4.4992 4.4992 0 0 1 6.6802 4.66zM8.3065 12.863l-2.02-1.1638a.0804.0804 0 0 1-.038-.0567V6.0742a4.4992 4.4992 0 0 1 7.3757-3.4537l-.142.0805L8.704 5.459a.7948.7948 0 0 0-.3927.6813zm1.0976-2.3654l2.602-1.4998 2.6069 1.4998v2.9994l-2.5974 1.4997-2.6067-1.4997Z"
-                        />
-                      </svg>
-                    </div>
-                    <div v-if="platformGroup === 'openai'"></div>
-                  </div>
-                  <h4>OpenAI</h4>
-                  <p>GPT 系列</p>
-                </div>
-              </div>
-
-              <!-- Gemini 分组 -->
-              <div @click="selectPlatformGroup('gemini')">
-                <div>
-                  <div>
-                    <div></div>
-                    <div v-if="platformGroup === 'gemini'"></div>
-                  </div>
-                  <h4>Gemini</h4>
-                  <p>Google AI</p>
-                </div>
-              </div>
-
-              <!-- Droid 分组 -->
-              <div @click="selectPlatformGroup('droid')">
-                <div>
-                  <div>
-                    <div></div>
-                    <div v-if="platformGroup === 'droid'"></div>
-                  </div>
-                  <h4>Droid</h4>
-                  <p>Claude Droid</p>
-                </div>
-              </div>
-            </div>
-
-            <!-- 子平台选择器 -->
-            <div v-if="platformGroup">
-              <p>选择具体平台类型：</p>
-              <div>
-                <!-- Claude 子选项 -->
-                <template v-if="platformGroup === 'claude'">
-                  <label>
-                    <input v-model="form.platform" type="radio" value="claude" />
-                    <div>
-                      <div>
-                        <span>Claude Code</span>
-                        <span>官方</span>
-                      </div>
-                    </div>
-                    <div v-if="form.platform === 'claude'"></div>
-                  </label>
-
-                  <label>
-                    <input v-model="form.platform" type="radio" value="claude-console" />
-                    <div>
-                      <div>
-                        <span>Claude Console</span>
-                        <span>标准API</span>
-                      </div>
-                    </div>
-                    <div v-if="form.platform === 'claude-console'"></div>
-                  </label>
-
-                  <label>
-                    <input v-model="form.platform" type="radio" value="bedrock" />
-                    <div>
-                      <div>
-                        <span>Bedrock</span>
-                        <span>AWS</span>
-                      </div>
-                    </div>
-                    <div v-if="form.platform === 'bedrock'"></div>
-                  </label>
-
-                  <label>
-                    <input v-model="form.platform" type="radio" value="ccr" />
-                    <div>
-                      <div>
-                        <span>CCR</span>
-                        <span>Claude Code Router</span>
-                      </div>
-                    </div>
-                    <div v-if="form.platform === 'ccr'"></div>
-                  </label>
-                </template>
-
-                <!-- OpenAI 子选项 -->
-                <template v-if="platformGroup === 'openai'">
-                  <label>
-                    <input v-model="form.platform" type="radio" value="openai" />
-                    <div>
-                      <div>
-                        <span>Codex Cli</span>
-                        <span>官方</span>
-                      </div>
-                    </div>
-                    <div v-if="form.platform === 'openai'"></div>
-                  </label>
-
-                  <label>
-                    <input v-model="form.platform" type="radio" value="openai-responses" />
-                    <div>
-                      <div>
-                        <span>Responses</span>
-                        <span>Openai-Responses</span>
-                      </div>
-                    </div>
-                    <div v-if="form.platform === 'openai-responses'"></div>
-                  </label>
-
-                  <label>
-                    <input v-model="form.platform" type="radio" value="azure_openai" />
-                    <div>
-                      <div>
-                        <span>Azure</span>
-                        <span>Azure Openai</span>
-                      </div>
-                    </div>
-                    <div v-if="form.platform === 'azure_openai'"></div>
-                  </label>
-                </template>
-
-                <!-- Gemini 子选项 -->
-                <template v-if="platformGroup === 'gemini'">
-                  <label>
-                    <input v-model="form.platform" type="radio" value="gemini" />
-                    <div>
-                      <div>
-                        <span>Gemini Cli</span>
-                        <span>官方</span>
-                      </div>
-                    </div>
-                    <div v-if="form.platform === 'gemini'"></div>
-                  </label>
-                </template>
-
-                <!-- Droid 子选项 -->
-                <template v-if="platformGroup === 'droid'">
-                  <label>
-                    <input v-model="form.platform" type="radio" value="droid" />
-                    <div>
-                      <div>
-                        <span>Droid 专属</span>
-                        <span>官方</span>
-                      </div>
-                    </div>
-                    <div v-if="form.platform === 'droid'"></div>
-                  </label>
-                </template>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div
-          v-if="
-            !isEdit &&
-            form.platform !== 'claude-console' &&
-            form.platform !== 'ccr' &&
-            form.platform !== 'bedrock' &&
-            form.platform !== 'azure_openai' &&
-            form.platform !== 'openai-responses'
-          "
-        >
-          <label>添加方式</label>
-          <div>
-            <label>
-              <input v-model="form.addType" type="radio" value="oauth" />
-              <span>
-                OAuth 授权<span v-if="form.platform === 'claude' || form.platform === 'openai'">
-                  (用量可视化)</span
-                >
-              </span>
-            </label>
-            <label v-if="form.platform === 'claude'">
-              <input v-model="form.addType" type="radio" value="setup-token" />
-              <span>Setup Token (效期长)</span>
-            </label>
-            <label>
-              <input v-model="form.addType" type="radio" value="manual" />
-              <span>手动输入 Access Token</span>
-            </label>
-            <label v-if="form.platform === 'droid'">
-              <input v-model="form.addType" type="radio" value="apikey" />
-              <span>使用 API Key (支持多个)</span>
-            </label>
-          </div>
-        </div>
-
-        <div>
-          <label>账户名称</label>
-          <input
-            v-model="form.name"
-            placeholder="为账户设置一个易识别的名称"
-            required
-            type="text"
-          />
-          <p v-if="errors.name">
-            {{ errors.name }}
-          </p>
-        </div>
-
-        <div>
-          <label>描述 (可选)</label>
-          <textarea v-model="form.description" placeholder="账户用途说明..." rows="3" />
-        </div>
-
-        <div>
-          <label>账户类型</label>
-          <div>
-            <label>
-              <input v-model="form.accountType" type="radio" value="shared" />
-              <span>共享账户</span>
-            </label>
-            <label>
-              <input v-model="form.accountType" type="radio" value="dedicated" />
-              <span>专属账户</span>
-            </label>
-            <label>
-              <input v-model="form.accountType" type="radio" value="group" />
-              <span>分组调度</span>
-            </label>
-          </div>
-          <p>
-            共享账户：供所有API Key使用；专属账户：仅供特定API
-            Key使用；分组调度：加入分组供分组内调度
-          </p>
-        </div>
-
-        <!-- 到期时间 - 仅在创建账户时显示，编辑时使用独立的过期时间编辑弹窗 -->
-        <div v-if="!isEdit">
-          <label>到期时间 (可选)</label>
-          <div>
-            <select v-model="form.expireDuration" @change="updateAccountExpireAt">
-              <option value="">永不过期</option>
-              <option value="30d">30 天</option>
-              <option value="90d">90 天</option>
-              <option value="180d">180 天</option>
-              <option value="365d">365 天</option>
-              <option value="custom">自定义日期</option>
-            </select>
-            <div v-if="form.expireDuration === 'custom'">
-              <input
-                v-model="form.customExpireDate"
-                :min="minDateTime"
-                type="datetime-local"
-                @change="updateAccountCustomExpireAt"
-              />
-            </div>
-            <p v-if="form.expiresAt">将于 {{ formatExpireDate(form.expiresAt) }} 过期</p>
-            <p v-else>账户永不过期</p>
-          </div>
-          <p>设置 Claude Max/Pro 订阅的到期时间，到期后将停止调度此账户</p>
-        </div>
-
-        <!-- 分组选择器 -->
-        <div v-if="form.accountType === 'group'">
-          <label>选择分组 *</label>
-          <div>
-            <div>
-              <!-- 多选分组界面 -->
-              <div>
-                <div v-if="filteredGroups.length === 0">暂无可用分组</div>
-                <label v-for="group in filteredGroups" :key="group.id">
-                  <input v-model="form.groupIds" type="checkbox" :value="group.id" />
-                  <span> {{ group.name }} ({{ group.memberCount || 0 }} 个成员) </span>
-                </label>
-                <!-- 新建分组选项 -->
-                <div>
-                  <button type="button" @click="handleNewGroup">新建分组</button>
-                </div>
-              </div>
-            </div>
-            <button type="button" @click="refreshGroups"></button>
-          </div>
-        </div>
-
-        <!-- Gemini 项目 ID 字段 -->
-        <div v-if="form.platform === 'gemini'">
-          <label>项目 ID (可选)</label>
-          <input v-model="form.projectId" placeholder="例如：verdant-wares-464411-k9" type="text" />
-          <div>
-            <div>
-              <div>
-                <p>Google Cloud/Workspace 账号需要提供项目 ID</p>
-                <p>
-                  某些 Google 账号（特别是绑定了 Google Cloud 的账号）会被识别为 Workspace
-                  账号，需要提供额外的项目 ID。
-                </p>
-                <div>
-                  <p>如何获取项目 ID：</p>
-                  <ol>
-                    <li>
-                      访问
-                      <a href="https://console.cloud.google.com/welcome" target="_blank"
-                        >Google Cloud Console</a
-                      >
-                    </li>
-                    <li>复制<span>项目 ID（Project ID）</span>，通常是字符串格式</li>
-                    <li>
-                      ⚠️ 注意：要复制项目 ID（Project ID），不要复制项目编号（Project Number）！
-                    </li>
-                  </ol>
-                </div>
-                <p>
-                  <strong>提示：</strong>如果您的账号是普通个人账号（未绑定 Google
-                  Cloud），请留空此字段。
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Bedrock 特定字段 -->
-        <div v-if="form.platform === 'bedrock' && !isEdit">
-          <div>
-            <label>AWS 访问密钥 ID *</label>
-            <input
-              v-model="form.accessKeyId"
-              placeholder="请输入 AWS Access Key ID"
-              required
-              type="text"
-            />
-            <p v-if="errors.accessKeyId">
-              {{ errors.accessKeyId }}
-            </p>
-          </div>
-
-          <div>
-            <label>AWS 秘密访问密钥 *</label>
-            <input
-              v-model="form.secretAccessKey"
-              placeholder="请输入 AWS Secret Access Key"
-              required
-              type="password"
-            />
-            <p v-if="errors.secretAccessKey">
-              {{ errors.secretAccessKey }}
-            </p>
-          </div>
-
-          <div>
-            <label>AWS 区域 *</label>
-            <input v-model="form.region" placeholder="例如：us-east-1" required type="text" />
-            <p v-if="errors.region">
-              {{ errors.region }}
-            </p>
-            <div>
-              <div>
-                <div>
-                  <p>常用 AWS 区域参考：</p>
-                  <div>
-                    <span>• us-east-1 (美国东部)</span>
-                    <span>• us-west-2 (美国西部)</span>
-                    <span>• eu-west-1 (欧洲爱尔兰)</span>
-                    <span>• ap-southeast-1 (新加坡)</span>
-                    <span>• ap-northeast-1 (东京)</span>
-                    <span>• eu-central-1 (法兰克福)</span>
-                  </div>
-                  <p>💡 请输入完整的区域代码，如 us-east-1</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div>
-            <label>会话令牌 (可选)</label>
-            <input
-              v-model="form.sessionToken"
-              placeholder="如果使用临时凭证，请输入会话令牌"
-              type="password"
-            />
-            <p>仅在使用临时 AWS 凭证时需要填写</p>
-          </div>
-
-          <div>
-            <label>默认主模型 (可选)</label>
-            <input
-              v-model="form.defaultModel"
-              placeholder="例如：us.anthropic.claude-sonnet-4-20250514-v1:0"
-              type="text"
-            />
-            <p>留空将使用系统默认模型。支持 inference profile ID 或 ARN</p>
-            <div>
-              <div>
-                <div>
-                  <p>Bedrock 模型配置说明：</p>
-                  <ul>
-                    <li>支持 Inference Profile ID（推荐）</li>
-                    <li>支持 Application Inference Profile ARN</li>
-                    <li>常用模型：us.anthropic.claude-sonnet-4-20250514-v1:0</li>
-                    <li>留空将使用系统配置的默认模型</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div>
-            <label>小快速模型 (可选)</label>
-            <input
-              v-model="form.smallFastModel"
-              placeholder="例如：us.anthropic.claude-3-5-haiku-20241022-v1:0"
-              type="text"
-            />
-            <p>用于快速响应的轻量级模型，留空将使用系统默认</p>
-          </div>
-        </div>
-
-        <!-- Azure OpenAI 特定字段 -->
-        <div v-if="form.platform === 'azure_openai' && !isEdit">
-          <div>
-            <label>Azure Endpoint *</label>
-            <input
-              v-model="form.azureEndpoint"
-              placeholder="https://your-resource.openai.azure.com"
-              required
-              type="url"
-            />
-            <p v-if="errors.azureEndpoint">
-              {{ errors.azureEndpoint }}
-            </p>
-            <p>Azure OpenAI 资源的终结点 URL，格式：https://your-resource.openai.azure.com</p>
-          </div>
-
-          <div>
-            <label>API 版本</label>
-            <input v-model="form.apiVersion" placeholder="2024-02-01" type="text" />
-            <p>Azure OpenAI API 版本，默认使用最新稳定版本 2024-02-01</p>
-          </div>
-
-          <div>
-            <label>部署名称 *</label>
-            <input v-model="form.deploymentName" placeholder="gpt-4" required type="text" />
-            <p v-if="errors.deploymentName">
-              {{ errors.deploymentName }}
-            </p>
-            <p>在 Azure OpenAI Studio 中创建的部署名称</p>
-          </div>
-
-          <div>
-            <label>API Key *</label>
-            <input
-              v-model="form.apiKey"
-              placeholder="请输入 Azure OpenAI API Key"
-              required
-              type="password"
-            />
-            <p v-if="errors.apiKey">
-              {{ errors.apiKey }}
-            </p>
-            <p>从 Azure 门户获取的 API 密钥</p>
-          </div>
-
-          <div>
-            <label>支持的模型</label>
-            <div>
-              <label
-                v-for="model in [
-                  'gpt-4',
-                  'gpt-4-turbo',
-                  'gpt-4o',
-                  'gpt-4o-mini',
-                  'gpt-5',
-                  'gpt-5-mini',
-                  'gpt-35-turbo',
-                  'gpt-35-turbo-16k',
-                  'codex-mini'
-                ]"
-                :key="model"
-              >
-                <input v-model="form.supportedModels" type="checkbox" :value="model" />
-                <span>{{ model }}</span>
-              </label>
-            </div>
-            <p>选择此部署支持的模型类型</p>
-          </div>
-        </div>
-
-        <div v-if="form.platform === 'bedrock' && !isEdit">
-          <div>
-            <label>限流机制</label>
-            <div>
-              <label>
-                <input v-model="form.enableRateLimit" type="checkbox" />
-                <span>启用限流机制</span>
-              </label>
-              <p>启用后，当账号返回429错误时将暂停调度一段时间</p>
-            </div>
-
-            <div v-if="form.enableRateLimit">
-              <label>限流时间 (分钟)</label>
-              <input
-                v-model.number="form.rateLimitDuration"
-                min="1"
-                placeholder="默认60分钟"
-                type="number"
-              />
-              <p>账号被限流后暂停调度的时间（分钟）</p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Claude Console 和 CCR 特定字段 -->
-        <div v-if="(form.platform === 'claude-console' || form.platform === 'ccr') && !isEdit">
-          <div>
-            <label>API URL *</label>
-            <input
-              v-model="form.apiUrl"
-              placeholder="例如：https://api.example.com"
-              required
-              type="text"
-            />
-            <p v-if="errors.apiUrl">
-              {{ errors.apiUrl }}
-            </p>
-          </div>
-
-          <div>
-            <label>API Key *</label>
-            <input v-model="form.apiKey" placeholder="请输入API Key" required type="password" />
-            <p v-if="errors.apiKey">
-              {{ errors.apiKey }}
-            </p>
-          </div>
-
-          <!-- 额度管理字段 -->
-          <div>
-            <div>
-              <label> 每日额度限制 ($) </label>
-              <input
-                v-model.number="form.dailyQuota"
-                min="0"
-                placeholder="0 表示不限制"
-                step="0.01"
-                type="number"
-              />
-              <p>设置每日使用额度，0 表示不限制</p>
-            </div>
-
-            <div>
-              <label> 额度重置时间 </label>
-              <input v-model="form.quotaResetTime" placeholder="00:00" type="time" />
-              <p>每日自动重置额度的时间</p>
-            </div>
-          </div>
-
-          <!-- 并发控制字段 -->
-          <div>
-            <label> 最大并发任务数 </label>
-            <input
-              v-model.number="form.maxConcurrentTasks"
-              min="0"
-              placeholder="0 表示不限制"
-              type="number"
-            />
-            <p>限制该账户的并发请求数量，0 表示不限制</p>
-          </div>
-
-          <div>
-            <label>模型限制 (可选)</label>
-
-            <!-- 模式切换 -->
-            <div>
-              <button type="button" @click="modelRestrictionMode = 'whitelist'">模型白名单</button>
-              <button type="button" @click="modelRestrictionMode = 'mapping'">模型映射</button>
-            </div>
-
-            <!-- 白名单模式 -->
-            <div v-if="modelRestrictionMode === 'whitelist'">
-              <div>
-                <p>选择允许使用此账户的模型。留空表示支持所有模型。</p>
-              </div>
-
-              <!-- 模型复选框列表 -->
-              <div>
-                <label v-for="model in commonModels" :key="model.value">
-                  <input v-model="allowedModels" type="checkbox" :value="model.value" />
-                  <span>{{ model.label }}</span>
-                </label>
-              </div>
-
-              <p>
-                已选择 {{ allowedModels.length }} 个模型
-                <span v-if="allowedModels.length === 0">（支持所有模型）</span>
-              </p>
-            </div>
-
-            <!-- 映射模式 -->
-            <div v-else>
-              <div>
-                <p>配置模型映射关系。左侧是客户端请求的模型，右侧是实际发送给API的模型。</p>
-              </div>
-
-              <!-- 模型映射表 -->
-              <div>
-                <div v-for="(mapping, index) in modelMappings" :key="index">
-                  <input v-model="mapping.from" placeholder="原始模型名称" type="text" />
-
-                  <input v-model="mapping.to" placeholder="映射后的模型名称" type="text" />
-                  <button type="button" @click="removeModelMapping(index)"></button>
-                </div>
-              </div>
-
-              <!-- 添加映射按钮 -->
-              <button type="button" @click="addModelMapping">添加模型映射</button>
-
-              <!-- 快捷添加按钮 -->
-              <div>
-                <button
-                  type="button"
-                  @click="addPresetMapping('claude-sonnet-4-20250514', 'claude-sonnet-4-20250514')"
-                >
-                  + Sonnet 4
-                </button>
-                <button
-                  type="button"
-                  @click="
-                    addPresetMapping('claude-sonnet-4-5-20250929', 'claude-sonnet-4-5-20250929')
-                  "
-                >
-                  + Sonnet 4.5
-                </button>
-                <button
-                  type="button"
-                  @click="addPresetMapping('claude-opus-4-1-20250805', 'claude-opus-4-1-20250805')"
-                >
-                  + Opus 4.1
-                </button>
-                <button
-                  type="button"
-                  @click="
-                    addPresetMapping('claude-3-5-haiku-20241022', 'claude-3-5-haiku-20241022')
-                  "
-                >
-                  + Haiku 3.5
-                </button>
-                <button
-                  type="button"
-                  @click="
-                    addPresetMapping('claude-haiku-4-5-20251001', 'claude-haiku-4-5-20251001')
-                  "
-                >
-                  + Haiku 4.5
-                </button>
-                <button type="button" @click="addPresetMapping('deepseek-chat', 'deepseek-chat')">
-                  + DeepSeek
-                </button>
-                <button type="button" @click="addPresetMapping('Qwen', 'Qwen')">+ Qwen</button>
-                <button type="button" @click="addPresetMapping('Kimi', 'Kimi')">+ Kimi</button>
-                <button type="button" @click="addPresetMapping('GLM', 'GLM')">+ GLM</button>
-                <button
-                  type="button"
-                  @click="addPresetMapping('claude-opus-4-1-20250805', 'claude-sonnet-4-20250514')"
-                >
-                  + Opus → Sonnet
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <div>
-            <label>自定义 User-Agent (可选)</label>
-            <input v-model="form.userAgent" placeholder="留空则透传客户端 User-Agent" type="text" />
-            <p>留空时将自动使用客户端的 User-Agent，仅在需要固定特定 UA 时填写</p>
-          </div>
-
-          <div>
-            <label>限流机制</label>
-            <div>
-              <label>
-                <input v-model="form.enableRateLimit" type="checkbox" />
-                <span>启用限流机制</span>
-              </label>
-              <p>启用后，当账号返回429错误时将暂停调度一段时间</p>
-            </div>
-
-            <div v-if="form.enableRateLimit">
-              <label>限流时间 (分钟)</label>
-              <input
-                v-model.number="form.rateLimitDuration"
-                min="1"
-                placeholder="默认60分钟"
-                type="number"
-              />
-              <p>账号被限流后暂停调度的时间（分钟）</p>
-            </div>
-          </div>
-        </div>
-
-        <!-- OpenAI-Responses 特定字段 -->
-        <div v-if="form.platform === 'openai-responses' && !isEdit">
-          <div>
-            <label>API 基础地址 *</label>
-            <input
-              v-model="form.baseApi"
-              placeholder="https://api.example.com/v1"
-              required
-              type="url"
-            />
-            <p>第三方 OpenAI 兼容 API 的基础地址，不要包含具体路径</p>
-          </div>
-
-          <div>
-            <label>API 密钥 *</label>
-            <div>
-              <input
-                v-model="form.apiKey"
-                placeholder="sk-xxxxxxxxxxxx"
-                required
-                :type="showApiKey ? 'text' : 'password'"
-              />
-              <button type="button" @click="showApiKey = !showApiKey"></button>
-            </div>
-            <p>第三方服务提供的 API 密钥</p>
-          </div>
-
-          <div>
-            <label>自定义 User-Agent (可选)</label>
-            <input
-              v-model="form.userAgent"
-              placeholder="留空则透传原始请求的 User-Agent"
-              type="text"
-            />
-            <p>可选项。如果设置，所有请求将使用此 User-Agent；否则透传客户端的 User-Agent</p>
-          </div>
-
-          <!-- 限流时长字段 - 隐藏不显示，使用默认值60 -->
-          <input v-model.number="form.rateLimitDuration" type="hidden" value="60" />
-        </div>
-
-        <!-- Claude 订阅类型选择 -->
-        <div v-if="form.platform === 'claude'">
-          <label>订阅类型</label>
-          <div>
-            <label>
-              <input v-model="form.subscriptionType" type="radio" value="claude_max" />
-              <span>Claude Max</span>
-            </label>
-            <label>
-              <input v-model="form.subscriptionType" type="radio" value="claude_pro" />
-              <span>Claude Pro</span>
-            </label>
-          </div>
-          <p>Pro 账号不支持 Claude Opus 4 模型</p>
-        </div>
-
-        <!-- Claude 5小时限制自动停止调度选项 -->
-        <div v-if="form.platform === 'claude'">
-          <label>
-            <input v-model="form.autoStopOnWarning" type="checkbox" />
-            <div>
-              <span> 5小时使用量接近限制时自动停止调度 </span>
-              <p>
-                当系统检测到账户接近5小时使用限制时，自动暂停调度该账户。进入新的时间窗口后会自动恢复调度。
-              </p>
-            </div>
-          </label>
-        </div>
-
-        <!-- Claude User-Agent 版本配置 -->
-        <div v-if="form.platform === 'claude'">
-          <label>
-            <input v-model="form.useUnifiedUserAgent" type="checkbox" />
-            <div>
-              <span> 使用统一 Claude Code 版本 </span>
-              <p>开启后将使用从真实 Claude Code 客户端捕获的统一 User-Agent，提高兼容性</p>
-              <div v-if="unifiedUserAgent">
-                <div>
-                  <p>💡 当前统一版本：{{ unifiedUserAgent }}</p>
-                  <button :disabled="clearingCache" type="button" @click="clearUnifiedCache">
-                    <div v-if="clearingCache"></div>
-                    {{ clearingCache ? '清除中...' : '清除缓存' }}
-                  </button>
-                </div>
-              </div>
-              <div v-else>
-                <p>⏳ 等待从 Claude Code 客户端捕获 User-Agent</p>
-                <p>
-                  💡 提示：如果长时间未能捕获，请确认有 Claude Code 客户端正在使用此账户，
-                  或联系开发者检查 User-Agent 格式是否发生变化
-                </p>
-              </div>
-            </div>
-          </label>
-        </div>
-
-        <!-- Claude 统一客户端标识配置 -->
-        <div v-if="form.platform === 'claude'">
-          <label>
-            <input
-              v-model="form.useUnifiedClientId"
-              type="checkbox"
-              @change="handleUnifiedClientIdChange"
-            />
-            <div>
-              <span> 使用统一的客户端标识 </span>
-              <p>开启后将使用固定的客户端标识，使所有请求看起来来自同一个客户端，减少特征</p>
-              <div v-if="form.useUnifiedClientId">
-                <div>
-                  <div>
-                    <span>客户端标识 ID</span>
-                    <button type="button" @click="regenerateClientId">重新生成</button>
-                  </div>
-                  <div>
-                    <code>
-                      <span>{{ form.unifiedClientId.substring(0, 8) }}</span
-                      ><span>{{ form.unifiedClientId.substring(8, 56) }}</span
-                      ><span>{{ form.unifiedClientId.substring(56) }}</span>
-                    </code>
-                  </div>
-                  <p>此ID将替换请求中的user_id客户端部分，保留session部分用于粘性会话</p>
-                </div>
-              </div>
-            </div>
-          </label>
-        </div>
-
-        <!-- 所有平台的优先级设置 -->
-        <div>
-          <label>调度优先级 (1-100)</label>
-          <input
-            v-model.number="form.priority"
-            max="100"
-            min="1"
-            placeholder="数字越小优先级越高，默认50"
-            type="number"
-          />
-          <p>数字越小优先级越高，建议范围：1-100</p>
-        </div>
-
-        <!-- 手动输入 Token 字段 -->
-        <div
-          v-if="
-            form.addType === 'manual' &&
-            form.platform !== 'claude-console' &&
-            form.platform !== 'ccr' &&
-            form.platform !== 'bedrock' &&
-            form.platform !== 'azure_openai' &&
-            form.platform !== 'openai-responses'
-          "
-        >
-          <div>
-            <div></div>
-            <div>
-              <h5>手动输入 Token</h5>
-              <p v-if="form.platform === 'claude'">
-                请输入有效的 Claude Access Token。如果您有 Refresh
-                Token，建议也一并填写以支持自动刷新。
-              </p>
-              <p v-else-if="form.platform === 'gemini'">
-                请输入有效的 Gemini Access Token。如果您有 Refresh
-                Token，建议也一并填写以支持自动刷新。
-              </p>
-              <p v-else-if="form.platform === 'openai'">
-                请输入有效的 OpenAI Access Token。如果您有 Refresh
-                Token，建议也一并填写以支持自动刷新。
-              </p>
-              <p v-else-if="form.platform === 'droid'">
-                请输入有效的 Droid Access Token，并同时提供 Refresh Token 以支持自动刷新。
-              </p>
-              <div>
-                <p>获取 Access Token 的方法：</p>
-                <p v-if="form.platform === 'claude'">
-                  请从已登录 Claude Code 的机器上获取
-                  <code>~/.claude/.credentials.json</code>
-                  文件中的凭证， 请勿使用 Claude 官网 API Keys 页面的密钥。
-                </p>
-                <p v-else-if="form.platform === 'gemini'">
-                  请从已登录 Gemini CLI 的机器上获取
-                  <code>~/.config/gemini/credentials.json</code>
-                  文件中的凭证。
-                </p>
-                <p v-else-if="form.platform === 'openai'">
-                  请从已登录 OpenAI 账户的机器上获取认证凭证， 或通过 OAuth 授权流程获取 Access
-                  Token。
-                </p>
-                <p v-else-if="form.platform === 'droid'">
-                  请从已完成授权的 Droid CLI 或 Factory.ai 导出的凭证中获取 Access Token 与 Refresh
-                  Token。
-                </p>
-              </div>
-              <p v-if="form.platform !== 'droid'">
-                💡 如果未填写 Refresh Token，Token 过期后需要手动更新。
-              </p>
-              <p v-else>
-                ⚠️ Droid 账户必须填写 Refresh Token，缺失将导致无法自动刷新 Access Token。
-              </p>
-            </div>
-          </div>
-
-          <div v-if="form.platform === 'openai'">
-            <label>Access Token (可选)</label>
-            <textarea
-              v-model="form.accessToken"
-              placeholder="可选：如果不填写，系统会自动通过 Refresh Token 获取..."
-              rows="4"
-            />
-            <p>Access Token 可选填。如果不提供，系统会通过 Refresh Token 自动获取。</p>
-          </div>
-
-          <div v-else>
-            <label>Access Token *</label>
-            <textarea
-              v-model="form.accessToken"
-              placeholder="请输入 Access Token..."
-              required
-              rows="4"
-            />
-            <p v-if="errors.accessToken">
-              {{ errors.accessToken }}
-            </p>
-          </div>
-
-          <div v-if="form.platform === 'openai' || form.platform === 'droid'">
-            <label>Refresh Token *</label>
-            <textarea
-              v-model="form.refreshToken"
-              placeholder="请输入 Refresh Token（必填）..."
-              required
-              rows="4"
-            />
-            <p v-if="errors.refreshToken">
-              {{ errors.refreshToken }}
-            </p>
-            <p>
-              <template v-if="form.platform === 'openai'">
-                系统将使用 Refresh Token 自动获取 Access Token 和用户信息
-              </template>
-              <template v-else>
-                系统将使用 Refresh Token 自动刷新 Factory.ai 访问令牌，确保账户保持可用。
-              </template>
-            </p>
-          </div>
-
-          <div v-else>
-            <label>Refresh Token (可选)</label>
-            <textarea v-model="form.refreshToken" placeholder="请输入 Refresh Token..." rows="4" />
-          </div>
-        </div>
-
-        <!-- API Key 模式输入 -->
-        <div v-if="form.addType === 'apikey' && form.platform === 'droid'">
-          <div>
-            <div></div>
-            <div>
-              <h5>使用 API Key 调度 Droid</h5>
-              <p>
-                请填写一个或多个 Factory.ai API
-                Key，系统会自动在请求时随机挑选并结合会话哈希维持粘性，确保对话上下文保持稳定。
-              </p>
-            </div>
-          </div>
-
-          <div>
-            <label>API Key 列表 *</label>
-            <textarea
-              v-model="form.apiKeysInput"
-              placeholder="每行一个 API Key，可粘贴多行"
-              required
-              rows="6"
-            />
-            <p v-if="errors.apiKeys">
-              {{ errors.apiKeys }}
-            </p>
-            <p>建议为每条 Key 提供独立额度；系统会自动去重并忽略空白行。</p>
-          </div>
-
-          <div>
-            <p>分配策略说明</p>
-            <ul>
-              <li>新会话将随机命中一个 Key，并在会话有效期内保持粘性。</li>
-              <li>若某 Key 失效，会自动切换到剩余可用 Key，最大化成功率。</li>
-              <li>
-                若上游返回 4xx 错误码，该 Key 会被自动标记为异常；全部 Key 异常后账号将暂停调度。
-              </li>
-            </ul>
-          </div>
-        </div>
-
-        <!-- 代理设置 -->
-        <ProxyConfig v-model="form.proxy" />
-
-        <div>
-          <button type="button" @click="$emit('close')">取消</button>
-          <button
-            v-if="
-              (form.addType === 'oauth' || form.addType === 'setup-token') &&
-              form.platform !== 'claude-console' &&
-              form.platform !== 'ccr' &&
-              form.platform !== 'bedrock' &&
-              form.platform !== 'azure_openai' &&
-              form.platform !== 'openai-responses'
-            "
-            :disabled="loading"
-            type="button"
-            @click="nextStep"
-          >
-            下一步
-          </button>
-          <button v-else :disabled="loading" type="button" @click="createAccount">
-            <div v-if="loading" />
-            {{ loading ? '创建中...' : '创建' }}
-          </button>
-        </div>
+      <div>1</div>
+      <span>基本信息</span>
       </div>
-    </div>
-
-    <!-- 步骤2: OAuth授权 -->
-    <OAuthFlow
-      v-if="oauthStep === 2 && form.addType === 'oauth'"
-      :platform="form.platform"
-      :proxy="form.proxy"
-      @back="oauthStep = 1"
-      @success="handleOAuthSuccess"
-    />
-
-    <!-- 步骤2: Setup Token授权 -->
-    <div v-if="oauthStep === 2 && form.addType === 'setup-token'">
-      <!-- Claude Setup Token流程 -->
-      <div v-if="form.platform === 'claude'">
-        <div>
-          <div>
-            <div></div>
-            <div>
-              <h4>Claude Setup Token 授权</h4>
-              <p>请按照以下步骤通过 Setup Token 完成 Claude 账户的授权：</p>
-
-              <div>
-                <!-- 步骤1: 生成授权链接 -->
-                <div>
-                  <div>
-                    <div>1</div>
-                    <div>
-                      <p>点击下方按钮生成授权链接</p>
-                      <button
-                        v-if="!setupTokenAuthUrl"
-                        :disabled="setupTokenLoading"
-                        @click="generateSetupTokenAuthUrl"
-                      >
-                        <div v-if="setupTokenLoading" />
-                        {{ setupTokenLoading ? '生成中...' : '生成 Setup Token 授权链接' }}
-                      </button>
-                      <div v-else>
-                        <div>
-                          <input readonly type="text" :value="setupTokenAuthUrl" />
-                          <button title="复制链接" @click="copySetupTokenAuthUrl"></button>
-                        </div>
-                        <button @click="regenerateSetupTokenAuthUrl">重新生成</button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- 步骤2: 访问链接并授权 -->
-                <div>
-                  <div>
-                    <div>2</div>
-                    <div>
-                      <p>在浏览器中打开链接并完成授权</p>
-                      <p>请在新标签页中打开授权链接，登录您的 Claude 账户并授权 Claude Code。</p>
-                      <div>
-                        <p>
-                          <strong>注意：</strong
-                          >如果您设置了代理，请确保浏览器也使用相同的代理访问授权页面。
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- 步骤3: 输入授权码 -->
-                <div>
-                  <div>
-                    <div>3</div>
-                    <div>
-                      <p>输入 Authorization Code</p>
-                      <p>授权完成后，从返回页面复制 Authorization Code，并粘贴到下方输入框：</p>
-                      <div>
-                        <div>
-                          <label> Authorization Code </label>
-                          <textarea
-                            v-model="setupTokenAuthCode"
-                            placeholder="粘贴从Claude Code授权页面获取的Authorization Code..."
-                            rows="3"
-                          />
-                        </div>
-                        <p>请粘贴从Claude Code授权页面复制的Authorization Code</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
+      <div />
       <div>
-        <button type="button" @click="oauthStep = 1">上一步</button>
-        <button
-          :disabled="!canExchangeSetupToken || setupTokenExchanging"
-          type="button"
-          @click="exchangeSetupTokenCode"
-        >
-          <div v-if="setupTokenExchanging" />
-          {{ setupTokenExchanging ? '验证中...' : '完成授权' }}
-        </button>
+      <div>2</div>
+      <span>授权认证</span>
       </div>
-    </div>
-
-    <!-- 编辑模式 -->
-    <div v-if="isEdit">
-      <!-- 基本信息 -->
+      </div>
+      </div>
+      
+      <!-- 步骤1: 基本信息和代理设置 -->
+      <div v-if="oauthStep === 1 && !isEdit">
       <div>
-        <label>账户名称</label>
-        <input v-model="form.name" placeholder="为账户设置一个易识别的名称" required type="text" />
-      </div>
-
+      <div v-if="!isEdit">
+      <label>选择平台</label>
+      <!-- 平台分组选择器 -->
       <div>
-        <label>描述 (可选)</label>
-        <textarea v-model="form.description" placeholder="账户用途说明..." rows="3" />
-      </div>
-
+      <!-- 分组选择器 -->
       <div>
-        <label>账户类型</label>
-        <div>
-          <label>
-            <input v-model="form.accountType" type="radio" value="shared" />
-            <span>共享账户</span>
-          </label>
-          <label>
-            <input v-model="form.accountType" type="radio" value="dedicated" />
-            <span>专属账户</span>
-          </label>
-          <label>
-            <input v-model="form.accountType" type="radio" value="group" />
-            <span>分组调度</span>
-          </label>
-        </div>
-        <p>
-          共享账户：供所有API Key使用；专属账户：仅供特定API Key使用；分组调度：加入分组供分组内调度
-        </p>
+      <!-- Claude 分组 -->
+      <div @click="selectPlatformGroup('claude')">
+      <div>
+      <div>
+      <div></div>
+      <div v-if="platformGroup === 'claude'"></div>
       </div>
-
+      <h4>Claude</h4>
+      <p>Anthropic</p>
+      </div>
+      </div>
+      
+      <!-- OpenAI 分组 -->
+      <div @click="selectPlatformGroup('openai')">
+      <div>
+      <div>
+      <div>
+      <svg
+      fill="currentColor"
+      viewBox="0 0 24 24"
+      xmlns="http://www.w3.org/2000/svg"
+      >
+      <path
+      d="M22.2819 9.8211a5.9847 5.9847 0 0 0-.5157-4.9108 6.0462 6.0462 0 0 0-6.5098-2.9A6.0651 6.0651 0 0 0 4.9807 4.1818a5.9847 5.9847 0 0 0-3.9977 2.9 6.0462 6.0462 0 0 0 .7427 7.0966 5.98 5.98 0 0 0 .511 4.9107 6.051 6.051 0 0 0 6.5146 2.9001A5.9847 5.9847 0 0 0 13.2599 24a6.0557 6.0557 0 0 0 5.7718-4.2058 5.9894 5.9894 0 0 0 3.9977-2.9001 6.0557 6.0557 0 0 0-.7475-7.0729zm-9.022 12.6081a4.4755 4.4755 0 0 1-2.8764-1.0408l.1419-.0804 4.7783-2.7582a.7948.7948 0 0 0 .3927-.6813v-6.7369l2.02 1.1686a.071.071 0 0 1 .038.052v5.5826a4.504 4.504 0 0 1-4.4945 4.4944zm-9.6607-4.1254a4.4708 4.4708 0 0 1-.5346-3.0137l.142.0852 4.783 2.7582a.7712.7712 0 0 0 .7806 0l5.8428-3.3685v2.3324a.0804.0804 0 0 1-.0332.0615L9.74 19.9502a4.4992 4.4992 0 0 1-6.1408-1.6464zM2.3408 7.8956a4.485 4.485 0 0 1 2.3655-1.9728V11.6a.7664.7664 0 0 0 .3879.6765l5.8144 3.3543-2.0201 1.1685a.0757.0757 0 0 1-.071 0l-4.8303-2.7865A4.504 4.504 0 0 1 2.3408 7.8956zm16.5963 3.8558L13.1038 8.364 15.1192 7.2a.0757.0757 0 0 1 .071 0l4.8303 2.7913a4.4944 4.4944 0 0 1-.6765 8.1042v-5.6772a.79.79 0 0 0-.4069-.6813zm2.0107-3.0231l-.142-.0852-4.7735-2.7818a.7759.7759 0 0 0-.7854 0L9.409 9.2297V6.8974a.0662.0662 0 0 1 .0284-.0615l4.8303-2.7866a4.4992 4.4992 0 0 1 6.6802 4.66zM8.3065 12.863l-2.02-1.1638a.0804.0804 0 0 1-.038-.0567V6.0742a4.4992 4.4992 0 0 1 7.3757-3.4537l-.142.0805L8.704 5.459a.7948.7948 0 0 0-.3927.6813zm1.0976-2.3654l2.602-1.4998 2.6069 1.4998v2.9994l-2.5974 1.4997-2.6067-1.4997Z"
+      />
+      </svg>
+      </div>
+      <div v-if="platformGroup === 'openai'"></div>
+      </div>
+      <h4>OpenAI</h4>
+      <p>GPT 系列</p>
+      </div>
+      </div>
+      
+      <!-- Gemini 分组 -->
+      <div @click="selectPlatformGroup('gemini')">
+      <div>
+      <div>
+      <div></div>
+      <div v-if="platformGroup === 'gemini'"></div>
+      </div>
+      <h4>Gemini</h4>
+      <p>Google AI</p>
+      </div>
+      </div>
+      
+      <!-- Droid 分组 -->
+      <div @click="selectPlatformGroup('droid')">
+      <div>
+      <div>
+      <div></div>
+      <div v-if="platformGroup === 'droid'"></div>
+      </div>
+      <h4>Droid</h4>
+      <p>Claude Droid</p>
+      </div>
+      </div>
+      </div>
+      
+      <!-- 子平台选择器 -->
+      <div v-if="platformGroup">
+      <p>选择具体平台类型：</p>
+      <div>
+      <!-- Claude 子选项 -->
+      <template v-if="platformGroup === 'claude'">
+      <label>
+      <input v-model="form.platform" type="radio" value="claude" />
+      <div>
+      <div>
+      <span>Claude Code</span>
+      <span>官方</span>
+      </div>
+      </div>
+      <div v-if="form.platform === 'claude'"></div>
+      </label>
+      
+      <label>
+      <input v-model="form.platform" type="radio" value="claude-console" />
+      <div>
+      <div>
+      <span>Claude Console</span>
+      <span>标准API</span>
+      </div>
+      </div>
+      <div v-if="form.platform === 'claude-console'"></div>
+      </label>
+      
+      <label>
+      <input v-model="form.platform" type="radio" value="bedrock" />
+      <div>
+      <div>
+      <span>Bedrock</span>
+      <span>AWS</span>
+      </div>
+      </div>
+      <div v-if="form.platform === 'bedrock'"></div>
+      </label>
+      
+      <label>
+      <input v-model="form.platform" type="radio" value="ccr" />
+      <div>
+      <div>
+      <span>CCR</span>
+      <span>Claude Code Router</span>
+      </div>
+      </div>
+      <div v-if="form.platform === 'ccr'"></div>
+      </label>
+      </template>
+      
+      <!-- OpenAI 子选项 -->
+      <template v-if="platformGroup === 'openai'">
+      <label>
+      <input v-model="form.platform" type="radio" value="openai" />
+      <div>
+      <div>
+      <span>Codex Cli</span>
+      <span>官方</span>
+      </div>
+      </div>
+      <div v-if="form.platform === 'openai'"></div>
+      </label>
+      
+      <label>
+      <input v-model="form.platform" type="radio" value="openai-responses" />
+      <div>
+      <div>
+      <span>Responses</span>
+      <span>Openai-Responses</span>
+      </div>
+      </div>
+      <div v-if="form.platform === 'openai-responses'"></div>
+      </label>
+      
+      <label>
+      <input v-model="form.platform" type="radio" value="azure_openai" />
+      <div>
+      <div>
+      <span>Azure</span>
+      <span>Azure Openai</span>
+      </div>
+      </div>
+      <div v-if="form.platform === 'azure_openai'"></div>
+      </label>
+      </template>
+      
+      <!-- Gemini 子选项 -->
+      <template v-if="platformGroup === 'gemini'">
+      <label>
+      <input v-model="form.platform" type="radio" value="gemini" />
+      <div>
+      <div>
+      <span>Gemini Cli</span>
+      <span>官方</span>
+      </div>
+      </div>
+      <div v-if="form.platform === 'gemini'"></div>
+      </label>
+      </template>
+      
+      <!-- Droid 子选项 -->
+      <template v-if="platformGroup === 'droid'">
+      <label>
+      <input v-model="form.platform" type="radio" value="droid" />
+      <div>
+      <div>
+      <span>Droid 专属</span>
+      <span>官方</span>
+      </div>
+      </div>
+      <div v-if="form.platform === 'droid'"></div>
+      </label>
+      </template>
+      </div>
+      </div>
+      </div>
+      </div>
+      
+      <div
+      v-if="
+      !isEdit &&
+      form.platform !== 'claude-console' &&
+      form.platform !== 'ccr' &&
+      form.platform !== 'bedrock' &&
+      form.platform !== 'azure_openai' &&
+      form.platform !== 'openai-responses'
+      "
+      >
+      <label>添加方式</label>
+      <div>
+      <label>
+      <input v-model="form.addType" type="radio" value="oauth" />
+      <span>
+      OAuth 授权<span v-if="form.platform === 'claude' || form.platform === 'openai'">
+      (用量可视化)</span
+      >
+      </span>
+      </label>
+      <label v-if="form.platform === 'claude'">
+      <input v-model="form.addType" type="radio" value="setup-token" />
+      <span>Setup Token (效期长)</span>
+      </label>
+      <label>
+      <input v-model="form.addType" type="radio" value="manual" />
+      <span>手动输入 Access Token</span>
+      </label>
+      <label v-if="form.platform === 'droid'">
+      <input v-model="form.addType" type="radio" value="apikey" />
+      <span>使用 API Key (支持多个)</span>
+      </label>
+      </div>
+      </div>
+      
+      <div>
+      <label>账户名称</label>
+      <input
+      v-model="form.name"
+      placeholder="为账户设置一个易识别的名称"
+      required
+      type="text"
+      />
+      <p v-if="errors.name">
+      {{ errors.name }}
+      </p>
+      </div>
+      
+      <div>
+      <label>描述 (可选)</label>
+      <textarea v-model="form.description" placeholder="账户用途说明..." rows="3" />
+      </div>
+      
+      <div>
+      <label>账户类型</label>
+      <div>
+      <label>
+      <input v-model="form.accountType" type="radio" value="shared" />
+      <span>共享账户</span>
+      </label>
+      <label>
+      <input v-model="form.accountType" type="radio" value="dedicated" />
+      <span>专属账户</span>
+      </label>
+      <label>
+      <input v-model="form.accountType" type="radio" value="group" />
+      <span>分组调度</span>
+      </label>
+      </div>
+      <p>
+      共享账户：供所有API Key使用；专属账户：仅供特定API
+      Key使用；分组调度：加入分组供分组内调度
+      </p>
+      </div>
+      
       <!-- 到期时间 - 仅在创建账户时显示，编辑时使用独立的过期时间编辑弹窗 -->
       <div v-if="!isEdit">
-        <label>到期时间 (可选)</label>
-        <div>
-          <select v-model="form.expireDuration" @change="updateAccountExpireAt">
-            <option value="">永不过期</option>
-            <option value="30d">30 天</option>
-            <option value="90d">90 天</option>
-            <option value="180d">180 天</option>
-            <option value="365d">365 天</option>
-            <option value="custom">自定义日期</option>
-          </select>
-          <div v-if="form.expireDuration === 'custom'">
-            <input
-              v-model="form.customExpireDate"
-              :min="minDateTime"
-              type="datetime-local"
-              @change="updateAccountCustomExpireAt"
-            />
-          </div>
-          <p v-if="form.expiresAt">将于 {{ formatExpireDate(form.expiresAt) }} 过期</p>
-          <p v-else>账户永不过期</p>
-        </div>
-        <p>设置 Claude Max/Pro 订阅的到期时间，到期后将停止调度此账户</p>
+      <label>到期时间 (可选)</label>
+      <div>
+      <select v-model="form.expireDuration" @change="updateAccountExpireAt">
+      <option value="">永不过期</option>
+      <option value="30d">30 天</option>
+      <option value="90d">90 天</option>
+      <option value="180d">180 天</option>
+      <option value="365d">365 天</option>
+      <option value="custom">自定义日期</option>
+      </select>
+      <div v-if="form.expireDuration === 'custom'">
+      <input
+      v-model="form.customExpireDate"
+      :min="minDateTime"
+      type="datetime-local"
+      @change="updateAccountCustomExpireAt"
+      />
       </div>
-
+      <p v-if="form.expiresAt">将于 {{ formatExpireDate(form.expiresAt) }} 过期</p>
+      <p v-else>账户永不过期</p>
+      </div>
+      <p>设置 Claude Max/Pro 订阅的到期时间，到期后将停止调度此账户</p>
+      </div>
+      
       <!-- 分组选择器 -->
       <div v-if="form.accountType === 'group'">
-        <label>选择分组 *</label>
-        <div>
-          <div>
-            <!-- 多选分组界面 -->
-            <div>
-              <div v-if="filteredGroups.length === 0">暂无可用分组</div>
-              <label v-for="group in filteredGroups" :key="group.id">
-                <input v-model="form.groupIds" type="checkbox" :value="group.id" />
-                <span> {{ group.name }} ({{ group.memberCount || 0 }} 个成员) </span>
-              </label>
-              <!-- 新建分组选项 -->
-              <div>
-                <button type="button" @click="handleNewGroup">新建分组</button>
-              </div>
-            </div>
-          </div>
-          <button type="button" @click="refreshGroups"></button>
-        </div>
+      <label>选择分组 *</label>
+      <div>
+      <div>
+      <!-- 多选分组界面 -->
+      <div>
+      <div v-if="filteredGroups.length === 0">暂无可用分组</div>
+      <label v-for="group in filteredGroups" :key="group.id">
+      <input v-model="form.groupIds" type="checkbox" :value="group.id" />
+      <span> {{ group.name }} ({{ group.memberCount || 0 }} 个成员) </span>
+      </label>
+      <!-- 新建分组选项 -->
+      <div>
+      <button type="button" @click="handleNewGroup">新建分组</button>
       </div>
-
+      </div>
+      </div>
+      <button type="button" @click="refreshGroups"></button>
+      </div>
+      </div>
+      
       <!-- Gemini 项目 ID 字段 -->
       <div v-if="form.platform === 'gemini'">
-        <label>项目 ID (可选)</label>
-        <input v-model="form.projectId" placeholder="例如：verdant-wares-464411-k9" type="text" />
-        <p>Google Cloud/Workspace 账号可能需要提供项目 ID</p>
-      </div>
-
-      <!-- Claude 订阅类型选择（编辑模式） -->
-      <div v-if="form.platform === 'claude'">
-        <label>订阅类型</label>
-        <div>
-          <label>
-            <input v-model="form.subscriptionType" type="radio" value="claude_max" />
-            <span>Claude Max</span>
-          </label>
-          <label>
-            <input v-model="form.subscriptionType" type="radio" value="claude_pro" />
-            <span>Claude Pro</span>
-          </label>
-        </div>
-        <p>Pro 账号不支持 Claude Opus 4 模型</p>
-      </div>
-
-      <!-- Claude 5小时限制自动停止调度选项（编辑模式） -->
-      <div v-if="form.platform === 'claude'">
-        <label>
-          <input v-model="form.autoStopOnWarning" type="checkbox" />
-          <div>
-            <span> 5小时使用量接近限制时自动停止调度 </span>
-            <p>
-              当系统检测到账户接近5小时使用限制时，自动暂停调度该账户。进入新的时间窗口后会自动恢复调度。
-            </p>
-          </div>
-        </label>
-      </div>
-
-      <!-- Claude User-Agent 版本配置（编辑模式） -->
-      <div v-if="form.platform === 'claude'">
-        <label>
-          <input v-model="form.useUnifiedUserAgent" type="checkbox" />
-          <div>
-            <span> 使用统一 Claude Code 版本 </span>
-            <p>开启后将使用从真实 Claude Code 客户端捕获的统一 User-Agent，提高兼容性</p>
-            <div v-if="unifiedUserAgent">
-              <div>
-                <p>💡 当前统一版本：{{ unifiedUserAgent }}</p>
-                <button :disabled="clearingCache" type="button" @click="clearUnifiedCache">
-                  <div v-if="clearingCache"></div>
-                  {{ clearingCache ? '清除中...' : '清除缓存' }}
-                </button>
-              </div>
-            </div>
-            <div v-else>
-              <p>⏳ 等待从 Claude Code 客户端捕获 User-Agent</p>
-              <p>
-                💡 提示：如果长时间未能捕获，请确认有 Claude Code 客户端正在使用此账户，
-                或联系开发者检查 User-Agent 格式是否发生变化
-              </p>
-            </div>
-          </div>
-        </label>
-      </div>
-
-      <!-- Claude 统一客户端标识配置（编辑模式） -->
-      <div v-if="form.platform === 'claude'">
-        <label>
-          <input
-            v-model="form.useUnifiedClientId"
-            type="checkbox"
-            @change="handleUnifiedClientIdChange"
-          />
-          <div>
-            <span> 使用统一的客户端标识 </span>
-            <p>开启后将使用固定的客户端标识，使所有请求看起来来自同一个客户端，减少特征</p>
-            <div v-if="form.useUnifiedClientId">
-              <div>
-                <div>
-                  <span>客户端标识 ID</span>
-                  <button type="button" @click="regenerateClientId">重新生成</button>
-                </div>
-                <div>
-                  <code>
-                    <span>{{ form.unifiedClientId.substring(0, 8) }}</span
-                    ><span>{{ form.unifiedClientId.substring(8, 56) }}</span
-                    ><span>{{ form.unifiedClientId.substring(56) }}</span>
-                  </code>
-                </div>
-                <p>此ID将替换请求中的user_id客户端部分，保留session部分用于粘性会话</p>
-              </div>
-            </div>
-          </div>
-        </label>
-      </div>
-
-      <!-- 所有平台的优先级设置（编辑模式） -->
+      <label>项目 ID (可选)</label>
+      <input
+      v-model="form.projectId"
+      placeholder="例如：verdant-wares-464411-k9"
+      type="text"
+      />
       <div>
-        <label>调度优先级 (1-100)</label>
-        <input
-          v-model.number="form.priority"
-          max="100"
-          min="1"
-          placeholder="数字越小优先级越高"
-          type="number"
-        />
-        <p>数字越小优先级越高，建议范围：1-100</p>
-      </div>
-
-      <!-- Claude Console 和 CCR 特定字段（编辑模式）-->
-      <div v-if="form.platform === 'claude-console' || form.platform === 'ccr'">
-        <div>
-          <label>API URL</label>
-          <input
-            v-model="form.apiUrl"
-            placeholder="例如：https://api.example.com"
-            required
-            type="text"
-          />
-        </div>
-
-        <div>
-          <label>API Key</label>
-          <input v-model="form.apiKey" placeholder="留空表示不更新" type="password" />
-          <p>留空表示不更新 API Key</p>
-        </div>
-
-        <!-- 额度管理字段 -->
-        <div>
-          <div>
-            <label> 每日额度限制 ($) </label>
-            <input
-              v-model.number="form.dailyQuota"
-              min="0"
-              placeholder="0 表示不限制"
-              step="0.01"
-              type="number"
-            />
-            <p>设置每日使用额度，0 表示不限制</p>
-          </div>
-
-          <div>
-            <label> 额度重置时间 </label>
-            <input v-model="form.quotaResetTime" placeholder="00:00" type="time" />
-            <p>每日自动重置额度的时间</p>
-          </div>
-        </div>
-
-        <!-- 当前使用情况（仅编辑模式显示） -->
-        <div v-if="isEdit && form.dailyQuota > 0">
-          <div>
-            <span> 今日使用情况 </span>
-            <span>
-              ${{ calculateCurrentUsage().toFixed(4) }} / ${{ form.dailyQuota.toFixed(2) }}
-            </span>
-          </div>
-          <div>
-            <div />
-          </div>
-          <div>
-            <span>
-              剩余: ${{ Math.max(0, form.dailyQuota - calculateCurrentUsage()).toFixed(2) }}
-            </span>
-            <span> {{ usagePercentage.toFixed(1) }}% 已使用 </span>
-          </div>
-        </div>
-
-        <!-- 并发控制字段（编辑模式）-->
-        <div>
-          <label> 最大并发任务数 </label>
-          <input
-            v-model.number="form.maxConcurrentTasks"
-            min="0"
-            placeholder="0 表示不限制"
-            type="number"
-          />
-          <p>限制该账户的并发请求数量，0 表示不限制</p>
-        </div>
-
-        <div>
-          <label>模型限制 (可选)</label>
-
-          <!-- 模式切换 -->
-          <div>
-            <button type="button" @click="modelRestrictionMode = 'whitelist'">模型白名单</button>
-            <button type="button" @click="modelRestrictionMode = 'mapping'">模型映射</button>
-          </div>
-
-          <!-- 白名单模式 -->
-          <div v-if="modelRestrictionMode === 'whitelist'">
-            <div>
-              <p>选择允许使用此账户的模型。留空表示支持所有模型。</p>
-            </div>
-
-            <!-- 模型复选框列表 -->
-            <div>
-              <label v-for="model in commonModels" :key="model.value">
-                <input v-model="allowedModels" type="checkbox" :value="model.value" />
-                <span>{{ model.label }}</span>
-              </label>
-            </div>
-
-            <p>
-              已选择 {{ allowedModels.length }} 个模型
-              <span v-if="allowedModels.length === 0">（支持所有模型）</span>
-            </p>
-          </div>
-
-          <!-- 映射模式 -->
-          <div v-else>
-            <div>
-              <p>配置模型映射关系。左侧是客户端请求的模型，右侧是实际发送给API的模型。</p>
-            </div>
-
-            <!-- 模型映射表 -->
-            <div>
-              <div v-for="(mapping, index) in modelMappings" :key="index">
-                <input v-model="mapping.from" placeholder="原始模型名称" type="text" />
-
-                <input v-model="mapping.to" placeholder="映射后的模型名称" type="text" />
-                <button type="button" @click="removeModelMapping(index)"></button>
-              </div>
-            </div>
-
-            <!-- 添加映射按钮 -->
-            <button type="button" @click="addModelMapping">添加模型映射</button>
-
-            <!-- 快捷添加按钮 -->
-            <div>
-              <button
-                type="button"
-                @click="addPresetMapping('claude-sonnet-4-20250514', 'claude-sonnet-4-20250514')"
-              >
-                + Sonnet 4
-              </button>
-              <button
-                type="button"
-                @click="
-                  addPresetMapping('claude-sonnet-4-5-20250929', 'claude-sonnet-4-5-20250929')
-                "
-              >
-                + Sonnet 4.5
-              </button>
-              <button
-                type="button"
-                @click="addPresetMapping('claude-opus-4-1-20250805', 'claude-opus-4-1-20250805')"
-              >
-                + Opus 4.1
-              </button>
-              <button
-                type="button"
-                @click="addPresetMapping('claude-3-5-haiku-20241022', 'claude-3-5-haiku-20241022')"
-              >
-                + Haiku 3.5
-              </button>
-              <button
-                type="button"
-                @click="addPresetMapping('claude-haiku-4-5-20251001', 'claude-haiku-4-5-20251001')"
-              >
-                + Haiku 4.5
-              </button>
-              <button type="button" @click="addPresetMapping('deepseek-chat', 'deepseek-chat')">
-                + DeepSeek
-              </button>
-              <button type="button" @click="addPresetMapping('Qwen', 'Qwen')">+ Qwen</button>
-              <button type="button" @click="addPresetMapping('Kimi', 'Kimi')">+ Kimi</button>
-              <button type="button" @click="addPresetMapping('GLM', 'GLM')">+ GLM</button>
-              <button
-                type="button"
-                @click="addPresetMapping('claude-opus-4-1-20250805', 'claude-sonnet-4-20250514')"
-              >
-                + Opus → Sonnet
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <div>
-          <label>自定义 User-Agent (可选)</label>
-          <input v-model="form.userAgent" placeholder="留空则透传客户端 User-Agent" type="text" />
-          <p>留空时将自动使用客户端的 User-Agent，仅在需要固定特定 UA 时填写</p>
-        </div>
-
-        <div>
-          <label>限流机制</label>
-          <div>
-            <label>
-              <input v-model="form.enableRateLimit" type="checkbox" />
-              <span>启用限流机制</span>
-            </label>
-            <p>启用后，当账号返回429错误时将暂停调度一段时间</p>
-          </div>
-
-          <div v-if="form.enableRateLimit">
-            <label>限流时间 (分钟)</label>
-            <input v-model.number="form.rateLimitDuration" min="1" type="number" />
-            <p>账号被限流后暂停调度的时间（分钟）</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- OpenAI-Responses 特定字段（编辑模式）-->
-      <div v-if="form.platform === 'openai-responses'">
-        <div>
-          <label>API 基础地址</label>
-          <input v-model="form.baseApi" placeholder="https://api.example.com/v1" type="url" />
-        </div>
-
-        <div>
-          <label>API 密钥</label>
-          <div>
-            <input
-              v-model="form.apiKey"
-              placeholder="留空表示不更新"
-              :type="showApiKey ? 'text' : 'password'"
-            />
-            <button type="button" @click="showApiKey = !showApiKey"></button>
-          </div>
-          <p>留空表示不更新 API Key</p>
-        </div>
-
-        <div>
-          <label>自定义 User-Agent</label>
-          <input v-model="form.userAgent" placeholder="留空则透传客户端 User-Agent" type="text" />
-          <p>留空时将自动使用客户端的 User-Agent，仅在需要固定特定 UA 时填写</p>
-        </div>
-
-        <!-- 限流时长字段 - 隐藏不显示，保持原值 -->
-        <input v-model.number="form.rateLimitDuration" type="hidden" />
-
-        <!-- 额度管理字段 -->
-        <div>
-          <div>
-            <label> 每日额度限制 ($) </label>
-            <input
-              v-model.number="form.dailyQuota"
-              min="0"
-              placeholder="0 表示不限制"
-              step="0.01"
-              type="number"
-            />
-          </div>
-          <div>
-            <label> 额度重置时间 </label>
-            <input v-model="form.quotaResetTime" type="time" />
-          </div>
-        </div>
-
-        <!-- 并发控制字段 -->
-        <div>
-          <label> 最大并发任务数 </label>
-          <input
-            v-model.number="form.maxConcurrentTasks"
-            min="0"
-            placeholder="0 表示不限制"
-            type="number"
-          />
-          <p>限制该账户的并发请求数量，0 表示不限制</p>
-        </div>
-      </div>
-
-      <!-- Bedrock 特定字段（编辑模式）-->
-      <div v-if="form.platform === 'bedrock'">
-        <div>
-          <label>AWS 访问密钥 ID</label>
-          <input v-model="form.accessKeyId" placeholder="留空表示不更新" type="text" />
-          <p>留空表示不更新 AWS Access Key ID</p>
-        </div>
-
-        <div>
-          <label>AWS 秘密访问密钥</label>
-          <input v-model="form.secretAccessKey" placeholder="留空表示不更新" type="password" />
-          <p>留空表示不更新 AWS Secret Access Key</p>
-        </div>
-
-        <div>
-          <label>AWS 区域</label>
-          <input v-model="form.region" placeholder="例如：us-east-1" type="text" />
-          <div>
-            <div>
-              <div>
-                <p>常用 AWS 区域参考：</p>
-                <div>
-                  <span>• us-east-1 (美国东部)</span>
-                  <span>• us-west-2 (美国西部)</span>
-                  <span>• eu-west-1 (欧洲爱尔兰)</span>
-                  <span>• ap-southeast-1 (新加坡)</span>
-                  <span>• ap-northeast-1 (东京)</span>
-                  <span>• eu-central-1 (法兰克福)</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div>
-          <label>会话令牌 (可选)</label>
-          <input v-model="form.sessionToken" placeholder="留空表示不更新" type="password" />
-        </div>
-
-        <div>
-          <label>默认主模型 (可选)</label>
-          <input
-            v-model="form.defaultModel"
-            placeholder="例如：us.anthropic.claude-sonnet-4-20250514-v1:0"
-            type="text"
-          />
-          <p>留空将使用系统默认模型。支持 inference profile ID 或 ARN</p>
-        </div>
-
-        <div>
-          <label>小快速模型 (可选)</label>
-          <input
-            v-model="form.smallFastModel"
-            placeholder="例如：us.anthropic.claude-3-5-haiku-20241022-v1:0"
-            type="text"
-          />
-          <p>用于快速响应的轻量级模型，留空将使用系统默认</p>
-        </div>
-
-        <div>
-          <label>限流机制</label>
-          <div>
-            <label>
-              <input v-model="form.enableRateLimit" type="checkbox" />
-              <span>启用限流机制</span>
-            </label>
-            <p>启用后，当账号返回429错误时将暂停调度一段时间</p>
-          </div>
-
-          <div v-if="form.enableRateLimit">
-            <label>限流时间 (分钟)</label>
-            <input v-model.number="form.rateLimitDuration" min="1" type="number" />
-            <p>账号被限流后暂停调度的时间（分钟）</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Azure OpenAI 特定字段（编辑模式）-->
-      <div v-if="form.platform === 'azure_openai'">
-        <div>
-          <label>Azure Endpoint</label>
-          <input
-            v-model="form.azureEndpoint"
-            placeholder="https://your-resource.openai.azure.com"
-            type="url"
-          />
-          <p v-if="errors.azureEndpoint">
-            {{ errors.azureEndpoint }}
-          </p>
-        </div>
-
-        <div>
-          <label>API 版本</label>
-          <input v-model="form.apiVersion" placeholder="2024-02-01" type="text" />
-          <p>Azure OpenAI API 版本，默认使用最新稳定版本 2024-02-01</p>
-        </div>
-
-        <div>
-          <label>部署名称</label>
-          <input v-model="form.deploymentName" placeholder="gpt-4" type="text" />
-          <p v-if="errors.deploymentName">
-            {{ errors.deploymentName }}
-          </p>
-        </div>
-
-        <div>
-          <label>API Key</label>
-          <input v-model="form.apiKey" placeholder="留空表示不更新" type="password" />
-          <p v-if="errors.apiKey">
-            {{ errors.apiKey }}
-          </p>
-          <p>留空表示不更新 API Key</p>
-        </div>
-
-        <div>
-          <label>支持的模型</label>
-          <div>
-            <label
-              v-for="model in [
-                'gpt-4',
-                'gpt-4-turbo',
-                'gpt-4o',
-                'gpt-4o-mini',
-                'gpt-5',
-                'gpt-5-mini',
-                'gpt-35-turbo',
-                'gpt-35-turbo-16k',
-                'codex-mini'
-              ]"
-              :key="model"
-            >
-              <input v-model="form.supportedModels" type="checkbox" :value="model" />
-              <span>{{ model }}</span>
-            </label>
-          </div>
-          <p>选择此部署支持的模型类型</p>
-        </div>
-      </div>
-
-      <!-- Token 更新 -->
-      <div v-if="isEdit && isEditingDroidApiKey">
-        <div>
-          <div></div>
-          <div>
-            <div>
-              <h5>更新 API Key</h5>
-              <button type="button" @click="showApiKeyManagement = true">
-                <span>管理 API Key</span>
-              </button>
-            </div>
-            <p>
-              当前已保存 <strong>{{ existingApiKeyCount }}</strong> 条 API Key。您可以追加新的
-              Key，或通过下方模式快速覆盖、删除指定 Key。
-            </p>
-            <p>留空表示保留现有 Key 不变；根据所选模式决定是追加、覆盖还是删除输入的 Key。</p>
-          </div>
-        </div>
-
-        <div>
-          <div>
-            <label>新的 API Key 列表</label>
-            <textarea
-              v-model="form.apiKeysInput"
-              placeholder="根据模式填写；每行一个 API Key"
-              rows="6"
-            />
-            <p v-if="errors.apiKeys">
-              {{ errors.apiKeys }}
-            </p>
-          </div>
-
-          <div>
-            <div>
-              <span>API Key 更新模式</span>
-              <span>
-                {{ currentApiKeyModeLabel }}
-              </span>
-            </div>
-            <div>
-              <span />
-              <button
-                v-for="option in apiKeyModeOptions"
-                :key="option.value"
-                type="button"
-                @click="form.apiKeyUpdateMode = option.value"
-              >
-                {{ option.label }}
-              </button>
-            </div>
-            <p>
-              {{ currentApiKeyModeDescription }}
-            </p>
-          </div>
-
-          <div>
-            <p>小提示</p>
-            <ul>
-              <li>系统会为新的 Key 自动建立粘性映射，保持同一会话命中同一个 Key。</li>
-              <li>追加模式会保留现有 Key 并在末尾追加新的 Key。</li>
-              <li>覆盖模式会先清空旧 Key 再写入上方的新列表。</li>
-              <li>删除模式会根据输入精准移除指定 Key，适合快速处理失效或被封禁的 Key。</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-
-      <div
-        v-if="
-          !(isEdit && isEditingDroidApiKey) &&
-          form.platform !== 'claude-console' &&
-          form.platform !== 'ccr' &&
-          form.platform !== 'bedrock' &&
-          form.platform !== 'azure_openai' &&
-          form.platform !== 'openai-responses'
-        "
+      <div>
+      <div>
+      <p>Google Cloud/Workspace 账号需要提供项目 ID</p>
+      <p>
+      某些 Google 账号（特别是绑定了 Google Cloud 的账号）会被识别为 Workspace
+      账号，需要提供额外的项目 ID。
+      </p>
+      <div>
+      <p>如何获取项目 ID：</p>
+      <ol>
+      <li>
+      访问
+      <a href="https://console.cloud.google.com/welcome" target="_blank"
+      >Google Cloud Console</a
       >
-        <div>
-          <div></div>
-          <div>
-            <h5>更新 Token</h5>
-            <p>可以更新 Access Token 和 Refresh Token。为了安全起见，不会显示当前的 Token 值。</p>
-            <p>💡 留空表示不更新该字段。</p>
-          </div>
-        </div>
-
-        <div>
-          <div>
-            <label>新的 Access Token</label>
-            <textarea v-model="form.accessToken" placeholder="留空表示不更新..." rows="4" />
-          </div>
-
-          <div>
-            <label>新的 Refresh Token</label>
-            <textarea v-model="form.refreshToken" placeholder="留空表示不更新..." rows="4" />
-          </div>
-        </div>
+      </li>
+      <li>复制<span>项目 ID（Project ID）</span>，通常是字符串格式</li>
+      <li>
+      ⚠️ 注意：要复制项目 ID（Project ID），不要复制项目编号（Project Number）！
+      </li>
+      </ol>
       </div>
-
+      <p>
+      <strong>提示：</strong>如果您的账号是普通个人账号（未绑定 Google
+      Cloud），请留空此字段。
+      </p>
+      </div>
+      </div>
+      </div>
+      </div>
+      
+      <!-- Bedrock 特定字段 -->
+      <div v-if="form.platform === 'bedrock' && !isEdit">
+      <div>
+      <label>AWS 访问密钥 ID *</label>
+      <input
+      v-model="form.accessKeyId"
+      placeholder="请输入 AWS Access Key ID"
+      required
+      type="text"
+      />
+      <p v-if="errors.accessKeyId">
+      {{ errors.accessKeyId }}
+      </p>
+      </div>
+      
+      <div>
+      <label>AWS 秘密访问密钥 *</label>
+      <input
+      v-model="form.secretAccessKey"
+      placeholder="请输入 AWS Secret Access Key"
+      required
+      type="password"
+      />
+      <p v-if="errors.secretAccessKey">
+      {{ errors.secretAccessKey }}
+      </p>
+      </div>
+      
+      <div>
+      <label>AWS 区域 *</label>
+      <input v-model="form.region" placeholder="例如：us-east-1" required type="text" />
+      <p v-if="errors.region">
+      {{ errors.region }}
+      </p>
+      <div>
+      <div>
+      <div>
+      <p>常用 AWS 区域参考：</p>
+      <div>
+      <span>• us-east-1 (美国东部)</span>
+      <span>• us-west-2 (美国西部)</span>
+      <span>• eu-west-1 (欧洲爱尔兰)</span>
+      <span>• ap-southeast-1 (新加坡)</span>
+      <span>• ap-northeast-1 (东京)</span>
+      <span>• eu-central-1 (法兰克福)</span>
+      </div>
+      <p>💡 请输入完整的区域代码，如 us-east-1</p>
+      </div>
+      </div>
+      </div>
+      </div>
+      
+      <div>
+      <label>会话令牌 (可选)</label>
+      <input
+      v-model="form.sessionToken"
+      placeholder="如果使用临时凭证，请输入会话令牌"
+      type="password"
+      />
+      <p>仅在使用临时 AWS 凭证时需要填写</p>
+      </div>
+      
+      <div>
+      <label>默认主模型 (可选)</label>
+      <input
+      v-model="form.defaultModel"
+      placeholder="例如：us.anthropic.claude-sonnet-4-20250514-v1:0"
+      type="text"
+      />
+      <p>留空将使用系统默认模型。支持 inference profile ID 或 ARN</p>
+      <div>
+      <div>
+      <div>
+      <p>Bedrock 模型配置说明：</p>
+      <ul>
+      <li>支持 Inference Profile ID（推荐）</li>
+      <li>支持 Application Inference Profile ARN</li>
+      <li>常用模型：us.anthropic.claude-sonnet-4-20250514-v1:0</li>
+      <li>留空将使用系统配置的默认模型</li>
+      </ul>
+      </div>
+      </div>
+      </div>
+      </div>
+      
+      <div>
+      <label>小快速模型 (可选)</label>
+      <input
+      v-model="form.smallFastModel"
+      placeholder="例如：us.anthropic.claude-3-5-haiku-20241022-v1:0"
+      type="text"
+      />
+      <p>用于快速响应的轻量级模型，留空将使用系统默认</p>
+      </div>
+      </div>
+      
+      <!-- Azure OpenAI 特定字段 -->
+      <div v-if="form.platform === 'azure_openai' && !isEdit">
+      <div>
+      <label>Azure Endpoint *</label>
+      <input
+      v-model="form.azureEndpoint"
+      placeholder="https://your-resource.openai.azure.com"
+      required
+      type="url"
+      />
+      <p v-if="errors.azureEndpoint">
+      {{ errors.azureEndpoint }}
+      </p>
+      <p>Azure OpenAI 资源的终结点 URL，格式：https://your-resource.openai.azure.com</p>
+      </div>
+      
+      <div>
+      <label>API 版本</label>
+      <input v-model="form.apiVersion" placeholder="2024-02-01" type="text" />
+      <p>Azure OpenAI API 版本，默认使用最新稳定版本 2024-02-01</p>
+      </div>
+      
+      <div>
+      <label>部署名称 *</label>
+      <input v-model="form.deploymentName" placeholder="gpt-4" required type="text" />
+      <p v-if="errors.deploymentName">
+      {{ errors.deploymentName }}
+      </p>
+      <p>在 Azure OpenAI Studio 中创建的部署名称</p>
+      </div>
+      
+      <div>
+      <label>API Key *</label>
+      <input
+      v-model="form.apiKey"
+      placeholder="请输入 Azure OpenAI API Key"
+      required
+      type="password"
+      />
+      <p v-if="errors.apiKey">
+      {{ errors.apiKey }}
+      </p>
+      <p>从 Azure 门户获取的 API 密钥</p>
+      </div>
+      
+      <div>
+      <label>支持的模型</label>
+      <div>
+      <label
+      v-for="model in [
+      'gpt-4',
+      'gpt-4-turbo',
+      'gpt-4o',
+      'gpt-4o-mini',
+      'gpt-5',
+      'gpt-5-mini',
+      'gpt-35-turbo',
+      'gpt-35-turbo-16k',
+      'codex-mini'
+      ]"
+      :key="model"
+      >
+      <input v-model="form.supportedModels" type="checkbox" :value="model" />
+      <span>{{ model }}</span>
+      </label>
+      </div>
+      <p>选择此部署支持的模型类型</p>
+      </div>
+      </div>
+      
+      <div v-if="form.platform === 'bedrock' && !isEdit">
+      <div>
+      <label>限流机制</label>
+      <div>
+      <label>
+      <input v-model="form.enableRateLimit" type="checkbox" />
+      <span>启用限流机制</span>
+      </label>
+      <p>启用后，当账号返回429错误时将暂停调度一段时间</p>
+      </div>
+      
+      <div v-if="form.enableRateLimit">
+      <label>限流时间 (分钟)</label>
+      <input
+      v-model.number="form.rateLimitDuration"
+      min="1"
+      placeholder="默认60分钟"
+      type="number"
+      />
+      <p>账号被限流后暂停调度的时间（分钟）</p>
+      </div>
+      </div>
+      </div>
+      
+      <!-- Claude Console 和 CCR 特定字段 -->
+      <div v-if="(form.platform === 'claude-console' || form.platform === 'ccr') && !isEdit">
+      <div>
+      <label>API URL *</label>
+      <input
+      v-model="form.apiUrl"
+      placeholder="例如：https://api.example.com"
+      required
+      type="text"
+      />
+      <p v-if="errors.apiUrl">
+      {{ errors.apiUrl }}
+      </p>
+      </div>
+      
+      <div>
+      <label>API Key *</label>
+      <input v-model="form.apiKey" placeholder="请输入API Key" required type="password" />
+      <p v-if="errors.apiKey">
+      {{ errors.apiKey }}
+      </p>
+      </div>
+      
+      <!-- 额度管理字段 -->
+      <div>
+      <div>
+      <label> 每日额度限制 ($) </label>
+      <input
+      v-model.number="form.dailyQuota"
+      min="0"
+      placeholder="0 表示不限制"
+      step="0.01"
+      type="number"
+      />
+      <p>设置每日使用额度，0 表示不限制</p>
+      </div>
+      
+      <div>
+      <label> 额度重置时间 </label>
+      <input v-model="form.quotaResetTime" placeholder="00:00" type="time" />
+      <p>每日自动重置额度的时间</p>
+      </div>
+      </div>
+      
+      <!-- 并发控制字段 -->
+      <div>
+      <label> 最大并发任务数 </label>
+      <input
+      v-model.number="form.maxConcurrentTasks"
+      min="0"
+      placeholder="0 表示不限制"
+      type="number"
+      />
+      <p>限制该账户的并发请求数量，0 表示不限制</p>
+      </div>
+      
+      <div>
+      <label>模型限制 (可选)</label>
+      
+      <!-- 模式切换 -->
+      <div>
+      <button type="button" @click="modelRestrictionMode = 'whitelist'">
+      模型白名单
+      </button>
+      <button type="button" @click="modelRestrictionMode = 'mapping'">模型映射</button>
+      </div>
+      
+      <!-- 白名单模式 -->
+      <div v-if="modelRestrictionMode === 'whitelist'">
+      <div>
+      <p>选择允许使用此账户的模型。留空表示支持所有模型。</p>
+      </div>
+      
+      <!-- 模型复选框列表 -->
+      <div>
+      <label v-for="model in commonModels" :key="model.value">
+      <input v-model="allowedModels" type="checkbox" :value="model.value" />
+      <span>{{ model.label }}</span>
+      </label>
+      </div>
+      
+      <p>
+      已选择 {{ allowedModels.length }} 个模型
+      <span v-if="allowedModels.length === 0">（支持所有模型）</span>
+      </p>
+      </div>
+      
+      <!-- 映射模式 -->
+      <div v-else>
+      <div>
+      <p>配置模型映射关系。左侧是客户端请求的模型，右侧是实际发送给API的模型。</p>
+      </div>
+      
+      <!-- 模型映射表 -->
+      <div>
+      <div v-for="(mapping, index) in modelMappings" :key="index">
+      <input v-model="mapping.from" placeholder="原始模型名称" type="text" />
+      
+      <input v-model="mapping.to" placeholder="映射后的模型名称" type="text" />
+      <button type="button" @click="removeModelMapping(index)"></button>
+      </div>
+      </div>
+      
+      <!-- 添加映射按钮 -->
+      <button type="button" @click="addModelMapping">添加模型映射</button>
+      
+      <!-- 快捷添加按钮 -->
+      <div>
+      <button
+      type="button"
+      @click="
+      addPresetMapping('claude-sonnet-4-20250514', 'claude-sonnet-4-20250514')
+      "
+      >
+      + Sonnet 4
+      </button>
+      <button
+      type="button"
+      @click="
+      addPresetMapping('claude-sonnet-4-5-20250929', 'claude-sonnet-4-5-20250929')
+      "
+      >
+      + Sonnet 4.5
+      </button>
+      <button
+      type="button"
+      @click="
+      addPresetMapping('claude-opus-4-1-20250805', 'claude-opus-4-1-20250805')
+      "
+      >
+      + Opus 4.1
+      </button>
+      <button
+      type="button"
+      @click="
+      addPresetMapping('claude-3-5-haiku-20241022', 'claude-3-5-haiku-20241022')
+      "
+      >
+      + Haiku 3.5
+      </button>
+      <button
+      type="button"
+      @click="
+      addPresetMapping('claude-haiku-4-5-20251001', 'claude-haiku-4-5-20251001')
+      "
+      >
+      + Haiku 4.5
+      </button>
+      <button
+      type="button"
+      @click="addPresetMapping('deepseek-chat', 'deepseek-chat')"
+      >
+      + DeepSeek
+      </button>
+      <button type="button" @click="addPresetMapping('Qwen', 'Qwen')">+ Qwen</button>
+      <button type="button" @click="addPresetMapping('Kimi', 'Kimi')">+ Kimi</button>
+      <button type="button" @click="addPresetMapping('GLM', 'GLM')">+ GLM</button>
+      <button
+      type="button"
+      @click="
+      addPresetMapping('claude-opus-4-1-20250805', 'claude-sonnet-4-20250514')
+      "
+      >
+      + Opus → Sonnet
+      </button>
+      </div>
+      </div>
+      </div>
+      
+      <div>
+      <label>自定义 User-Agent (可选)</label>
+      <input
+      v-model="form.userAgent"
+      placeholder="留空则透传客户端 User-Agent"
+      type="text"
+      />
+      <p>留空时将自动使用客户端的 User-Agent，仅在需要固定特定 UA 时填写</p>
+      </div>
+      
+      <div>
+      <label>限流机制</label>
+      <div>
+      <label>
+      <input v-model="form.enableRateLimit" type="checkbox" />
+      <span>启用限流机制</span>
+      </label>
+      <p>启用后，当账号返回429错误时将暂停调度一段时间</p>
+      </div>
+      
+      <div v-if="form.enableRateLimit">
+      <label>限流时间 (分钟)</label>
+      <input
+      v-model.number="form.rateLimitDuration"
+      min="1"
+      placeholder="默认60分钟"
+      type="number"
+      />
+      <p>账号被限流后暂停调度的时间（分钟）</p>
+      </div>
+      </div>
+      </div>
+      
+      <!-- OpenAI-Responses 特定字段 -->
+      <div v-if="form.platform === 'openai-responses' && !isEdit">
+      <div>
+      <label>API 基础地址 *</label>
+      <input
+      v-model="form.baseApi"
+      placeholder="https://api.example.com/v1"
+      required
+      type="url"
+      />
+      <p>第三方 OpenAI 兼容 API 的基础地址，不要包含具体路径</p>
+      </div>
+      
+      <div>
+      <label>API 密钥 *</label>
+      <div>
+      <input
+      v-model="form.apiKey"
+      placeholder="sk-xxxxxxxxxxxx"
+      required
+      :type="showApiKey ? 'text' : 'password'"
+      />
+      <button type="button" @click="showApiKey = !showApiKey"></button>
+      </div>
+      <p>第三方服务提供的 API 密钥</p>
+      </div>
+      
+      <div>
+      <label>自定义 User-Agent (可选)</label>
+      <input
+      v-model="form.userAgent"
+      placeholder="留空则透传原始请求的 User-Agent"
+      type="text"
+      />
+      <p>可选项。如果设置，所有请求将使用此 User-Agent；否则透传客户端的 User-Agent</p>
+      </div>
+      
+      <!-- 限流时长字段 - 隐藏不显示，使用默认值60 -->
+      <input v-model.number="form.rateLimitDuration" type="hidden" value="60" />
+      </div>
+      
+      <!-- Claude 订阅类型选择 -->
+      <div v-if="form.platform === 'claude'">
+      <label>订阅类型</label>
+      <div>
+      <label>
+      <input v-model="form.subscriptionType" type="radio" value="claude_max" />
+      <span>Claude Max</span>
+      </label>
+      <label>
+      <input v-model="form.subscriptionType" type="radio" value="claude_pro" />
+      <span>Claude Pro</span>
+      </label>
+      </div>
+      <p>Pro 账号不支持 Claude Opus 4 模型</p>
+      </div>
+      
+      <!-- Claude 5小时限制自动停止调度选项 -->
+      <div v-if="form.platform === 'claude'">
+      <label>
+      <input v-model="form.autoStopOnWarning" type="checkbox" />
+      <div>
+      <span> 5小时使用量接近限制时自动停止调度 </span>
+      <p>
+      当系统检测到账户接近5小时使用限制时，自动暂停调度该账户。进入新的时间窗口后会自动恢复调度。
+      </p>
+      </div>
+      </label>
+      </div>
+      
+      <!-- Claude User-Agent 版本配置 -->
+      <div v-if="form.platform === 'claude'">
+      <label>
+      <input v-model="form.useUnifiedUserAgent" type="checkbox" />
+      <div>
+      <span> 使用统一 Claude Code 版本 </span>
+      <p>开启后将使用从真实 Claude Code 客户端捕获的统一 User-Agent，提高兼容性</p>
+      <div v-if="unifiedUserAgent">
+      <div>
+      <p>💡 当前统一版本：{{ unifiedUserAgent }}</p>
+      <button :disabled="clearingCache" type="button" @click="clearUnifiedCache">
+      <div v-if="clearingCache"></div>
+      {{ clearingCache ? '清除中...' : '清除缓存' }}
+      </button>
+      </div>
+      </div>
+      <div v-else>
+      <p>⏳ 等待从 Claude Code 客户端捕获 User-Agent</p>
+      <p>
+      💡 提示：如果长时间未能捕获，请确认有 Claude Code 客户端正在使用此账户，
+      或联系开发者检查 User-Agent 格式是否发生变化
+      </p>
+      </div>
+      </div>
+      </label>
+      </div>
+      
+      <!-- Claude 统一客户端标识配置 -->
+      <div v-if="form.platform === 'claude'">
+      <label>
+      <input
+      v-model="form.useUnifiedClientId"
+      type="checkbox"
+      @change="handleUnifiedClientIdChange"
+      />
+      <div>
+      <span> 使用统一的客户端标识 </span>
+      <p>开启后将使用固定的客户端标识，使所有请求看起来来自同一个客户端，减少特征</p>
+      <div v-if="form.useUnifiedClientId">
+      <div>
+      <div>
+      <span>客户端标识 ID</span>
+      <button type="button" @click="regenerateClientId">重新生成</button>
+      </div>
+      <div>
+      <code>
+      <span>{{ form.unifiedClientId.substring(0, 8) }}</span
+      ><span>{{ form.unifiedClientId.substring(8, 56) }}</span
+      ><span>{{ form.unifiedClientId.substring(56) }}</span>
+      </code>
+      </div>
+      <p>此ID将替换请求中的user_id客户端部分，保留session部分用于粘性会话</p>
+      </div>
+      </div>
+      </div>
+      </label>
+      </div>
+      
+      <!-- 所有平台的优先级设置 -->
+      <div>
+      <label>调度优先级 (1-100)</label>
+      <input
+      v-model.number="form.priority"
+      max="100"
+      min="1"
+      placeholder="数字越小优先级越高，默认50"
+      type="number"
+      />
+      <p>数字越小优先级越高，建议范围：1-100</p>
+      </div>
+      
+      <!-- 手动输入 Token 字段 -->
+      <div
+      v-if="
+      form.addType === 'manual' &&
+      form.platform !== 'claude-console' &&
+      form.platform !== 'ccr' &&
+      form.platform !== 'bedrock' &&
+      form.platform !== 'azure_openai' &&
+      form.platform !== 'openai-responses'
+      "
+      >
+      <div>
+      <div></div>
+      <div>
+      <h5>手动输入 Token</h5>
+      <p v-if="form.platform === 'claude'">
+      请输入有效的 Claude Access Token。如果您有 Refresh
+      Token，建议也一并填写以支持自动刷新。
+      </p>
+      <p v-else-if="form.platform === 'gemini'">
+      请输入有效的 Gemini Access Token。如果您有 Refresh
+      Token，建议也一并填写以支持自动刷新。
+      </p>
+      <p v-else-if="form.platform === 'openai'">
+      请输入有效的 OpenAI Access Token。如果您有 Refresh
+      Token，建议也一并填写以支持自动刷新。
+      </p>
+      <p v-else-if="form.platform === 'droid'">
+      请输入有效的 Droid Access Token，并同时提供 Refresh Token 以支持自动刷新。
+      </p>
+      <div>
+      <p>获取 Access Token 的方法：</p>
+      <p v-if="form.platform === 'claude'">
+      请从已登录 Claude Code 的机器上获取
+      <code>~/.claude/.credentials.json</code>
+      文件中的凭证， 请勿使用 Claude 官网 API Keys 页面的密钥。
+      </p>
+      <p v-else-if="form.platform === 'gemini'">
+      请从已登录 Gemini CLI 的机器上获取
+      <code>~/.config/gemini/credentials.json</code>
+      文件中的凭证。
+      </p>
+      <p v-else-if="form.platform === 'openai'">
+      请从已登录 OpenAI 账户的机器上获取认证凭证， 或通过 OAuth 授权流程获取 Access
+      Token。
+      </p>
+      <p v-else-if="form.platform === 'droid'">
+      请从已完成授权的 Droid CLI 或 Factory.ai 导出的凭证中获取 Access Token 与
+      Refresh Token。
+      </p>
+      </div>
+      <p v-if="form.platform !== 'droid'">
+      💡 如果未填写 Refresh Token，Token 过期后需要手动更新。
+      </p>
+      <p v-else>
+      ⚠️ Droid 账户必须填写 Refresh Token，缺失将导致无法自动刷新 Access Token。
+      </p>
+      </div>
+      </div>
+      
+      <div v-if="form.platform === 'openai'">
+      <label>Access Token (可选)</label>
+      <textarea
+      v-model="form.accessToken"
+      placeholder="可选：如果不填写，系统会自动通过 Refresh Token 获取..."
+      rows="4"
+      />
+      <p>Access Token 可选填。如果不提供，系统会通过 Refresh Token 自动获取。</p>
+      </div>
+      
+      <div v-else>
+      <label>Access Token *</label>
+      <textarea
+      v-model="form.accessToken"
+      placeholder="请输入 Access Token..."
+      required
+      rows="4"
+      />
+      <p v-if="errors.accessToken">
+      {{ errors.accessToken }}
+      </p>
+      </div>
+      
+      <div v-if="form.platform === 'openai' || form.platform === 'droid'">
+      <label>Refresh Token *</label>
+      <textarea
+      v-model="form.refreshToken"
+      placeholder="请输入 Refresh Token（必填）..."
+      required
+      rows="4"
+      />
+      <p v-if="errors.refreshToken">
+      {{ errors.refreshToken }}
+      </p>
+      <p>
+      <template v-if="form.platform === 'openai'">
+      系统将使用 Refresh Token 自动获取 Access Token 和用户信息
+      </template>
+      <template v-else>
+      系统将使用 Refresh Token 自动刷新 Factory.ai 访问令牌，确保账户保持可用。
+      </template>
+      </p>
+      </div>
+      
+      <div v-else>
+      <label>Refresh Token (可选)</label>
+      <textarea
+      v-model="form.refreshToken"
+      placeholder="请输入 Refresh Token..."
+      rows="4"
+      />
+      </div>
+      </div>
+      
+      <!-- API Key 模式输入 -->
+      <div v-if="form.addType === 'apikey' && form.platform === 'droid'">
+      <div>
+      <div></div>
+      <div>
+      <h5>使用 API Key 调度 Droid</h5>
+      <p>
+      请填写一个或多个 Factory.ai API
+      Key，系统会自动在请求时随机挑选并结合会话哈希维持粘性，确保对话上下文保持稳定。
+      </p>
+      </div>
+      </div>
+      
+      <div>
+      <label>API Key 列表 *</label>
+      <textarea
+      v-model="form.apiKeysInput"
+      placeholder="每行一个 API Key，可粘贴多行"
+      required
+      rows="6"
+      />
+      <p v-if="errors.apiKeys">
+      {{ errors.apiKeys }}
+      </p>
+      <p>建议为每条 Key 提供独立额度；系统会自动去重并忽略空白行。</p>
+      </div>
+      
+      <div>
+      <p>分配策略说明</p>
+      <ul>
+      <li>新会话将随机命中一个 Key，并在会话有效期内保持粘性。</li>
+      <li>若某 Key 失效，会自动切换到剩余可用 Key，最大化成功率。</li>
+      <li>
+      若上游返回 4xx 错误码，该 Key 会被自动标记为异常；全部 Key
+      异常后账号将暂停调度。
+      </li>
+      </ul>
+      </div>
+      </div>
+      
       <!-- 代理设置 -->
       <ProxyConfig v-model="form.proxy" />
-
-      <div>
-        <button type="button" @click="$emit('close')">取消</button>
-        <button :disabled="loading" type="button" @click="updateAccount">
-          <div v-if="loading" />
-          {{ loading ? '更新中...' : '更新' }}
-        </button>
-      </div>
+      
     </div>
+
+    <!-- Footer Buttons -->
+    <template #footer>
+      <!-- Cancel Button -->
+      <button
+        type="button"
+        class="rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
+        @click="$emit('close')"
+      >
+        取消
+      </button>
+
+      <!-- Next Step Button (for OAuth/Setup Token flows) -->
+      <button
+        v-if="oauthStep === 1 && !isEdit && showNextStepButton"
+        type="button"
+        class="rounded-lg bg-primary-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-primary-700 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-primary-500 dark:hover:bg-primary-600"
+        :disabled="loading"
+        @click="nextStep"
+      >
+        下一步
+      </button>
+
+      <!-- Create Button (for direct creation) -->
+      <button
+        v-else-if="oauthStep === 1 && !isEdit"
+        type="button"
+        class="flex items-center gap-2 rounded-lg bg-primary-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-primary-700 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-primary-500 dark:hover:bg-primary-600"
+        :disabled="loading"
+        @click="createAccount"
+      >
+        <div v-if="loading" class="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
+        {{ loading ? '创建中...' : '创建' }}
+      </button>
+
+      <!-- Update Button (for edit mode) -->
+      <button
+        v-else-if="isEdit"
+        type="button"
+        class="flex items-center gap-2 rounded-lg bg-primary-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-primary-700 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-primary-500 dark:hover:bg-primary-600"
+        :disabled="loading"
+        @click="updateAccount"
+      >
+        <div v-if="loading" class="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
+        {{ loading ? '更新中...' : '更新' }}
+      </button>
+    </template>
   </BaseModal>
 
-  <ConfirmModal
-    :cancel-text="confirmOptions.cancelText"
-    :confirm-text="confirmOptions.confirmText"
-    :message="confirmOptions.message"
-    :show="showConfirmModal"
-    :title="confirmOptions.title"
-    @cancel="handleCancel"
-    @confirm="handleConfirm"
-  />
+    <!-- 确认弹窗 -->
+    <ConfirmModal
+      :cancel-text="confirmOptions.cancelText"
+      :confirm-text="confirmOptions.confirmText"
+      :message="confirmOptions.message"
+      :show="showConfirmModal"
+      :title="confirmOptions.title"
+      @cancel="handleCancel"
+      @confirm="handleConfirm"
+    />
 
-  <!-- 分组管理模态框 -->
-  <GroupManagementModal
-    v-if="showGroupManagement"
-    @close="showGroupManagement = false"
-    @refresh="handleGroupRefresh"
-  />
+    <!-- 分组管理模态框 -->
+    <GroupManagementModal
+      v-if="showGroupManagement"
+      @close="showGroupManagement = false"
+      @refresh="handleGroupRefresh"
+    />
 
-  <!-- API Key 管理模态框 -->
-  <ApiKeyManagementModal
-    v-if="showApiKeyManagement"
-    :account-id="props.account?.id"
-    :account-name="props.account?.name"
-    @close="showApiKeyManagement = false"
-    @refresh="handleApiKeyRefresh"
-  />
+    <!-- API Key 管理模态框 -->
+    <ApiKeyManagementModal
+      v-if="showApiKeyManagement"
+      :account-id="props.account?.id"
+      :account-name="props.account?.name"
+      @close="showApiKeyManagement = false"
+      @refresh="handleApiKeyRefresh"
+    />
 </template>
-
 <script setup>
 import { ref, computed, watch, onMounted } from 'vue'
 import { showToast } from '@/utils/toast'
@@ -1895,6 +1151,7 @@ import { useConfirm } from '@/composables/useConfirm'
 import ProxyConfig from './ProxyConfig.vue'
 import OAuthFlow from './OAuthFlow.vue'
 import BaseModal from '@/components/common/BaseModal.vue'
+import Icon from '@/components/common/Icon.vue'
 import ConfirmModal from '@/components/common/ConfirmModal.vue'
 import GroupManagementModal from './GroupManagementModal.vue'
 import ApiKeyManagementModal from './ApiKeyManagementModal.vue'
@@ -1933,6 +1190,18 @@ const modalTitle = computed(() => {
     return platformNames[form.value.platform] || '添加账户'
   }
   return '添加账户'
+})
+
+// Show next step button condition
+const showNextStepButton = computed(() => {
+  return (
+    (form.value.addType === 'oauth' || form.value.addType === 'setup-token') &&
+    form.value.platform !== 'claude-console' &&
+    form.value.platform !== 'ccr' &&
+    form.value.platform !== 'bedrock' &&
+    form.value.platform !== 'azure_openai' &&
+    form.value.platform !== 'openai-responses'
+  )
 })
 
 // OAuth步骤
@@ -2523,7 +1792,7 @@ const copySetupTokenAuthUrl = async () => {
 
     try {
       // eslint-disable-next-line
-      const successful = document.execCommand('copy')
+ const successful = document.execCommand('copy')
       if (successful) {
         setupTokenCopied.value = true
         showToast('链接已复制', 'success')

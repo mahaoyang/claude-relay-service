@@ -1,316 +1,370 @@
 <template>
- <Teleport to="body">
- <div v-if="show">
- <div
- >
- <div>
- <div>
- <div
- >
- 
- </div>
- <div>
- <h3>
- API Key 管理
- </h3>
- <p>
- {{ accountName }}
- </p>
- </div>
- </div>
- <div>
- <button
- :disabled="loading || apiKeys.length === 0 || copyingAll"
- @click="copyAllApiKeys"
- >
- 
- <span>复制全部 Key</span>
- </button>
- <button
- title="关闭"
- @click="$emit('close')"
- >
- 
- </button>
- </div>
- </div>
+  <BaseModal :show="show" size="4xl" title="" @close="$emit('close')">
+    <template #header>
+      <div class="flex flex-1 items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div
+            class="flex h-10 w-10 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-900/30"
+          >
+            <Icon class="h-5 w-5 text-blue-600 dark:text-blue-400" name="Key" />
+          </div>
+          <div>
+            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">API Key 管理</h3>
+            <p class="text-sm text-gray-600 dark:text-gray-400">{{ accountName }}</p>
+          </div>
+        </div>
+        <button
+          class="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-blue-500 dark:hover:bg-blue-600"
+          :disabled="loading || apiKeys.length === 0 || copyingAll"
+          @click="copyAllApiKeys"
+        >
+          <Icon class="h-4 w-4" name="Copy" />
+          <span>复制全部 Key</span>
+        </button>
+      </div>
+    </template>
 
- <!-- 加载状态 -->
- <div v-if="loading">
- <div />
- <p >加载中...</p>
- </div>
+    <!-- 加载状态 -->
+    <div v-if="loading" class="flex flex-col items-center justify-center py-16">
+      <div
+        class="h-12 w-12 animate-spin rounded-full border-4 border-gray-200 border-t-blue-600 dark:border-gray-700 dark:border-t-blue-500"
+      />
+      <p class="mt-4 text-sm text-gray-600 dark:text-gray-400">加载中...</p>
+    </div>
 
- <!-- 空状态：没有加载且没有 API Key -->
- <div
- v-if="!loading && apiKeys.length === 0"
- >
- 
- <p >暂无 API Key</p>
- </div>
+    <!-- 空状态：没有加载且没有 API Key -->
+    <div
+      v-if="!loading && apiKeys.length === 0"
+      class="flex flex-col items-center justify-center py-16"
+    >
+      <div
+        class="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800"
+      >
+        <Icon class="h-8 w-8 text-gray-400 dark:text-gray-600" name="Key" />
+      </div>
+      <p class="text-sm text-gray-600 dark:text-gray-400">暂无 API Key</p>
+    </div>
 
- <!-- 有 API Key 时显示菜单和列表 -->
- <div v-if="!loading && apiKeys.length > 0">
- <!-- 菜单栏 -->
- <div>
- <!-- 工具栏：筛选、搜索和操作 -->
- <div
- >
- <!-- 第一行：筛选和搜索 -->
- <div>
- <!-- 左侧：状态筛选 -->
- <div>
- 
- <span>筛选：</span>
- <div>
- <button
- @click="statusFilter = 'all'"
- >
- 全部 ({{ apiKeys.length }})
- </button>
- <button
- @click="statusFilter = 'active'"
- >
- 
- 正常 ({{ activeKeysCount }})
- </button>
- <button
- @click="statusFilter = 'error'"
- >
- 
- 异常 ({{ errorKeysCount }})
- </button>
- </div>
- </div>
+    <!-- 有 API Key 时显示菜单和列表 -->
+    <div v-if="!loading && apiKeys.length > 0" class="space-y-4">
+      <!-- 工具栏：筛选、搜索和操作 -->
+      <div
+        class="space-y-4 rounded-lg border border-gray-200 bg-gray-50 p-4 dark:border-gray-700 dark:bg-gray-900"
+      >
+        <!-- 第一行：筛选和搜索 -->
+        <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+          <!-- 左侧：状态筛选 -->
+          <div class="flex flex-wrap items-center gap-2">
+            <span class="text-sm font-medium text-gray-700 dark:text-gray-300">筛选：</span>
+            <div class="flex flex-wrap gap-2">
+              <button
+                class="rounded-lg px-3 py-1.5 text-sm font-medium transition-colors"
+                :class="
+                  statusFilter === 'all'
+                    ? 'bg-blue-600 text-white dark:bg-blue-500'
+                    : 'bg-white text-gray-700 hover:bg-gray-100 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700'
+                "
+                @click="statusFilter = 'all'"
+              >
+                全部 ({{ apiKeys.length }})
+              </button>
+              <button
+                class="rounded-lg px-3 py-1.5 text-sm font-medium transition-colors"
+                :class="
+                  statusFilter === 'active'
+                    ? 'bg-green-600 text-white dark:bg-green-500'
+                    : 'bg-white text-gray-700 hover:bg-gray-100 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700'
+                "
+                @click="statusFilter = 'active'"
+              >
+                正常 ({{ activeKeysCount }})
+              </button>
+              <button
+                class="rounded-lg px-3 py-1.5 text-sm font-medium transition-colors"
+                :class="
+                  statusFilter === 'error'
+                    ? 'bg-red-600 text-white dark:bg-red-500'
+                    : 'bg-white text-gray-700 hover:bg-gray-100 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700'
+                "
+                @click="statusFilter = 'error'"
+              >
+                异常 ({{ errorKeysCount }})
+              </button>
+            </div>
+          </div>
 
- <!-- 右侧：搜索框 -->
- <div>
- <div>
- <input
- v-model="searchQuery"
- placeholder="搜索 API Key..."
- type="text"
- />
- <Icon name="Search" />
- </div>
- <div>
- <button
- title="模糊搜索：包含查询字符串即可"
- @click="searchMode = 'fuzzy'"
- >
- 
- 模糊
- </button>
- <button
- title="精确搜索：完全匹配完整 Key"
- @click="searchMode = 'exact'"
- >
- 
- 精确
- </button>
- </div>
- </div>
- </div>
+          <!-- 右侧：搜索框 -->
+          <div class="flex flex-col gap-2 sm:flex-row sm:items-center">
+            <div class="relative">
+              <input
+                v-model="searchQuery"
+                class="w-full rounded-lg border border-gray-300 bg-white py-2 pl-10 pr-4 text-sm text-gray-900 placeholder-gray-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:placeholder-gray-400 sm:w-64"
+                placeholder="搜索 API Key..."
+                type="text"
+              />
+              <Icon class="absolute left-3 top-2.5 h-5 w-5 text-gray-400" name="Search" />
+            </div>
+            <div class="flex gap-1 rounded-lg bg-white p-1 dark:bg-gray-800">
+              <button
+                class="rounded px-3 py-1.5 text-xs font-medium transition-colors"
+                :class="
+                  searchMode === 'fuzzy'
+                    ? 'bg-blue-600 text-white dark:bg-blue-500'
+                    : 'text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700'
+                "
+                title="模糊搜索：包含查询字符串即可"
+                @click="searchMode = 'fuzzy'"
+              >
+                模糊
+              </button>
+              <button
+                class="rounded px-3 py-1.5 text-xs font-medium transition-colors"
+                :class="
+                  searchMode === 'exact'
+                    ? 'bg-blue-600 text-white dark:bg-blue-500'
+                    : 'text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700'
+                "
+                title="精确搜索：完全匹配完整 Key"
+                @click="searchMode = 'exact'"
+              >
+                精确
+              </button>
+            </div>
+          </div>
+        </div>
 
- <!-- 分隔线 -->
- <div></div>
+        <!-- 分隔线 -->
+        <div class="border-t border-gray-200 dark:border-gray-700"></div>
 
- <!-- 第二行：批量操作 -->
- <div>
- <!-- 左侧：操作按钮 -->
- <div>
- <span
- >批量操作：</span
- >
- <button
- :disabled="errorKeysCount === 0 || batchDeleting"
- title="删除所有异常状态的 API Key"
- @click="deleteAllErrorKeys"
- >
- 
- 删除异常
- </button>
- <button
- :disabled="apiKeys.length === 0 || batchDeleting"
- title="删除所有 API Key"
- @click="deleteAllKeys"
- >
- 
- 删除全部
- </button>
- <div></div>
- <button
- :disabled="errorKeysCount === 0"
- title="导出所有异常状态的 API Key"
- @click="exportKeys('error')"
- >
- 
- 导出异常
- </button>
- <button
- :disabled="apiKeys.length === 0"
- title="导出所有 API Key"
- @click="exportKeys('all')"
- >
- 
- 导出全部
- </button>
- </div>
+        <!-- 第二行：批量操作 -->
+        <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+          <!-- 左侧：操作按钮 -->
+          <div class="flex flex-wrap items-center gap-2">
+            <span class="text-sm font-medium text-gray-700 dark:text-gray-300">批量操作：</span>
+            <button
+              class="inline-flex items-center gap-1.5 rounded-lg bg-red-100 px-3 py-1.5 text-sm font-medium text-red-700 transition-colors hover:bg-red-200 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-red-900/30 dark:text-red-400 dark:hover:bg-red-900/50"
+              :disabled="errorKeysCount === 0 || batchDeleting"
+              title="删除所有异常状态的 API Key"
+              @click="deleteAllErrorKeys"
+            >
+              <Icon class="h-4 w-4" name="Trash2" />
+              删除异常
+            </button>
+            <button
+              class="inline-flex items-center gap-1.5 rounded-lg bg-red-100 px-3 py-1.5 text-sm font-medium text-red-700 transition-colors hover:bg-red-200 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-red-900/30 dark:text-red-400 dark:hover:bg-red-900/50"
+              :disabled="apiKeys.length === 0 || batchDeleting"
+              title="删除所有 API Key"
+              @click="deleteAllKeys"
+            >
+              <Icon class="h-4 w-4" name="Trash2" />
+              删除全部
+            </button>
+            <div class="h-4 w-px bg-gray-300 dark:bg-gray-600"></div>
+            <button
+              class="inline-flex items-center gap-1.5 rounded-lg bg-blue-100 px-3 py-1.5 text-sm font-medium text-blue-700 transition-colors hover:bg-blue-200 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-blue-900/30 dark:text-blue-400 dark:hover:bg-blue-900/50"
+              :disabled="errorKeysCount === 0"
+              title="导出所有异常状态的 API Key"
+              @click="exportKeys('error')"
+            >
+              <Icon class="h-4 w-4" name="Download" />
+              导出异常
+            </button>
+            <button
+              class="inline-flex items-center gap-1.5 rounded-lg bg-blue-100 px-3 py-1.5 text-sm font-medium text-blue-700 transition-colors hover:bg-blue-200 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-blue-900/30 dark:text-blue-400 dark:hover:bg-blue-900/50"
+              :disabled="apiKeys.length === 0"
+              title="导出所有 API Key"
+              @click="exportKeys('all')"
+            >
+              <Icon class="h-4 w-4" name="Download" />
+              导出全部
+            </button>
+          </div>
 
- <!-- 右侧：统计信息 -->
- <div
- >
- 
- <span>
- 显示 <strong>{{ filteredApiKeys.length }}</strong> 个
- </span>
- </div>
- </div>
- </div>
- </div>
- <!-- API Key 网格布局 -->
- <div>
- <div
- v-for="(apiKey, index) in paginatedApiKeys"
- :key="index"
- >
- <!-- 左上角错误状态码角标 -->
- <div
- v-if="
- (apiKey.status === 'error' || apiKey.status === 'disabled') && apiKey.errorMessage
- "
- >
- <span
- :title="`错误状态码: ${apiKey.errorMessage}`"
- >
- {{ apiKey.errorMessage }}
- </span>
- </div>
+          <!-- 右侧：统计信息 -->
+          <div class="text-sm text-gray-600 dark:text-gray-400">
+            显示
+            <strong class="text-gray-900 dark:text-white">{{ filteredApiKeys.length }}</strong> 个
+          </div>
+        </div>
+      </div>
 
- <div>
- <!-- API Key 信息 -->
- <div>
- <span
- :title="apiKey.key"
- >
- {{ maskApiKey(apiKey.key) }}
- </span>
- <div>
- <button
- title="复制 API Key"
- @click="copyApiKey(apiKey.key)"
- >
- 
- </button>
- <button
- v-if="apiKey.status === 'error' || apiKey.status === 'disabled'"
- :disabled="resetting === apiKey.key"
- title="重置状态"
- @click="resetApiKeyStatus(apiKey)"
- >
- <div v-if="resetting === apiKey.key" />
- 
- </button>
- <button
- :disabled="deleting === apiKey.key"
- @click="deleteApiKey(apiKey)"
- >
- <div v-if="deleting === apiKey.key" />
- 
- </button>
- </div>
- </div>
+      <!-- API Key 网格布局 -->
+      <div class="grid grid-cols-1 gap-4 lg:grid-cols-2 xl:grid-cols-3">
+        <div
+          v-for="(apiKey, index) in paginatedApiKeys"
+          :key="index"
+          class="group relative overflow-hidden rounded-lg border border-gray-200 bg-white p-4 shadow-sm transition-shadow hover:shadow-md dark:border-gray-700 dark:bg-gray-800"
+        >
+          <!-- 左上角错误状态码角标 -->
+          <div
+            v-if="
+              (apiKey.status === 'error' || apiKey.status === 'disabled') && apiKey.errorMessage
+            "
+            class="absolute right-0 top-0 z-10"
+          >
+            <span
+              class="inline-block rounded-bl-lg bg-red-600 px-2 py-1 text-xs font-bold text-white dark:bg-red-500"
+              :title="`错误状态码: ${apiKey.errorMessage}`"
+            >
+              {{ apiKey.errorMessage }}
+            </span>
+          </div>
 
- <!-- 统计信息（一行显示） -->
- <div
- >
- <div>
- <span
- >
- 
- {{
- apiKey.status === 'active'
- ? '正常'
- : apiKey.status === 'error'
- ? '异常'
- : apiKey.status === 'disabled'
- ? '禁用'
- : apiKey.status || '未知'
- }}
- </span>
- </div>
- <div>
- <span
- >使用: <strong>{{ apiKey.usageCount || 0 }}</strong
- >次</span
- >
- </div>
- <div v-if="apiKey.lastUsedAt">
- <span>{{ formatTime(apiKey.lastUsedAt) }}</span>
- </div>
- </div>
- </div>
- </div>
- </div>
+          <div class="space-y-3">
+            <!-- API Key 信息 -->
+            <div class="flex items-start justify-between gap-2">
+              <span
+                class="flex-1 truncate font-mono text-sm text-gray-900 dark:text-white"
+                :title="apiKey.key"
+              >
+                {{ maskApiKey(apiKey.key) }}
+              </span>
+              <div class="flex shrink-0 gap-1">
+                <button
+                  class="rounded p-1.5 text-gray-500 transition-colors hover:bg-gray-100 hover:text-blue-600 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-blue-400"
+                  title="复制 API Key"
+                  @click="copyApiKey(apiKey.key)"
+                >
+                  <Icon class="h-4 w-4" name="Copy" />
+                </button>
+                <button
+                  v-if="apiKey.status === 'error' || apiKey.status === 'disabled'"
+                  class="rounded p-1.5 text-gray-500 transition-colors hover:bg-gray-100 hover:text-green-600 disabled:cursor-not-allowed disabled:opacity-50 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-green-400"
+                  :disabled="resetting === apiKey.key"
+                  title="重置状态"
+                  @click="resetApiKeyStatus(apiKey)"
+                >
+                  <div
+                    v-if="resetting === apiKey.key"
+                    class="h-4 w-4 animate-spin rounded-full border-2 border-gray-300 border-t-green-600 dark:border-gray-600 dark:border-t-green-400"
+                  />
+                  <Icon v-else class="h-4 w-4" name="RotateCw" />
+                </button>
+                <button
+                  class="rounded p-1.5 text-gray-500 transition-colors hover:bg-gray-100 hover:text-red-600 disabled:cursor-not-allowed disabled:opacity-50 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-red-400"
+                  :disabled="deleting === apiKey.key"
+                  title="删除"
+                  @click="deleteApiKey(apiKey)"
+                >
+                  <div
+                    v-if="deleting === apiKey.key"
+                    class="h-4 w-4 animate-spin rounded-full border-2 border-gray-300 border-t-red-600 dark:border-gray-600 dark:border-t-red-400"
+                  />
+                  <Icon v-else class="h-4 w-4" name="Trash2" />
+                </button>
+              </div>
+            </div>
 
- <!-- 分页控制（底部） -->
- <div v-if="totalPages > 1">
- <div>
- 显示 {{ (currentPage - 1) * pageSize + 1 }}-{{
- Math.min(currentPage * pageSize, totalItems)
- }}
- 项，共 {{ totalItems }} 项
- </div>
- <div>
- <button
- :disabled="currentPage === 1"
- @click="currentPage = 1"
- >
- 
- </button>
- <button
- :disabled="currentPage === 1"
- @click="currentPage--"
- >
- 
- </button>
- <span>
- {{ currentPage }} / {{ totalPages }}
- </span>
- <button
- :disabled="currentPage === totalPages"
- @click="currentPage++"
- >
- 
- </button>
- <button
- :disabled="currentPage === totalPages"
- @click="currentPage = totalPages"
- >
- 
- </button>
- </div>
- </div>
- </div>
- </div>
- </div>
- </Teleport>
+            <!-- 统计信息（一行显示） -->
+            <div class="flex flex-wrap items-center gap-2 text-xs">
+              <div>
+                <span
+                  class="inline-flex items-center rounded-full px-2 py-1 font-medium"
+                  :class="
+                    apiKey.status === 'active'
+                      ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'
+                      : apiKey.status === 'error'
+                        ? 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'
+                        : apiKey.status === 'disabled'
+                          ? 'bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-400'
+                          : 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400'
+                  "
+                >
+                  {{
+                    apiKey.status === 'active'
+                      ? '正常'
+                      : apiKey.status === 'error'
+                        ? '异常'
+                        : apiKey.status === 'disabled'
+                          ? '禁用'
+                          : apiKey.status || '未知'
+                  }}
+                </span>
+              </div>
+              <div class="text-gray-600 dark:text-gray-400">
+                使用:
+                <strong class="text-gray-900 dark:text-white">{{ apiKey.usageCount || 0 }}</strong
+                >次
+              </div>
+              <div v-if="apiKey.lastUsedAt" class="text-gray-500 dark:text-gray-500">
+                {{ formatTime(apiKey.lastUsedAt) }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 分页控制（底部） -->
+      <div
+        v-if="totalPages > 1"
+        class="flex flex-col items-center justify-between gap-4 rounded-lg border border-gray-200 bg-gray-50 px-4 py-3 dark:border-gray-700 dark:bg-gray-900 sm:flex-row"
+      >
+        <div class="text-sm text-gray-600 dark:text-gray-400">
+          显示 {{ (currentPage - 1) * pageSize + 1 }}-{{
+            Math.min(currentPage * pageSize, totalItems)
+          }}
+          项，共 {{ totalItems }} 项
+        </div>
+        <div class="flex items-center gap-2">
+          <button
+            class="rounded-lg p-2 text-gray-500 transition-colors hover:bg-gray-200 disabled:cursor-not-allowed disabled:opacity-50 dark:text-gray-400 dark:hover:bg-gray-700"
+            :disabled="currentPage === 1"
+            title="首页"
+            @click="currentPage = 1"
+          >
+            <Icon class="h-4 w-4" name="ChevronsLeft" />
+          </button>
+          <button
+            class="rounded-lg p-2 text-gray-500 transition-colors hover:bg-gray-200 disabled:cursor-not-allowed disabled:opacity-50 dark:text-gray-400 dark:hover:bg-gray-700"
+            :disabled="currentPage === 1"
+            title="上一页"
+            @click="currentPage--"
+          >
+            <Icon class="h-4 w-4" name="ChevronLeft" />
+          </button>
+          <span
+            class="min-w-[100px] text-center text-sm font-medium text-gray-700 dark:text-gray-300"
+          >
+            {{ currentPage }} / {{ totalPages }}
+          </span>
+          <button
+            class="rounded-lg p-2 text-gray-500 transition-colors hover:bg-gray-200 disabled:cursor-not-allowed disabled:opacity-50 dark:text-gray-400 dark:hover:bg-gray-700"
+            :disabled="currentPage === totalPages"
+            title="下一页"
+            @click="currentPage++"
+          >
+            <Icon class="h-4 w-4" name="ChevronRight" />
+          </button>
+          <button
+            class="rounded-lg p-2 text-gray-500 transition-colors hover:bg-gray-200 disabled:cursor-not-allowed disabled:opacity-50 dark:text-gray-400 dark:hover:bg-gray-700"
+            :disabled="currentPage === totalPages"
+            title="末页"
+            @click="currentPage = totalPages"
+          >
+            <Icon class="h-4 w-4" name="ChevronsRight" />
+          </button>
+        </div>
+      </div>
+    </div>
+  </BaseModal>
 </template>
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { showToast } from '@/utils/toast'
 import { apiClient } from '@/config/api'
+import BaseModal from '@/components/common/BaseModal.vue'
+import Icon from '@/components/common/Icon.vue'
 
 const props = defineProps({
- accountId: {
- type: String,
- required: true
- },
- accountName: {
- type: String,
- default: ''
- }
+  accountId: {
+    type: String,
+    required: true
+  },
+  accountName: {
+    type: String,
+    default: ''
+  }
 })
 
 const emit = defineEmits(['close', 'refresh'])
@@ -332,393 +386,393 @@ const batchDeleting = ref(false)
 
 // 掩码显示 API Key（提前声明供 computed 使用）
 const maskApiKey = (key) => {
- if (!key || key.length < 12) {
- return key
- }
- return `${key.substring(0, 8)}...${key.substring(key.length - 4)}`
+  if (!key || key.length < 12) {
+    return key
+  }
+  return `${key.substring(0, 8)}...${key.substring(key.length - 4)}`
 }
 
 // 计算属性：筛选后的 API Keys
 const filteredApiKeys = computed(() => {
- let filtered = apiKeys.value
+  let filtered = apiKeys.value
 
- // 状态筛选
- if (statusFilter.value !== 'all') {
- filtered = filtered.filter((key) => key.status === statusFilter.value)
- }
+  // 状态筛选
+  if (statusFilter.value !== 'all') {
+    filtered = filtered.filter((key) => key.status === statusFilter.value)
+  }
 
- // 搜索筛选（使用完整的 key 进行搜索）
- if (searchQuery.value.trim()) {
- const query = searchQuery.value.trim()
- filtered = filtered.filter((key) => {
- const fullKey = key.key // 使用完整的 key
- if (searchMode.value === 'exact') {
- // 精确搜索：完全匹配完整的 key
- return fullKey === query
- } else {
- // 模糊搜索：完整 key 包含查询字符串（不区分大小写）
- return fullKey.toLowerCase().includes(query.toLowerCase())
- }
- })
- }
+  // 搜索筛选（使用完整的 key 进行搜索）
+  if (searchQuery.value.trim()) {
+    const query = searchQuery.value.trim()
+    filtered = filtered.filter((key) => {
+      const fullKey = key.key // 使用完整的 key
+      if (searchMode.value === 'exact') {
+        // 精确搜索：完全匹配完整的 key
+        return fullKey === query
+      } else {
+        // 模糊搜索：完整 key 包含查询字符串（不区分大小写）
+        return fullKey.toLowerCase().includes(query.toLowerCase())
+      }
+    })
+  }
 
- return filtered
+  return filtered
 })
 
 // 计算属性
 const totalItems = computed(() => filteredApiKeys.value.length)
 const totalPages = computed(() => Math.ceil(totalItems.value / pageSize.value))
 const paginatedApiKeys = computed(() => {
- const start = (currentPage.value - 1) * pageSize.value
- const end = start + pageSize.value
- return filteredApiKeys.value.slice(start, end)
+  const start = (currentPage.value - 1) * pageSize.value
+  const end = start + pageSize.value
+  return filteredApiKeys.value.slice(start, end)
 })
 
 // 统计数量
 const activeKeysCount = computed(() => {
- return apiKeys.value.filter((key) => key.status === 'active').length
+  return apiKeys.value.filter((key) => key.status === 'active').length
 })
 
 const errorKeysCount = computed(() => {
- return apiKeys.value.filter((key) => key.status === 'error').length
+  return apiKeys.value.filter((key) => key.status === 'error').length
 })
 
 // 加载 API Keys
 const loadApiKeys = async () => {
- loading.value = true
- try {
- const response = await apiClient.get(`/admin/droid-accounts/${props.accountId}`)
- const account = response.data
+  loading.value = true
+  try {
+    const response = await apiClient.get(`/admin/droid-accounts/${props.accountId}`)
+    const account = response.data
 
- // 解析 apiKeys
- let parsedKeys = []
- if (Array.isArray(account.apiKeys)) {
- parsedKeys = account.apiKeys
- } else if (typeof account.apiKeys === 'string') {
- try {
- parsedKeys = JSON.parse(account.apiKeys)
- } catch (error) {
- console.error('Failed to parse apiKeys:', error)
- }
- }
+    // 解析 apiKeys
+    let parsedKeys = []
+    if (Array.isArray(account.apiKeys)) {
+      parsedKeys = account.apiKeys
+    } else if (typeof account.apiKeys === 'string') {
+      try {
+        parsedKeys = JSON.parse(account.apiKeys)
+      } catch (error) {
+        console.error('Failed to parse apiKeys:', error)
+      }
+    }
 
- // 转换为统一格式
- const formattedKeys = parsedKeys.map((item) => {
- if (typeof item === 'string') {
- // 对于字符串类型的API Key，保持默认状态为active
- return {
- key: item,
- usageCount: 0,
- status: 'active',
- lastUsedAt: null,
- errorMessage: ''
- }
- } else if (typeof item === 'object' && item !== null) {
- // 对于对象类型的API Key，保留所有状态信息
- return {
- key: item.key || item.apiKey || '',
- usageCount: item.usageCount || item.count || 0,
- status: item.status || 'active', // 保留后端返回的状态
- lastUsedAt: item.lastUsedAt || item.lastUsed || null,
- errorMessage: item.errorMessage || '' // 保留后端返回的错误信息
- }
- }
- // 其他情况，默认为active状态
- return {
- key: String(item),
- usageCount: 0,
- status: 'active',
- lastUsedAt: null,
- errorMessage: ''
- }
- })
+    // 转换为统一格式
+    const formattedKeys = parsedKeys.map((item) => {
+      if (typeof item === 'string') {
+        // 对于字符串类型的API Key，保持默认状态为active
+        return {
+          key: item,
+          usageCount: 0,
+          status: 'active',
+          lastUsedAt: null,
+          errorMessage: ''
+        }
+      } else if (typeof item === 'object' && item !== null) {
+        // 对于对象类型的API Key，保留所有状态信息
+        return {
+          key: item.key || item.apiKey || '',
+          usageCount: item.usageCount || item.count || 0,
+          status: item.status || 'active', // 保留后端返回的状态
+          lastUsedAt: item.lastUsedAt || item.lastUsed || null,
+          errorMessage: item.errorMessage || '' // 保留后端返回的错误信息
+        }
+      }
+      // 其他情况，默认为active状态
+      return {
+        key: String(item),
+        usageCount: 0,
+        status: 'active',
+        lastUsedAt: null,
+        errorMessage: ''
+      }
+    })
 
- // 按最新使用时间排序（最近使用的在前，未使用的在后）
- apiKeys.value = formattedKeys.sort((a, b) => {
- // 如果都有 lastUsedAt，按时间降序排序
- if (a.lastUsedAt && b.lastUsedAt) {
- return new Date(b.lastUsedAt) - new Date(a.lastUsedAt)
- }
- // 如果 a 有时间，b 没有，a 排在前面
- if (a.lastUsedAt && !b.lastUsedAt) {
- return -1
- }
- // 如果 b 有时间，a 没有，b 排在前面
- if (!a.lastUsedAt && b.lastUsedAt) {
- return 1
- }
- // 如果都没有时间，按使用次数降序排序
- return (b.usageCount || 0) - (a.usageCount || 0)
- })
- } catch (error) {
- console.error('Failed to load API keys:', error)
- showToast('加载 API Key 失败', 'error')
- } finally {
- loading.value = false
- // 重置到第一页
- currentPage.value = 1
- }
+    // 按最新使用时间排序（最近使用的在前，未使用的在后）
+    apiKeys.value = formattedKeys.sort((a, b) => {
+      // 如果都有 lastUsedAt，按时间降序排序
+      if (a.lastUsedAt && b.lastUsedAt) {
+        return new Date(b.lastUsedAt) - new Date(a.lastUsedAt)
+      }
+      // 如果 a 有时间，b 没有，a 排在前面
+      if (a.lastUsedAt && !b.lastUsedAt) {
+        return -1
+      }
+      // 如果 b 有时间，a 没有，b 排在前面
+      if (!a.lastUsedAt && b.lastUsedAt) {
+        return 1
+      }
+      // 如果都没有时间，按使用次数降序排序
+      return (b.usageCount || 0) - (a.usageCount || 0)
+    })
+  } catch (error) {
+    console.error('Failed to load API keys:', error)
+    showToast('加载 API Key 失败', 'error')
+  } finally {
+    loading.value = false
+    // 重置到第一页
+    currentPage.value = 1
+  }
 }
 
 // 删除 API Key
 const deleteApiKey = async (apiKey) => {
- if (!confirm(`确定要删除 API Key "${maskApiKey(apiKey.key)}" 吗？`)) {
- return
- }
+  if (!confirm(`确定要删除 API Key "${maskApiKey(apiKey.key)}" 吗？`)) {
+    return
+  }
 
- deleting.value = apiKey.key
- try {
- // 准备更新数据：删除指定的 key
- const updateData = {
- removeApiKeys: [apiKey.key],
- apiKeyUpdateMode: 'delete'
- }
+  deleting.value = apiKey.key
+  try {
+    // 准备更新数据：删除指定的 key
+    const updateData = {
+      removeApiKeys: [apiKey.key],
+      apiKeyUpdateMode: 'delete'
+    }
 
- await apiClient.put(`/admin/droid-accounts/${props.accountId}`, updateData)
+    await apiClient.put(`/admin/droid-accounts/${props.accountId}`, updateData)
 
- showToast('API Key 已删除', 'success')
- await loadApiKeys()
- emit('refresh')
- } catch (error) {
- console.error('Failed to delete API key:', error)
- showToast(error.response?.data?.error || '删除 API Key 失败', 'error')
- } finally {
- deleting.value = null
- }
+    showToast('API Key 已删除', 'success')
+    await loadApiKeys()
+    emit('refresh')
+  } catch (error) {
+    console.error('Failed to delete API key:', error)
+    showToast(error.response?.data?.error || '删除 API Key 失败', 'error')
+  } finally {
+    deleting.value = null
+  }
 }
 
 // 重置 API Key 状态
 const resetApiKeyStatus = async (apiKey) => {
- if (
- !confirm(
- `确定要重置 API Key "${maskApiKey(apiKey.key)}" 的状态吗？这将清除错误信息并恢复为正常状态。`
- )
- ) {
- return
- }
+  if (
+    !confirm(
+      `确定要重置 API Key "${maskApiKey(apiKey.key)}" 的状态吗？这将清除错误信息并恢复为正常状态。`
+    )
+  ) {
+    return
+  }
 
- resetting.value = apiKey.key
- try {
- // 准备更新数据：重置指定 key 的状态
- const updateData = {
- apiKeys: [
- {
- key: apiKey.key,
- status: 'active',
- errorMessage: ''
- }
- ],
- apiKeyUpdateMode: 'update'
- }
+  resetting.value = apiKey.key
+  try {
+    // 准备更新数据：重置指定 key 的状态
+    const updateData = {
+      apiKeys: [
+        {
+          key: apiKey.key,
+          status: 'active',
+          errorMessage: ''
+        }
+      ],
+      apiKeyUpdateMode: 'update'
+    }
 
- await apiClient.put(`/admin/droid-accounts/${props.accountId}`, updateData)
+    await apiClient.put(`/admin/droid-accounts/${props.accountId}`, updateData)
 
- showToast('API Key 状态已重置', 'success')
- await loadApiKeys()
- emit('refresh')
- } catch (error) {
- console.error('Failed to reset API key status:', error)
- showToast(error.response?.data?.error || '重置 API Key 状态失败', 'error')
- } finally {
- resetting.value = null
- }
+    showToast('API Key 状态已重置', 'success')
+    await loadApiKeys()
+    emit('refresh')
+  } catch (error) {
+    console.error('Failed to reset API key status:', error)
+    showToast(error.response?.data?.error || '重置 API Key 状态失败', 'error')
+  } finally {
+    resetting.value = null
+  }
 }
 
 // 批量删除所有异常状态的 Key
 const deleteAllErrorKeys = async () => {
- const errorKeys = apiKeys.value.filter((key) => key.status === 'error')
- if (errorKeys.length === 0) {
- showToast('没有异常状态的 API Key', 'warning')
- return
- }
+  const errorKeys = apiKeys.value.filter((key) => key.status === 'error')
+  if (errorKeys.length === 0) {
+    showToast('没有异常状态的 API Key', 'warning')
+    return
+  }
 
- if (!confirm(`确定要删除所有 ${errorKeys.length} 个异常状态的 API Key 吗？此操作不可恢复！`)) {
- return
- }
+  if (!confirm(`确定要删除所有 ${errorKeys.length} 个异常状态的 API Key 吗？此操作不可恢复！`)) {
+    return
+  }
 
- batchDeleting.value = true
- try {
- const keysToDelete = errorKeys.map((key) => key.key)
- const updateData = {
- removeApiKeys: keysToDelete,
- apiKeyUpdateMode: 'delete'
- }
+  batchDeleting.value = true
+  try {
+    const keysToDelete = errorKeys.map((key) => key.key)
+    const updateData = {
+      removeApiKeys: keysToDelete,
+      apiKeyUpdateMode: 'delete'
+    }
 
- await apiClient.put(`/admin/droid-accounts/${props.accountId}`, updateData)
+    await apiClient.put(`/admin/droid-accounts/${props.accountId}`, updateData)
 
- showToast(`成功删除 ${errorKeys.length} 个异常 API Key`, 'success')
- await loadApiKeys()
- emit('refresh')
- } catch (error) {
- console.error('Failed to delete error API keys:', error)
- showToast(error.response?.data?.error || '批量删除失败', 'error')
- } finally {
- batchDeleting.value = false
- }
+    showToast(`成功删除 ${errorKeys.length} 个异常 API Key`, 'success')
+    await loadApiKeys()
+    emit('refresh')
+  } catch (error) {
+    console.error('Failed to delete error API keys:', error)
+    showToast(error.response?.data?.error || '批量删除失败', 'error')
+  } finally {
+    batchDeleting.value = false
+  }
 }
 
 // 批量删除所有 Key
 const deleteAllKeys = async () => {
- if (apiKeys.value.length === 0) {
- showToast('没有可删除的 API Key', 'warning')
- return
- }
+  if (apiKeys.value.length === 0) {
+    showToast('没有可删除的 API Key', 'warning')
+    return
+  }
 
- if (
- !confirm(
- `确定要删除所有 ${apiKeys.value.length} 个 API Key 吗？此操作不可恢复！\n\n请再次确认：这将删除该账户下的所有 API Key。`
- )
- ) {
- return
- }
+  if (
+    !confirm(
+      `确定要删除所有 ${apiKeys.value.length} 个 API Key 吗？此操作不可恢复！\n\n请再次确认：这将删除该账户下的所有 API Key。`
+    )
+  ) {
+    return
+  }
 
- // 二次确认
- if (!confirm('最后确认：真的要删除所有 API Key 吗？')) {
- return
- }
+  // 二次确认
+  if (!confirm('最后确认：真的要删除所有 API Key 吗？')) {
+    return
+  }
 
- batchDeleting.value = true
- try {
- const keysToDelete = apiKeys.value.map((key) => key.key)
- const updateData = {
- removeApiKeys: keysToDelete,
- apiKeyUpdateMode: 'delete'
- }
+  batchDeleting.value = true
+  try {
+    const keysToDelete = apiKeys.value.map((key) => key.key)
+    const updateData = {
+      removeApiKeys: keysToDelete,
+      apiKeyUpdateMode: 'delete'
+    }
 
- await apiClient.put(`/admin/droid-accounts/${props.accountId}`, updateData)
+    await apiClient.put(`/admin/droid-accounts/${props.accountId}`, updateData)
 
- showToast(`成功删除所有 ${keysToDelete.length} 个 API Key`, 'success')
- await loadApiKeys()
- emit('refresh')
- } catch (error) {
- console.error('Failed to delete all API keys:', error)
- showToast(error.response?.data?.error || '批量删除失败', 'error')
- } finally {
- batchDeleting.value = false
- }
+    showToast(`成功删除所有 ${keysToDelete.length} 个 API Key`, 'success')
+    await loadApiKeys()
+    emit('refresh')
+  } catch (error) {
+    console.error('Failed to delete all API keys:', error)
+    showToast(error.response?.data?.error || '批量删除失败', 'error')
+  } finally {
+    batchDeleting.value = false
+  }
 }
 
 // 导出 Key
 const exportKeys = (type) => {
- let keysToExport = []
- let filename = ''
+  let keysToExport = []
+  let filename = ''
 
- if (type === 'error') {
- keysToExport = apiKeys.value.filter((key) => key.status === 'error')
- filename = `error_api_keys_${props.accountName}_${new Date().toISOString().split('T')[0]}.txt`
- } else {
- keysToExport = apiKeys.value
- filename = `all_api_keys_${props.accountName}_${new Date().toISOString().split('T')[0]}.txt`
- }
+  if (type === 'error') {
+    keysToExport = apiKeys.value.filter((key) => key.status === 'error')
+    filename = `error_api_keys_${props.accountName}_${new Date().toISOString().split('T')[0]}.txt`
+  } else {
+    keysToExport = apiKeys.value
+    filename = `all_api_keys_${props.accountName}_${new Date().toISOString().split('T')[0]}.txt`
+  }
 
- if (keysToExport.length === 0) {
- showToast('没有可导出的 API Key', 'warning')
- return
- }
+  if (keysToExport.length === 0) {
+    showToast('没有可导出的 API Key', 'warning')
+    return
+  }
 
- // 生成 TXT 内容（每行一个完整的 key）
- const content = keysToExport.map((key) => key.key).join('\n')
+  // 生成 TXT 内容（每行一个完整的 key）
+  const content = keysToExport.map((key) => key.key).join('\n')
 
- // 创建下载
- const blob = new Blob([content], { type: 'text/plain;charset=utf-8' })
- const url = URL.createObjectURL(blob)
- const link = document.createElement('a')
- link.href = url
- link.download = filename
- document.body.appendChild(link)
- link.click()
- document.body.removeChild(link)
- URL.revokeObjectURL(url)
+  // 创建下载
+  const blob = new Blob([content], { type: 'text/plain;charset=utf-8' })
+  const url = URL.createObjectURL(blob)
+  const link = document.createElement('a')
+  link.href = url
+  link.download = filename
+  document.body.appendChild(link)
+  link.click()
+  document.body.removeChild(link)
+  URL.revokeObjectURL(url)
 
- showToast(`成功导出 ${keysToExport.length} 个 API Key`, 'success')
+  showToast(`成功导出 ${keysToExport.length} 个 API Key`, 'success')
 }
 
 // 写入剪贴板（带回退逻辑）
 const writeToClipboard = async (text) => {
- const canUseClipboardApi =
- typeof navigator !== 'undefined' &&
- navigator.clipboard &&
- typeof navigator.clipboard.writeText === 'function' &&
- (typeof window === 'undefined' || window.isSecureContext !== false)
+  const canUseClipboardApi =
+    typeof navigator !== 'undefined' &&
+    navigator.clipboard &&
+    typeof navigator.clipboard.writeText === 'function' &&
+    (typeof window === 'undefined' || window.isSecureContext !== false)
 
- if (canUseClipboardApi) {
- await navigator.clipboard.writeText(text)
- return
- }
+  if (canUseClipboardApi) {
+    await navigator.clipboard.writeText(text)
+    return
+  }
 
- if (typeof document === 'undefined') {
- throw new Error('clipboard unavailable')
- }
+  if (typeof document === 'undefined') {
+    throw new Error('clipboard unavailable')
+  }
 
- const textarea = document.createElement('textarea')
- textarea.value = text
- textarea.setAttribute('readonly', '')
- textarea.style.position = 'fixed'
- textarea.style.opacity = '0'
- textarea.style.pointerEvents = 'none'
- document.body.appendChild(textarea)
- textarea.select()
+  const textarea = document.createElement('textarea')
+  textarea.value = text
+  textarea.setAttribute('readonly', '')
+  textarea.style.position = 'fixed'
+  textarea.style.opacity = '0'
+  textarea.style.pointerEvents = 'none'
+  document.body.appendChild(textarea)
+  textarea.select()
 
- try {
- const success = document.execCommand('copy')
- document.body.removeChild(textarea)
- if (!success) {
- throw new Error('execCommand failed')
- }
- } catch (error) {
- document.body.removeChild(textarea)
- throw error
- }
+  try {
+    const success = document.execCommand('copy')
+    document.body.removeChild(textarea)
+    if (!success) {
+      throw new Error('execCommand failed')
+    }
+  } catch (error) {
+    document.body.removeChild(textarea)
+    throw error
+  }
 }
 
 // 复制 API Key
 const copyApiKey = async (key) => {
- try {
- await writeToClipboard(key)
- showToast('API Key 已复制', 'success')
- } catch (error) {
- console.error('Failed to copy:', error)
- showToast('复制失败，请手动复制', 'error')
- }
+  try {
+    await writeToClipboard(key)
+    showToast('API Key 已复制', 'success')
+  } catch (error) {
+    console.error('Failed to copy:', error)
+    showToast('复制失败，请手动复制', 'error')
+  }
 }
 
 // 复制全部 API Key
 const copyAllApiKeys = async () => {
- if (!apiKeys.value.length || copyingAll.value) {
- return
- }
+  if (!apiKeys.value.length || copyingAll.value) {
+    return
+  }
 
- copyingAll.value = true
- try {
- const allKeysText = apiKeys.value.map((item) => item.key).join('\n')
- await writeToClipboard(allKeysText)
- showToast(`已复制 ${apiKeys.value.length} 条 API Key`, 'success')
- } catch (error) {
- console.error('Failed to copy all keys:', error)
- showToast('复制全部 API Key 失败，请手动复制', 'error')
- } finally {
- copyingAll.value = false
- }
+  copyingAll.value = true
+  try {
+    const allKeysText = apiKeys.value.map((item) => item.key).join('\n')
+    await writeToClipboard(allKeysText)
+    showToast(`已复制 ${apiKeys.value.length} 条 API Key`, 'success')
+  } catch (error) {
+    console.error('Failed to copy all keys:', error)
+    showToast('复制全部 API Key 失败，请手动复制', 'error')
+  } finally {
+    copyingAll.value = false
+  }
 }
 
 // 格式化时间
 const formatTime = (timestamp) => {
- if (!timestamp) return '-'
- try {
- const date = new Date(timestamp)
- return date.toLocaleString('zh-CN', {
- year: 'numeric',
- month: '2-digit',
- day: '2-digit',
- hour: '2-digit',
- minute: '2-digit'
- })
- } catch (error) {
- return '-'
- }
+  if (!timestamp) return '-'
+  try {
+    const date = new Date(timestamp)
+    return date.toLocaleString('zh-CN', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit'
+    })
+  } catch (error) {
+    return '-'
+  }
 }
 
 onMounted(() => {
- loadApiKeys()
+  loadApiKeys()
 })
 </script>
