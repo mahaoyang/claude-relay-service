@@ -2483,19 +2483,6 @@ const getDroidApiKeyCount = (account) => {
   return 0
 }
 
-// 根据数量返回徽标样式
-const getDroidApiKeyBadgeClasses = (account) => {
-  const count = getDroidApiKeyCount(account)
-  const baseClass =
-    'ml-1 inline-flex items-center gap-1 border px-1.5 py-[1px] text-[10px] font-medium backdrop-'
-
-  if (count > 0) {
-    return [baseClass, ' dark: dark: dark:']
-  }
-
-  return [baseClass, ' dark: dark: dark:']
-}
-
 // 获取 Claude 账号类型显示
 const getClaudeAccountType = (account) => {
   // 如果有订阅信息
@@ -2644,62 +2631,6 @@ const getAccountStatusText = (account) => {
   return '正常'
 }
 
-// 获取账户状态样式类
-const getAccountStatusClass = (account) => {
-  if (account.status === 'blocked') {
-    return ' '
-  }
-  if (account.status === 'unauthorized') {
-    return ' '
-  }
-  if (
-    account.isRateLimited ||
-    account.status === 'rate_limited' ||
-    (account.rateLimitStatus && account.rateLimitStatus.isRateLimited) ||
-    account.rateLimitStatus === 'limited'
-  ) {
-    return ' '
-  }
-  if (account.status === 'temp_error') {
-    return ' '
-  }
-  if (account.status === 'error' || !account.isActive) {
-    return ' '
-  }
-  if (account.schedulable === false) {
-    return ' '
-  }
-  return ' '
-}
-
-// 获取账户状态点样式类
-const getAccountStatusDotClass = (account) => {
-  if (account.status === 'blocked') {
-    return ''
-  }
-  if (account.status === 'unauthorized') {
-    return ''
-  }
-  if (
-    account.isRateLimited ||
-    account.status === 'rate_limited' ||
-    (account.rateLimitStatus && account.rateLimitStatus.isRateLimited) ||
-    account.rateLimitStatus === 'limited'
-  ) {
-    return ''
-  }
-  if (account.status === 'temp_error') {
-    return ''
-  }
-  if (account.status === 'error' || !account.isActive) {
-    return ''
-  }
-  if (account.schedulable === false) {
-    return ''
-  }
-  return ''
-}
-
 // 获取会话窗口百分比
 // const getSessionWindowPercentage = (account) => {
 // if (!account.sessionWindow) return 100
@@ -2711,42 +2642,6 @@ const getAccountStatusDotClass = (account) => {
 // 格式化相对时间
 const formatRelativeTime = (dateString) => {
   return formatLastUsed(dateString)
-}
-
-// 获取会话窗口进度条的样式类
-const getSessionProgressBarClass = (status, account = null) => {
-  // 根据状态返回不同的颜色类，包含防御性检查
-  if (!status) {
-    // 无状态信息时默认为蓝色
-    return ' '
-  }
-
-  // 检查账号是否处于限流状态
-  const isRateLimited =
-    account &&
-    (account.isRateLimited ||
-      account.status === 'rate_limited' ||
-      (account.rateLimitStatus && account.rateLimitStatus.isRateLimited) ||
-      account.rateLimitStatus === 'limited')
-
-  // 如果账号处于限流状态，显示红色
-  if (isRateLimited) {
-    return ' '
-  }
-
-  // 转换为小写进行比较，避免大小写问题
-  const normalizedStatus = String(status).toLowerCase()
-
-  if (normalizedStatus === 'rejected') {
-    // 被拒绝 - 红色
-    return ' '
-  } else if (normalizedStatus === 'allowed_warning') {
-    // 警告状态 - 橙色/黄色
-    return ' '
-  } else {
-    // 正常状态（allowed 或其他） - 蓝色
-    return ' '
-  }
 }
 
 // ====== Claude OAuth Usage 相关函数 ======
@@ -2762,26 +2657,6 @@ const formatClaudeUsagePercent = (window) => {
     return '-'
   }
   return `${window.utilization}%`
-}
-
-// 获取 Claude 使用率宽度
-const getClaudeUsageWidth = (window) => {
-  if (!window || window.utilization === null || window.utilization === undefined) {
-    return '0%'
-  }
-  return `${window.utilization}%`
-}
-
-// 获取 Claude 使用率进度条颜色
-const getClaudeUsageBarClass = (window) => {
-  const util = window?.utilization || 0
-  if (util < 60) {
-    return ' '
-  }
-  if (util < 90) {
-    return ' '
-  }
-  return ' '
 }
 
 // 格式化 Claude 剩余时间
@@ -2850,21 +2725,6 @@ const normalizeCodexUsagePercent = (usageItem) => {
   return Math.max(0, Math.min(100, basePercent))
 }
 
-// OpenAI 限额进度条颜色
-const getCodexUsageBarClass = (usageItem) => {
-  const percent = normalizeCodexUsagePercent(usageItem)
-  if (percent === null) {
-    return ' '
-  }
-  if (percent >= 90) {
-    return ' '
-  }
-  if (percent >= 75) {
-    return ' '
-  }
-  return ' '
-}
-
 // 百分比显示
 const formatCodexUsagePercent = (usageItem) => {
   const percent = normalizeCodexUsagePercent(usageItem)
@@ -2872,15 +2732,6 @@ const formatCodexUsagePercent = (usageItem) => {
     return '--'
   }
   return `${percent.toFixed(1)}%`
-}
-
-// 进度条宽度
-const getCodexUsageWidth = (usageItem) => {
-  const percent = normalizeCodexUsagePercent(usageItem)
-  if (percent === null) {
-    return '0%'
-  }
-  return `${percent}%`
 }
 
 // 时间窗口标签
@@ -2948,40 +2799,12 @@ const getQuotaUsagePercent = (account) => {
   return (used / quota) * 100
 }
 
-// 额度进度条颜色（Claude Console）
-const getQuotaBarClass = (percent) => {
-  if (percent >= 90) return ''
-  if (percent >= 70) return ''
-  return ''
-}
-
 // 并发使用百分比（Claude Console）
 const getConsoleConcurrencyPercent = (account) => {
   const max = Number(account?.maxConcurrentTasks || 0)
   if (!max || max <= 0) return 0
   const active = Number(account?.activeTaskCount || 0)
   return Math.min(100, (active / max) * 100)
-}
-
-// 并发进度条颜色（Claude Console）
-const getConcurrencyBarClass = (percent) => {
-  if (percent >= 100) return ''
-  if (percent >= 80) return ''
-  return ''
-}
-
-// 并发标签颜色（Claude Console）
-const getConcurrencyLabelClass = (account) => {
-  const max = Number(account?.maxConcurrentTasks || 0)
-  if (!max || max <= 0) return ' dark:'
-  const active = Number(account?.activeTaskCount || 0)
-  if (active >= max) {
-    return ' dark:'
-  }
-  if (active >= max * 0.8) {
-    return ' dark:'
-  }
-  return ' dark:'
 }
 
 // 剩余额度（Claude Console）

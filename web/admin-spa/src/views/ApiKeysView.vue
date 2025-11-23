@@ -134,7 +134,7 @@
               </div>
               <div class="relative w-full sm:w-64">
                 <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                  <Icon name="Search" class="h-4 w-4 text-gray-400" />
+                  <Icon class="h-4 w-4 text-gray-400" name="Search" />
                 </div>
                 <input
                   v-model="searchKeyword"
@@ -154,7 +154,7 @@
                   class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200"
                   @click="clearSearch"
                 >
-                  <Icon name="X" class="h-4 w-4" />
+                  <Icon class="h-4 w-4" name="X" />
                 </button>
               </div>
             </div>
@@ -168,7 +168,7 @@
               :disabled="apiKeysLoading"
               @click="loadApiKeys()"
             >
-              <Icon name="RefreshCw" class="h-4 w-4" :class="{ 'animate-spin': apiKeysLoading }" />
+              <Icon class="h-4 w-4" :class="{ 'animate-spin': apiKeysLoading }" name="RefreshCw" />
               <span>刷新</span>
             </button>
 
@@ -177,7 +177,7 @@
               class="inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-700 shadow-sm transition-colors hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700"
               @click="toggleSelectionMode"
             >
-              <Icon :name="showCheckboxes ? 'X' : 'CheckSquare'" class="h-4 w-4" />
+              <Icon class="h-4 w-4" :name="showCheckboxes ? 'X' : 'CheckSquare'" />
               <span>{{ showCheckboxes ? '取消选择' : '选择' }}</span>
             </button>
 
@@ -186,7 +186,7 @@
               class="inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-700 shadow-sm transition-colors hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700"
               @click="exportToExcel"
             >
-              <Icon name="FileSpreadsheet" class="h-4 w-4" />
+              <Icon class="h-4 w-4" name="FileSpreadsheet" />
               <span>导出数据</span>
             </button>
 
@@ -196,7 +196,7 @@
               class="inline-flex items-center gap-2 rounded-lg border border-blue-300 bg-blue-50 px-3 py-2 text-sm font-medium text-blue-700 shadow-sm transition-colors hover:bg-blue-100 dark:border-blue-700 dark:bg-blue-900/30 dark:text-blue-300 dark:hover:bg-blue-900/50"
               @click="openBatchEditModal()"
             >
-              <Icon name="Edit" class="h-4 w-4" />
+              <Icon class="h-4 w-4" name="Edit" />
               <span>编辑选中 ({{ selectedApiKeys.length }})</span>
             </button>
 
@@ -206,7 +206,7 @@
               class="inline-flex items-center gap-2 rounded-lg border border-red-300 bg-red-50 px-3 py-2 text-sm font-medium text-red-700 shadow-sm transition-colors hover:bg-red-100 dark:border-red-700 dark:bg-red-900/30 dark:text-red-300 dark:hover:bg-red-900/50"
               @click="batchDeleteApiKeys()"
             >
-              <Icon name="Trash" class="h-4 w-4" />
+              <Icon class="h-4 w-4" name="Trash" />
               <span>删除选中 ({{ selectedApiKeys.length }})</span>
             </button>
 
@@ -215,7 +215,7 @@
               class="inline-flex items-center gap-2 rounded-lg bg-primary-600 px-3 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-primary-700 dark:bg-primary-500 dark:hover:bg-primary-600"
               @click.stop="openCreateApiKeyModal"
             >
-              <Icon name="Plus" class="h-4 w-4" />
+              <Icon class="h-4 w-4" name="Plus" />
               <span>创建新 Key</span>
             </button>
           </div>
@@ -237,7 +237,7 @@
           <div
             class="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800"
           >
-            <Icon name="Key" class="h-8 w-8 text-gray-400 dark:text-gray-500" />
+            <Icon class="h-8 w-8 text-gray-400 dark:text-gray-500" name="Key" />
           </div>
           <p class="mb-2 text-base font-medium text-gray-900 dark:text-white">暂无 API Keys</p>
           <p class="text-sm text-gray-600 dark:text-gray-400">点击上方按钮创建您的第一个 API Key</p>
@@ -267,11 +267,11 @@
                     <div class="flex items-center gap-1">
                       名称
                       <Icon
-                        v-if="apiKeysSortBy === \'name\'"
-                        :name="apiKeysSortOrder === \'asc\' ? \'ChevronUp\' : \'ChevronDown\'"
+                        v-if="apiKeysSortBy === 'name'"
                         class="h-3 w-3"
+                        :name="apiKeysSortOrder === 'asc' ? 'ChevronUp' : 'ChevronDown'"
                       />
-                      <Icon name="ArrowUpDown" v-else class="h-3 w-3" />
+                      <Icon v-else class="h-3 w-3" name="ArrowUpDown" />
                     </div>
                   </th>
                   <th
@@ -291,11 +291,11 @@
                     <div class="flex items-center gap-1">
                       状态
                       <Icon
-                        v-if="apiKeysSortBy === \'status\'"
-                        :name="apiKeysSortOrder === \'asc\' ? \'ChevronUp\' : \'ChevronDown\'"
+                        v-if="apiKeysSortBy === 'status'"
                         class="h-3 w-3"
+                        :name="apiKeysSortOrder === 'asc' ? 'ChevronUp' : 'ChevronDown'"
                       />
-                      <Icon name="ArrowUpDown" v-else class="h-3 w-3" />
+                      <Icon v-else class="h-3 w-3" name="ArrowUpDown" />
                     </div>
                   </th>
                   <th
@@ -305,11 +305,11 @@
                     <div class="flex items-center gap-1">
                       费用
                       <Icon
-                        v-if="apiKeysSortBy === \'periodCost\'"
-                        :name="apiKeysSortOrder === \'asc\' ? \'ChevronUp\' : \'ChevronDown\'"
+                        v-if="apiKeysSortBy === 'periodCost'"
                         class="h-3 w-3"
+                        :name="apiKeysSortOrder === 'asc' ? 'ChevronUp' : 'ChevronDown'"
                       />
-                      <Icon name="ArrowUpDown" v-else class="h-3 w-3" />
+                      <Icon v-else class="h-3 w-3" name="ArrowUpDown" />
                     </div>
                   </th>
                   <th
@@ -324,11 +324,11 @@
                     <div class="flex items-center gap-1">
                       Token
                       <Icon
-                        v-if="apiKeysSortBy === \'periodTokens\'"
-                        :name="apiKeysSortOrder === \'asc\' ? \'ChevronUp\' : \'ChevronDown\'"
+                        v-if="apiKeysSortBy === 'periodTokens'"
                         class="h-3 w-3"
+                        :name="apiKeysSortOrder === 'asc' ? 'ChevronUp' : 'ChevronDown'"
                       />
-                      <Icon name="ArrowUpDown" v-else class="h-3 w-3" />
+                      <Icon v-else class="h-3 w-3" name="ArrowUpDown" />
                     </div>
                   </th>
                   <th
@@ -338,11 +338,11 @@
                     <div class="flex items-center gap-1">
                       请求数
                       <Icon
-                        v-if="apiKeysSortBy === \'periodRequests\'"
-                        :name="apiKeysSortOrder === \'asc\' ? \'ChevronUp\' : \'ChevronDown\'"
+                        v-if="apiKeysSortBy === 'periodRequests'"
                         class="h-3 w-3"
+                        :name="apiKeysSortOrder === 'asc' ? 'ChevronUp' : 'ChevronDown'"
                       />
-                      <Icon name="ArrowUpDown" v-else class="h-3 w-3" />
+                      <Icon v-else class="h-3 w-3" name="ArrowUpDown" />
                     </div>
                   </th>
                   <th
@@ -352,11 +352,11 @@
                     <div class="flex items-center gap-1">
                       最后使用
                       <Icon
-                        v-if="apiKeysSortBy === \'lastUsedAt\'"
-                        :name="apiKeysSortOrder === \'asc\' ? \'ChevronUp\' : \'ChevronDown\'"
+                        v-if="apiKeysSortBy === 'lastUsedAt'"
                         class="h-3 w-3"
+                        :name="apiKeysSortOrder === 'asc' ? 'ChevronUp' : 'ChevronDown'"
                       />
-                      <Icon name="ArrowUpDown" v-else class="h-3 w-3" />
+                      <Icon v-else class="h-3 w-3" name="ArrowUpDown" />
                     </div>
                   </th>
                   <th
@@ -366,11 +366,11 @@
                     <div class="flex items-center gap-1">
                       创建时间
                       <Icon
-                        v-if="apiKeysSortBy === \'createdAt\'"
-                        :name="apiKeysSortOrder === \'asc\' ? \'ChevronUp\' : \'ChevronDown\'"
+                        v-if="apiKeysSortBy === 'createdAt'"
                         class="h-3 w-3"
+                        :name="apiKeysSortOrder === 'asc' ? 'ChevronUp' : 'ChevronDown'"
                       />
-                      <Icon name="ArrowUpDown" v-else class="h-3 w-3" />
+                      <Icon v-else class="h-3 w-3" name="ArrowUpDown" />
                     </div>
                   </th>
                   <th
@@ -380,11 +380,11 @@
                     <div class="flex items-center gap-1">
                       过期时间
                       <Icon
-                        v-if="apiKeysSortBy === \'expiresAt\'"
-                        :name="apiKeysSortOrder === \'asc\' ? \'ChevronUp\' : \'ChevronDown\'"
+                        v-if="apiKeysSortBy === 'expiresAt'"
                         class="h-3 w-3"
+                        :name="apiKeysSortOrder === 'asc' ? 'ChevronUp' : 'ChevronDown'"
                       />
-                      <Icon name="ArrowUpDown" v-else class="h-3 w-3" />
+                      <Icon v-else class="h-3 w-3" name="ArrowUpDown" />
                     </div>
                   </th>
                   <th
@@ -397,7 +397,7 @@
               <tbody
                 class="divide-y divide-gray-200 bg-white dark:divide-gray-700 dark:bg-gray-900"
               >
-                <template v-for="(key, index) in paginatedApiKeys" :key="key.id">
+                <template v-for="key in paginatedApiKeys" :key="key.id">
                   <!-- API Key 主行 -->
                   <tr class="transition-colors hover:bg-gray-50 dark:hover:bg-gray-800/50">
                     <td v-if="shouldShowCheckboxes" class="whitespace-nowrap px-4 py-3">
@@ -422,7 +422,7 @@
                           v-if="isLdapEnabled && key.ownerDisplayName"
                           class="flex items-center gap-1 text-xs text-gray-500 dark:text-gray-400"
                         >
-                          <Icon name="User" class="h-3 w-3" />
+                          <Icon class="h-3 w-3" name="User" />
                           {{ key.ownerDisplayName }}
                         </div>
                       </div>
@@ -438,7 +438,7 @@
                           <span
                             class="flex items-center gap-1 font-medium text-purple-600 dark:text-purple-400"
                           >
-                            <Icon name="Brain" class="h-3.5 w-3.5" />
+                            <Icon class="h-3.5 w-3.5" name="Brain" />
                             Claude
                           </span>
                           <span class="text-gray-600 dark:text-gray-400">
@@ -450,7 +450,7 @@
                           <span
                             class="flex items-center gap-1 font-medium text-blue-600 dark:text-blue-400"
                           >
-                            <Icon name="Bot" class="h-3.5 w-3.5" />
+                            <Icon class="h-3.5 w-3.5" name="Bot" />
                             Gemini
                           </span>
                           <span class="text-gray-600 dark:text-gray-400">
@@ -462,7 +462,7 @@
                           <span
                             class="flex items-center gap-1 font-medium text-green-600 dark:text-green-400"
                           >
-                            <Icon name="Bot" class="h-3 w-3" />
+                            <Icon class="h-3 w-3" name="Bot" />
                             OpenAI
                           </span>
                           <span class="text-gray-600 dark:text-gray-400">
@@ -474,7 +474,7 @@
                           <span
                             class="flex items-center gap-1 font-medium text-orange-600 dark:text-orange-400"
                           >
-                            <Icon name="Cloud" class="h-3.5 w-3.5" />
+                            <Icon class="h-3.5 w-3.5" name="Cloud" />
                             Bedrock
                           </span>
                           <span class="text-gray-600 dark:text-gray-400">
@@ -486,7 +486,7 @@
                           <span
                             class="flex items-center gap-1 font-medium text-cyan-600 dark:text-cyan-400"
                           >
-                            <Icon name="Bot" class="h-3.5 w-3.5" />
+                            <Icon class="h-3.5 w-3.5" name="Bot" />
                             Droid
                           </span>
                           <span class="text-gray-600 dark:text-gray-400">
@@ -505,7 +505,7 @@
                           "
                           class="flex items-center gap-1 text-gray-600 dark:text-gray-400"
                         >
-                          <Icon name="Share2" class="h-3.5 w-3.5" />
+                          <Icon class="h-3.5 w-3.5" name="Share2" />
                           共享池
                         </div>
                       </div>
@@ -597,7 +597,7 @@
                             class="flex items-center justify-between text-xs text-gray-600 dark:text-gray-400"
                           >
                             <div class="flex items-center gap-1">
-                              <Icon name="Clock" class="h-3 w-3" />
+                              <Icon class="h-3 w-3" name="Clock" />
                               <span>{{ key.rateLimitWindow }}分钟窗口</span>
                             </div>
                             <span class="font-medium">
@@ -615,7 +615,7 @@
                           v-else
                           class="flex items-center gap-1 text-sm text-gray-500 dark:text-gray-400"
                         >
-                          <Icon name="Infinity" class="h-4 w-4" />
+                          <Icon class="h-4 w-4" name="Infinity" />
                           <span>无限制</span>
                         </div>
                       </div>
@@ -677,7 +677,7 @@
                           v-if="key.expirationMode === 'activation' && !key.isActivated"
                           class="inline-flex items-center gap-1 text-gray-600 dark:text-gray-400"
                         >
-                          <Icon name="PauseCircle" class="h-4 w-4" />
+                          <Icon class="h-4 w-4" name="PauseCircle" />
                           未激活 (
                           {{ key.activationDays || (key.activationUnit === 'hours' ? 24 : 30)
                           }}{{ key.activationUnit === 'hours' ? '小时' : '天' }})
@@ -689,7 +689,7 @@
                             class="inline-flex cursor-pointer items-center gap-1 text-red-600 dark:text-red-400"
                             @click.stop="startEditExpiry(key)"
                           >
-                            <Icon name="AlertCircle" class="h-4 w-4" />
+                            <Icon class="h-4 w-4" name="AlertCircle" />
                             已过期
                           </span>
                           <span
@@ -697,7 +697,7 @@
                             class="inline-flex cursor-pointer items-center gap-1 text-orange-600 dark:text-orange-400"
                             @click.stop="startEditExpiry(key)"
                           >
-                            <Icon name="Clock" class="h-4 w-4" />
+                            <Icon class="h-4 w-4" name="Clock" />
                             {{ formatExpireDate(key.expiresAt) }}
                           </span>
                           <span
@@ -714,7 +714,7 @@
                           class="inline-flex cursor-pointer items-center gap-1 text-gray-600 dark:text-gray-400"
                           @click.stop="startEditExpiry(key)"
                         >
-                          <Icon name="Infinity" class="h-4 w-4" />
+                          <Icon class="h-4 w-4" name="Infinity" />
                           永不过期
                         </span>
                       </div>
@@ -727,7 +727,7 @@
                           title="查看详细统计"
                           @click="showUsageDetails(key)"
                         >
-                          <Icon name="LineChart" class="h-3.5 w-3.5" />
+                          <Icon class="h-3.5 w-3.5" name="LineChart" />
                           <span>详情</span>
                         </button>
                         <button
@@ -736,7 +736,7 @@
                           title="模型使用分布"
                           @click="toggleApiKeyModelStats(key.id)"
                         >
-                          <Icon name="PieChart" class="h-3.5 w-3.5" />
+                          <Icon class="h-3.5 w-3.5" name="PieChart" />
                           <span>模型</span>
                         </button>
                         <button
@@ -744,7 +744,7 @@
                           title="编辑"
                           @click="openEditApiKeyModal(key)"
                         >
-                          <Icon name="Edit" class="h-3.5 w-3.5" />
+                          <Icon class="h-3.5 w-3.5" name="Edit" />
                           <span>编辑</span>
                         </button>
                         <button
@@ -756,7 +756,7 @@
                           title="续期"
                           @click="openRenewApiKeyModal(key)"
                         >
-                          <Icon name="Clock" class="h-3.5 w-3.5" />
+                          <Icon class="h-3.5 w-3.5" name="Clock" />
                           <span>续期</span>
                         </button>
                         <button
@@ -769,7 +769,7 @@
                           :title="key.isActive ? '禁用' : '激活'"
                           @click="toggleApiKeyStatus(key)"
                         >
-                          <Icon :name="key.isActive ? 'Ban' : 'CheckCircle'" class="h-3.5 w-3.5" />
+                          <Icon class="h-3.5 w-3.5" :name="key.isActive ? 'Ban' : 'CheckCircle'" />
                           <span>{{ key.isActive ? '禁用' : '激活' }}</span>
                         </button>
                         <button
@@ -777,7 +777,7 @@
                           title="删除"
                           @click="deleteApiKey(key.id)"
                         >
-                          <Icon name="Trash" class="h-3.5 w-3.5" />
+                          <Icon class="h-3.5 w-3.5" name="Trash" />
                           <span>删除</span>
                         </button>
                       </div>
@@ -808,8 +808,8 @@
                             class="flex items-center gap-2 text-sm font-semibold text-gray-900 dark:text-white"
                           >
                             <Icon
-                              name="PieChart"
                               class="h-4 w-4 text-purple-600 dark:text-purple-400"
+                              name="PieChart"
                             />
                             模型使用分布
                           </h5>
@@ -875,8 +875,8 @@
                             class="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800"
                           >
                             <Icon
-                              name="LineChart"
                               class="h-6 w-6 text-gray-400 dark:text-gray-500"
+                              name="LineChart"
                             />
                           </div>
                           <p class="mb-2 text-base font-medium text-gray-900 dark:text-white">
@@ -890,7 +890,7 @@
                             title="重置筛选条件并刷新"
                             @click="resetApiKeyDateFilter(key.id)"
                           >
-                            <Icon name="RefreshCcw" class="h-4 w-4" />
+                            <Icon class="h-4 w-4" name="RefreshCcw" />
                             <span>刷新</span>
                           </button>
                         </div>
@@ -923,8 +923,8 @@
                               <div class="grid grid-cols-2 gap-3 text-sm">
                                 <div class="flex items-center gap-1.5">
                                   <Icon
-                                    name="Coins"
                                     class="h-4 w-4 text-yellow-600 dark:text-yellow-400"
+                                    name="Coins"
                                   />
                                   <span class="text-gray-600 dark:text-gray-400">总Token:</span>
                                   <span class="font-medium text-gray-900 dark:text-white">
@@ -933,8 +933,8 @@
                                 </div>
                                 <div class="flex items-center gap-1.5">
                                   <Icon
-                                    name="DollarSign"
                                     class="h-4 w-4 text-green-600 dark:text-green-400"
+                                    name="DollarSign"
                                   />
                                   <span class="text-gray-600 dark:text-gray-400">费用:</span>
                                   <span class="font-medium text-gray-900 dark:text-white">
@@ -947,8 +947,8 @@
                               <div class="grid grid-cols-2 gap-2 text-xs">
                                 <div class="flex items-center gap-1">
                                   <Icon
-                                    name="ArrowDown"
                                     class="h-3 w-3 text-blue-600 dark:text-blue-400"
+                                    name="ArrowDown"
                                   />
                                   <span class="text-gray-600 dark:text-gray-400">输入:</span>
                                   <span class="text-gray-900 dark:text-white">
@@ -957,8 +957,8 @@
                                 </div>
                                 <div class="flex items-center gap-1">
                                   <Icon
-                                    name="ArrowUp"
                                     class="h-3 w-3 text-purple-600 dark:text-purple-400"
+                                    name="ArrowUp"
                                   />
                                   <span class="text-gray-600 dark:text-gray-400">输出:</span>
                                   <span class="text-gray-900 dark:text-white">
@@ -970,8 +970,8 @@
                                   class="flex items-center gap-1"
                                 >
                                   <Icon
-                                    name="Save"
                                     class="h-3 w-3 text-orange-600 dark:text-orange-400"
+                                    name="Save"
                                   />
                                   <span class="text-gray-600 dark:text-gray-400">缓存创建:</span>
                                   <span class="text-gray-900 dark:text-white">
@@ -983,8 +983,8 @@
                                   class="flex items-center gap-1"
                                 >
                                   <Icon
-                                    name="Download"
                                     class="h-3 w-3 text-cyan-600 dark:text-cyan-400"
+                                    name="Download"
                                   />
                                   <span class="text-gray-600 dark:text-gray-400">缓存读取:</span>
                                   <span class="text-gray-900 dark:text-white">
@@ -1029,7 +1029,7 @@
                             <span
                               class="flex items-center gap-2 text-sm font-semibold text-primary-900 dark:text-primary-100"
                             >
-                              <Icon name="Calculator" class="h-4 w-4" />
+                              <Icon class="h-4 w-4" name="Calculator" />
                               总计统计
                             </span>
                             <div class="flex flex-wrap gap-4 text-sm">
@@ -1364,7 +1364,7 @@
               :disabled="currentPage === 1"
               @click="currentPage--"
             >
-              <Icon name="ChevronLeft" class="h-4 w-4" />
+              <Icon class="h-4 w-4" name="ChevronLeft" />
             </button>
 
             <!-- 页码 -->
@@ -1425,7 +1425,7 @@
               :disabled="currentPage === totalPages || totalPages === 0"
               @click="currentPage++"
             >
-              <Icon name="ChevronRight" class="h-4 w-4" />
+              <Icon class="h-4 w-4" name="ChevronRight" />
             </button>
           </div>
         </div>
@@ -1449,7 +1449,7 @@
           <div
             class="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800"
           >
-            <Icon name="Trash" class="h-8 w-8 text-gray-400 dark:text-gray-500" />
+            <Icon class="h-8 w-8 text-gray-400 dark:text-gray-500" name="Trash" />
           </div>
           <p class="mb-2 text-base font-medium text-gray-900 dark:text-white">
             暂无已删除的 API Keys
@@ -1466,7 +1466,7 @@
               class="inline-flex items-center gap-2 rounded-lg border border-red-300 bg-red-50 px-3 py-2 text-sm font-medium text-red-700 shadow-sm transition-colors hover:bg-red-100 dark:border-red-700 dark:bg-red-900/30 dark:text-red-300 dark:hover:bg-red-900/50"
               @click="clearAllDeletedApiKeys"
             >
-              <Icon name="Trash2" class="h-4 w-4" />
+              <Icon class="h-4 w-4" name="Trash2" />
               清空所有已删除 ({{ deletedApiKeys.length }})
             </button>
           </div>
@@ -1622,7 +1622,7 @@
                           title="恢复 API Key"
                           @click="restoreApiKey(key.id)"
                         >
-                          <Icon name="RotateCcw" class="h-3.5 w-3.5" />
+                          <Icon class="h-3.5 w-3.5" name="RotateCcw" />
                           恢复
                         </button>
                         <button
@@ -1630,7 +1630,7 @@
                           title="彻底删除 API Key"
                           @click="permanentDeleteApiKey(key.id)"
                         >
-                          <Icon name="X" class="h-3.5 w-3.5" />
+                          <Icon class="h-3.5 w-3.5" name="X" />
                           彻底删除
                         </button>
                       </div>
