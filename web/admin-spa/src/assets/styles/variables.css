@@ -1,1 +1,35 @@
-/* CSS variables removed - using Tailwind classes instead */
+/* 主色系统 - 统一管理所有颜色 */
+@layer base {
+  :root {
+    /* 主色 (Primary) - 橙红色 #d97757 */
+    --color-primary-50: 254 244 242;
+    --color-primary-100: 253 230 224;
+    --color-primary-200: 252 207 195;
+    --color-primary-300: 249 171 149;
+    --color-primary-400: 240 138 110;
+    --color-primary-500: 217 119 87;
+    --color-primary-600: 204 95 61;
+    --color-primary-700: 168 78 50;
+    --color-primary-800: 139 64 41;
+    --color-primary-900: 114 53 34;
+    --color-primary-950: 65 29 17;
+
+    /* 辅助色 (Secondary) */
+    --color-secondary-50: 248 250 252;
+    --color-secondary-100: 241 245 249;
+    --color-secondary-200: 226 232 240;
+    --color-secondary-300: 203 213 225;
+    --color-secondary-400: 148 163 184;
+    --color-secondary-500: 100 116 139;
+    --color-secondary-600: 71 85 105;
+    --color-secondary-700: 51 65 85;
+    --color-secondary-800: 30 41 59;
+    --color-secondary-900: 15 23 42;
+    --color-secondary-950: 2 6 23;
+
+    /* 暗黑模式背景色 */
+    --color-dark-bg: 15 23 42;
+    --color-dark-surface: 30 41 59;
+    --color-dark-border: 51 65 85;
+  }
+}
