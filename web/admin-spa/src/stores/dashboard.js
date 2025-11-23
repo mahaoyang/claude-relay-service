@@ -52,23 +52,15 @@ export const useDashboardStore = defineStore('dashboard', () => {
   })
 
   const modelStats = ref([])
-  const trendData = ref({
-    labels: [],
-    inputTokens: [],
-    outputTokens: [],
-    cacheCreateTokens: [],
-    cacheReadTokens: []
-  })
+  const trendData = ref([])
   const dashboardModelStats = ref([])
   const apiKeysTrendData = ref({
-    labels: [],
-    datasets: [],
+    data: [],
     topApiKeys: [],
     totalApiKeys: 0
   })
   const accountUsageTrendData = ref({
-    labels: [],
-    datasets: [],
+    data: [],
     topAccounts: [],
     totalAccounts: 0,
     group: 'claude',
@@ -509,8 +501,7 @@ export const useDashboardStore = defineStore('dashboard', () => {
       const response = await apiClient.get(url)
       if (response.success) {
         apiKeysTrendData.value = {
-          labels: response.data?.labels || [],
-          datasets: response.data?.datasets || [],
+          data: response.data || [],
           topApiKeys: response.topApiKeys || [],
           totalApiKeys: response.totalApiKeys || 0
         }
@@ -599,8 +590,7 @@ export const useDashboardStore = defineStore('dashboard', () => {
       const response = await apiClient.get(url)
       if (response.success) {
         accountUsageTrendData.value = {
-          labels: response.data?.labels || [],
-          datasets: response.data?.datasets || [],
+          data: response.data || [],
           topAccounts: response.topAccounts || [],
           totalAccounts: response.totalAccounts || 0,
           group: response.group || group,

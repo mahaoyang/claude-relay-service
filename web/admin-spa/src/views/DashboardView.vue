@@ -1156,18 +1156,11 @@ onMounted(async () => {
   // 初始化主题
   themeStore.initTheme()
 
-  // 设置默认时间范围（7天）
-  setDateFilterPreset('7days')
-
-  // 加载基础数据
-  await loadDashboardData()
-
-  // 加载所有图表数据（使用默认时间范围）
-  await refreshChartsData()
-
-  await nextTick()
+  // 加载所有数据
+  await refreshAllData()
 
   // 创建图表
+  await nextTick()
   createModelUsageChart()
   createUsageTrendChart()
   createApiKeysUsageTrendChart()
