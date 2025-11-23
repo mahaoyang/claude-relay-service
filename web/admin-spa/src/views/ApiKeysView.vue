@@ -1546,154 +1546,259 @@
             </button>
           </div>
 
-          <div>
-            <div>
-              <table>
-                <thead>
+          <div
+            class="overflow-hidden rounded-lg border border-gray-200 shadow-sm dark:border-gray-700"
+          >
+            <div class="overflow-x-auto">
+              <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                <thead class="bg-gray-50 dark:bg-gray-800">
                   <tr>
-                    <th>名称</th>
-                    <th>所属账号</th>
-                    <th v-if="isLdapEnabled">创建者</th>
-                    <th>创建时间</th>
-                    <th>删除者</th>
-                    <th>删除时间</th>
-                    <th>费用</th>
-                    <th>Token</th>
-                    <th>请求数</th>
-                    <th>最后使用</th>
-                    <th>操作</th>
+                    <th
+                      class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400"
+                    >
+                      名称
+                    </th>
+                    <th
+                      class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400"
+                    >
+                      所属账号
+                    </th>
+                    <th
+                      v-if="isLdapEnabled"
+                      class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400"
+                    >
+                      创建者
+                    </th>
+                    <th
+                      class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400"
+                    >
+                      创建时间
+                    </th>
+                    <th
+                      class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400"
+                    >
+                      删除者
+                    </th>
+                    <th
+                      class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400"
+                    >
+                      删除时间
+                    </th>
+                    <th
+                      class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400"
+                    >
+                      费用
+                    </th>
+                    <th
+                      class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400"
+                    >
+                      Token
+                    </th>
+                    <th
+                      class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400"
+                    >
+                      请求数
+                    </th>
+                    <th
+                      class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400"
+                    >
+                      最后使用
+                    </th>
+                    <th
+                      class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400"
+                    >
+                      操作
+                    </th>
                   </tr>
                 </thead>
-                <tbody>
-                  <tr v-for="key in deletedApiKeys" :key="key.id">
-                    <td>
-                      <div>
-                        <div>
-                          <Icon name="Trash" />
+                <tbody
+                  class="divide-y divide-gray-200 bg-white dark:divide-gray-700 dark:bg-gray-900"
+                >
+                  <tr
+                    v-for="key in deletedApiKeys"
+                    :key="key.id"
+                    class="transition-colors hover:bg-gray-50 dark:hover:bg-gray-800"
+                  >
+                    <td class="px-4 py-3">
+                      <div class="flex items-center gap-2">
+                        <div
+                          class="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-gray-100 dark:bg-gray-800"
+                        >
+                          <Icon class="h-4 w-4 text-gray-500 dark:text-gray-400" name="Trash" />
                         </div>
-                        <div>
-                          <div :title="key.name">
+                        <div class="min-w-0">
+                          <div
+                            class="truncate text-sm font-medium text-gray-900 dark:text-white"
+                            :title="key.name"
+                          >
                             {{ key.name }}
                           </div>
                         </div>
                       </div>
                     </td>
                     <!-- 所属账号 -->
-                    <td>
-                      <div>
+                    <td class="px-4 py-3">
+                      <div class="flex flex-col gap-1 text-sm">
                         <!-- Claude OAuth 绑定 -->
-                        <div v-if="key.claudeAccountId">
-                          <span>
-                            <Icon name="Bot" />
+                        <div v-if="key.claudeAccountId" class="flex items-center gap-1">
+                          <span
+                            class="flex items-center gap-1 font-medium text-purple-600 dark:text-purple-400"
+                          >
+                            <Icon class="h-3.5 w-3.5" name="Bot" />
                             Claude OAuth
                           </span>
                         </div>
                         <!-- Claude Console 绑定 -->
-                        <div v-else-if="key.claudeConsoleAccountId">
-                          <span>
-                            <Icon name="Terminal" />
+                        <div v-else-if="key.claudeConsoleAccountId" class="flex items-center gap-1">
+                          <span
+                            class="flex items-center gap-1 font-medium text-purple-600 dark:text-purple-400"
+                          >
+                            <Icon class="h-3.5 w-3.5" name="Terminal" />
                             Claude Console
                           </span>
                         </div>
                         <!-- Gemini 绑定 -->
-                        <div v-else-if="key.geminiAccountId">
-                          <span>
-                            <i />
+                        <div v-else-if="key.geminiAccountId" class="flex items-center gap-1">
+                          <span
+                            class="flex items-center gap-1 font-medium text-blue-600 dark:text-blue-400"
+                          >
+                            <Icon class="h-3.5 w-3.5" name="Bot" />
                             Gemini
                           </span>
                         </div>
                         <!-- 共享池 -->
-                        <div v-else>
-                          <Icon name="Share2" />
+                        <div
+                          v-else
+                          class="flex items-center gap-1 text-gray-600 dark:text-gray-400"
+                        >
+                          <Icon class="h-3.5 w-3.5" name="Share2" />
                           共享池
                         </div>
                       </div>
                     </td>
                     <!-- 创建者 -->
-                    <td v-if="isLdapEnabled">
-                      <div>
-                        <span v-if="key.createdBy === 'admin'">
-                          <Icon name="ShieldCheck" />
+                    <td v-if="isLdapEnabled" class="px-4 py-3">
+                      <div class="flex items-center gap-1 text-sm">
+                        <span
+                          v-if="key.createdBy === 'admin'"
+                          class="flex items-center gap-1 text-gray-900 dark:text-white"
+                        >
+                          <Icon
+                            class="h-3.5 w-3.5 text-primary-600 dark:text-primary-400"
+                            name="ShieldCheck"
+                          />
                           管理员
                         </span>
-                        <span v-else-if="key.userUsername">
-                          <Icon name="User" />
+                        <span
+                          v-else-if="key.userUsername"
+                          class="flex items-center gap-1 text-gray-900 dark:text-white"
+                        >
+                          <Icon class="h-3.5 w-3.5 text-gray-500 dark:text-gray-400" name="User" />
                           {{ key.userUsername }}
                         </span>
-                        <span v-else>
-                          <Icon name="HelpCircle" />
+                        <span
+                          v-else
+                          class="flex items-center gap-1 text-gray-500 dark:text-gray-400"
+                        >
+                          <Icon class="h-3.5 w-3.5" name="HelpCircle" />
                           未知
                         </span>
                       </div>
                     </td>
                     <!-- 创建时间 -->
-                    <td>
+                    <td
+                      class="whitespace-nowrap px-4 py-3 text-sm text-gray-600 dark:text-gray-400"
+                    >
                       {{ formatDate(key.createdAt) }}
                     </td>
                     <!-- 删除者 -->
-                    <td>
-                      <div>
-                        <span v-if="key.deletedByType === 'admin'">
-                          <Icon name="ShieldCheck" />
+                    <td class="px-4 py-3">
+                      <div class="flex items-center gap-1 text-sm">
+                        <span
+                          v-if="key.deletedByType === 'admin'"
+                          class="flex items-center gap-1 text-gray-900 dark:text-white"
+                        >
+                          <Icon
+                            class="h-3.5 w-3.5 text-primary-600 dark:text-primary-400"
+                            name="ShieldCheck"
+                          />
                           {{ key.deletedBy }}
                         </span>
-                        <span v-else-if="key.deletedByType === 'user'">
-                          <Icon name="User" />
+                        <span
+                          v-else-if="key.deletedByType === 'user'"
+                          class="flex items-center gap-1 text-gray-900 dark:text-white"
+                        >
+                          <Icon class="h-3.5 w-3.5 text-gray-500 dark:text-gray-400" name="User" />
                           {{ key.deletedBy }}
                         </span>
-                        <span v-else>
-                          <Icon name="Settings" />
+                        <span v-else class="flex items-center gap-1 text-gray-900 dark:text-white">
+                          <Icon
+                            class="h-3.5 w-3.5 text-gray-500 dark:text-gray-400"
+                            name="Settings"
+                          />
                           {{ key.deletedBy }}
                         </span>
                       </div>
                     </td>
                     <!-- 删除时间 -->
-                    <td>
+                    <td
+                      class="whitespace-nowrap px-4 py-3 text-sm text-gray-600 dark:text-gray-400"
+                    >
                       {{ formatDate(key.deletedAt) }}
                     </td>
                     <!-- 费用 -->
-                    <td>
-                      <span> ${{ (key.usage?.total?.cost || 0).toFixed(2) }} </span>
+                    <td class="px-4 py-3">
+                      <span class="text-sm font-medium text-gray-900 dark:text-white">
+                        ${{ (key.usage?.total?.cost || 0).toFixed(2) }}
+                      </span>
                     </td>
                     <!-- Token -->
-                    <td>
-                      <span>
+                    <td class="px-4 py-3">
+                      <span class="text-sm text-gray-900 dark:text-white">
                         {{ formatTokenCount(key.usage?.total?.tokens || 0) }}
                       </span>
                     </td>
                     <!-- 请求数 -->
-                    <td>
-                      <div>
-                        <span>
+                    <td class="px-4 py-3">
+                      <div class="flex items-baseline gap-1 text-sm">
+                        <span class="font-medium text-gray-900 dark:text-white">
                           {{ formatNumber(key.usage?.total?.requests || 0) }}
                         </span>
-                        <span>次</span>
+                        <span class="text-gray-500 dark:text-gray-400">次</span>
                       </div>
                     </td>
                     <!-- 最后使用 -->
-                    <td>
-                      <div>
+                    <td class="px-4 py-3">
+                      <div class="flex flex-col gap-0.5 text-sm">
                         <span
                           v-if="key.lastUsedAt"
+                          class="text-gray-900 dark:text-white"
                           :title="new Date(key.lastUsedAt).toLocaleString('zh-CN')"
                         >
                           {{ formatLastUsed(key.lastUsedAt) }}
                         </span>
-                        <span v-else>从未使用</span>
-                        <span v-if="hasLastUsageAccount(key)" :title="getLastUsageFullName(key)">
+                        <span v-else class="text-gray-500 dark:text-gray-400">从未使用</span>
+                        <span
+                          v-if="hasLastUsageAccount(key)"
+                          class="text-xs text-gray-500 dark:text-gray-400"
+                          :title="getLastUsageFullName(key)"
+                        >
                           {{ getLastUsageDisplayName(key) }}
                           <span v-if="!isLastUsageDeleted(key)">
                             ({{ getLastUsageTypeLabel(key) }})
                           </span>
                         </span>
-                        <span v-else> 暂无使用账号 </span>
+                        <span v-else class="text-xs text-gray-500 dark:text-gray-400">
+                          暂无使用账号
+                        </span>
                       </div>
                     </td>
-                    <td>
-                      <div class="flex flex-wrap gap-1">
+                    <!-- 操作 -->
+                    <td class="px-4 py-3">
+                      <div class="flex flex-wrap gap-1.5">
                         <button
                           v-if="key.canRestore"
-                          class="inline-flex items-center gap-1 rounded px-2 py-1 text-xs font-medium text-green-600 transition-colors hover:bg-green-50 dark:text-green-400 dark:hover:bg-green-900/30"
+                          class="inline-flex items-center gap-1 rounded-md px-2.5 py-1.5 text-xs font-medium text-green-600 transition-colors hover:bg-green-50 dark:text-green-400 dark:hover:bg-green-900/30"
                           title="恢复 API Key"
                           @click="restoreApiKey(key.id)"
                         >
@@ -1701,7 +1806,7 @@
                           恢复
                         </button>
                         <button
-                          class="inline-flex items-center gap-1 rounded px-2 py-1 text-xs font-medium text-red-600 transition-colors hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-900/30"
+                          class="inline-flex items-center gap-1 rounded-md px-2.5 py-1.5 text-xs font-medium text-red-600 transition-colors hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-900/30"
                           title="彻底删除 API Key"
                           @click="permanentDeleteApiKey(key.id)"
                         >
