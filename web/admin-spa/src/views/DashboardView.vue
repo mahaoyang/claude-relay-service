@@ -873,44 +873,96 @@ function createUsageTrendChart() {
     usageTrendChartInstance.destroy()
   }
 
-  const data = trendData.value
-  if (!data || !data.labels || data.labels.length === 0) return
+  const data = trendData.value || []
+
+  // 准备多维度数据
+  const inputData = data.map((d) => d.inputTokens || 0)
+  const outputData = data.map((d) => d.outputTokens || 0)
+  const cacheCreateData = data.map((d) => d.cacheCreateTokens || 0)
+  const cacheReadData = data.map((d) => d.cacheReadTokens || 0)
+  const requestsData = data.map((d) => d.requests || 0)
+  const costData = data.map((d) => d.cost || 0)
+
+  // 根据数据类型确定标签字段和格式
+  const labelField = data[0]?.date ? 'date' : 'hour'
+  const labels = data.map((d) => {
+    // 优先使用后端提供的label字段
+    if (d.label) {
+      return d.label
+    }
+
+    if (labelField === 'hour') {
+      // 格式化小时显示
+      const date = new Date(d.hour)
+      const month = String(date.getMonth() + 1).padStart(2, '0')
+      const day = String(date.getDate()).padStart(2, '0')
+      const hour = String(date.getHours()).padStart(2, '0')
+      return `${month}/${day} ${hour}:00`
+    }
+    // 按天显示时，只显示月/日，不显示年份
+    const dateStr = d.date
+    if (dateStr && dateStr.includes('-')) {
+      const parts = dateStr.split('-')
+      if (parts.length >= 3) {
+        return `${parts[1]}/${parts[2]}`
+      }
+    }
+    return d.date
+  })
+
+  const chartData = {
+    labels: labels,
+    datasets: [
+      {
+        label: '输入Token',
+        data: inputData,
+        borderColor: 'rgb(102, 126, 234)',
+        backgroundColor: 'rgba(102, 126, 234, 0.1)',
+        tension: 0.3
+      },
+      {
+        label: '输出Token',
+        data: outputData,
+        borderColor: 'rgb(240, 147, 251)',
+        backgroundColor: 'rgba(240, 147, 251, 0.1)',
+        tension: 0.3
+      },
+      {
+        label: '缓存创建Token',
+        data: cacheCreateData,
+        borderColor: 'rgb(59, 130, 246)',
+        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+        tension: 0.3
+      },
+      {
+        label: '缓存读取Token',
+        data: cacheReadData,
+        borderColor: 'rgb(147, 51, 234)',
+        backgroundColor: 'rgba(147, 51, 234, 0.1)',
+        tension: 0.3
+      },
+      {
+        label: '费用 (USD)',
+        data: costData,
+        borderColor: 'rgb(34, 197, 94)',
+        backgroundColor: 'rgba(34, 197, 94, 0.1)',
+        tension: 0.3,
+        yAxisID: 'y2'
+      },
+      {
+        label: '请求数',
+        data: requestsData,
+        borderColor: 'rgb(16, 185, 129)',
+        backgroundColor: 'rgba(16, 185, 129, 0.1)',
+        tension: 0.3,
+        yAxisID: 'y1'
+      }
+    ]
+  }
 
   usageTrendChartInstance = new Chart(usageTrendChart.value, {
     type: 'line',
-    data: {
-      labels: data.labels,
-      datasets: [
-        {
-          label: '输入 Token',
-          data: data.inputTokens,
-          borderColor: trendLineColors[0],
-          backgroundColor: trendLineColors[0] + '20',
-          tension: 0.4
-        },
-        {
-          label: '输出 Token',
-          data: data.outputTokens,
-          borderColor: trendLineColors[1],
-          backgroundColor: trendLineColors[1] + '20',
-          tension: 0.4
-        },
-        {
-          label: '缓存创建',
-          data: data.cacheCreateTokens,
-          borderColor: trendLineColors[2],
-          backgroundColor: trendLineColors[2] + '20',
-          tension: 0.4
-        },
-        {
-          label: '缓存读取',
-          data: data.cacheReadTokens,
-          borderColor: trendLineColors[3],
-          backgroundColor: trendLineColors[3] + '20',
-          tension: 0.4
-        }
-      ]
-    },
+    data: chartData,
     options: {
       responsive: true,
       maintainAspectRatio: false,
@@ -919,31 +971,126 @@ function createUsageTrendChart() {
         intersect: false
       },
       plugins: {
+        title: {
+          display: true,
+          text: 'Token使用趋势',
+          font: {
+            size: 16,
+            weight: 'bold'
+          },
+          color: chartColors.value.text
+        },
         legend: {
           position: 'top',
           labels: {
-            usePointStyle: true,
-            padding: 15,
-            font: { size: 12 },
             color: chartColors.value.legend
           }
         },
-        title: {
-          display: true,
-          text: 'Token 使用趋势',
-          color: chartColors.value.text,
-          font: { size: 16, weight: 'bold' }
+        tooltip: {
+          mode: 'index',
+          intersect: false,
+          itemSort: function (a, b) {
+            // 按值倒序排列，费用和请求数特殊处理
+            const aLabel = a.dataset.label || ''
+            const bLabel = b.dataset.label || ''
+
+            // 费用和请求数使用不同的轴，单独处理
+            if (aLabel === '费用 (USD)' || bLabel === '费用 (USD)') {
+              return aLabel === '费用 (USD)' ? -1 : 1
+            }
+            if (aLabel === '请求数' || bLabel === '请求数') {
+              return aLabel === '请求数' ? 1 : -1
+            }
+
+            // 其他按token值倒序
+            return b.parsed.y - a.parsed.y
+          },
+          callbacks: {
+            label: function (context) {
+              const label = context.dataset.label || ''
+              let value = context.parsed.y
+
+              if (label === '费用 (USD)') {
+                // 格式化费用显示
+                if (value < 0.01) {
+                  return label + ': $' + value.toFixed(6)
+                } else {
+                  return label + ': $' + value.toFixed(4)
+                }
+              } else if (label === '请求数') {
+                return label + ': ' + value.toLocaleString() + ' 次'
+              } else {
+                // 格式化token数显示
+                if (value >= 1000000) {
+                  return label + ': ' + (value / 1000000).toFixed(2) + 'M tokens'
+                } else if (value >= 1000) {
+                  return label + ': ' + (value / 1000).toFixed(2) + 'K tokens'
+                } else {
+                  return label + ': ' + value.toLocaleString() + ' tokens'
+                }
+              }
+            }
+          }
         }
       },
       scales: {
-        y: {
-          beginAtZero: true,
-          ticks: { color: chartColors.value.text },
-          grid: { color: chartColors.value.grid }
-        },
         x: {
-          ticks: { color: chartColors.value.text },
-          grid: { color: chartColors.value.grid }
+          type: 'category',
+          display: true,
+          title: {
+            display: true,
+            text: trendGranularity.value === 'hour' ? '时间' : '日期',
+            color: chartColors.value.text
+          },
+          ticks: {
+            color: chartColors.value.text
+          },
+          grid: {
+            color: chartColors.value.grid
+          }
+        },
+        y: {
+          type: 'linear',
+          display: true,
+          position: 'left',
+          title: {
+            display: true,
+            text: 'Token数量',
+            color: chartColors.value.text
+          },
+          ticks: {
+            callback: function (value) {
+              return formatNumber(value)
+            },
+            color: chartColors.value.text
+          },
+          grid: {
+            color: chartColors.value.grid
+          }
+        },
+        y1: {
+          type: 'linear',
+          display: true,
+          position: 'right',
+          title: {
+            display: true,
+            text: '请求数',
+            color: chartColors.value.text
+          },
+          grid: {
+            drawOnChartArea: false
+          },
+          ticks: {
+            callback: function (value) {
+              return value.toLocaleString()
+            },
+            color: chartColors.value.text
+          }
+        },
+        y2: {
+          type: 'linear',
+          display: false, // 隐藏费用轴，在tooltip中显示
+          position: 'right'
         }
       }
     }
