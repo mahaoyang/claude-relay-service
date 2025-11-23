@@ -3,10 +3,10 @@
     <template #header>
       <div class="flex items-center justify-between">
         <div>
-          <h1 class="text-2xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-3xl">
+          <h1 class="text-lg font-bold tracking-tight text-gray-900 dark:text-white">
             系统控制台
           </h1>
-          <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">实时监控系统状态和使用情况</p>
+          <p class="mt-1 text-[10px] text-gray-600 dark:text-gray-400">实时监控系统状态和使用情况</p>
         </div>
         <div class="flex items-center gap-4">
           <!-- 主题切换按钮 -->
@@ -17,270 +17,9 @@
 
     <!-- 系统概览 - 整合卡片 -->
     <Card class="mb-8">
-      <!-- Section 1+3: 主要指标与实时监控 - 合并网格 -->
-      <div class="mb-4">
-        <h3
-          class="text-[10px] font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400"
-        >
-          主要指标与实时监控
-        </h3>
-      </div>
-      <div
-        class="grid grid-cols-1 gap-6 border-b border-gray-200 pb-6 dark:border-gray-700 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7"
-      >
-        <!-- 系统状态 -->
-        <div class="flex items-start gap-3">
-          <div
-            class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-primary-50 dark:bg-primary-900/20"
-            title="系统状态"
-          >
-            <BadgeCheck class="h-4 w-4 text-primary-600 dark:text-primary-400" />
-          </div>
-          <div class="min-w-0 flex-1">
-            <p class="text-[6px] uppercase tracking-wider text-gray-400 dark:text-gray-500">
-              系统状态
-            </p>
-            <p class="text-sm font-bold text-primary-600 dark:text-primary-400">
-              {{ dashboardData.systemStatus }}
-            </p>
-            <p class="mt-1 text-[10px] text-gray-600 dark:text-gray-400">
-              运行 <span class="font-semibold">{{ formattedUptime }}</span>
-            </p>
-          </div>
-        </div>
-
-        <!-- API Keys -->
-        <div class="flex items-start gap-3">
-          <div
-            class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-primary-50 dark:bg-primary-900/20"
-            title="API Keys"
-          >
-            <KeyRound class="h-4 w-4 text-primary-600 dark:text-primary-400" />
-          </div>
-          <div class="min-w-0 flex-1">
-            <p class="text-[6px] uppercase tracking-wider text-gray-400 dark:text-gray-500">
-              API KEYS
-            </p>
-            <p class="text-sm font-bold text-gray-900 dark:text-white">
-              {{ dashboardData.totalApiKeys }}
-            </p>
-            <p class="mt-1 text-[10px] text-gray-600 dark:text-gray-400">
-              活跃 <span class="font-semibold">{{ dashboardData.activeApiKeys || 0 }}</span>
-            </p>
-          </div>
-        </div>
-
-        <!-- 今日请求 -->
-        <div class="flex items-start gap-3">
-          <div
-            class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-primary-50 dark:bg-primary-900/20"
-            title="今日请求"
-          >
-            <BarChart3 class="h-4 w-4 text-primary-600 dark:text-primary-400" />
-          </div>
-          <div class="min-w-0 flex-1">
-            <p class="text-[6px] uppercase tracking-wider text-gray-400 dark:text-gray-500">
-              今日请求
-            </p>
-            <p class="text-sm font-bold text-gray-900 dark:text-white">
-              {{ formatNumber(dashboardData.todayRequests) }}
-            </p>
-            <p class="mt-1 text-[10px] text-gray-600 dark:text-gray-400">
-              总计
-              <span class="font-semibold text-primary-600 dark:text-primary-400">{{
-                formatNumber(dashboardData.totalRequests || 0)
-              }}</span>
-              次
-            </p>
-          </div>
-        </div>
-
-        <!-- 服务账户 -->
-        <div class="flex items-start gap-3">
-          <div
-            class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-primary-50 dark:bg-primary-900/20"
-            title="服务账户"
-          >
-            <Server class="h-4 w-4 text-primary-600 dark:text-primary-400" />
-          </div>
-          <div class="min-w-0 flex-1">
-            <p class="text-[6px] uppercase tracking-wider text-gray-400 dark:text-gray-500">
-              服务账户
-            </p>
-            <p class="text-sm font-bold text-gray-900 dark:text-white">
-              {{ dashboardData.totalAccounts }}
-            </p>
-            <div
-              class="mt-1 flex flex-wrap items-center gap-1 text-[10px] text-gray-600 dark:text-gray-400"
-            >
-              <span
-                >正常
-                <span class="font-semibold">{{ dashboardData.normalAccounts || 0 }}</span></span
-              >
-              <span v-if="dashboardData.abnormalAccounts > 0">·</span>
-              <span
-                v-if="dashboardData.abnormalAccounts > 0"
-                class="text-primary-600 dark:text-primary-400"
-              >
-                异常 <span class="font-semibold">{{ dashboardData.abnormalAccounts }}</span>
-              </span>
-              <span v-if="dashboardData.pausedAccounts > 0">·</span>
-              <span
-                v-if="dashboardData.pausedAccounts > 0"
-                class="text-primary-600 dark:text-primary-400"
-              >
-                停止 <span class="font-semibold">{{ dashboardData.pausedAccounts }}</span>
-              </span>
-            </div>
-          </div>
-        </div>
-
-        <!-- 实时 RPM -->
-        <div class="flex items-start gap-3">
-          <div
-            class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-primary-50 dark:bg-primary-900/20"
-            title="实时 RPM"
-          >
-            <Activity class="h-4 w-4 text-primary-600 dark:text-primary-400" />
-          </div>
-          <div class="min-w-0 flex-1">
-            <p class="text-[6px] uppercase tracking-wider text-gray-400 dark:text-gray-500">
-              实时 RPM
-            </p>
-            <p class="text-sm font-bold text-gray-900 dark:text-white">
-              {{ dashboardData.realtimeRPM || 0 }}
-            </p>
-            <p class="mt-1 text-[10px] text-gray-500 dark:text-gray-400">
-              {{ dashboardData.metricsWindow || 5 }} 分钟
-              <span
-                v-if="dashboardData.isHistoricalMetrics"
-                class="text-primary-600 dark:text-primary-400"
-              >
-                (历史)
-              </span>
-            </p>
-          </div>
-        </div>
-
-        <!-- 实时 TPM -->
-        <div class="flex items-start gap-3">
-          <div
-            class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-primary-50 dark:bg-primary-900/20"
-            title="实时 TPM"
-          >
-            <Gauge class="h-4 w-4 text-primary-600 dark:text-primary-400" />
-          </div>
-          <div class="min-w-0 flex-1">
-            <p class="text-[6px] uppercase tracking-wider text-gray-400 dark:text-gray-500">
-              实时 TPM
-            </p>
-            <p class="text-sm font-bold text-gray-900 dark:text-white">
-              {{ formatNumber(dashboardData.realtimeTPM || 0) }}
-            </p>
-            <p class="mt-1 text-[10px] text-gray-500 dark:text-gray-400">
-              {{ dashboardData.metricsWindow || 5 }} 分钟
-              <span
-                v-if="dashboardData.isHistoricalMetrics"
-                class="text-primary-600 dark:text-primary-400"
-              >
-                (历史)
-              </span>
-            </p>
-          </div>
-        </div>
-
-        <!-- 平台分布 -->
-        <div class="flex items-start gap-3">
-          <div
-            class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-primary-50 dark:bg-primary-900/20"
-            title="平台分布"
-          >
-            <Boxes class="h-4 w-4 text-primary-600 dark:text-primary-400" />
-          </div>
-          <div class="min-w-0 flex-1">
-            <p class="text-[6px] uppercase tracking-wider text-gray-400 dark:text-gray-500">
-              平台分布
-            </p>
-            <p class="text-sm font-bold text-gray-900 dark:text-white">{{ platformCount }}</p>
-            <div v-if="dashboardData.accountsByPlatform" class="mt-1 flex flex-wrap gap-[1px]">
-              <span
-                v-if="
-                  dashboardData.accountsByPlatform.claude &&
-                  dashboardData.accountsByPlatform.claude.total > 0
-                "
-                :title="`Claude: ${dashboardData.accountsByPlatform.claude.total} 个 (正常: ${dashboardData.accountsByPlatform.claude.normal})`"
-                class="rounded bg-primary-100 p-[2px] text-[8px] font-medium text-primary-700 dark:bg-primary-900/30 dark:text-primary-300"
-              >
-                Claude {{ dashboardData.accountsByPlatform.claude.total }}
-              </span>
-              <span
-                v-if="
-                  dashboardData.accountsByPlatform['claude-console'] &&
-                  dashboardData.accountsByPlatform['claude-console'].total > 0
-                "
-                :title="`Console: ${dashboardData.accountsByPlatform['claude-console'].total} 个 (正常: ${dashboardData.accountsByPlatform['claude-console'].normal})`"
-                class="rounded bg-primary-100 p-[2px] text-[8px] font-medium text-primary-700 dark:bg-primary-900/30 dark:text-primary-300"
-              >
-                Console {{ dashboardData.accountsByPlatform['claude-console'].total }}
-              </span>
-              <span
-                v-if="
-                  dashboardData.accountsByPlatform.gemini &&
-                  dashboardData.accountsByPlatform.gemini.total > 0
-                "
-                :title="`Gemini: ${dashboardData.accountsByPlatform.gemini.total} 个 (正常: ${dashboardData.accountsByPlatform.gemini.normal})`"
-                class="rounded bg-primary-100 p-[2px] text-[8px] font-medium text-primary-700 dark:bg-primary-900/30 dark:text-primary-300"
-              >
-                Gemini {{ dashboardData.accountsByPlatform.gemini.total }}
-              </span>
-              <span
-                v-if="
-                  dashboardData.accountsByPlatform.bedrock &&
-                  dashboardData.accountsByPlatform.bedrock.total > 0
-                "
-                :title="`Bedrock: ${dashboardData.accountsByPlatform.bedrock.total} 个 (正常: ${dashboardData.accountsByPlatform.bedrock.normal})`"
-                class="rounded bg-primary-100 p-[2px] text-[8px] font-medium text-primary-700 dark:bg-primary-900/30 dark:text-primary-300"
-              >
-                Bedrock {{ dashboardData.accountsByPlatform.bedrock.total }}
-              </span>
-              <span
-                v-if="
-                  dashboardData.accountsByPlatform.openai &&
-                  dashboardData.accountsByPlatform.openai.total > 0
-                "
-                :title="`OpenAI: ${dashboardData.accountsByPlatform.openai.total} 个 (正常: ${dashboardData.accountsByPlatform.openai.normal})`"
-                class="rounded bg-primary-100 p-[2px] text-[8px] font-medium text-primary-700 dark:bg-primary-900/30 dark:text-primary-300"
-              >
-                OpenAI {{ dashboardData.accountsByPlatform.openai.total }}
-              </span>
-              <span
-                v-if="
-                  dashboardData.accountsByPlatform.azure_openai &&
-                  dashboardData.accountsByPlatform.azure_openai.total > 0
-                "
-                :title="`Azure OpenAI: ${dashboardData.accountsByPlatform.azure_openai.total} 个 (正常: ${dashboardData.accountsByPlatform.azure_openai.normal})`"
-                class="rounded bg-primary-100 p-[2px] text-[8px] font-medium text-primary-700 dark:bg-primary-900/30 dark:text-primary-300"
-              >
-                Azure {{ dashboardData.accountsByPlatform.azure_openai.total }}
-              </span>
-              <span
-                v-if="
-                  dashboardData.accountsByPlatform['openai-responses'] &&
-                  dashboardData.accountsByPlatform['openai-responses'].total > 0
-                "
-                :title="`OpenAI Responses: ${dashboardData.accountsByPlatform['openai-responses'].total} 个 (正常: ${dashboardData.accountsByPlatform['openai-responses'].normal})`"
-                class="rounded bg-primary-100 p-[2px] text-[8px] font-medium text-primary-700 dark:bg-primary-900/30 dark:text-primary-300"
-              >
-                Responses {{ dashboardData.accountsByPlatform['openai-responses'].total }}
-              </span>
-            </div>
-          </div>
-        </div>
-      </div>
-
       <!-- Section 2: Token 统计 - 2列网格 -->
       <div
-        class="grid grid-cols-1 gap-6 border-b border-gray-200 py-6 dark:border-gray-700 lg:grid-cols-2"
+        class="grid grid-cols-1 gap-6 border-b border-gray-200 pb-6 dark:border-gray-700 lg:grid-cols-2"
       >
         <!-- 今日 Token -->
         <div class="flex items-start gap-3">
@@ -386,6 +125,265 @@
                   formatNumber(dashboardData.totalCacheReadTokens || 0)
                 }}</span></span
               >
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 1+3: 主要指标与实时监控 - 合并网格 -->
+      <div class="mb-4 pt-6">
+        <h3
+          class="text-[10px] font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400"
+        >
+          主要指标与实时监控
+        </h3>
+      </div>
+      <div class="grid grid-cols-1 gap-6 pb-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-8">
+        <!-- 系统状态 -->
+        <div class="flex items-start gap-3">
+          <div
+            class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-primary-50 dark:bg-primary-900/20"
+            title="系统状态"
+          >
+            <BadgeCheck class="h-4 w-4 text-primary-600 dark:text-primary-400" />
+          </div>
+          <div class="min-w-0 flex-1">
+            <p class="text-[10px] uppercase tracking-wider text-gray-400 dark:text-gray-500">
+              系统状态
+            </p>
+            <p class="text-sm font-bold text-primary-600 dark:text-primary-400">
+              {{ dashboardData.systemStatus }}
+            </p>
+            <p class="mt-1 text-[10px] text-gray-600 dark:text-gray-400">
+              运行 <span class="font-semibold">{{ formattedUptime }}</span>
+            </p>
+          </div>
+        </div>
+
+        <!-- API Keys -->
+        <div class="flex items-start gap-3">
+          <div
+            class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-primary-50 dark:bg-primary-900/20"
+            title="API Keys"
+          >
+            <KeyRound class="h-4 w-4 text-primary-600 dark:text-primary-400" />
+          </div>
+          <div class="min-w-0 flex-1">
+            <p class="text-[10px] uppercase tracking-wider text-gray-400 dark:text-gray-500">
+              API KEYS
+            </p>
+            <p class="text-sm font-bold text-gray-900 dark:text-white">
+              {{ dashboardData.totalApiKeys }}
+            </p>
+            <p class="mt-1 text-[10px] text-gray-600 dark:text-gray-400">
+              活跃 <span class="font-semibold">{{ dashboardData.activeApiKeys || 0 }}</span>
+            </p>
+          </div>
+        </div>
+
+        <!-- 今日请求 -->
+        <div class="flex items-start gap-3">
+          <div
+            class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-primary-50 dark:bg-primary-900/20"
+            title="今日请求"
+          >
+            <BarChart3 class="h-4 w-4 text-primary-600 dark:text-primary-400" />
+          </div>
+          <div class="min-w-0 flex-1">
+            <p class="text-[10px] uppercase tracking-wider text-gray-400 dark:text-gray-500">
+              今日请求
+            </p>
+            <p class="text-sm font-bold text-gray-900 dark:text-white">
+              {{ formatNumber(dashboardData.todayRequests) }}
+            </p>
+            <p class="mt-1 text-[10px] text-gray-600 dark:text-gray-400">
+              总计
+              <span class="font-semibold text-primary-600 dark:text-primary-400">{{
+                formatNumber(dashboardData.totalRequests || 0)
+              }}</span>
+              次
+            </p>
+          </div>
+        </div>
+
+        <!-- 服务账户 -->
+        <div class="flex items-start gap-3">
+          <div
+            class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-primary-50 dark:bg-primary-900/20"
+            title="服务账户"
+          >
+            <Server class="h-4 w-4 text-primary-600 dark:text-primary-400" />
+          </div>
+          <div class="min-w-0 flex-1">
+            <p class="text-[10px] uppercase tracking-wider text-gray-400 dark:text-gray-500">
+              服务账户
+            </p>
+            <p class="text-sm font-bold text-gray-900 dark:text-white">
+              {{ dashboardData.totalAccounts }}
+            </p>
+            <div
+              class="mt-1 flex flex-wrap items-center gap-1 text-[10px] text-gray-600 dark:text-gray-400"
+            >
+              <span
+                >正常
+                <span class="font-semibold">{{ dashboardData.normalAccounts || 0 }}</span></span
+              >
+              <span v-if="dashboardData.abnormalAccounts > 0">·</span>
+              <span
+                v-if="dashboardData.abnormalAccounts > 0"
+                class="text-primary-600 dark:text-primary-400"
+              >
+                异常 <span class="font-semibold">{{ dashboardData.abnormalAccounts }}</span>
+              </span>
+              <span v-if="dashboardData.pausedAccounts > 0">·</span>
+              <span
+                v-if="dashboardData.pausedAccounts > 0"
+                class="text-primary-600 dark:text-primary-400"
+              >
+                停止 <span class="font-semibold">{{ dashboardData.pausedAccounts }}</span>
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 实时 RPM -->
+        <div class="flex items-start gap-3">
+          <div
+            class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-primary-50 dark:bg-primary-900/20"
+            title="实时 RPM"
+          >
+            <Activity class="h-4 w-4 text-primary-600 dark:text-primary-400" />
+          </div>
+          <div class="min-w-0 flex-1">
+            <p class="text-[10px] uppercase tracking-wider text-gray-400 dark:text-gray-500">
+              实时 RPM
+            </p>
+            <p class="text-sm font-bold text-gray-900 dark:text-white">
+              {{ dashboardData.realtimeRPM || 0 }}
+            </p>
+            <p class="mt-1 text-[10px] text-gray-500 dark:text-gray-400">
+              {{ dashboardData.metricsWindow || 5 }} 分钟
+              <span
+                v-if="dashboardData.isHistoricalMetrics"
+                class="text-primary-600 dark:text-primary-400"
+              >
+                (历史)
+              </span>
+            </p>
+          </div>
+        </div>
+
+        <!-- 实时 TPM -->
+        <div class="flex items-start gap-3">
+          <div
+            class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-primary-50 dark:bg-primary-900/20"
+            title="实时 TPM"
+          >
+            <Gauge class="h-4 w-4 text-primary-600 dark:text-primary-400" />
+          </div>
+          <div class="min-w-0 flex-1">
+            <p class="text-[10px] uppercase tracking-wider text-gray-400 dark:text-gray-500">
+              实时 TPM
+            </p>
+            <p class="text-sm font-bold text-gray-900 dark:text-white">
+              {{ formatNumber(dashboardData.realtimeTPM || 0) }}
+            </p>
+            <p class="mt-1 text-[10px] text-gray-500 dark:text-gray-400">
+              {{ dashboardData.metricsWindow || 5 }} 分钟
+              <span
+                v-if="dashboardData.isHistoricalMetrics"
+                class="text-primary-600 dark:text-primary-400"
+              >
+                (历史)
+              </span>
+            </p>
+          </div>
+        </div>
+
+        <!-- 平台分布 -->
+        <div class="flex items-start gap-3 lg:col-span-2">
+          <div
+            class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-primary-50 dark:bg-primary-900/20"
+            title="平台分布"
+          >
+            <Boxes class="h-4 w-4 text-primary-600 dark:text-primary-400" />
+          </div>
+          <div class="min-w-0 flex-1">
+            <p class="text-[10px] uppercase tracking-wider text-gray-400 dark:text-gray-500">
+              平台分布
+            </p>
+            <p class="text-sm font-bold text-gray-900 dark:text-white">{{ platformCount }}</p>
+            <div v-if="dashboardData.accountsByPlatform" class="mt-1 flex flex-wrap gap-1">
+              <span
+                v-if="
+                  dashboardData.accountsByPlatform.claude &&
+                  dashboardData.accountsByPlatform.claude.total > 0
+                "
+                :title="`Claude: ${dashboardData.accountsByPlatform.claude.total} 个 (正常: ${dashboardData.accountsByPlatform.claude.normal})`"
+                class="rounded bg-primary-100 px-[6px] pb-[2px] pt-[1.5px] text-[8px] font-medium text-primary-700 dark:bg-primary-900/30 dark:text-primary-300"
+              >
+                Claude {{ dashboardData.accountsByPlatform.claude.total }}
+              </span>
+              <span
+                v-if="
+                  dashboardData.accountsByPlatform['claude-console'] &&
+                  dashboardData.accountsByPlatform['claude-console'].total > 0
+                "
+                :title="`Console: ${dashboardData.accountsByPlatform['claude-console'].total} 个 (正常: ${dashboardData.accountsByPlatform['claude-console'].normal})`"
+                class="rounded bg-primary-100 px-[6px] pb-[2px] pt-[1.5px] text-[8px] font-medium text-primary-700 dark:bg-primary-900/30 dark:text-primary-300"
+              >
+                Console {{ dashboardData.accountsByPlatform['claude-console'].total }}
+              </span>
+              <span
+                v-if="
+                  dashboardData.accountsByPlatform.gemini &&
+                  dashboardData.accountsByPlatform.gemini.total > 0
+                "
+                :title="`Gemini: ${dashboardData.accountsByPlatform.gemini.total} 个 (正常: ${dashboardData.accountsByPlatform.gemini.normal})`"
+                class="rounded bg-primary-100 px-[6px] pb-[2px] pt-[1.5px] text-[8px] font-medium text-primary-700 dark:bg-primary-900/30 dark:text-primary-300"
+              >
+                Gemini {{ dashboardData.accountsByPlatform.gemini.total }}
+              </span>
+              <span
+                v-if="
+                  dashboardData.accountsByPlatform.bedrock &&
+                  dashboardData.accountsByPlatform.bedrock.total > 0
+                "
+                :title="`Bedrock: ${dashboardData.accountsByPlatform.bedrock.total} 个 (正常: ${dashboardData.accountsByPlatform.bedrock.normal})`"
+                class="rounded bg-primary-100 px-[6px] pb-[2px] pt-[1.5px] text-[8px] font-medium text-primary-700 dark:bg-primary-900/30 dark:text-primary-300"
+              >
+                Bedrock {{ dashboardData.accountsByPlatform.bedrock.total }}
+              </span>
+              <span
+                v-if="
+                  dashboardData.accountsByPlatform.openai &&
+                  dashboardData.accountsByPlatform.openai.total > 0
+                "
+                :title="`OpenAI: ${dashboardData.accountsByPlatform.openai.total} 个 (正常: ${dashboardData.accountsByPlatform.openai.normal})`"
+                class="rounded bg-primary-100 px-[6px] pb-[2px] pt-[1.5px] text-[8px] font-medium text-primary-700 dark:bg-primary-900/30 dark:text-primary-300"
+              >
+                OpenAI {{ dashboardData.accountsByPlatform.openai.total }}
+              </span>
+              <span
+                v-if="
+                  dashboardData.accountsByPlatform.azure_openai &&
+                  dashboardData.accountsByPlatform.azure_openai.total > 0
+                "
+                :title="`Azure OpenAI: ${dashboardData.accountsByPlatform.azure_openai.total} 个 (正常: ${dashboardData.accountsByPlatform.azure_openai.normal})`"
+                class="rounded bg-primary-100 px-[6px] pb-[2px] pt-[1.5px] text-[8px] font-medium text-primary-700 dark:bg-primary-900/30 dark:text-primary-300"
+              >
+                Azure {{ dashboardData.accountsByPlatform.azure_openai.total }}
+              </span>
+              <span
+                v-if="
+                  dashboardData.accountsByPlatform['openai-responses'] &&
+                  dashboardData.accountsByPlatform['openai-responses'].total > 0
+                "
+                :title="`OpenAI Responses: ${dashboardData.accountsByPlatform['openai-responses'].total} 个 (正常: ${dashboardData.accountsByPlatform['openai-responses'].normal})`"
+                class="rounded bg-primary-100 px-[6px] pb-[2px] pt-[1.5px] text-[8px] font-medium text-primary-700 dark:bg-primary-900/30 dark:text-primary-300"
+              >
+                Responses {{ dashboardData.accountsByPlatform['openai-responses'].total }}
+              </span>
             </div>
           </div>
         </div>
