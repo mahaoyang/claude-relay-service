@@ -1795,7 +1795,7 @@ import AccountExpiryEditModal from '@/components/accounts/AccountExpiryEditModal
 import ConfirmModal from '@/components/common/ConfirmModal.vue'
 import CustomDropdown from '@/components/common/CustomDropdown.vue'
 import PageContainer from '@/components/layout/PageContainer.vue'
-import Card from '@/components/common/Card.vue'
+import Card from '@/ui/Card.vue'
 import Icon from '@/components/common/Icon.vue'
 
 // 使用确认弹窗
