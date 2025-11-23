@@ -575,7 +575,8 @@
 
     <!-- Token使用趋势图 -->
     <Card class="mb-8">
-      <div class="p-6">
+      <div class="space-y-4 p-6">
+        <h3 class="text-sm font-semibold text-gray-900 dark:text-white">Token 使用趋势</h3>
         <div class="h-[400px]">
           <canvas ref="usageTrendChart" />
         </div>
@@ -971,15 +972,6 @@ function createUsageTrendChart() {
         intersect: false
       },
       plugins: {
-        title: {
-          display: true,
-          text: 'Token使用趋势',
-          font: {
-            size: 16,
-            weight: 'bold'
-          },
-          color: chartColors.value.text
-        },
         legend: {
           position: 'top',
           labels: {
