@@ -3,14 +3,14 @@
     <template #header>
       <div class="flex items-center justify-between">
         <div>
-          <h1 class="text-lg font-bold tracking-tight text-gray-900 dark:text-white">
-            系统控制台
-          </h1>
-          <p class="mt-1 text-[10px] text-gray-600 dark:text-gray-400">实时监控系统状态和使用情况</p>
+          <h1 class="text-lg font-bold tracking-tight text-gray-900 dark:text-white">系统控制台</h1>
+          <p class="mt-1 text-[10px] text-gray-600 dark:text-gray-400">
+            实时监控系统状态和使用情况
+          </p>
         </div>
         <div class="flex items-center gap-4">
           <!-- 主题切换按钮 -->
-          <ThemeToggle mode="dropdown" class="shadow-sm transition-shadow hover:shadow-md" />
+          <ThemeToggle class="shadow-sm transition-shadow hover:shadow-md" mode="dropdown" />
         </div>
       </div>
     </template>
@@ -319,8 +319,8 @@
                   dashboardData.accountsByPlatform.claude &&
                   dashboardData.accountsByPlatform.claude.total > 0
                 "
-                :title="`Claude: ${dashboardData.accountsByPlatform.claude.total} 个 (正常: ${dashboardData.accountsByPlatform.claude.normal})`"
                 class="rounded bg-primary-100 px-[6px] pb-[2px] pt-[1.5px] text-[8px] font-medium text-primary-700 dark:bg-primary-900/30 dark:text-primary-300"
+                :title="`Claude: ${dashboardData.accountsByPlatform.claude.total} 个 (正常: ${dashboardData.accountsByPlatform.claude.normal})`"
               >
                 Claude {{ dashboardData.accountsByPlatform.claude.total }}
               </span>
@@ -329,8 +329,8 @@
                   dashboardData.accountsByPlatform['claude-console'] &&
                   dashboardData.accountsByPlatform['claude-console'].total > 0
                 "
-                :title="`Console: ${dashboardData.accountsByPlatform['claude-console'].total} 个 (正常: ${dashboardData.accountsByPlatform['claude-console'].normal})`"
                 class="rounded bg-primary-100 px-[6px] pb-[2px] pt-[1.5px] text-[8px] font-medium text-primary-700 dark:bg-primary-900/30 dark:text-primary-300"
+                :title="`Console: ${dashboardData.accountsByPlatform['claude-console'].total} 个 (正常: ${dashboardData.accountsByPlatform['claude-console'].normal})`"
               >
                 Console {{ dashboardData.accountsByPlatform['claude-console'].total }}
               </span>
@@ -339,8 +339,8 @@
                   dashboardData.accountsByPlatform.gemini &&
                   dashboardData.accountsByPlatform.gemini.total > 0
                 "
-                :title="`Gemini: ${dashboardData.accountsByPlatform.gemini.total} 个 (正常: ${dashboardData.accountsByPlatform.gemini.normal})`"
                 class="rounded bg-primary-100 px-[6px] pb-[2px] pt-[1.5px] text-[8px] font-medium text-primary-700 dark:bg-primary-900/30 dark:text-primary-300"
+                :title="`Gemini: ${dashboardData.accountsByPlatform.gemini.total} 个 (正常: ${dashboardData.accountsByPlatform.gemini.normal})`"
               >
                 Gemini {{ dashboardData.accountsByPlatform.gemini.total }}
               </span>
@@ -349,8 +349,8 @@
                   dashboardData.accountsByPlatform.bedrock &&
                   dashboardData.accountsByPlatform.bedrock.total > 0
                 "
-                :title="`Bedrock: ${dashboardData.accountsByPlatform.bedrock.total} 个 (正常: ${dashboardData.accountsByPlatform.bedrock.normal})`"
                 class="rounded bg-primary-100 px-[6px] pb-[2px] pt-[1.5px] text-[8px] font-medium text-primary-700 dark:bg-primary-900/30 dark:text-primary-300"
+                :title="`Bedrock: ${dashboardData.accountsByPlatform.bedrock.total} 个 (正常: ${dashboardData.accountsByPlatform.bedrock.normal})`"
               >
                 Bedrock {{ dashboardData.accountsByPlatform.bedrock.total }}
               </span>
@@ -359,8 +359,8 @@
                   dashboardData.accountsByPlatform.openai &&
                   dashboardData.accountsByPlatform.openai.total > 0
                 "
-                :title="`OpenAI: ${dashboardData.accountsByPlatform.openai.total} 个 (正常: ${dashboardData.accountsByPlatform.openai.normal})`"
                 class="rounded bg-primary-100 px-[6px] pb-[2px] pt-[1.5px] text-[8px] font-medium text-primary-700 dark:bg-primary-900/30 dark:text-primary-300"
+                :title="`OpenAI: ${dashboardData.accountsByPlatform.openai.total} 个 (正常: ${dashboardData.accountsByPlatform.openai.normal})`"
               >
                 OpenAI {{ dashboardData.accountsByPlatform.openai.total }}
               </span>
@@ -369,8 +369,8 @@
                   dashboardData.accountsByPlatform.azure_openai &&
                   dashboardData.accountsByPlatform.azure_openai.total > 0
                 "
-                :title="`Azure OpenAI: ${dashboardData.accountsByPlatform.azure_openai.total} 个 (正常: ${dashboardData.accountsByPlatform.azure_openai.normal})`"
                 class="rounded bg-primary-100 px-[6px] pb-[2px] pt-[1.5px] text-[8px] font-medium text-primary-700 dark:bg-primary-900/30 dark:text-primary-300"
+                :title="`Azure OpenAI: ${dashboardData.accountsByPlatform.azure_openai.total} 个 (正常: ${dashboardData.accountsByPlatform.azure_openai.normal})`"
               >
                 Azure {{ dashboardData.accountsByPlatform.azure_openai.total }}
               </span>
@@ -379,8 +379,8 @@
                   dashboardData.accountsByPlatform['openai-responses'] &&
                   dashboardData.accountsByPlatform['openai-responses'].total > 0
                 "
-                :title="`OpenAI Responses: ${dashboardData.accountsByPlatform['openai-responses'].total} 个 (正常: ${dashboardData.accountsByPlatform['openai-responses'].normal})`"
                 class="rounded bg-primary-100 px-[6px] pb-[2px] pt-[1.5px] text-[8px] font-medium text-primary-700 dark:bg-primary-900/30 dark:text-primary-300"
+                :title="`OpenAI Responses: ${dashboardData.accountsByPlatform['openai-responses'].total} 个 (正常: ${dashboardData.accountsByPlatform['openai-responses'].normal})`"
               >
                 Responses {{ dashboardData.accountsByPlatform['openai-responses'].total }}
               </span>
@@ -403,13 +403,13 @@
               <button
                 v-for="option in dateFilter.presetOptions"
                 :key="option.value"
-                @click="setDateFilterPreset(option.value)"
                 class="rounded-md px-3 py-1.5 text-sm font-medium transition-colors"
                 :class="
                   dateFilter.preset === option.value
                     ? 'bg-primary-50 text-primary-600 dark:bg-primary-900/30 dark:text-primary-400'
                     : 'text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700'
                 "
+                @click="setDateFilterPreset(option.value)"
               >
                 {{ option.label }}
               </button>
@@ -418,24 +418,24 @@
             <!-- 粒度切换按钮 -->
             <div class="flex gap-2">
               <button
-                @click="setTrendGranularity('day')"
                 class="rounded-md px-3 py-1.5 text-sm font-medium transition-colors"
                 :class="
                   trendGranularity === 'day'
                     ? 'bg-primary-50 text-primary-600 dark:bg-primary-900/30 dark:text-primary-400'
                     : 'text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700'
                 "
+                @click="setTrendGranularity('day')"
               >
                 按天
               </button>
               <button
-                @click="setTrendGranularity('hour')"
                 class="rounded-md px-3 py-1.5 text-sm font-medium transition-colors"
                 :class="
                   trendGranularity === 'hour'
                     ? 'bg-primary-50 text-primary-600 dark:bg-primary-900/30 dark:text-primary-400'
                     : 'text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700'
                 "
+                @click="setTrendGranularity('hour')"
               >
                 按小时
               </button>
@@ -445,17 +445,17 @@
             <div class="flex items-center gap-2">
               <el-date-picker
                 v-model="dateFilter.customRange"
-                type="datetimerange"
-                range-separator="至"
-                start-placeholder="开始日期"
-                end-placeholder="结束日期"
-                format="YYYY-MM-DD HH:mm:ss"
-                value-format="YYYY-MM-DD HH:mm:ss"
-                size="default"
+                class="w-auto"
                 :default-time="defaultTime"
                 :disabled-date="disabledDate"
+                end-placeholder="结束日期"
+                format="YYYY-MM-DD HH:mm:ss"
+                range-separator="至"
+                size="default"
+                start-placeholder="开始日期"
+                type="datetimerange"
+                value-format="YYYY-MM-DD HH:mm:ss"
                 @change="onCustomDateRangeChange"
-                class="w-auto"
               />
               <span
                 v-if="trendGranularity === 'hour'"
@@ -469,7 +469,7 @@
             <div class="flex items-center gap-2">
               <!-- 自动刷新控制 -->
               <label class="flex cursor-pointer items-center gap-2">
-                <input v-model="autoRefreshEnabled" type="checkbox" class="peer sr-only" />
+                <input v-model="autoRefreshEnabled" class="peer sr-only" type="checkbox" />
                 <div
                   class="relative h-5 w-9 rounded-full bg-gray-200 transition-colors peer-checked:bg-primary-600 dark:bg-gray-700"
                 >
@@ -487,10 +487,10 @@
 
               <!-- 刷新按钮 -->
               <button
-                @click="refreshAllData()"
+                class="rounded-md bg-primary-600 px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-primary-700 disabled:bg-gray-300 dark:disabled:bg-gray-700"
                 :disabled="isRefreshing"
                 title="立即刷新数据"
-                class="rounded-md bg-primary-600 px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-primary-700 disabled:bg-gray-300 dark:disabled:bg-gray-700"
+                @click="refreshAllData()"
               >
                 {{ isRefreshing ? '刷新中' : '刷新' }}
               </button>
@@ -546,7 +546,7 @@
                     class="hover:bg-gray-50 dark:hover:bg-gray-800/50"
                   >
                     <td class="px-4 py-2 text-gray-900 dark:text-white">
-                      <span :title="stat.model" class="block max-w-[200px] truncate">
+                      <span class="block max-w-[200px] truncate" :title="stat.model">
                         {{ stat.model }}
                       </span>
                     </td>
@@ -590,25 +590,25 @@
           <!-- 维度切换按钮 -->
           <div class="flex gap-2">
             <button
-              @click="((apiKeysTrendMetric = 'requests'), updateApiKeysUsageTrendChart())"
               class="rounded-md px-3 py-1.5 text-sm font-medium transition-colors"
               :class="
                 apiKeysTrendMetric === 'requests'
                   ? 'bg-primary-50 text-primary-600 dark:bg-primary-900/30 dark:text-primary-400'
                   : 'text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700'
               "
+              @click="((apiKeysTrendMetric = 'requests'), updateApiKeysUsageTrendChart())"
             >
               <span class="hidden sm:inline">请求次数</span>
               <span class="sm:hidden">请求</span>
             </button>
             <button
-              @click="((apiKeysTrendMetric = 'tokens'), updateApiKeysUsageTrendChart())"
               class="rounded-md px-3 py-1.5 text-sm font-medium transition-colors"
               :class="
                 apiKeysTrendMetric === 'tokens'
                   ? 'bg-primary-50 text-primary-600 dark:bg-primary-900/30 dark:text-primary-400'
                   : 'text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700'
               "
+              @click="((apiKeysTrendMetric = 'tokens'), updateApiKeysUsageTrendChart())"
             >
               <span class="hidden sm:inline">Token 数量</span>
               <span class="sm:hidden">Token</span>
@@ -641,13 +641,13 @@
             <button
               v-for="option in accountGroupOptions"
               :key="option.value"
-              @click="handleAccountUsageGroupChange(option.value)"
               class="rounded-md px-3 py-1.5 text-sm font-medium transition-colors"
               :class="
                 accountUsageGroup === option.value
                   ? 'bg-primary-50 text-primary-600 dark:bg-primary-900/30 dark:text-primary-400'
                   : 'text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700'
               "
+              @click="handleAccountUsageGroupChange(option.value)"
             >
               {{ option.label }}
             </button>
@@ -787,19 +787,6 @@ function formatNumber(num) {
     return (num / 1000).toFixed(2) + 'K'
   }
   return num.toString()
-}
-
-function formatCostValue(cost) {
-  if (!Number.isFinite(cost)) {
-    return '$0.000000'
-  }
-  if (cost >= 1) {
-    return `$${cost.toFixed(2)}`
-  }
-  if (cost >= 0.01) {
-    return `$${cost.toFixed(3)}`
-  }
-  return `$${cost.toFixed(6)}`
 }
 
 // 计算百分比

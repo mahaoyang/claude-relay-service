@@ -13,27 +13,27 @@
     <Card class="mb-6">
       <nav class="flex gap-2 p-2">
         <button
-          @click="activeSection = 'branding'"
           class="flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors"
           :class="
             activeSection === 'branding'
               ? 'bg-primary-50 text-primary-600 dark:bg-primary-900/30 dark:text-primary-400'
               : 'text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700'
           "
+          @click="activeSection = 'branding'"
         >
-          <Icon name="Palette" class="h-4 w-4" />
+          <Icon class="h-4 w-4" name="Palette" />
           品牌设置
         </button>
         <button
-          @click="activeSection = 'webhook'"
           class="flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors"
           :class="
             activeSection === 'webhook'
               ? 'bg-primary-50 text-primary-600 dark:bg-primary-900/30 dark:text-primary-400'
               : 'text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700'
           "
+          @click="activeSection = 'webhook'"
         >
-          <Icon name="Bell" class="h-4 w-4" />
+          <Icon class="h-4 w-4" name="Bell" />
           通知设置
         </button>
       </nav>
@@ -64,7 +64,7 @@
                     <div
                       class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-primary-50 dark:bg-primary-900/20"
                     >
-                      <Icon name="Type" class="h-5 w-5 text-primary-600 dark:text-primary-400" />
+                      <Icon class="h-5 w-5 text-primary-600 dark:text-primary-400" name="Type" />
                     </div>
                     <div>
                       <div class="font-medium text-gray-900 dark:text-white">网站名称</div>
@@ -75,10 +75,10 @@
                 <td class="p-6">
                   <input
                     v-model="oemSettings.siteName"
+                    class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-gray-900 transition-colors focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500/20 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:focus:border-primary-400"
                     maxlength="100"
                     placeholder="Claude Relay Service"
                     type="text"
-                    class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-gray-900 transition-colors focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500/20 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:focus:border-primary-400"
                   />
                   <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">
                     将显示在浏览器标题和页面头部
@@ -93,7 +93,7 @@
                     <div
                       class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-primary-50 dark:bg-primary-900/20"
                     >
-                      <Icon name="Image" class="h-5 w-5 text-primary-600 dark:text-primary-400" />
+                      <Icon class="h-5 w-5 text-primary-600 dark:text-primary-400" name="Image" />
                     </div>
                     <div>
                       <div class="font-medium text-gray-900 dark:text-white">网站图标</div>
@@ -110,16 +110,16 @@
                     >
                       <img
                         alt="图标预览"
+                        class="h-8 w-8 rounded"
                         :src="oemSettings.siteIconData || oemSettings.siteIcon"
                         @error="handleIconError"
-                        class="h-8 w-8 rounded"
                       />
                       <span class="flex-1 text-sm text-gray-600 dark:text-gray-400">当前图标</span>
                       <button
-                        @click="removeIcon"
                         class="flex items-center gap-2 rounded-lg bg-red-50 px-3 py-1.5 text-sm font-medium text-red-600 transition-colors hover:bg-red-100 dark:bg-red-900/20 dark:text-red-400 dark:hover:bg-red-900/30"
+                        @click="removeIcon"
                       >
-                        <Icon name="Trash" class="h-4 w-4" />
+                        <Icon class="h-4 w-4" name="Trash" />
                         删除
                       </button>
                     </div>
@@ -129,15 +129,15 @@
                       <input
                         ref="iconFileInput"
                         accept=".ico,.png,.jpg,.jpeg,.svg"
+                        class="hidden"
                         type="file"
                         @change="handleIconUpload"
-                        class="hidden"
                       />
                       <button
-                        @click="$refs.iconFileInput.click()"
                         class="flex items-center gap-2 rounded-lg bg-primary-50 px-4 py-2 text-sm font-medium text-primary-600 transition-colors hover:bg-primary-100 dark:bg-primary-900/20 dark:text-primary-400 dark:hover:bg-primary-900/30"
+                        @click="$refs.iconFileInput.click()"
                       >
-                        <Icon name="Upload" class="h-4 w-4" />
+                        <Icon class="h-4 w-4" name="Upload" />
                         上传图标
                       </button>
                       <p class="text-sm text-gray-500 dark:text-gray-400">
@@ -155,7 +155,7 @@
                     <div
                       class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-primary-50 dark:bg-primary-900/20"
                     >
-                      <Icon name="EyeOff" class="h-5 w-5 text-primary-600 dark:text-primary-400" />
+                      <Icon class="h-5 w-5 text-primary-600 dark:text-primary-400" name="EyeOff" />
                     </div>
                     <div>
                       <div class="font-medium text-gray-900 dark:text-white">管理入口</div>
@@ -166,7 +166,7 @@
                 <td class="p-6">
                   <div class="space-y-3">
                     <label class="flex cursor-pointer items-center gap-3">
-                      <input v-model="hideAdminButton" type="checkbox" class="peer sr-only" />
+                      <input v-model="hideAdminButton" class="peer sr-only" type="checkbox" />
                       <div
                         class="relative h-6 w-11 rounded-full bg-gray-200 transition-colors peer-checked:bg-primary-600 dark:bg-gray-700"
                       >
@@ -187,28 +187,28 @@
 
               <!-- 操作按钮 -->
               <tr>
-                <td colspan="2" class="bg-gray-50 p-6 dark:bg-gray-800/50">
+                <td class="bg-gray-50 p-6 dark:bg-gray-800/50" colspan="2">
                   <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                     <div class="flex flex-wrap gap-3">
                       <button
+                        class="flex items-center gap-2 rounded-lg bg-primary-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-primary-700 disabled:bg-gray-300 dark:disabled:bg-gray-700"
                         :disabled="saving"
                         @click="saveOemSettings"
-                        class="flex items-center gap-2 rounded-lg bg-primary-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-primary-700 disabled:bg-gray-300 dark:disabled:bg-gray-700"
                       >
                         <div
                           v-if="saving"
                           class="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"
                         ></div>
-                        <Icon name="Save" v-else class="h-4 w-4" />
+                        <Icon v-else class="h-4 w-4" name="Save" />
                         {{ saving ? '保存中...' : '保存设置' }}
                       </button>
 
                       <button
+                        class="flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 disabled:bg-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 dark:disabled:bg-gray-800"
                         :disabled="saving"
                         @click="resetOemSettings"
-                        class="flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 disabled:bg-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 dark:disabled:bg-gray-800"
                       >
-                        <Icon name="RotateCcw" class="h-4 w-4" />
+                        <Icon class="h-4 w-4" name="RotateCcw" />
                         重置为默认
                       </button>
                     </div>
@@ -217,7 +217,7 @@
                       v-if="oemSettings.updatedAt"
                       class="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400"
                     >
-                      <Icon name="Clock" class="h-4 w-4" />
+                      <Icon class="h-4 w-4" name="Clock" />
                       最后更新：{{ formatDateTime(oemSettings.updatedAt) }}
                     </div>
                   </div>
@@ -237,7 +237,7 @@
               <div
                 class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-primary-50 dark:bg-primary-900/20"
               >
-                <Icon name="Tag" class="h-5 w-5 text-primary-600 dark:text-primary-400" />
+                <Icon class="h-5 w-5 text-primary-600 dark:text-primary-400" name="Tag" />
               </div>
               <div class="flex-1">
                 <h3 class="font-medium text-gray-900 dark:text-white">站点名称</h3>
@@ -246,10 +246,10 @@
             </div>
             <input
               v-model="oemSettings.siteName"
+              class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-gray-900 transition-colors focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500/20 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:focus:border-primary-400"
               maxlength="100"
               placeholder="Claude Relay Service"
               type="text"
-              class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-gray-900 transition-colors focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500/20 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:focus:border-primary-400"
             />
           </div>
 
@@ -261,7 +261,7 @@
               <div
                 class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-primary-50 dark:bg-primary-900/20"
               >
-                <Icon name="Image" class="h-5 w-5 text-primary-600 dark:text-primary-400" />
+                <Icon class="h-5 w-5 text-primary-600 dark:text-primary-400" name="Image" />
               </div>
               <div class="flex-1">
                 <h3 class="font-medium text-gray-900 dark:text-white">站点图标</h3>
@@ -278,14 +278,14 @@
               >
                 <img
                   alt="图标预览"
+                  class="h-8 w-8 rounded"
                   :src="oemSettings.siteIconData || oemSettings.siteIcon"
                   @error="handleIconError"
-                  class="h-8 w-8 rounded"
                 />
                 <span class="flex-1 text-sm text-gray-600 dark:text-gray-400">当前图标</span>
                 <button
-                  @click="removeIcon"
                   class="rounded-lg bg-red-50 px-3 py-1.5 text-sm font-medium text-red-600 transition-colors hover:bg-red-100 dark:bg-red-900/20 dark:text-red-400 dark:hover:bg-red-900/30"
+                  @click="removeIcon"
                 >
                   删除
                 </button>
@@ -296,15 +296,15 @@
                 <input
                   ref="iconFileInputMobile"
                   accept=".ico,.png,.jpg,.jpeg,.svg"
+                  class="hidden"
                   type="file"
                   @change="handleIconUpload"
-                  class="hidden"
                 />
                 <button
-                  @click="$refs.iconFileInputMobile.click()"
                   class="flex w-full items-center justify-center gap-2 rounded-lg bg-primary-50 px-4 py-2 text-sm font-medium text-primary-600 transition-colors hover:bg-primary-100 dark:bg-primary-900/20 dark:text-primary-400 dark:hover:bg-primary-900/30"
+                  @click="$refs.iconFileInputMobile.click()"
                 >
-                  <Icon name="Upload" class="h-4 w-4" />
+                  <Icon class="h-4 w-4" name="Upload" />
                   上传图标
                 </button>
                 <p class="text-sm text-gray-500 dark:text-gray-400">
@@ -322,7 +322,7 @@
               <div
                 class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-primary-50 dark:bg-primary-900/20"
               >
-                <Icon name="EyeOff" class="h-5 w-5 text-primary-600 dark:text-primary-400" />
+                <Icon class="h-5 w-5 text-primary-600 dark:text-primary-400" name="EyeOff" />
               </div>
               <div class="flex-1">
                 <h3 class="font-medium text-gray-900 dark:text-white">管理入口</h3>
@@ -333,7 +333,7 @@
             </div>
             <div class="space-y-2">
               <label class="flex cursor-pointer items-center gap-3">
-                <input v-model="hideAdminButton" type="checkbox" class="peer sr-only" />
+                <input v-model="hideAdminButton" class="peer sr-only" type="checkbox" />
                 <div
                   class="relative h-6 w-11 rounded-full bg-gray-200 transition-colors peer-checked:bg-primary-600 dark:bg-gray-700"
                 >
@@ -357,24 +357,24 @@
           >
             <div class="space-y-3">
               <button
+                class="flex w-full items-center justify-center gap-2 rounded-lg bg-primary-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-primary-700 disabled:bg-gray-300 dark:disabled:bg-gray-700"
                 :disabled="saving"
                 @click="saveOemSettings"
-                class="flex w-full items-center justify-center gap-2 rounded-lg bg-primary-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-primary-700 disabled:bg-gray-300 dark:disabled:bg-gray-700"
               >
                 <div
                   v-if="saving"
                   class="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"
                 ></div>
-                <Icon name="Save" v-else class="h-4 w-4" />
+                <Icon v-else class="h-4 w-4" name="Save" />
                 {{ saving ? '保存中...' : '保存设置' }}
               </button>
 
               <button
+                class="flex w-full items-center justify-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 disabled:bg-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 dark:disabled:bg-gray-800"
                 :disabled="saving"
                 @click="resetOemSettings"
-                class="flex w-full items-center justify-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 disabled:bg-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 dark:disabled:bg-gray-800"
               >
-                <Icon name="RotateCcw" class="h-4 w-4" />
+                <Icon class="h-4 w-4" name="RotateCcw" />
                 重置为默认
               </button>
 
@@ -382,7 +382,7 @@
                 v-if="oemSettings.updatedAt"
                 class="flex items-center justify-center gap-2 text-sm text-gray-500 dark:text-gray-400"
               >
-                <Icon name="Clock" class="h-4 w-4" />
+                <Icon class="h-4 w-4" name="Clock" />
                 上次更新: {{ formatDateTime(oemSettings.updatedAt) }}
               </div>
             </div>
@@ -404,9 +404,9 @@
             <label class="flex cursor-pointer items-center gap-3">
               <input
                 v-model="webhookConfig.enabled"
+                class="peer sr-only"
                 type="checkbox"
                 @change="saveWebhookConfig"
-                class="peer sr-only"
               />
               <div
                 class="relative h-7 w-12 rounded-full bg-gray-200 transition-colors peer-checked:bg-primary-600 dark:bg-gray-700"
@@ -574,10 +574,10 @@
         <!-- 测试通知按钮 -->
         <div class="border-t border-gray-200 p-6 dark:border-gray-700">
           <button
-            @click="sendTestNotification"
             class="flex items-center gap-2 rounded-lg bg-primary-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-primary-700"
+            @click="sendTestNotification"
           >
-            <Icon name="Send" class="h-4 w-4" />
+            <Icon class="h-4 w-4" name="Send" />
             发送测试通知
           </button>
         </div>
@@ -1699,21 +1699,6 @@ const getPlatformName = (type) => {
     custom: '自定义'
   }
   return names[type] || type
-}
-
-const getPlatformIcon = (type) => {
-  const icons = {
-    wechat_work: 'fab fa-weixin ',
-    dingtalk: 'fas fa-comment-dots ',
-    feishu: 'fas fa-dove ',
-    slack: 'fab fa-slack ',
-    discord: 'fab fa-discord ',
-    telegram: 'fab fa-telegram-plane ',
-    bark: 'fas fa-bell ',
-    smtp: 'fas fa-envelope ',
-    custom: 'fas fa-webhook '
-  }
-  return icons[type] || 'fas fa-bell'
 }
 
 const getWebhookHint = (type) => {
