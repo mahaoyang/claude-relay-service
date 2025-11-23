@@ -6,14 +6,14 @@
       class="flex h-10 cursor-pointer items-center gap-2 rounded-lg border border-gray-200 bg-white px-3 text-sm text-gray-700 shadow-sm transition-all duration-200 hover:border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200 dark:hover:border-gray-500"
       @click="toggleDropdown"
     >
-      <Icon v-if="icon" :name="icon" class="h-4 w-4" :class="iconColor" />
+      <Icon v-if="icon" class="h-4 w-4" :class="iconColor" :name="icon" />
       <span class="flex-1 truncate">
         {{ selectedLabel || placeholder }}
       </span>
       <Icon
-        name="ChevronDown"
         class="h-4 w-4 text-gray-400 transition-transform duration-200"
         :class="{ 'rotate-180': isOpen }"
+        name="ChevronDown"
       />
     </div>
 
@@ -45,12 +45,12 @@
               ]"
               @click="selectOption(option)"
             >
-              <Icon v-if="option.icon" :name="option.icon" class="h-4 w-4" />
+              <Icon v-if="option.icon" class="h-4 w-4" :name="option.icon" />
               <span class="flex-1">{{ option.label }}</span>
               <Icon
                 v-if="option.value === modelValue"
-                name="Check"
                 class="h-4 w-4 text-primary-600 dark:text-primary-400"
+                name="Check"
               />
             </div>
           </div>
