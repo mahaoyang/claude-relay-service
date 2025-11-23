@@ -1140,58 +1140,63 @@
                           !account.isActive)
                       "
                       :class="[
-                        'rounded px-2.5 py-1 text-xs font-medium transition-colors',
+                        'inline-flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-xs font-medium transition-colors',
                         account.isResetting
-                          ? 'cursor-not-allowed bg-gray-100 text-gray-400'
-                          : 'bg-yellow-100 text-yellow-700 hover:bg-yellow-200'
+                          ? 'cursor-not-allowed bg-gray-100 text-gray-400 dark:bg-gray-700 dark:text-gray-500'
+                          : 'bg-primary-50 text-primary-700 hover:bg-primary-100 dark:bg-primary-900/30 dark:text-primary-300 dark:hover:bg-primary-900/50'
                       ]"
                       :disabled="account.isResetting"
                       :title="account.isResetting ? '重置中...' : '重置所有异常状态'"
                       @click="resetAccountStatus(account)"
                     >
-                      <i :class="['fas fa-redo', account.isResetting ? 'animate-spin' : '']" />
-                      <span class="ml-1">重置状态</span>
+                      <Icon
+                        class="h-3.5 w-3.5"
+                        :class="{ 'animate-spin': account.isResetting }"
+                        name="RotateCcw"
+                      />
+                      <span>重置状态</span>
                     </button>
                     <button
                       :class="[
-                        'rounded px-2.5 py-1 text-xs font-medium transition-colors',
+                        'inline-flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-xs font-medium transition-colors',
                         account.isTogglingSchedulable
-                          ? 'cursor-not-allowed bg-gray-100 text-gray-400'
-                          : account.schedulable
-                            ? 'bg-green-100 text-green-700 hover:bg-green-200'
-                            : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                          ? 'cursor-not-allowed bg-gray-100 text-gray-400 dark:bg-gray-700 dark:text-gray-500'
+                          : 'bg-primary-50 text-primary-700 hover:bg-primary-100 dark:bg-primary-900/30 dark:text-primary-300 dark:hover:bg-primary-900/50'
                       ]"
                       :disabled="account.isTogglingSchedulable"
                       :title="account.schedulable ? '点击禁用调度' : '点击启用调度'"
                       @click="toggleSchedulable(account)"
                     >
-                      <i :class="['fas', account.schedulable ? 'fa-toggle-on' : 'fa-toggle-off']" />
-                      <span class="ml-1">{{ account.schedulable ? '调度' : '停用' }}</span>
+                      <Icon
+                        class="h-3.5 w-3.5"
+                        :name="account.schedulable ? 'ToggleRight' : 'ToggleLeft'"
+                      />
+                      <span>{{ account.schedulable ? '调度' : '停用' }}</span>
                     </button>
                     <button
                       v-if="canViewUsage(account)"
-                      class="rounded bg-indigo-100 px-2.5 py-1 text-xs font-medium text-indigo-700 transition-colors hover:bg-indigo-200"
+                      class="inline-flex items-center gap-1 rounded-lg bg-primary-50 px-2.5 py-1.5 text-xs font-medium text-primary-700 transition-colors hover:bg-primary-100 dark:bg-primary-900/30 dark:text-primary-300 dark:hover:bg-primary-900/50"
                       :title="'查看使用详情'"
                       @click="openAccountUsageModal(account)"
                     >
-                      <i class="fas fa-chart-line" />
-                      <span class="ml-1">详情</span>
+                      <Icon class="h-3.5 w-3.5" name="BarChart3" />
+                      <span>详情</span>
                     </button>
                     <button
-                      class="rounded bg-blue-100 px-2.5 py-1 text-xs font-medium text-blue-700 transition-colors hover:bg-blue-200"
+                      class="inline-flex items-center gap-1 rounded-lg bg-primary-50 px-2.5 py-1.5 text-xs font-medium text-primary-700 transition-colors hover:bg-primary-100 dark:bg-primary-900/30 dark:text-primary-300 dark:hover:bg-primary-900/50"
                       :title="'编辑账户'"
                       @click="editAccount(account)"
                     >
-                      <i class="fas fa-edit" />
-                      <span class="ml-1">编辑</span>
+                      <Icon class="h-3.5 w-3.5" name="Pencil" />
+                      <span>编辑</span>
                     </button>
                     <button
-                      class="rounded bg-red-100 px-2.5 py-1 text-xs font-medium text-red-700 transition-colors hover:bg-red-200"
+                      class="inline-flex items-center gap-1 rounded-lg bg-red-50 px-2.5 py-1.5 text-xs font-medium text-red-700 transition-colors hover:bg-red-100 dark:bg-red-900/30 dark:text-red-300 dark:hover:bg-red-900/50"
                       :title="'删除账户'"
                       @click="deleteAccount(account)"
                     >
-                      <i class="fas fa-trash" />
-                      <span class="ml-1">删除</span>
+                      <Icon class="h-3.5 w-3.5" name="Trash2" />
+                      <span>删除</span>
                     </button>
                   </div>
                 </td>
@@ -1590,41 +1595,36 @@
             <!-- 操作按钮 -->
             <div class="mt-3 flex gap-2 border-t border-gray-100 pt-3">
               <button
-                class="flex flex-1 items-center justify-center gap-1 rounded-lg px-3 py-2 text-xs transition-colors"
-                :class="
-                  account.schedulable
-                    ? 'bg-gray-50 text-gray-600 hover:bg-gray-100'
-                    : 'bg-green-50 text-green-600 hover:bg-green-100'
-                "
+                class="flex flex-1 items-center justify-center gap-1 rounded-lg bg-primary-50 px-3 py-2 text-xs font-medium text-primary-600 transition-colors hover:bg-primary-100 dark:bg-primary-900/30 dark:text-primary-300 dark:hover:bg-primary-900/50"
                 :disabled="account.isTogglingSchedulable"
                 @click="toggleSchedulable(account)"
               >
-                <i :class="['fas', account.schedulable ? 'fa-pause' : 'fa-play']" />
+                <Icon class="h-3.5 w-3.5" :name="account.schedulable ? 'Pause' : 'Play'" />
                 {{ account.schedulable ? '暂停' : '启用' }}
               </button>
 
               <button
                 v-if="canViewUsage(account)"
-                class="flex flex-1 items-center justify-center gap-1 rounded-lg bg-indigo-50 px-3 py-2 text-xs text-indigo-600 transition-colors hover:bg-indigo-100"
+                class="flex flex-1 items-center justify-center gap-1 rounded-lg bg-primary-50 px-3 py-2 text-xs font-medium text-primary-600 transition-colors hover:bg-primary-100 dark:bg-primary-900/30 dark:text-primary-300 dark:hover:bg-primary-900/50"
                 @click="openAccountUsageModal(account)"
               >
-                <i class="fas fa-chart-line" />
+                <Icon class="h-3.5 w-3.5" name="BarChart3" />
                 详情
               </button>
 
               <button
-                class="flex-1 rounded-lg bg-gray-50 px-3 py-2 text-xs text-gray-600 transition-colors hover:bg-gray-100"
+                class="flex flex-1 items-center justify-center gap-1 rounded-lg bg-primary-50 px-3 py-2 text-xs font-medium text-primary-600 transition-colors hover:bg-primary-100 dark:bg-primary-900/30 dark:text-primary-300 dark:hover:bg-primary-900/50"
                 @click="editAccount(account)"
               >
-                <i class="fas fa-edit mr-1" />
+                <Icon class="h-3.5 w-3.5" name="Pencil" />
                 编辑
               </button>
 
               <button
-                class="rounded-lg bg-red-50 px-3 py-2 text-xs text-red-600 transition-colors hover:bg-red-100"
+                class="flex items-center justify-center rounded-lg bg-red-50 px-3 py-2 text-xs font-medium text-red-600 transition-colors hover:bg-red-100 dark:bg-red-900/30 dark:text-red-300 dark:hover:bg-red-900/50"
                 @click="deleteAccount(account)"
               >
-                <i class="fas fa-trash" />
+                <Icon class="h-3.5 w-3.5" name="Trash2" />
               </button>
             </div>
           </div>
