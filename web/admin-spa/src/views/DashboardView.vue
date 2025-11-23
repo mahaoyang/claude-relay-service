@@ -403,7 +403,7 @@
               <button
                 v-for="option in dateFilter.presetOptions"
                 :key="option.value"
-                class="rounded-md px-3 py-1.5 text-sm font-medium transition-colors"
+                class="rounded-md px-2 py-1 text-xs font-medium transition-colors"
                 :class="
                   dateFilter.preset === option.value
                     ? 'bg-primary-50 text-primary-600 dark:bg-primary-900/30 dark:text-primary-400'
@@ -418,7 +418,7 @@
             <!-- 粒度切换按钮 -->
             <div class="flex gap-2">
               <button
-                class="rounded-md px-3 py-1.5 text-sm font-medium transition-colors"
+                class="rounded-md px-2 py-1 text-xs font-medium transition-colors"
                 :class="
                   trendGranularity === 'day'
                     ? 'bg-primary-50 text-primary-600 dark:bg-primary-900/30 dark:text-primary-400'
@@ -429,7 +429,7 @@
                 按天
               </button>
               <button
-                class="rounded-md px-3 py-1.5 text-sm font-medium transition-colors"
+                class="rounded-md px-2 py-1 text-xs font-medium transition-colors"
                 :class="
                   trendGranularity === 'hour'
                     ? 'bg-primary-50 text-primary-600 dark:bg-primary-900/30 dark:text-primary-400'
@@ -451,7 +451,7 @@
                 end-placeholder="结束日期"
                 format="YYYY-MM-DD HH:mm:ss"
                 range-separator="至"
-                size="default"
+                size="small"
                 start-placeholder="开始日期"
                 type="datetimerange"
                 value-format="YYYY-MM-DD HH:mm:ss"
@@ -471,13 +471,13 @@
               <label class="flex cursor-pointer items-center gap-2">
                 <input v-model="autoRefreshEnabled" class="peer sr-only" type="checkbox" />
                 <div
-                  class="relative h-5 w-9 rounded-full bg-gray-200 transition-colors peer-checked:bg-primary-600 dark:bg-gray-700"
+                  class="relative h-4 w-7 rounded-full bg-gray-200 transition-colors peer-checked:bg-primary-600 dark:bg-gray-700"
                 >
                   <div
-                    class="absolute left-0.5 top-0.5 h-4 w-4 rounded-full bg-white transition-transform peer-checked:translate-x-4"
+                    class="absolute left-0.5 top-0.5 h-3 w-3 rounded-full bg-white transition-transform peer-checked:translate-x-3"
                   ></div>
                 </div>
-                <span class="text-sm text-gray-600 dark:text-gray-400">
+                <span class="text-xs text-gray-600 dark:text-gray-400">
                   自动刷新
                   <span v-if="autoRefreshEnabled" class="text-primary-600 dark:text-primary-400">
                     {{ refreshCountdown }}s
@@ -487,7 +487,7 @@
 
               <!-- 刷新按钮 -->
               <button
-                class="rounded-md bg-primary-600 px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-primary-700 disabled:bg-gray-300 dark:disabled:bg-gray-700"
+                class="rounded-md bg-primary-600 px-2 py-1 text-xs font-medium text-white transition-colors hover:bg-primary-700 disabled:bg-gray-300 dark:disabled:bg-gray-700"
                 :disabled="isRefreshing"
                 title="立即刷新数据"
                 @click="refreshAllData()"
