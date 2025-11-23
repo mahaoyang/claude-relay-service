@@ -4,17 +4,26 @@ import { Listbox, ListboxButton, ListboxOptions, ListboxOption } from '@headless
 import { Check, ChevronsUpDown } from 'lucide-vue-next'
 
 const props = defineProps({
-  modelValue: [String, Number, Object],
+  modelValue: {
+    type: [String, Number, Object],
+    default: null
+  },
   options: {
     type: Array,
     required: true
   },
-  label: String,
+  label: {
+    type: String,
+    default: ''
+  },
   placeholder: {
     type: String,
     default: '请选择'
   },
-  error: String,
+  error: {
+    type: String,
+    default: ''
+  },
   disabled: Boolean,
   valueKey: {
     type: String,

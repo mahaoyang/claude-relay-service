@@ -11,7 +11,10 @@ const props = defineProps({
     type: [String, Number],
     required: true
   },
-  icon: Object,
+  icon: {
+    type: Object,
+    default: null
+  },
   trend: {
     type: Object,
     default: null

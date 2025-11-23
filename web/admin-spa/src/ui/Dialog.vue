@@ -8,9 +8,12 @@ import {
 } from '@headlessui/vue'
 import { X } from 'lucide-vue-next'
 
-const props = defineProps({
+defineProps({
   modelValue: Boolean,
-  title: String,
+  title: {
+    type: String,
+    default: ''
+  },
   size: {
     type: String,
     default: 'md',

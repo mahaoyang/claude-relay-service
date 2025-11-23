@@ -3,7 +3,10 @@ import { Switch as HeadlessSwitch } from '@headlessui/vue'
 
 defineProps({
   modelValue: Boolean,
-  label: String,
+  label: {
+    type: String,
+    default: ''
+  },
   disabled: Boolean
 })
 

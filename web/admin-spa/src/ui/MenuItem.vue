@@ -2,7 +2,10 @@
 import { MenuItem as HeadlessMenuItem } from '@headlessui/vue'
 
 defineProps({
-  icon: Object,
+  icon: {
+    type: Object,
+    default: null
+  },
   disabled: Boolean
 })
 

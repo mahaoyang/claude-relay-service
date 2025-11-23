@@ -699,7 +699,7 @@ import {
 } from 'lucide-vue-next'
 
 // 初始化 Chart.js 全局配置
-const { trendLineColors } = useChartConfig()
+useChartConfig()
 
 const dashboardStore = useDashboardStore()
 const themeStore = useThemeStore()
