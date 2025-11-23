@@ -1,8 +1,17 @@
 <script setup>
 defineProps({
-  title: String,
-  subtitle: String,
-  noPadding: Boolean,
+  title: {
+    type: String,
+    default: undefined
+  },
+  subtitle: {
+    type: String,
+    default: undefined
+  },
+  noPadding: {
+    type: Boolean,
+    default: false
+  },
   hover: {
     type: Boolean,
     default: true

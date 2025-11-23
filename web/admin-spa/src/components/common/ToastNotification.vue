@@ -29,7 +29,7 @@ import { ref, onMounted, onUnmounted } from 'vue'
 const toasts = ref([])
 let toastIdCounter = 0
 
-// 获取图标类名
+// eslint-disable-next-line no-unused-vars
 const getIconClass = (type) => {
   const iconMap = {
     success: 'fas fa-check-circle',

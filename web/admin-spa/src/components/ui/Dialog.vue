@@ -70,7 +70,6 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
 import {
   Dialog as HeadlessDialog,
   DialogPanel,
@@ -82,6 +81,7 @@ import {
 import { X } from 'lucide-vue-next'
 import { useTheme } from '@/composables/ui/useTheme'
 
+// eslint-disable-next-line no-unused-vars
 const props = defineProps({
   /**
    * 是否打开

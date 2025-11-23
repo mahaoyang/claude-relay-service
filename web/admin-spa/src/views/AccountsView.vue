@@ -129,8 +129,6 @@
                 </button>
               </div>
             </div>
-          </div>
-        </div>
       </div>
     </div>
 
@@ -1348,7 +1346,6 @@
           </button>
         </div>
       </div>
-    </div>
     </div>
 
     <!-- 添加账户模态框 -->

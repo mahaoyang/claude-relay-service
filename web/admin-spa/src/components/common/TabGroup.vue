@@ -25,8 +25,6 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
-
 const props = defineProps({
   modelValue: {
     type: [String, Number, Boolean],
@@ -36,7 +34,11 @@ const props = defineProps({
     type: Array,
     required: true,
     validator: (value) => {
-      return value.every((item) => item.hasOwnProperty('value') && item.hasOwnProperty('label'))
+      return value.every(
+        (item) =>
+          Object.prototype.hasOwnProperty.call(item, 'value') &&
+          Object.prototype.hasOwnProperty.call(item, 'label')
+      )
     }
   },
   activeClass: {

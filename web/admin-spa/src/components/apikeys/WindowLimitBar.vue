@@ -97,7 +97,7 @@ const requestProgress = computed(() => {
   return Math.min(percentage, 100)
 })
 
-// 时间进度（倒计时）
+// eslint-disable-next-line no-unused-vars
 const timeProgress = computed(() => {
   if (!props.rateLimitWindow || props.rateLimitWindow === 0) return 0
   const totalSeconds = props.rateLimitWindow * 60
@@ -105,7 +105,7 @@ const timeProgress = computed(() => {
   return Math.max(0, (elapsed / totalSeconds) * 100)
 })
 
-// 费用进度条颜色
+// eslint-disable-next-line no-unused-vars
 const getCostProgressBarClass = () => {
   const p = costProgress.value
   if (p >= 90) {
@@ -117,7 +117,7 @@ const getCostProgressBarClass = () => {
   }
 }
 
-// 请求进度条颜色
+// eslint-disable-next-line no-unused-vars
 const getRequestProgressBarClass = () => {
   const p = requestProgress.value
   if (p >= 90) {
@@ -129,7 +129,7 @@ const getRequestProgressBarClass = () => {
   }
 }
 
-// 费用文字颜色
+// eslint-disable-next-line no-unused-vars
 const getCostTextClass = () => {
   const p = costProgress.value
   if (p > 50) {
@@ -139,6 +139,7 @@ const getCostTextClass = () => {
   }
 }
 
+// eslint-disable-next-line no-unused-vars
 const getCostValueTextClass = () => {
   const p = costProgress.value
   if (p > 50) {
@@ -148,7 +149,7 @@ const getCostValueTextClass = () => {
   }
 }
 
-// 请求文字颜色
+// eslint-disable-next-line no-unused-vars
 const getRequestTextClass = () => {
   const p = requestProgress.value
   if (p > 50) {
@@ -158,6 +159,7 @@ const getRequestTextClass = () => {
   }
 }
 
+// eslint-disable-next-line no-unused-vars
 const getRequestValueTextClass = () => {
   const p = requestProgress.value
   if (p > 50) {

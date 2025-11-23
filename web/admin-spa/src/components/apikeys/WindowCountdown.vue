@@ -175,18 +175,21 @@ const formatTokenCount = (count) => {
   return count.toString()
 }
 
+// eslint-disable-next-line no-unused-vars
 const getRequestProgress = () => {
   if (!props.requestLimit || props.requestLimit === 0) return 0
   const percentage = ((props.currentRequests || 0) / props.requestLimit) * 100
   return Math.min(percentage, 100)
 }
 
+// eslint-disable-next-line no-unused-vars
 const getTokenProgress = () => {
   if (!props.tokenLimit || props.tokenLimit === 0) return 0
   const percentage = ((props.currentTokens || 0) / props.tokenLimit) * 100
   return Math.min(percentage, 100)
 }
 
+// eslint-disable-next-line no-unused-vars
 const getCostProgress = () => {
   if (!props.costLimit || props.costLimit === 0) return 0
   const percentage = ((props.currentCost || 0) / props.costLimit) * 100

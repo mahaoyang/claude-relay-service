@@ -114,7 +114,7 @@ const calculatePercentage = (stat) => {
   return Math.round(percentage)
 }
 
-// 获取进度条颜色
+// eslint-disable-next-line no-unused-vars
 const getProgressColor = (index) => {
   const colors = ['', '', '', '', '']
   return colors[index] || ''
