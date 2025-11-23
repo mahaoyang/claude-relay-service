@@ -826,16 +826,16 @@ function createModelUsageChart() {
       {
         data: data.map((d) => d.allTokens),
         backgroundColor: [
-          '#3B82F6',
-          '#10B981',
-          '#F59E0B',
-          '#EF4444',
-          '#8B5CF6',
-          '#EC4899',
-          '#14B8A6',
-          '#F97316',
-          '#6366F1',
-          '#84CC16'
+          'rgb(252, 207, 195)', // primary-200
+          'rgb(249, 171, 149)', // primary-300
+          'rgb(240, 138, 110)', // primary-400
+          'rgb(217, 119, 87)', // primary-500
+          'rgb(204, 95, 61)', // primary-600
+          'rgb(168, 78, 50)', // primary-700
+          'rgb(139, 64, 41)', // primary-800
+          'rgb(114, 53, 34)', // primary-900
+          'rgb(65, 29, 17)', // primary-950
+          'rgb(254, 244, 242)' // primary-50
         ],
         borderWidth: 0
       }
@@ -916,44 +916,44 @@ function createUsageTrendChart() {
       {
         label: '输入Token',
         data: inputData,
-        borderColor: 'rgb(102, 126, 234)',
-        backgroundColor: 'rgba(102, 126, 234, 0.1)',
+        borderColor: 'rgb(217, 119, 87)', // primary-500
+        backgroundColor: 'rgba(217, 119, 87, 0.1)',
         tension: 0.3
       },
       {
         label: '输出Token',
         data: outputData,
-        borderColor: 'rgb(240, 147, 251)',
-        backgroundColor: 'rgba(240, 147, 251, 0.1)',
+        borderColor: 'rgb(240, 138, 110)', // primary-400
+        backgroundColor: 'rgba(240, 138, 110, 0.1)',
         tension: 0.3
       },
       {
         label: '缓存创建Token',
         data: cacheCreateData,
-        borderColor: 'rgb(59, 130, 246)',
-        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+        borderColor: 'rgb(204, 95, 61)', // primary-600
+        backgroundColor: 'rgba(204, 95, 61, 0.1)',
         tension: 0.3
       },
       {
         label: '缓存读取Token',
         data: cacheReadData,
-        borderColor: 'rgb(147, 51, 234)',
-        backgroundColor: 'rgba(147, 51, 234, 0.1)',
+        borderColor: 'rgb(168, 78, 50)', // primary-700
+        backgroundColor: 'rgba(168, 78, 50, 0.1)',
         tension: 0.3
       },
       {
         label: '费用 (USD)',
         data: costData,
-        borderColor: 'rgb(34, 197, 94)',
-        backgroundColor: 'rgba(34, 197, 94, 0.1)',
+        borderColor: 'rgb(139, 64, 41)', // primary-800
+        backgroundColor: 'rgba(139, 64, 41, 0.1)',
         tension: 0.3,
         yAxisID: 'y2'
       },
       {
         label: '请求数',
         data: requestsData,
-        borderColor: 'rgb(16, 185, 129)',
-        backgroundColor: 'rgba(16, 185, 129, 0.1)',
+        borderColor: 'rgb(249, 171, 149)', // primary-300
+        backgroundColor: 'rgba(249, 171, 149, 0.1)',
         tension: 0.3,
         yAxisID: 'y1'
       }
@@ -1108,18 +1108,18 @@ function createApiKeysUsageTrendChart() {
   const data = apiKeysTrendData.value.data || []
   const metric = apiKeysTrendMetric.value
 
-  // 颜色数组
+  // 颜色数组 - 使用主色的深浅变化
   const colors = [
-    '#3B82F6',
-    '#10B981',
-    '#F59E0B',
-    '#EF4444',
-    '#8B5CF6',
-    '#EC4899',
-    '#14B8A6',
-    '#F97316',
-    '#6366F1',
-    '#84CC16'
+    'rgb(252, 207, 195)', // primary-200
+    'rgb(249, 171, 149)', // primary-300
+    'rgb(240, 138, 110)', // primary-400
+    'rgb(217, 119, 87)', // primary-500
+    'rgb(204, 95, 61)', // primary-600
+    'rgb(168, 78, 50)', // primary-700
+    'rgb(139, 64, 41)', // primary-800
+    'rgb(114, 53, 34)', // primary-900
+    'rgb(65, 29, 17)', // primary-950
+    'rgb(254, 244, 242)' // primary-50
   ]
 
   // 准备数据集
@@ -1301,17 +1301,18 @@ function createAccountUsageTrendChart() {
   const trend = accountUsageTrendData.value?.data || []
   const topAccounts = accountUsageTrendData.value?.topAccounts || []
 
+  // 颜色数组 - 使用主色的深浅变化
   const colors = [
-    '#2563EB',
-    '#059669',
-    '#D97706',
-    '#DC2626',
-    '#7C3AED',
-    '#F472B6',
-    '#0EA5E9',
-    '#F97316',
-    '#6366F1',
-    '#22C55E'
+    'rgb(252, 207, 195)', // primary-200
+    'rgb(249, 171, 149)', // primary-300
+    'rgb(240, 138, 110)', // primary-400
+    'rgb(217, 119, 87)', // primary-500
+    'rgb(204, 95, 61)', // primary-600
+    'rgb(168, 78, 50)', // primary-700
+    'rgb(139, 64, 41)', // primary-800
+    'rgb(114, 53, 34)', // primary-900
+    'rgb(65, 29, 17)', // primary-950
+    'rgb(254, 244, 242)' // primary-50
   ]
 
   const datasets = topAccounts.map((accountId, index) => {
