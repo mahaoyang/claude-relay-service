@@ -1,14 +1,29 @@
 <script setup>
 defineProps({
-  modelValue: [String, Number],
-  label: String,
+  modelValue: {
+    type: [String, Number],
+    default: ''
+  },
+  label: {
+    type: String,
+    default: ''
+  },
   type: {
     type: String,
     default: 'text'
   },
-  placeholder: String,
-  error: String,
-  icon: Object,
+  placeholder: {
+    type: String,
+    default: ''
+  },
+  error: {
+    type: String,
+    default: ''
+  },
+  icon: {
+    type: Object,
+    default: null
+  },
   disabled: Boolean
 })
 

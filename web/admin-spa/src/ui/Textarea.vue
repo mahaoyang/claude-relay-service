@@ -1,9 +1,21 @@
 <script setup>
 defineProps({
-  modelValue: String,
-  label: String,
-  placeholder: String,
-  error: String,
+  modelValue: {
+    type: String,
+    default: ''
+  },
+  label: {
+    type: String,
+    default: ''
+  },
+  placeholder: {
+    type: String,
+    default: ''
+  },
+  error: {
+    type: String,
+    default: ''
+  },
   disabled: Boolean,
   rows: {
     type: Number,

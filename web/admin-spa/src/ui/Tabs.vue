@@ -6,7 +6,10 @@ defineProps({
     type: Array,
     required: true
   },
-  modelValue: [String, Number],
+  modelValue: {
+    type: [String, Number],
+    default: null
+  },
   vertical: Boolean
 })
 

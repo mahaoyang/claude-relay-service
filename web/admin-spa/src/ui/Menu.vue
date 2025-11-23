@@ -1,8 +1,11 @@
 <script setup>
-import { Menu as HeadlessMenu, MenuButton, MenuItems, MenuItem } from '@headlessui/vue'
+import { Menu as HeadlessMenu, MenuButton, MenuItems } from '@headlessui/vue'
 
 defineProps({
-  buttonText: String,
+  buttonText: {
+    type: String,
+    default: ''
+  },
   position: {
     type: String,
     default: 'right',
