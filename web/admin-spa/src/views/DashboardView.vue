@@ -394,7 +394,7 @@
     <Card class="mb-8">
       <div class="space-y-6 p-6">
         <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+          <h3 class="text-sm font-semibold text-gray-900 dark:text-white">
             模型使用分布与Token使用趋势
           </h3>
           <div class="flex flex-wrap items-center gap-3">
@@ -586,7 +586,7 @@
     <Card class="mb-8">
       <div class="space-y-4 p-6">
         <div class="flex items-center justify-between">
-          <h3 class="text-lg font-semibold text-gray-900 dark:text-white">API Keys 使用趋势</h3>
+          <h3 class="text-sm font-semibold text-gray-900 dark:text-white">API Keys 使用趋势</h3>
           <!-- 维度切换按钮 -->
           <div class="flex gap-2">
             <button
@@ -615,7 +615,7 @@
             </button>
           </div>
         </div>
-        <p class="text-sm text-gray-500 dark:text-gray-400">
+        <p class="text-xs text-gray-500 dark:text-gray-400">
           <span v-if="apiKeysTrendData.totalApiKeys > 10">
             共 {{ apiKeysTrendData.totalApiKeys }} 个 API Key，显示使用量前 10 个
           </span>
@@ -632,8 +632,8 @@
       <div class="space-y-4 p-6">
         <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">账号使用趋势</h3>
-            <span class="text-sm text-gray-500 dark:text-gray-400">
+            <h3 class="text-sm font-semibold text-gray-900 dark:text-white">账号使用趋势</h3>
+            <span class="text-xs text-gray-500 dark:text-gray-400">
               当前分组：{{ accountUsageTrendData.groupLabel || '未选择' }}
             </span>
           </div>
@@ -653,7 +653,7 @@
             </button>
           </div>
         </div>
-        <p class="text-sm text-gray-500 dark:text-gray-400">
+        <p class="text-xs text-gray-500 dark:text-gray-400">
           <span>共 {{ accountUsageTrendData.totalAccounts || 0 }} 个账号</span>
           <span
             v-if="accountUsageTrendData.topAccounts && accountUsageTrendData.topAccounts.length"
