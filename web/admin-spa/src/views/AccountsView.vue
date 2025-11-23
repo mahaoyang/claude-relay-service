@@ -174,75 +174,60 @@
                   @click="sortAccounts('name')"
                 >
                   名称
-                  <i
+                  <Icon
                     v-if="accountsSortBy === 'name'"
-                    :class="[
-                      'fas',
-                      accountsSortOrder === 'asc' ? 'fa-sort-up' : 'fa-sort-down',
-                      'ml-1'
-                    ]"
+                    class="ml-1 inline h-3 w-3"
+                    :name="accountsSortOrder === 'asc' ? 'ChevronUp' : 'ChevronDown'"
                   />
-                  <i v-else class="fas fa-sort ml-1 text-gray-400" />
+                  <Icon v-else class="ml-1 inline h-3 w-3 text-gray-400" name="ArrowUpDown" />
                 </th>
                 <th
                   class="w-[15%] min-w-[120px] cursor-pointer px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-700 transition-colors hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700/50"
                   @click="sortAccounts('platform')"
                 >
                   平台/类型
-                  <i
+                  <Icon
                     v-if="accountsSortBy === 'platform'"
-                    :class="[
-                      'fas',
-                      accountsSortOrder === 'asc' ? 'fa-sort-up' : 'fa-sort-down',
-                      'ml-1'
-                    ]"
+                    class="ml-1 inline h-3 w-3"
+                    :name="accountsSortOrder === 'asc' ? 'ChevronUp' : 'ChevronDown'"
                   />
-                  <i v-else class="fas fa-sort ml-1 text-gray-400" />
+                  <Icon v-else class="ml-1 inline h-3 w-3 text-gray-400" name="ArrowUpDown" />
                 </th>
                 <th
                   class="w-[12%] min-w-[110px] cursor-pointer px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-700 transition-colors hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700/50"
                   @click="sortAccounts('expiresAt')"
                 >
                   到期时间
-                  <i
+                  <Icon
                     v-if="accountsSortBy === 'expiresAt'"
-                    :class="[
-                      'fas',
-                      accountsSortOrder === 'asc' ? 'fa-sort-up' : 'fa-sort-down',
-                      'ml-1'
-                    ]"
+                    class="ml-1 inline h-3 w-3"
+                    :name="accountsSortOrder === 'asc' ? 'ChevronUp' : 'ChevronDown'"
                   />
-                  <i v-else class="fas fa-sort ml-1 text-gray-400" />
+                  <Icon v-else class="ml-1 inline h-3 w-3 text-gray-400" name="ArrowUpDown" />
                 </th>
                 <th
                   class="w-[12%] min-w-[100px] cursor-pointer px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-700 transition-colors hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700/50"
                   @click="sortAccounts('status')"
                 >
                   状态
-                  <i
+                  <Icon
                     v-if="accountsSortBy === 'status'"
-                    :class="[
-                      'fas',
-                      accountsSortOrder === 'asc' ? 'fa-sort-up' : 'fa-sort-down',
-                      'ml-1'
-                    ]"
+                    class="ml-1 inline h-3 w-3"
+                    :name="accountsSortOrder === 'asc' ? 'ChevronUp' : 'ChevronDown'"
                   />
-                  <i v-else class="fas fa-sort ml-1 text-gray-400" />
+                  <Icon v-else class="ml-1 inline h-3 w-3 text-gray-400" name="ArrowUpDown" />
                 </th>
                 <th
                   class="w-[8%] min-w-[80px] cursor-pointer px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-700 transition-colors hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700/50"
                   @click="sortAccounts('priority')"
                 >
                   优先级
-                  <i
+                  <Icon
                     v-if="accountsSortBy === 'priority'"
-                    :class="[
-                      'fas',
-                      accountsSortOrder === 'asc' ? 'fa-sort-up' : 'fa-sort-down',
-                      'ml-1'
-                    ]"
+                    class="ml-1 inline h-3 w-3"
+                    :name="accountsSortOrder === 'asc' ? 'ChevronUp' : 'ChevronDown'"
                   />
-                  <i v-else class="fas fa-sort ml-1 text-gray-400" />
+                  <Icon v-else class="ml-1 inline h-3 w-3 text-gray-400" name="ArrowUpDown" />
                 </th>
                 <th
                   class="w-[10%] min-w-[100px] px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-700 dark:text-gray-300"
@@ -308,23 +293,24 @@
                             </div>
                             <div class="space-y-1 text-gray-200 dark:text-gray-600">
                               <div class="flex items-start gap-2">
-                                <i class="fas fa-clock mt-[2px] text-[10px] text-blue-500"></i>
+                                <Icon class="mt-[2px] h-2.5 w-2.5 text-blue-500" name="Clock" />
                                 <span class="font-medium text-white dark:text-gray-900"
                                   >5h 窗口：5小时使用量进度，到达重置时间后会自动归零。</span
                                 >
                               </div>
                               <div class="flex items-start gap-2">
-                                <i class="fas fa-history mt-[2px] text-[10px] text-emerald-500"></i>
+                                <Icon
+                                  class="mt-[2px] h-2.5 w-2.5 text-emerald-500"
+                                  name="History"
+                                />
                                 <span class="font-medium text-white dark:text-gray-900"
                                   >周限窗口：7天使用量进度，重置时同样回到 0%。</span
                                 >
                               </div>
                               <div class="flex items-start gap-2">
-                                <i
-                                  class="fas fa-info-circle mt-[2px] text-[10px] text-indigo-500"
-                                ></i>
+                                <Icon class="mt-[2px] h-2.5 w-2.5 text-indigo-500" name="Info" />
                                 <span class="font-medium text-white dark:text-gray-900"
-                                  >当“重置剩余”为 0 时，进度条与百分比会同步清零。</span
+                                  >当"重置剩余"为 0 时，进度条与百分比会同步清零。</span
                                 >
                               </div>
                             </div>
@@ -339,27 +325,28 @@
                             </div>
                             <div class="space-y-1 text-gray-200 dark:text-gray-600">
                               <div class="flex items-start gap-2">
-                                <i class="fas fa-clock mt-[2px] text-[10px] text-indigo-500"></i>
+                                <Icon class="mt-[2px] h-2.5 w-2.5 text-indigo-500" name="Clock" />
                                 <span class="font-medium text-white dark:text-gray-900"
                                   >5h 窗口：5小时滑动窗口的使用率。</span
                                 >
                               </div>
                               <div class="flex items-start gap-2">
-                                <i
-                                  class="fas fa-calendar-alt mt-[2px] text-[10px] text-emerald-500"
-                                ></i>
+                                <Icon
+                                  class="mt-[2px] h-2.5 w-2.5 text-emerald-500"
+                                  name="Calendar"
+                                />
                                 <span class="font-medium text-white dark:text-gray-900"
                                   >7d 窗口：7天总限额的使用率。</span
                                 >
                               </div>
                               <div class="flex items-start gap-2">
-                                <i class="fas fa-gem mt-[2px] text-[10px] text-purple-500"></i>
+                                <Icon class="mt-[2px] h-2.5 w-2.5 text-purple-500" name="Gem" />
                                 <span class="font-medium text-white dark:text-gray-900"
                                   >Opus 窗口：7天Opus模型专用限额。</span
                                 >
                               </div>
                               <div class="flex items-start gap-2">
-                                <i class="fas fa-sync-alt mt-[2px] text-[10px] text-blue-500"></i>
+                                <Icon class="mt-[2px] h-2.5 w-2.5 text-blue-500" name="RefreshCw" />
                                 <span class="font-medium text-white dark:text-gray-900"
                                   >到达重置时间后自动归零。</span
                                 >
@@ -368,8 +355,9 @@
                           </div>
                         </div>
                       </template>
-                      <i
-                        class="fas fa-question-circle cursor-help text-xs text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-400"
+                      <Icon
+                        class="h-3.5 w-3.5 cursor-help text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-400"
+                        name="HelpCircle"
                       />
                     </el-tooltip>
                   </div>
@@ -408,7 +396,7 @@
                     <div
                       class="mr-2 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-green-500 to-green-600"
                     >
-                      <i class="fas fa-user-circle text-xs text-white" />
+                      <Icon class="h-3 w-3 text-white" name="UserCircle" />
                     </div>
                     <div class="min-w-0">
                       <div class="flex items-center gap-2">
@@ -422,19 +410,19 @@
                           v-if="account.accountType === 'dedicated'"
                           class="inline-flex items-center rounded-full bg-purple-100 px-2 py-0.5 text-xs font-medium text-purple-800"
                         >
-                          <i class="fas fa-lock mr-1" />专属
+                          <Icon class="mr-1 h-3 w-3" name="Lock" />专属
                         </span>
                         <span
                           v-else-if="account.accountType === 'group'"
                           class="inline-flex items-center rounded-full bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-800"
                         >
-                          <i class="fas fa-layer-group mr-1" />分组调度
+                          <Icon class="mr-1 h-3 w-3" name="Layers" />分组调度
                         </span>
                         <span
                           v-else
                           class="inline-flex items-center rounded-full bg-green-100 px-2 py-0.5 text-xs font-medium text-green-800"
                         >
-                          <i class="fas fa-share-alt mr-1" />共享
+                          <Icon class="mr-1 h-3 w-3" name="Share2" />共享
                         </span>
                       </div>
                       <!-- 显示所有分组 - 换行显示 -->
@@ -448,7 +436,7 @@
                           class="inline-flex items-center rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-600 dark:bg-gray-700 dark:text-gray-400"
                           :title="`所属分组: ${group.name}`"
                         >
-                          <i class="fas fa-folder mr-1" />{{ group.name }}
+                          <Icon class="mr-1 h-3 w-3" name="Folder" />{{ group.name }}
                         </span>
                       </div>
                       <div
@@ -467,7 +455,7 @@
                       v-if="account.platform === 'gemini'"
                       class="flex items-center gap-1.5 rounded-lg border border-yellow-200 bg-gradient-to-r from-yellow-100 to-amber-100 px-2.5 py-1"
                     >
-                      <i class="fas fa-robot text-xs text-yellow-700" />
+                      <Icon class="h-3 w-3 text-yellow-700" name="Bot" />
                       <span class="text-xs font-semibold text-yellow-800">Gemini</span>
                       <span class="mx-1 h-4 w-px bg-yellow-300" />
                       <span class="text-xs font-medium text-yellow-700">
@@ -478,7 +466,7 @@
                       v-else-if="account.platform === 'claude-console'"
                       class="flex items-center gap-1.5 rounded-lg border border-purple-200 bg-gradient-to-r from-purple-100 to-pink-100 px-2.5 py-1"
                     >
-                      <i class="fas fa-terminal text-xs text-purple-700" />
+                      <Icon class="h-3 w-3 text-purple-700" name="Terminal" />
                       <span class="text-xs font-semibold text-purple-800">Console</span>
                       <span class="mx-1 h-4 w-px bg-purple-300" />
                       <span class="text-xs font-medium text-purple-700">API Key</span>
@@ -487,7 +475,7 @@
                       v-else-if="account.platform === 'bedrock'"
                       class="flex items-center gap-1.5 rounded-lg border border-orange-200 bg-gradient-to-r from-orange-100 to-red-100 px-2.5 py-1"
                     >
-                      <i class="fab fa-aws text-xs text-orange-700" />
+                      <Icon class="h-3 w-3 text-orange-700" name="Cloud" />
                       <span class="text-xs font-semibold text-orange-800">Bedrock</span>
                       <span class="mx-1 h-4 w-px bg-orange-300" />
                       <span class="text-xs font-medium text-orange-700">AWS</span>
@@ -496,7 +484,7 @@
                       v-else-if="account.platform === 'openai'"
                       class="flex items-center gap-1.5 rounded-lg border border-gray-700 bg-gray-100 bg-gradient-to-r from-gray-100 to-gray-100 px-2.5 py-1"
                     >
-                      <div class="fa-openai" />
+                      <Icon class="h-3 w-3 text-gray-950" name="Zap" />
                       <span class="text-xs font-semibold text-gray-950">OpenAi</span>
                       <span class="mx-1 h-4 w-px bg-gray-400" />
                       <span class="text-xs font-medium text-gray-950">{{
@@ -507,7 +495,7 @@
                       v-else-if="account.platform === 'azure_openai'"
                       class="flex items-center gap-1.5 rounded-lg border border-blue-200 bg-gradient-to-r from-blue-100 to-cyan-100 px-2.5 py-1 dark:border-blue-700 dark:from-blue-900/20 dark:to-cyan-900/20"
                     >
-                      <i class="fab fa-microsoft text-xs text-blue-700 dark:text-blue-400" />
+                      <Icon class="h-3 w-3 text-blue-700 dark:text-blue-400" name="Cloud" />
                       <span class="text-xs font-semibold text-blue-800 dark:text-blue-300"
                         >Azure OpenAI</span
                       >
@@ -520,7 +508,7 @@
                       v-else-if="account.platform === 'openai-responses'"
                       class="flex items-center gap-1.5 rounded-lg border border-teal-200 bg-gradient-to-r from-teal-100 to-green-100 px-2.5 py-1 dark:border-teal-700 dark:from-teal-900/20 dark:to-green-900/20"
                     >
-                      <i class="fas fa-server text-xs text-teal-700 dark:text-teal-400" />
+                      <Icon class="h-3 w-3 text-teal-700 dark:text-teal-400" name="Server" />
                       <span class="text-xs font-semibold text-teal-800 dark:text-teal-300"
                         >OpenAI-Responses</span
                       >
@@ -535,7 +523,7 @@
                       "
                       class="flex items-center gap-1.5 rounded-lg border border-indigo-200 bg-gradient-to-r from-indigo-100 to-blue-100 px-2.5 py-1"
                     >
-                      <i class="fas fa-brain text-xs text-indigo-700" />
+                      <Icon class="h-3 w-3 text-indigo-700" name="Brain" />
                       <span class="text-xs font-semibold text-indigo-800">{{
                         getClaudeAccountType(account)
                       }}</span>
@@ -548,7 +536,7 @@
                       v-else-if="account.platform === 'ccr'"
                       class="flex items-center gap-1.5 rounded-lg border border-teal-200 bg-gradient-to-r from-teal-100 to-emerald-100 px-2.5 py-1 dark:border-teal-700 dark:from-teal-900/20 dark:to-emerald-900/20"
                     >
-                      <i class="fas fa-code-branch text-xs text-teal-700 dark:text-teal-400" />
+                      <Icon class="h-3 w-3 text-teal-700 dark:text-teal-400" name="GitBranch" />
                       <span class="text-xs font-semibold text-teal-800 dark:text-teal-300"
                         >CCR</span
                       >
@@ -561,7 +549,7 @@
                       v-else-if="account.platform === 'droid'"
                       class="flex items-center gap-1.5 rounded-lg border border-cyan-200 bg-gradient-to-r from-cyan-100 to-sky-100 px-2.5 py-1 dark:border-cyan-700 dark:from-cyan-900/20 dark:to-sky-900/20"
                     >
-                      <i class="fas fa-robot text-xs text-cyan-700 dark:text-cyan-400" />
+                      <Icon class="h-3 w-3 text-cyan-700 dark:text-cyan-400" name="Bot" />
                       <span class="text-xs font-semibold text-cyan-800 dark:text-cyan-300"
                         >Droid</span
                       >
@@ -573,7 +561,7 @@
                         v-if="isDroidApiKeyMode(account)"
                         :class="getDroidApiKeyBadgeClasses(account)"
                       >
-                        <i class="fas fa-key text-[9px]" />
+                        <Icon class="h-2.5 w-2.5" name="Key" />
                         <span>x{{ getDroidApiKeyCount(account) }}</span>
                       </span>
                     </div>
@@ -581,7 +569,7 @@
                       v-else
                       class="flex items-center gap-1.5 rounded-lg border border-gray-200 bg-gradient-to-r from-gray-100 to-gray-200 px-2.5 py-1"
                     >
-                      <i class="fas fa-question text-xs text-gray-700" />
+                      <Icon class="h-3 w-3 text-gray-700" name="HelpCircle" />
                       <span class="text-xs font-semibold text-gray-800">未知</span>
                     </div>
                   </div>
@@ -596,7 +584,7 @@
                         style="font-size: 13px"
                         @click.stop="startEditAccountExpiry(account)"
                       >
-                        <i class="fas fa-exclamation-circle mr-1 text-xs" />
+                        <Icon class="mr-1 h-3 w-3" name="AlertCircle" />
                         已过期
                       </span>
                       <span
@@ -605,7 +593,7 @@
                         style="font-size: 13px"
                         @click.stop="startEditAccountExpiry(account)"
                       >
-                        <i class="fas fa-clock mr-1 text-xs" />
+                        <Icon class="mr-1 h-3 w-3" name="Clock" />
                         {{ formatExpireDate(account.expiresAt) }}
                       </span>
                       <span
@@ -624,7 +612,7 @@
                       style="font-size: 13px"
                       @click.stop="startEditAccountExpiry(account)"
                     >
-                      <i class="fas fa-infinity mr-1 text-xs" />
+                      <Icon class="mr-1 h-3 w-3" name="Infinity" />
                       永不过期
                     </span>
                   </div>
@@ -678,7 +666,7 @@
                       "
                       class="inline-flex items-center rounded-full bg-yellow-100 px-3 py-1 text-xs font-semibold text-yellow-800"
                     >
-                      <i class="fas fa-exclamation-triangle mr-1" />
+                      <Icon class="mr-1 h-3 w-3" name="AlertTriangle" />
                       限流中
                       <span
                         v-if="
@@ -693,7 +681,7 @@
                       v-if="account.schedulable === false"
                       class="inline-flex items-center rounded-full bg-gray-100 px-3 py-1 text-xs font-semibold text-gray-700"
                     >
-                      <i class="fas fa-pause-circle mr-1" />
+                      <Icon class="mr-1 h-3 w-3" name="PauseCircle" />
                       不可调度
                       <el-tooltip
                         v-if="getSchedulableReason(account)"
@@ -701,7 +689,7 @@
                         effect="dark"
                         placement="top"
                       >
-                        <i class="fas fa-question-circle ml-1 cursor-help text-gray-500" />
+                        <Icon class="ml-1 h-3 w-3 cursor-help text-gray-500" name="HelpCircle" />
                       </el-tooltip>
                     </span>
                     <span
@@ -999,7 +987,7 @@
                       </template>
                       <template v-else>
                         <div class="text-sm text-gray-400">
-                          <i class="fas fa-minus" />
+                          <Icon class="h-3 w-3" name="Minus" />
                         </div>
                       </template>
                     </div>
@@ -1043,7 +1031,7 @@
                         v-else
                         class="inline-flex items-center rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-500 dark:bg-gray-700 dark:text-gray-300"
                       >
-                        <i class="fas fa-infinity mr-1" />并发无限制
+                        <Icon class="mr-1 h-3 w-3" name="Infinity" />并发无限制
                       </div>
                     </div>
                   </div>
@@ -1241,23 +1229,23 @@
                                 : 'bg-gradient-to-br from-blue-500 to-blue-600'
                   ]"
                 >
-                  <i
-                    :class="[
-                      'text-sm text-white',
+                  <Icon
+                    class="h-4 w-4 text-white"
+                    :name="
                       account.platform === 'claude'
-                        ? 'fas fa-brain'
+                        ? 'Brain'
                         : account.platform === 'bedrock'
-                          ? 'fab fa-aws'
+                          ? 'Cloud'
                           : account.platform === 'azure_openai'
-                            ? 'fab fa-microsoft'
+                            ? 'Cloud'
                             : account.platform === 'openai'
-                              ? 'fas fa-openai'
+                              ? 'Zap'
                               : account.platform === 'ccr'
-                                ? 'fas fa-code-branch'
+                                ? 'GitBranch'
                                 : account.platform === 'droid'
-                                  ? 'fas fa-robot'
-                                  : 'fas fa-robot'
-                    ]"
+                                  ? 'Bot'
+                                  : 'Bot'
+                    "
                   />
                 </div>
                 <div>
@@ -1453,8 +1441,9 @@
                         content="会话窗口进度不代表使用量，仅表示距离下一个5小时窗口的剩余时间"
                         placement="top"
                       >
-                        <i
-                          class="fas fa-question-circle cursor-help text-xs text-gray-400 hover:text-gray-600"
+                        <Icon
+                          class="h-3 w-3 cursor-help text-gray-400 hover:text-gray-600"
+                          name="HelpCircle"
                         />
                       </el-tooltip>
                     </div>
@@ -1661,7 +1650,7 @@
               :disabled="currentPage === 1"
               @click="currentPage--"
             >
-              <i class="fas fa-chevron-left" />
+              <Icon class="h-4 w-4" name="ChevronLeft" />
             </button>
 
             <div class="flex items-center gap-1">
@@ -1715,7 +1704,7 @@
               :disabled="currentPage === totalPages || totalPages === 0"
               @click="currentPage++"
             >
-              <i class="fas fa-chevron-right" />
+              <Icon class="h-4 w-4" name="ChevronRight" />
             </button>
           </div>
         </div>
@@ -1863,30 +1852,30 @@ const accountGroupMap = ref(new Map()) // Map<accountId, Array<groupInfo>>
 
 // 下拉选项数据
 const sortOptions = ref([
-  { value: 'name', label: '按名称排序', icon: 'fa-font' },
-  { value: 'dailyTokens', label: '按今日Token排序', icon: 'fa-coins' },
-  { value: 'dailyRequests', label: '按今日请求数排序', icon: 'fa-chart-line' },
-  { value: 'totalTokens', label: '按总Token排序', icon: 'fa-database' },
-  { value: 'lastUsed', label: '按最后使用排序', icon: 'fa-clock' }
+  { value: 'name', label: '按名称排序', icon: 'Type' },
+  { value: 'dailyTokens', label: '按今日Token排序', icon: 'Coins' },
+  { value: 'dailyRequests', label: '按今日请求数排序', icon: 'BarChart3' },
+  { value: 'totalTokens', label: '按总Token排序', icon: 'Database' },
+  { value: 'lastUsed', label: '按最后使用排序', icon: 'Clock' }
 ])
 
 const platformOptions = ref([
-  { value: 'all', label: '所有平台', icon: 'fa-globe' },
-  { value: 'claude', label: 'Claude', icon: 'fa-brain' },
-  { value: 'claude-console', label: 'Claude Console', icon: 'fa-terminal' },
-  { value: 'gemini', label: 'Gemini', icon: 'fab fa-google' },
-  { value: 'openai', label: 'OpenAi', icon: 'fa-openai' },
-  { value: 'azure_openai', label: 'Azure OpenAI', icon: 'fab fa-microsoft' },
-  { value: 'bedrock', label: 'Bedrock', icon: 'fab fa-aws' },
-  { value: 'openai-responses', label: 'OpenAI-Responses', icon: 'fa-server' },
-  { value: 'ccr', label: 'CCR', icon: 'fa-code-branch' },
-  { value: 'droid', label: 'Droid', icon: 'fa-robot' }
+  { value: 'all', label: '所有平台', icon: 'Globe' },
+  { value: 'claude', label: 'Claude', icon: 'Brain' },
+  { value: 'claude-console', label: 'Claude Console', icon: 'Terminal' },
+  { value: 'gemini', label: 'Gemini', icon: 'Sparkles' },
+  { value: 'openai', label: 'OpenAi', icon: 'Zap' },
+  { value: 'azure_openai', label: 'Azure OpenAI', icon: 'Cloud' },
+  { value: 'bedrock', label: 'Bedrock', icon: 'Cloud' },
+  { value: 'openai-responses', label: 'OpenAI-Responses', icon: 'Server' },
+  { value: 'ccr', label: 'CCR', icon: 'GitBranch' },
+  { value: 'droid', label: 'Droid', icon: 'Bot' }
 ])
 
 const groupOptions = computed(() => {
   const options = [
-    { value: 'all', label: '所有账户', icon: 'fa-globe' },
-    { value: 'ungrouped', label: '未分组账户', icon: 'fa-user' }
+    { value: 'all', label: '所有账户', icon: 'Globe' },
+    { value: 'ungrouped', label: '未分组账户', icon: 'User' }
   ]
   accountGroups.value.forEach((group) => {
     options.push({
@@ -1894,12 +1883,12 @@ const groupOptions = computed(() => {
       label: `${group.name} (${group.platform === 'claude' ? 'Claude' : group.platform === 'gemini' ? 'Gemini' : group.platform === 'openai' ? 'OpenAI' : 'Droid'})`,
       icon:
         group.platform === 'claude'
-          ? 'fa-brain'
+          ? 'Brain'
           : group.platform === 'gemini'
-            ? 'fa-robot'
+            ? 'Sparkles'
             : group.platform === 'openai'
-              ? 'fa-openai'
-              : 'fa-robot'
+              ? 'Zap'
+              : 'Bot'
     })
   })
   return options
