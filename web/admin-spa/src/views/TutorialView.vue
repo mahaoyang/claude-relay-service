@@ -19,14 +19,12 @@
 
     <!-- 系统选择标签 -->
     <Card class="mb-6">
-      <div class="p-6">
-        <TabGroup v-model="activeTutorialSystem" :options="systemOptions" />
-      </div>
+      <TabGroup v-model="activeTutorialSystem" :options="systemOptions" />
     </Card>
 
     <!-- Windows 教程 -->
     <Card v-if="activeTutorialSystem === 'windows'">
-      <div class="space-y-6 p-6">
+      <div class="space-y-6">
         <!-- 第一步：安装 Node.js -->
         <div>
           <h4
@@ -596,7 +594,7 @@
 
     <!-- macOS 教程 -->
     <Card v-else-if="activeTutorialSystem === 'macos'">
-      <div class="space-y-6 p-6">
+      <div class="space-y-6">
         <!-- 第一步：安装 Node.js -->
         <div>
           <h4
@@ -1094,7 +1092,7 @@
 
     <!-- Linux 教程 -->
     <Card v-else-if="activeTutorialSystem === 'linux'">
-      <div class="space-y-6 p-6">
+      <div class="space-y-6">
         <!-- 第一步：安装 Node.js -->
         <div>
           <h4
