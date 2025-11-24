@@ -50,7 +50,9 @@
               <p class="mb-3 text-xs leading-relaxed text-gray-600 dark:text-gray-400">
                 方法一：官网下载（推荐）
               </p>
-              <ol class="mb-4 list-inside list-decimal space-y-2 text-xs text-gray-600 dark:text-gray-400">
+              <ol
+                class="mb-4 list-inside list-decimal space-y-2 text-xs text-gray-600 dark:text-gray-400"
+              >
                 <li class="text-xs text-gray-600 dark:text-gray-400">
                   打开浏览器访问
                   <code
@@ -95,8 +97,12 @@
               <h6 class="mb-2 text-base font-medium text-gray-700 dark:text-white">
                 Windows 注意事项
               </h6>
-              <ul class="mb-4 list-inside list-disc space-y-2 text-xs text-gray-600 dark:text-gray-400">
-                <li class="text-xs text-gray-600 dark:text-gray-400">建议使用 PowerShell 而不是 CMD</li>
+              <ul
+                class="mb-4 list-inside list-disc space-y-2 text-xs text-gray-600 dark:text-gray-400"
+              >
+                <li class="text-xs text-gray-600 dark:text-gray-400">
+                  建议使用 PowerShell 而不是 CMD
+                </li>
                 <li class="text-xs text-gray-600 dark:text-gray-400">
                   如果遇到权限问题，尝试以管理员身份运行
                 </li>
@@ -151,7 +157,9 @@
 
             <div>
               <h6 class="mb-2 text-base font-medium text-gray-700 dark:text-white">提示</h6>
-              <ul class="mb-4 list-inside list-disc space-y-2 text-xs text-gray-600 dark:text-gray-400">
+              <ul
+                class="mb-4 list-inside list-disc space-y-2 text-xs text-gray-600 dark:text-gray-400"
+              >
                 <li class="text-xs text-gray-600 dark:text-gray-400">
                   建议使用 PowerShell 而不是 CMD，功能更强大
                 </li>
@@ -536,8 +544,12 @@
                 <p class="mb-3 text-xs leading-relaxed text-gray-600 dark:text-gray-400">
                   这通常是权限问题，尝试以下解决方法：
                 </p>
-                <ul class="mb-4 list-inside list-disc space-y-2 text-xs text-gray-600 dark:text-gray-400">
-                  <li class="text-xs text-gray-600 dark:text-gray-400">以管理员身份运行 PowerShell</li>
+                <ul
+                  class="mb-4 list-inside list-disc space-y-2 text-xs text-gray-600 dark:text-gray-400"
+                >
+                  <li class="text-xs text-gray-600 dark:text-gray-400">
+                    以管理员身份运行 PowerShell
+                  </li>
                   <li class="text-xs text-gray-600 dark:text-gray-400">
                     或者配置 npm 使用用户目录：<code
                       class="rounded bg-gray-100 px-2 py-1 font-mono text-sm text-gray-800 dark:bg-gray-800 dark:text-gray-200"
@@ -577,9 +589,15 @@
                 <p class="mb-3 text-xs leading-relaxed text-gray-600 dark:text-gray-400">
                   设置永久环境变量后需要：
                 </p>
-                <ul class="mb-4 list-inside list-disc space-y-2 text-xs text-gray-600 dark:text-gray-400">
-                  <li class="text-xs text-gray-600 dark:text-gray-400">重新启动 PowerShell 或 CMD</li>
-                  <li class="text-xs text-gray-600 dark:text-gray-400">或者注销并重新登录 Windows</li>
+                <ul
+                  class="mb-4 list-inside list-disc space-y-2 text-xs text-gray-600 dark:text-gray-400"
+                >
+                  <li class="text-xs text-gray-600 dark:text-gray-400">
+                    重新启动 PowerShell 或 CMD
+                  </li>
+                  <li class="text-xs text-gray-600 dark:text-gray-400">
+                    或者注销并重新登录 Windows
+                  </li>
                   <li class="text-xs text-gray-600 dark:text-gray-400">
                     验证设置：<code
                       class="rounded bg-gray-100 px-2 py-1 font-mono text-sm text-gray-800 dark:bg-gray-800 dark:text-gray-200"
@@ -629,8 +647,12 @@
               />
             </div>
             <div>
-              <p class="mb-3 text-xs leading-relaxed text-gray-600 dark:text-gray-400">方法二：官网下载</p>
-              <ol class="mb-4 list-inside list-decimal space-y-2 text-xs text-gray-600 dark:text-gray-400">
+              <p class="mb-3 text-xs leading-relaxed text-gray-600 dark:text-gray-400">
+                方法二：官网下载
+              </p>
+              <ol
+                class="mb-4 list-inside list-decimal space-y-2 text-xs text-gray-600 dark:text-gray-400"
+              >
                 <li class="text-xs text-gray-600 dark:text-gray-400">
                   访问
                   <code
@@ -654,7 +676,9 @@
               <h6 class="mb-2 text-base font-medium text-gray-700 dark:text-white">
                 macOS 注意事项
               </h6>
-              <ul class="mb-4 list-inside list-disc space-y-2 text-xs text-gray-600 dark:text-gray-400">
+              <ul
+                class="mb-4 list-inside list-disc space-y-2 text-xs text-gray-600 dark:text-gray-400"
+              >
                 <li class="text-xs text-gray-600 dark:text-gray-400">
                   如果遇到权限问题，可能需要使用
                   <code
@@ -665,7 +689,9 @@
                 <li class="text-xs text-gray-600 dark:text-gray-400">
                   首次运行可能需要在系统偏好设置中允许
                 </li>
-                <li class="text-xs text-gray-600 dark:text-gray-400">建议使用 Terminal 或 iTerm2</li>
+                <li class="text-xs text-gray-600 dark:text-gray-400">
+                  建议使用 Terminal 或 iTerm2
+                </li>
               </ul>
             </div>
           </div>
@@ -1021,7 +1047,9 @@
                 <p class="mb-3 text-xs leading-relaxed text-gray-600 dark:text-gray-400">
                   尝试以下解决方法：
                 </p>
-                <ul class="mb-4 list-inside list-disc space-y-2 text-xs text-gray-600 dark:text-gray-400">
+                <ul
+                  class="mb-4 list-inside list-disc space-y-2 text-xs text-gray-600 dark:text-gray-400"
+                >
                   <li class="text-xs text-gray-600 dark:text-gray-400">
                     使用 sudo 安装：<code
                       class="rounded bg-gray-100 px-2 py-1 font-mono text-sm text-gray-800 dark:bg-gray-800 dark:text-gray-200"
@@ -1049,7 +1077,9 @@
                 <p class="mb-3 text-xs leading-relaxed text-gray-600 dark:text-gray-400">
                   如果系统阻止运行 Claude Code：
                 </p>
-                <ul class="mb-4 list-inside list-disc space-y-2 text-xs text-gray-600 dark:text-gray-400">
+                <ul
+                  class="mb-4 list-inside list-disc space-y-2 text-xs text-gray-600 dark:text-gray-400"
+                >
                   <li class="text-xs text-gray-600 dark:text-gray-400">
                     打开"系统偏好设置" → "安全性与隐私"
                   </li>
@@ -1072,8 +1102,12 @@
                 环境变量不生效
               </summary>
               <div>
-                <p class="mb-3 text-xs leading-relaxed text-gray-600 dark:text-gray-400">检查以下几点：</p>
-                <ul class="mb-4 list-inside list-disc space-y-2 text-xs text-gray-600 dark:text-gray-400">
+                <p class="mb-3 text-xs leading-relaxed text-gray-600 dark:text-gray-400">
+                  检查以下几点：
+                </p>
+                <ul
+                  class="mb-4 list-inside list-disc space-y-2 text-xs text-gray-600 dark:text-gray-400"
+                >
                   <li class="text-xs text-gray-600 dark:text-gray-400">
                     确认修改了正确的配置文件（.zshrc 或 .bash_profile）
                   </li>
@@ -1150,8 +1184,12 @@
               <h6 class="mb-2 text-base font-medium text-gray-700 dark:text-white">
                 Linux 注意事项
               </h6>
-              <ul class="mb-4 list-inside list-disc space-y-2 text-xs text-gray-600 dark:text-gray-400">
-                <li class="text-xs text-gray-600 dark:text-gray-400">某些发行版可能需要安装额外的依赖</li>
+              <ul
+                class="mb-4 list-inside list-disc space-y-2 text-xs text-gray-600 dark:text-gray-400"
+              >
+                <li class="text-xs text-gray-600 dark:text-gray-400">
+                  某些发行版可能需要安装额外的依赖
+                </li>
                 <li class="text-xs text-gray-600 dark:text-gray-400">
                   如果遇到权限问题，使用
                   <code
@@ -1310,7 +1348,9 @@
                 <h6 class="mb-2 text-base font-medium text-gray-700 dark:text-white">
                   验证 Gemini CLI 环境变量
                 </h6>
-                <p class="mb-3 text-xs leading-relaxed text-gray-600 dark:text-gray-400">在终端中验证：</p>
+                <p class="mb-3 text-xs leading-relaxed text-gray-600 dark:text-gray-400">
+                  在终端中验证：
+                </p>
                 <CodeBlock
                   language="bash"
                   :lines="[
@@ -1519,7 +1559,9 @@
                   <p class="mb-3 text-xs leading-relaxed text-gray-600 dark:text-gray-400">
                     尝试以下解决方法：
                   </p>
-                  <ul class="mb-4 list-inside list-disc space-y-2 text-xs text-gray-600 dark:text-gray-400">
+                  <ul
+                    class="mb-4 list-inside list-disc space-y-2 text-xs text-gray-600 dark:text-gray-400"
+                  >
                     <li class="text-xs text-gray-600 dark:text-gray-400">
                       使用 sudo 安装：<code
                         class="rounded bg-gray-100 px-2 py-1 font-mono text-sm text-gray-800 dark:bg-gray-800 dark:text-gray-200"
@@ -1566,7 +1608,9 @@
                   <p class="mb-3 text-xs leading-relaxed text-gray-600 dark:text-gray-400">
                     检查以下几点：
                   </p>
-                  <ul class="mb-4 list-inside list-disc space-y-2 text-xs text-gray-600 dark:text-gray-400">
+                  <ul
+                    class="mb-4 list-inside list-disc space-y-2 text-xs text-gray-600 dark:text-gray-400"
+                  >
                     <li class="text-xs text-gray-600 dark:text-gray-400">
                       确认修改了正确的配置文件（.bashrc 或 .zshrc）
                     </li>

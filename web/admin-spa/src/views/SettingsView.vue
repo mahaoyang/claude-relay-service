@@ -159,7 +159,9 @@
                     </div>
                     <div>
                       <div class="font-medium text-gray-900 dark:text-white">管理入口</div>
-                      <div class="mt-1 text-sm text-gray-500 dark:text-gray-400">管理后台按钮显示</div>
+                      <div class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                        管理后台按钮显示
+                      </div>
                     </div>
                   </div>
                 </td>
@@ -662,387 +664,383 @@
 
     <!-- 内容区域 -->
     <div class="space-y-6">
-          <!-- 平台类型选择 -->
-          <div>
-            <label class="mb-2 flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300">
-              <Icon class="h-4 w-4" name="Layers" />
-              平台类型
-            </label>
-            <div class="relative">
-              <select
-                v-model="platformForm.type"
-                class="w-full appearance-none rounded-lg border border-gray-300 bg-white px-4 py-2 pr-10 text-sm text-gray-900 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 disabled:cursor-not-allowed disabled:opacity-50 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
-                :disabled="editingPlatform"
-              >
-                <option value="wechat_work">🟢 企业微信</option>
-                <option value="dingtalk">🔵 钉钉</option>
-                <option value="feishu">🟦 飞书</option>
-                <option value="slack">🟣 Slack</option>
-                <option value="discord">🟪 Discord</option>
-                <option value="telegram">✈️ Telegram</option>
-                <option value="bark">🔔 Bark</option>
-                <option value="smtp">📧 邮件通知</option>
-                <option value="custom">⚙️ 自定义</option>
-              </select>
-              <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
-                <Icon class="h-4 w-4 text-gray-400" name="ChevronDown" />
-              </div>
-            </div>
-            <p
-              v-if="editingPlatform"
-              class="mt-1.5 flex items-center gap-1.5 text-xs text-amber-600 dark:text-amber-400"
-            >
-              <Icon class="h-3.5 w-3.5" name="Info" />
-              编辑模式下不能更改平台类型
-            </p>
+      <!-- 平台类型选择 -->
+      <div>
+        <label
+          class="mb-2 flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300"
+        >
+          <Icon class="h-4 w-4" name="Layers" />
+          平台类型
+        </label>
+        <div class="relative">
+          <select
+            v-model="platformForm.type"
+            class="w-full appearance-none rounded-lg border border-gray-300 bg-white px-4 py-2 pr-10 text-sm text-gray-900 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 disabled:cursor-not-allowed disabled:opacity-50 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+            :disabled="editingPlatform"
+          >
+            <option value="wechat_work">企业微信</option>
+            <option value="dingtalk">钉钉</option>
+            <option value="feishu">飞书</option>
+            <option value="slack">Slack</option>
+            <option value="discord">Discord</option>
+            <option value="telegram">Telegram</option>
+            <option value="bark">Bark</option>
+            <option value="smtp">邮件通知</option>
+            <option value="custom">自定义</option>
+          </select>
+          <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
+            <Icon class="h-4 w-4 text-gray-400" name="ChevronDown" />
           </div>
+        </div>
+        <p
+          v-if="editingPlatform"
+          class="mt-1.5 flex items-center gap-1.5 text-xs text-amber-600 dark:text-amber-400"
+        >
+          <Icon class="h-3.5 w-3.5" name="Info" />
+          编辑模式下不能更改平台类型
+        </p>
+      </div>
 
-          <!-- 平台名称 -->
+      <!-- 平台名称 -->
+      <div>
+        <label
+          class="mb-2 flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300"
+        >
+          <Icon class="h-4 w-4" name="Tag" />
+          名称
+          <span class="text-xs font-normal text-gray-500">(可选)</span>
+        </label>
+        <input
+          v-model="platformForm.name"
+          class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm text-gray-900 placeholder-gray-500 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
+          placeholder="例如：运维群通知、开发测试群"
+          type="text"
+        />
+      </div>
+
+      <!-- Webhook URL (非Bark和SMTP平台) -->
+      <div
+        v-if="
+          platformForm.type !== 'bark' &&
+          platformForm.type !== 'smtp' &&
+          platformForm.type !== 'telegram'
+        "
+      >
+        <label
+          class="mb-2 flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300"
+        >
+          <Icon class="h-4 w-4" name="Link" />
+          Webhook URL
+          <span class="text-red-500">*</span>
+        </label>
+        <div class="relative">
+          <input
+            v-model="platformForm.url"
+            class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 pr-10 text-sm text-gray-900 placeholder-gray-500 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
+            placeholder="https://..."
+            required
+            type="url"
+            @input="validateUrl"
+          />
+          <div
+            v-if="urlValid"
+            class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3"
+          >
+            <Icon class="h-5 w-5 text-green-500" name="CheckCircle" />
+          </div>
+          <div
+            v-if="urlError"
+            class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3"
+          >
+            <Icon class="h-5 w-5 text-red-500" name="AlertCircle" />
+          </div>
+        </div>
+        <div
+          v-if="getWebhookHint(platformForm.type)"
+          class="mt-1.5 flex items-start gap-1.5 rounded-lg bg-blue-50 p-3 dark:bg-blue-900/20"
+        >
+          <Icon class="mt-0.5 h-4 w-4 flex-shrink-0 text-blue-600 dark:text-blue-400" name="Info" />
+          <p class="text-xs text-blue-700 dark:text-blue-300">
+            {{ getWebhookHint(platformForm.type) }}
+          </p>
+        </div>
+      </div>
+
+      <!-- Telegram 平台特有字段 -->
+      <div v-if="platformForm.type === 'telegram'">
+        <div>
+          <label>
+            <Icon name="Bot" />
+            Bot Token
+            <span>*</span>
+          </label>
+          <input
+            v-model="platformForm.botToken"
+            placeholder="例如：123456789:ABCDEFghijk-xyz"
+            required
+            type="text"
+          />
+          <p>在 Telegram 的 @BotFather 中创建机器人后获得的 Token</p>
+        </div>
+
+        <div>
+          <label>
+            <Icon name="MessagesSquare" />
+            Chat ID
+            <span>*</span>
+          </label>
+          <input
+            v-model="platformForm.chatId"
+            placeholder="例如：123456789 或 -1001234567890"
+            required
+            type="text"
+          />
+          <p>可使用 @userinfobot、@RawDataBot 或 API 获取聊天/频道的 Chat ID</p>
+        </div>
+
+        <div>
+          <label>
+            <Icon name="Globe" />
+            API 基础地址
+            <span>(可选)</span>
+          </label>
+          <input
+            v-model="platformForm.apiBaseUrl"
+            placeholder="默认: https://api.telegram.org"
+            type="url"
+          />
+          <p>使用自建 Bot API 时可覆盖默认域名，需以 http 或 https 开头</p>
+        </div>
+
+        <div>
+          <label>
+            <Icon name="Route" />
+            代理地址
+            <span>(可选)</span>
+          </label>
+          <input
+            v-model="platformForm.proxyUrl"
+            placeholder="例如：socks5://user:pass@127.0.0.1:1080"
+            type="text"
+          />
+          <p>支持 http、https、socks4/4a/5 代理，留空则直接连接 Telegram 官方 API</p>
+        </div>
+
+        <div>
+          <Icon name="Info" />
+          <div>机器人需先加入对应群组或频道并授予发送消息权限，通知会以纯文本方式发送。</div>
+        </div>
+      </div>
+
+      <!-- Bark 平台特有字段 -->
+      <div v-if="platformForm.type === 'bark'">
+        <!-- 设备密钥 -->
+        <div>
+          <label>
+            <Icon name="Key" />
+            设备密钥 (Device Key)
+            <span>*</span>
+          </label>
+          <input
+            v-model="platformForm.deviceKey"
+            placeholder="例如：aBcDeFgHiJkLmNoPqRsTuVwX"
+            required
+            type="text"
+          />
+          <p>在Bark App中查看您的推送密钥</p>
+        </div>
+
+        <!-- 服务器URL（可选） -->
+        <div>
+          <label>
+            <Icon name="Server" />
+            服务器地址
+            <span>(可选)</span>
+          </label>
+          <input
+            v-model="platformForm.serverUrl"
+            placeholder="默认: https://api.day.app/push"
+            type="url"
+          />
+        </div>
+
+        <!-- 通知级别 -->
+        <div>
+          <label>
+            <Icon name="Flag" />
+            通知级别
+          </label>
+          <select v-model="platformForm.level">
+            <option value="">自动（根据通知类型）</option>
+            <option value="passive">被动</option>
+            <option value="active">默认</option>
+            <option value="timeSensitive">时效性</option>
+            <option value="critical">紧急</option>
+          </select>
+        </div>
+
+        <!-- 通知声音 -->
+        <div>
+          <label>
+            <Icon name="Volume2" />
+            通知声音
+          </label>
+          <select v-model="platformForm.sound">
+            <option value="">自动（根据通知类型）</option>
+            <option value="default">默认</option>
+            <option value="alarm">警报</option>
+            <option value="bell">铃声</option>
+            <option value="birdsong">鸟鸣</option>
+            <option value="electronic">电子音</option>
+            <option value="glass">玻璃</option>
+            <option value="horn">喇叭</option>
+            <option value="silence">静音</option>
+          </select>
+        </div>
+
+        <!-- 分组 -->
+        <div>
+          <label>
+            <Icon name="Folder" />
+            通知分组
+            <span>(可选)</span>
+          </label>
+          <input v-model="platformForm.group" placeholder="默认: claude-relay" type="text" />
+        </div>
+
+        <!-- 提示信息 -->
+        <div>
+          <Icon name="Info" />
           <div>
-            <label class="mb-2 flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300">
-              <Icon class="h-4 w-4" name="Tag" />
-              名称
-              <span class="text-xs font-normal text-gray-500">(可选)</span>
+            <p>1. 在iPhone上安装Bark App</p>
+            <p>2. 打开App获取您的设备密钥</p>
+            <p>3. 将密钥粘贴到上方输入框</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SMTP 平台特有字段 -->
+      <div v-if="platformForm.type === 'smtp'">
+        <!-- SMTP 主机 -->
+        <div>
+          <label>
+            <Icon name="Server" />
+            SMTP 服务器
+            <span>*</span>
+          </label>
+          <input
+            v-model="platformForm.host"
+            placeholder="例如: smtp.gmail.com"
+            required
+            type="text"
+          />
+        </div>
+
+        <!-- SMTP 端口和安全设置 -->
+        <div>
+          <div>
+            <label>
+              <Icon name="Plug" />
+              端口
             </label>
             <input
-              v-model="platformForm.name"
-              class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm text-gray-900 placeholder-gray-500 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
-              placeholder="例如：运维群通知、开发测试群"
-              type="text"
+              v-model.number="platformForm.port"
+              max="65535"
+              min="1"
+              placeholder="587"
+              type="number"
             />
+            <p>默认: 587 (TLS) 或 465 (SSL)</p>
           </div>
 
-          <!-- Webhook URL (非Bark和SMTP平台) -->
-          <div
-            v-if="
-              platformForm.type !== 'bark' &&
-              platformForm.type !== 'smtp' &&
-              platformForm.type !== 'telegram'
-            "
-          >
-            <label class="mb-2 flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300">
-              <Icon class="h-4 w-4" name="Link" />
-              Webhook URL
-              <span class="text-red-500">*</span>
+          <div>
+            <label>
+              <Icon name="Shield" />
+              加密方式
             </label>
-            <div class="relative">
-              <input
-                v-model="platformForm.url"
-                class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 pr-10 text-sm text-gray-900 placeholder-gray-500 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
-                placeholder="https://..."
-                required
-                type="url"
-                @input="validateUrl"
-              />
-              <div
-                v-if="urlValid"
-                class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3"
-              >
-                <Icon class="h-5 w-5 text-green-500" name="CheckCircle" />
-              </div>
-              <div
-                v-if="urlError"
-                class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3"
-              >
-                <Icon class="h-5 w-5 text-red-500" name="AlertCircle" />
-              </div>
-            </div>
-            <div
-              v-if="getWebhookHint(platformForm.type)"
-              class="mt-1.5 flex items-start gap-1.5 rounded-lg bg-blue-50 p-3 dark:bg-blue-900/20"
-            >
-              <Icon class="mt-0.5 h-4 w-4 flex-shrink-0 text-blue-600 dark:text-blue-400" name="Info" />
-              <p class="text-xs text-blue-700 dark:text-blue-300">
-                {{ getWebhookHint(platformForm.type) }}
-              </p>
-            </div>
+            <select v-model="platformForm.secure">
+              <option :value="false">STARTTLS (端口587)</option>
+              <option :value="true">SSL/TLS (端口465)</option>
+            </select>
           </div>
+        </div>
 
-          <!-- Telegram 平台特有字段 -->
-          <div v-if="platformForm.type === 'telegram'">
-            <div>
-              <label>
-                <Icon name="Bot" />
-                Bot Token
-                <span>*</span>
-              </label>
-              <input
-                v-model="platformForm.botToken"
-                placeholder="例如：123456789:ABCDEFghijk-xyz"
-                required
-                type="text"
-              />
-              <p>在 Telegram 的 @BotFather 中创建机器人后获得的 Token</p>
-            </div>
+        <!-- 用户名 -->
+        <div>
+          <label>
+            <Icon name="User" />
+            用户名
+            <span>*</span>
+          </label>
+          <input v-model="platformForm.user" placeholder="user@example.com" required type="email" />
+        </div>
 
-            <div>
-              <label>
-                <Icon name="MessagesSquare" />
-                Chat ID
-                <span>*</span>
-              </label>
-              <input
-                v-model="platformForm.chatId"
-                placeholder="例如：123456789 或 -1001234567890"
-                required
-                type="text"
-              />
-              <p>可使用 @userinfobot、@RawDataBot 或 API 获取聊天/频道的 Chat ID</p>
-            </div>
+        <!-- 密码 -->
+        <div>
+          <label>
+            <Icon name="Lock" />
+            密码 / 应用密码
+            <span>*</span>
+          </label>
+          <input
+            v-model="platformForm.pass"
+            placeholder="邮箱密码或应用专用密码"
+            required
+            type="password"
+          />
+          <p>建议使用应用专用密码，而非邮箱登录密码</p>
+        </div>
 
-            <div>
-              <label>
-                <Icon name="Globe" />
-                API 基础地址
-                <span>(可选)</span>
-              </label>
-              <input
-                v-model="platformForm.apiBaseUrl"
-                placeholder="默认: https://api.telegram.org"
-                type="url"
-              />
-              <p>使用自建 Bot API 时可覆盖默认域名，需以 http 或 https 开头</p>
-            </div>
+        <!-- 发件人邮箱 -->
+        <div>
+          <label>
+            <Icon name="Send" />
+            发件人邮箱
+            <span>(可选)</span>
+          </label>
+          <input v-model="platformForm.from" placeholder="默认使用用户名邮箱" type="email" />
+        </div>
 
-            <div>
-              <label>
-                <Icon name="Route" />
-                代理地址
-                <span>(可选)</span>
-              </label>
-              <input
-                v-model="platformForm.proxyUrl"
-                placeholder="例如：socks5://user:pass@127.0.0.1:1080"
-                type="text"
-              />
-              <p>支持 http、https、socks4/4a/5 代理，留空则直接连接 Telegram 官方 API</p>
-            </div>
+        <!-- 收件人邮箱 -->
+        <div>
+          <label>
+            <Icon name="Mail" />
+            收件人邮箱
+            <span>*</span>
+          </label>
+          <input v-model="platformForm.to" placeholder="admin@example.com" required type="email" />
+          <p>接收通知的邮箱地址</p>
+        </div>
+      </div>
 
-            <div>
-              <Icon name="Info" />
-              <div>机器人需先加入对应群组或频道并授予发送消息权限，通知会以纯文本方式发送。</div>
-            </div>
+      <!-- 签名设置（钉钉/飞书） -->
+      <div v-if="platformForm.type === 'dingtalk' || platformForm.type === 'feishu'">
+        <div>
+          <div>
+            <label for="enableSign">
+              <input id="enableSign" v-model="platformForm.enableSign" type="checkbox" />
+              <span>
+                <Icon name="Shield" />
+                启用签名验证
+              </span>
+            </label>
+            <span v-if="platformForm.enableSign"> 已启用 </span>
           </div>
-
-          <!-- Bark 平台特有字段 -->
-          <div v-if="platformForm.type === 'bark'">
-            <!-- 设备密钥 -->
-            <div>
-              <label>
-                <Icon name="Key" />
-                设备密钥 (Device Key)
-                <span>*</span>
-              </label>
-              <input
-                v-model="platformForm.deviceKey"
-                placeholder="例如：aBcDeFgHiJkLmNoPqRsTuVwX"
-                required
-                type="text"
-              />
-              <p>在Bark App中查看您的推送密钥</p>
+          <transition
+            enter-active-class="transition-all duration-200 ease-out"
+            enter-from-class="opacity-0"
+            enter-to-class="opacity-100"
+            leave-active-class="transition-all duration-150 ease-in"
+            leave-from-class="opacity-100"
+            leave-to-class="opacity-0"
+          >
+            <div v-if="platformForm.enableSign">
+              <label> 签名密钥 </label>
+              <input v-model="platformForm.secret" placeholder="SEC..." type="text" />
             </div>
-
-            <!-- 服务器URL（可选） -->
-            <div>
-              <label>
-                <Icon name="Server" />
-                服务器地址
-                <span>(可选)</span>
-              </label>
-              <input
-                v-model="platformForm.serverUrl"
-                placeholder="默认: https://api.day.app/push"
-                type="url"
-              />
-            </div>
-
-            <!-- 通知级别 -->
-            <div>
-              <label>
-                <Icon name="Flag" />
-                通知级别
-              </label>
-              <select v-model="platformForm.level">
-                <option value="">自动（根据通知类型）</option>
-                <option value="passive">被动</option>
-                <option value="active">默认</option>
-                <option value="timeSensitive">时效性</option>
-                <option value="critical">紧急</option>
-              </select>
-            </div>
-
-            <!-- 通知声音 -->
-            <div>
-              <label>
-                <Icon name="Volume2" />
-                通知声音
-              </label>
-              <select v-model="platformForm.sound">
-                <option value="">自动（根据通知类型）</option>
-                <option value="default">默认</option>
-                <option value="alarm">警报</option>
-                <option value="bell">铃声</option>
-                <option value="birdsong">鸟鸣</option>
-                <option value="electronic">电子音</option>
-                <option value="glass">玻璃</option>
-                <option value="horn">喇叭</option>
-                <option value="silence">静音</option>
-              </select>
-            </div>
-
-            <!-- 分组 -->
-            <div>
-              <label>
-                <Icon name="Folder" />
-                通知分组
-                <span>(可选)</span>
-              </label>
-              <input v-model="platformForm.group" placeholder="默认: claude-relay" type="text" />
-            </div>
-
-            <!-- 提示信息 -->
-            <div>
-              <Icon name="Info" />
-              <div>
-                <p>1. 在iPhone上安装Bark App</p>
-                <p>2. 打开App获取您的设备密钥</p>
-                <p>3. 将密钥粘贴到上方输入框</p>
-              </div>
-            </div>
-          </div>
-
-          <!-- SMTP 平台特有字段 -->
-          <div v-if="platformForm.type === 'smtp'">
-            <!-- SMTP 主机 -->
-            <div>
-              <label>
-                <Icon name="Server" />
-                SMTP 服务器
-                <span>*</span>
-              </label>
-              <input
-                v-model="platformForm.host"
-                placeholder="例如: smtp.gmail.com"
-                required
-                type="text"
-              />
-            </div>
-
-            <!-- SMTP 端口和安全设置 -->
-            <div>
-              <div>
-                <label>
-                  <Icon name="Plug" />
-                  端口
-                </label>
-                <input
-                  v-model.number="platformForm.port"
-                  max="65535"
-                  min="1"
-                  placeholder="587"
-                  type="number"
-                />
-                <p>默认: 587 (TLS) 或 465 (SSL)</p>
-              </div>
-
-              <div>
-                <label>
-                  <Icon name="Shield" />
-                  加密方式
-                </label>
-                <select v-model="platformForm.secure">
-                  <option :value="false">STARTTLS (端口587)</option>
-                  <option :value="true">SSL/TLS (端口465)</option>
-                </select>
-              </div>
-            </div>
-
-            <!-- 用户名 -->
-            <div>
-              <label>
-                <Icon name="User" />
-                用户名
-                <span>*</span>
-              </label>
-              <input
-                v-model="platformForm.user"
-                placeholder="user@example.com"
-                required
-                type="email"
-              />
-            </div>
-
-            <!-- 密码 -->
-            <div>
-              <label>
-                <Icon name="Lock" />
-                密码 / 应用密码
-                <span>*</span>
-              </label>
-              <input
-                v-model="platformForm.pass"
-                placeholder="邮箱密码或应用专用密码"
-                required
-                type="password"
-              />
-              <p>建议使用应用专用密码，而非邮箱登录密码</p>
-            </div>
-
-            <!-- 发件人邮箱 -->
-            <div>
-              <label>
-                <Icon name="Send" />
-                发件人邮箱
-                <span>(可选)</span>
-              </label>
-              <input v-model="platformForm.from" placeholder="默认使用用户名邮箱" type="email" />
-            </div>
-
-            <!-- 收件人邮箱 -->
-            <div>
-              <label>
-                <Icon name="Mail" />
-                收件人邮箱
-                <span>*</span>
-              </label>
-              <input
-                v-model="platformForm.to"
-                placeholder="admin@example.com"
-                required
-                type="email"
-              />
-              <p>接收通知的邮箱地址</p>
-            </div>
-          </div>
-
-          <!-- 签名设置（钉钉/飞书） -->
-          <div v-if="platformForm.type === 'dingtalk' || platformForm.type === 'feishu'">
-            <div>
-              <div>
-                <label for="enableSign">
-                  <input id="enableSign" v-model="platformForm.enableSign" type="checkbox" />
-                  <span>
-                    <Icon name="Shield" />
-                    启用签名验证
-                  </span>
-                </label>
-                <span v-if="platformForm.enableSign"> 已启用 </span>
-              </div>
-              <transition
-                enter-active-class="transition-all duration-200 ease-out"
-                enter-from-class="opacity-0"
-                enter-to-class="opacity-100"
-                leave-active-class="transition-all duration-150 ease-in"
-                leave-from-class="opacity-100"
-                leave-to-class="opacity-0"
-              >
-                <div v-if="platformForm.enableSign">
-                  <label> 签名密钥 </label>
-                  <input v-model="platformForm.secret" placeholder="SEC..." type="text" />
-                </div>
-              </transition>
-            </div>
-          </div>
+          </transition>
+        </div>
+      </div>
     </div>
 
     <!-- 底部按钮 -->
@@ -1067,11 +1065,7 @@
             type="button"
             @click="testPlatformForm"
           >
-            <Icon
-              class="h-4 w-4"
-              :class="{ 'animate-spin': testingConnection }"
-              name="Loader2"
-            />
+            <Icon class="h-4 w-4" :class="{ 'animate-spin': testingConnection }" name="Loader2" />
             {{ testingConnection ? '测试中...' : '测试连接' }}
           </button>
           <button
