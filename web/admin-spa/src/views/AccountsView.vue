@@ -394,7 +394,7 @@
                 <td class="px-4 py-4">
                   <div class="flex items-center">
                     <div
-                      class="mr-2 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-green-500 to-green-600"
+                      class="mr-2 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-primary-500 to-primary-600"
                     >
                       <Icon class="h-3 w-3 text-white" name="UserCircle" />
                     </div>
