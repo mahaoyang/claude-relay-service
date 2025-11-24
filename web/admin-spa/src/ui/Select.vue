@@ -79,10 +79,7 @@ const displayLabel = computed(() => {
 
 <template>
   <div class="w-full">
-    <label
-      v-if="label"
-      class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
-    >
+    <label v-if="label" class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
       {{ label }}
     </label>
     <Listbox
@@ -102,7 +99,7 @@ const displayLabel = computed(() => {
             {{ displayLabel }}
           </span>
           <span class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
-            <Icon :class="sizeClasses[size].icon" class="text-gray-400" name="ChevronDown" />
+            <Icon class="text-gray-400" :class="sizeClasses[size].icon" name="ChevronDown" />
           </span>
         </ListboxButton>
 
