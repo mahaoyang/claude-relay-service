@@ -256,10 +256,10 @@
           class="hidden overflow-hidden rounded-lg border border-gray-200 dark:border-gray-700 lg:block"
         >
           <div class="overflow-x-auto">
-            <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+            <table class="w-full table-fixed divide-y divide-gray-200 dark:divide-gray-700">
               <thead class="bg-gray-50 dark:bg-gray-800">
                 <tr>
-                  <th v-if="shouldShowCheckboxes" class="px-4 py-3 text-left">
+                  <th v-if="shouldShowCheckboxes" class="w-[40px] px-4 py-3 text-left">
                     <div class="flex items-center">
                       <input
                         v-model="selectAllChecked"
@@ -271,7 +271,7 @@
                     </div>
                   </th>
                   <th
-                    class="cursor-pointer px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 transition-colors hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                    class="w-[10%] min-w-[100px] cursor-pointer px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 transition-colors hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
                     @click="sortApiKeys('name')"
                   >
                     <div class="flex items-center gap-1">
@@ -285,17 +285,17 @@
                     </div>
                   </th>
                   <th
-                    class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400"
+                    class="w-[8%] min-w-[80px] px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400"
                   >
                     所属账号
                   </th>
                   <th
-                    class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400"
+                    class="w-[8%] min-w-[60px] px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400"
                   >
                     标签
                   </th>
                   <th
-                    class="cursor-pointer px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 transition-colors hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                    class="w-[5%] min-w-[60px] cursor-pointer px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 transition-colors hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
                     @click="sortApiKeys('status')"
                   >
                     <div class="flex items-center gap-1">
@@ -309,7 +309,7 @@
                     </div>
                   </th>
                   <th
-                    class="cursor-pointer px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 transition-colors hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                    class="w-[5%] min-w-[55px] cursor-pointer px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 transition-colors hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
                     @click="sortApiKeys('periodCost')"
                   >
                     <div class="flex items-center gap-1">
@@ -323,12 +323,12 @@
                     </div>
                   </th>
                   <th
-                    class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400"
+                    class="w-[12%] min-w-[140px] px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400"
                   >
                     限制
                   </th>
                   <th
-                    class="cursor-pointer px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 transition-colors hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                    class="w-[6%] min-w-[60px] cursor-pointer px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 transition-colors hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
                     @click="sortApiKeys('periodTokens')"
                   >
                     <div class="flex items-center gap-1">
@@ -342,7 +342,7 @@
                     </div>
                   </th>
                   <th
-                    class="cursor-pointer px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 transition-colors hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                    class="w-[6%] min-w-[60px] cursor-pointer px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 transition-colors hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
                     @click="sortApiKeys('periodRequests')"
                   >
                     <div class="flex items-center gap-1">
@@ -356,7 +356,7 @@
                     </div>
                   </th>
                   <th
-                    class="cursor-pointer px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 transition-colors hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                    class="w-[9%] min-w-[90px] cursor-pointer px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 transition-colors hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
                     @click="sortApiKeys('lastUsedAt')"
                   >
                     <div class="flex items-center gap-1">
@@ -370,7 +370,7 @@
                     </div>
                   </th>
                   <th
-                    class="cursor-pointer px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 transition-colors hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                    class="w-[7%] min-w-[80px] cursor-pointer px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 transition-colors hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
                     @click="sortApiKeys('createdAt')"
                   >
                     <div class="flex items-center gap-1">
@@ -384,7 +384,7 @@
                     </div>
                   </th>
                   <th
-                    class="cursor-pointer px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 transition-colors hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                    class="w-[8%] min-w-[90px] cursor-pointer px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 transition-colors hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
                     @click="sortApiKeys('expiresAt')"
                   >
                     <div class="flex items-center gap-1">
@@ -398,7 +398,7 @@
                     </div>
                   </th>
                   <th
-                    class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400"
+                    class="w-[16%] min-w-[180px] px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400"
                   >
                     操作
                   </th>
@@ -421,10 +421,13 @@
                         />
                       </div>
                     </td>
-                    <td class="whitespace-nowrap px-4 py-3">
+                    <td class="px-4 py-3">
                       <div class="flex flex-col gap-1">
                         <!-- 名称 -->
-                        <div class="font-medium text-gray-900 dark:text-white" :title="key.name">
+                        <div
+                          class="max-w-[120px] truncate font-medium text-gray-900 dark:text-white"
+                          :title="key.name"
+                        >
                           {{ key.name }}
                         </div>
                         <!-- 显示所有者信息 -->
@@ -563,7 +566,7 @@
                     </td>
                     <!-- 限制 -->
                     <td class="px-4 py-3">
-                      <div class="min-w-[180px] space-y-2">
+                      <div class="space-y-2">
                         <!-- 每日费用限制进度条 -->
                         <LimitProgressBar
                           v-if="key.dailyCostLimit > 0"
@@ -660,7 +663,7 @@
                         <span v-else class="text-gray-500 dark:text-gray-400">从未使用</span>
                         <span
                           v-if="hasLastUsageAccount(key)"
-                          class="text-xs text-gray-600 dark:text-gray-400"
+                          class="max-w-[100px] truncate text-xs text-gray-600 dark:text-gray-400"
                           :title="getLastUsageFullName(key)"
                         >
                           {{ getLastUsageDisplayName(key) }}
