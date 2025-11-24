@@ -521,14 +521,14 @@
                     </div>
                     <div
                       v-else-if="account.platform === 'openai-responses'"
-                      class="flex items-center gap-1.5 rounded-lg border border-primary-200 bg-gradient-to-r from-primary-50 to-primary-100 px-2.5 py-1 dark:border-primary-700 dark:from-primary-900/20 dark:to-primary-800/20"
+                      class="flex items-center gap-1.5 rounded-lg border border-emerald-200 bg-gradient-to-r from-emerald-50 to-emerald-100 px-2.5 py-1 dark:border-emerald-700 dark:from-emerald-900/20 dark:to-emerald-800/20"
                     >
-                      <Icon class="h-3 w-3 text-primary-700 dark:text-primary-400" name="Server" />
-                      <span class="text-xs font-semibold text-primary-800 dark:text-primary-300"
+                      <Icon class="h-3 w-3 text-emerald-700 dark:text-emerald-400" name="Server" />
+                      <span class="text-xs font-semibold text-emerald-800 dark:text-emerald-300"
                         >OpenAI-Responses</span
                       >
-                      <span class="mx-1 h-4 w-px bg-primary-300 dark:bg-primary-600" />
-                      <span class="text-xs font-medium text-primary-700 dark:text-primary-400"
+                      <span class="mx-1 h-4 w-px bg-emerald-300 dark:bg-emerald-600" />
+                      <span class="text-xs font-medium text-emerald-700 dark:text-emerald-400"
                         >API Key</span
                       >
                     </div>
