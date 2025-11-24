@@ -170,7 +170,7 @@
                   </div>
                 </th>
                 <th
-                  class="w-[22%] min-w-[180px] cursor-pointer px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-700 transition-colors hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700/50"
+                  class="w-[14%] min-w-[140px] cursor-pointer px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-700 transition-colors hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700/50"
                   @click="sortAccounts('name')"
                 >
                   名称
@@ -182,7 +182,7 @@
                   <Icon v-else class="ml-1 inline h-3 w-3 text-gray-400" name="ArrowUpDown" />
                 </th>
                 <th
-                  class="w-[15%] min-w-[120px] cursor-pointer px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-700 transition-colors hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700/50"
+                  class="w-[13%] min-w-[140px] cursor-pointer px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-700 transition-colors hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700/50"
                   @click="sortAccounts('platform')"
                 >
                   平台/类型
@@ -194,7 +194,7 @@
                   <Icon v-else class="ml-1 inline h-3 w-3 text-gray-400" name="ArrowUpDown" />
                 </th>
                 <th
-                  class="w-[12%] min-w-[110px] cursor-pointer px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-700 transition-colors hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700/50"
+                  class="w-[8%] min-w-[80px] cursor-pointer px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-700 transition-colors hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700/50"
                   @click="sortAccounts('expiresAt')"
                 >
                   到期时间
@@ -206,7 +206,7 @@
                   <Icon v-else class="ml-1 inline h-3 w-3 text-gray-400" name="ArrowUpDown" />
                 </th>
                 <th
-                  class="w-[12%] min-w-[100px] cursor-pointer px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-700 transition-colors hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700/50"
+                  class="w-[8%] min-w-[80px] cursor-pointer px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-700 transition-colors hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700/50"
                   @click="sortAccounts('status')"
                 >
                   状态
@@ -218,7 +218,7 @@
                   <Icon v-else class="ml-1 inline h-3 w-3 text-gray-400" name="ArrowUpDown" />
                 </th>
                 <th
-                  class="w-[8%] min-w-[80px] cursor-pointer px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-700 transition-colors hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700/50"
+                  class="w-[6%] min-w-[70px] cursor-pointer px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-700 transition-colors hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700/50"
                   @click="sortAccounts('priority')"
                 >
                   优先级
@@ -230,7 +230,7 @@
                   <Icon v-else class="ml-1 inline h-3 w-3 text-gray-400" name="ArrowUpDown" />
                 </th>
                 <th
-                  class="w-[10%] min-w-[100px] px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-700 dark:text-gray-300"
+                  class="w-[6%] min-w-[60px] px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-700 dark:text-gray-300"
                 >
                   代理
                 </th>
@@ -363,12 +363,12 @@
                   </div>
                 </th>
                 <th
-                  class="w-[8%] min-w-[80px] px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-700 dark:text-gray-300"
+                  class="w-[7%] min-w-[70px] px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-700 dark:text-gray-300"
                 >
                   最后使用
                 </th>
                 <th
-                  class="w-[15%] min-w-[180px] px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-700 dark:text-gray-300"
+                  class="w-[18%] min-w-[190px] px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-700 dark:text-gray-300"
                 >
                   操作
                 </th>
@@ -453,82 +453,92 @@
                     <!-- 平台图标和名称 -->
                     <div
                       v-if="account.platform === 'gemini'"
-                      class="flex items-center gap-1.5 rounded-lg border border-primary-200 bg-gradient-to-r from-primary-50 to-primary-100 px-2.5 py-1 dark:border-primary-700 dark:from-primary-900/20 dark:to-primary-800/20"
+                      class="flex items-center gap-1 rounded-md border border-primary-200 bg-gradient-to-r from-primary-50 to-primary-100 px-1.5 py-0.5 dark:border-primary-700 dark:from-primary-900/20 dark:to-primary-800/20"
                     >
-                      <Icon class="h-3 w-3 text-primary-700 dark:text-primary-400" name="Bot" />
-                      <span class="text-xs font-semibold text-primary-800 dark:text-primary-300"
+                      <Icon class="h-2.5 w-2.5 text-primary-700 dark:text-primary-400" name="Bot" />
+                      <span class="text-[10px] font-semibold text-primary-800 dark:text-primary-300"
                         >Gemini</span
                       >
-                      <span class="mx-1 h-4 w-px bg-primary-300 dark:bg-primary-600" />
-                      <span class="text-xs font-medium text-primary-700 dark:text-primary-400">
+                      <span class="mx-0.5 h-3 w-px bg-primary-300 dark:bg-primary-600" />
+                      <span class="text-[10px] font-medium text-primary-700 dark:text-primary-400">
                         {{ getGeminiAuthType() }}
                       </span>
                     </div>
                     <div
                       v-else-if="account.platform === 'claude-console'"
-                      class="flex items-center gap-1.5 rounded-lg border border-primary-200 bg-gradient-to-r from-primary-50 to-primary-100 px-2.5 py-1 dark:border-primary-700 dark:from-primary-900/20 dark:to-primary-800/20"
+                      class="flex items-center gap-1 rounded-md border border-primary-200 bg-gradient-to-r from-primary-50 to-primary-100 px-1.5 py-0.5 dark:border-primary-700 dark:from-primary-900/20 dark:to-primary-800/20"
                     >
                       <Icon
-                        class="h-3 w-3 text-primary-700 dark:text-primary-400"
+                        class="h-2.5 w-2.5 text-primary-700 dark:text-primary-400"
                         name="Terminal"
                       />
-                      <span class="text-xs font-semibold text-primary-800 dark:text-primary-300"
+                      <span class="text-[10px] font-semibold text-primary-800 dark:text-primary-300"
                         >Console</span
                       >
-                      <span class="mx-1 h-4 w-px bg-primary-300 dark:bg-primary-600" />
-                      <span class="text-xs font-medium text-primary-700 dark:text-primary-400"
+                      <span class="mx-0.5 h-3 w-px bg-primary-300 dark:bg-primary-600" />
+                      <span class="text-[10px] font-medium text-primary-700 dark:text-primary-400"
                         >API Key</span
                       >
                     </div>
                     <div
                       v-else-if="account.platform === 'bedrock'"
-                      class="flex items-center gap-1.5 rounded-lg border border-primary-200 bg-gradient-to-r from-primary-50 to-primary-100 px-2.5 py-1 dark:border-primary-700 dark:from-primary-900/20 dark:to-primary-800/20"
+                      class="flex items-center gap-1 rounded-md border border-primary-200 bg-gradient-to-r from-primary-50 to-primary-100 px-1.5 py-0.5 dark:border-primary-700 dark:from-primary-900/20 dark:to-primary-800/20"
                     >
-                      <Icon class="h-3 w-3 text-primary-700 dark:text-primary-400" name="Cloud" />
-                      <span class="text-xs font-semibold text-primary-800 dark:text-primary-300"
+                      <Icon
+                        class="h-2.5 w-2.5 text-primary-700 dark:text-primary-400"
+                        name="Cloud"
+                      />
+                      <span class="text-[10px] font-semibold text-primary-800 dark:text-primary-300"
                         >Bedrock</span
                       >
-                      <span class="mx-1 h-4 w-px bg-primary-300 dark:bg-primary-600" />
-                      <span class="text-xs font-medium text-primary-700 dark:text-primary-400"
+                      <span class="mx-0.5 h-3 w-px bg-primary-300 dark:bg-primary-600" />
+                      <span class="text-[10px] font-medium text-primary-700 dark:text-primary-400"
                         >AWS</span
                       >
                     </div>
                     <div
                       v-else-if="account.platform === 'openai'"
-                      class="flex items-center gap-1.5 rounded-lg border border-primary-200 bg-gradient-to-r from-primary-50 to-primary-100 px-2.5 py-1 dark:border-primary-700 dark:from-primary-900/20 dark:to-primary-800/20"
+                      class="flex items-center gap-1 rounded-md border border-primary-200 bg-gradient-to-r from-primary-50 to-primary-100 px-1.5 py-0.5 dark:border-primary-700 dark:from-primary-900/20 dark:to-primary-800/20"
                     >
-                      <Icon class="h-3 w-3 text-primary-700 dark:text-primary-400" name="Zap" />
-                      <span class="text-xs font-semibold text-primary-800 dark:text-primary-300"
+                      <Icon class="h-2.5 w-2.5 text-primary-700 dark:text-primary-400" name="Zap" />
+                      <span class="text-[10px] font-semibold text-primary-800 dark:text-primary-300"
                         >OpenAi</span
                       >
-                      <span class="mx-1 h-4 w-px bg-primary-300 dark:bg-primary-600" />
-                      <span class="text-xs font-medium text-primary-700 dark:text-primary-400">{{
-                        getOpenAIAuthType()
-                      }}</span>
+                      <span class="mx-0.5 h-3 w-px bg-primary-300 dark:bg-primary-600" />
+                      <span
+                        class="text-[10px] font-medium text-primary-700 dark:text-primary-400"
+                        >{{ getOpenAIAuthType() }}</span
+                      >
                     </div>
                     <div
                       v-else-if="account.platform === 'azure_openai'"
-                      class="flex items-center gap-1.5 rounded-lg border border-primary-200 bg-gradient-to-r from-primary-50 to-primary-100 px-2.5 py-1 dark:border-primary-700 dark:from-primary-900/20 dark:to-primary-800/20"
+                      class="flex items-center gap-1 rounded-md border border-primary-200 bg-gradient-to-r from-primary-50 to-primary-100 px-1.5 py-0.5 dark:border-primary-700 dark:from-primary-900/20 dark:to-primary-800/20"
                     >
-                      <Icon class="h-3 w-3 text-primary-700 dark:text-primary-400" name="Cloud" />
-                      <span class="text-xs font-semibold text-primary-800 dark:text-primary-300"
+                      <Icon
+                        class="h-2.5 w-2.5 text-primary-700 dark:text-primary-400"
+                        name="Cloud"
+                      />
+                      <span class="text-[10px] font-semibold text-primary-800 dark:text-primary-300"
                         >Azure OpenAI</span
                       >
-                      <span class="mx-1 h-4 w-px bg-primary-300 dark:bg-primary-600" />
-                      <span class="text-xs font-medium text-primary-700 dark:text-primary-400"
+                      <span class="mx-0.5 h-3 w-px bg-primary-300 dark:bg-primary-600" />
+                      <span class="text-[10px] font-medium text-primary-700 dark:text-primary-400"
                         >API Key</span
                       >
                     </div>
                     <div
                       v-else-if="account.platform === 'openai-responses'"
-                      class="flex items-center gap-1.5 rounded-lg border border-emerald-200 bg-gradient-to-r from-emerald-50 to-emerald-100 px-2.5 py-1 dark:border-emerald-700 dark:from-emerald-900/20 dark:to-emerald-800/20"
+                      class="flex items-center gap-1 rounded-md border border-emerald-200 bg-gradient-to-r from-emerald-50 to-emerald-100 px-1.5 py-0.5 dark:border-emerald-700 dark:from-emerald-900/20 dark:to-emerald-800/20"
                     >
-                      <Icon class="h-3 w-3 text-emerald-700 dark:text-emerald-400" name="Server" />
-                      <span class="text-xs font-semibold text-emerald-800 dark:text-emerald-300"
+                      <Icon
+                        class="h-2.5 w-2.5 text-emerald-700 dark:text-emerald-400"
+                        name="Server"
+                      />
+                      <span class="text-[10px] font-semibold text-emerald-800 dark:text-emerald-300"
                         >OpenAI-Responses</span
                       >
-                      <span class="mx-1 h-4 w-px bg-emerald-300 dark:bg-emerald-600" />
-                      <span class="text-xs font-medium text-emerald-700 dark:text-emerald-400"
+                      <span class="mx-0.5 h-3 w-px bg-emerald-300 dark:bg-emerald-600" />
+                      <span class="text-[10px] font-medium text-emerald-700 dark:text-emerald-400"
                         >API Key</span
                       >
                     </div>
@@ -536,43 +546,47 @@
                       v-else-if="
                         account.platform === 'claude' || account.platform === 'claude-oauth'
                       "
-                      class="flex items-center gap-1.5 rounded-lg border border-primary-200 bg-gradient-to-r from-primary-50 to-primary-100 px-2.5 py-1 dark:border-primary-700 dark:from-primary-900/20 dark:to-primary-800/20"
+                      class="flex items-center gap-1 rounded-md border border-primary-200 bg-gradient-to-r from-primary-50 to-primary-100 px-1.5 py-0.5 dark:border-primary-700 dark:from-primary-900/20 dark:to-primary-800/20"
                     >
-                      <Icon class="h-3 w-3 text-primary-700 dark:text-primary-400" name="Brain" />
-                      <span class="text-xs font-semibold text-primary-800 dark:text-primary-300">{{
-                        getClaudeAccountType(account)
-                      }}</span>
-                      <span class="mx-1 h-4 w-px bg-primary-300 dark:bg-primary-600" />
-                      <span class="text-xs font-medium text-primary-700 dark:text-primary-400">
+                      <Icon
+                        class="h-2.5 w-2.5 text-primary-700 dark:text-primary-400"
+                        name="Brain"
+                      />
+                      <span
+                        class="text-[10px] font-semibold text-primary-800 dark:text-primary-300"
+                        >{{ getClaudeAccountType(account) }}</span
+                      >
+                      <span class="mx-0.5 h-3 w-px bg-primary-300 dark:bg-primary-600" />
+                      <span class="text-[10px] font-medium text-primary-700 dark:text-primary-400">
                         {{ getClaudeAuthType(account) }}
                       </span>
                     </div>
                     <div
                       v-else-if="account.platform === 'ccr'"
-                      class="flex items-center gap-1.5 rounded-lg border border-primary-200 bg-gradient-to-r from-primary-50 to-primary-100 px-2.5 py-1 dark:border-primary-700 dark:from-primary-900/20 dark:to-primary-800/20"
+                      class="flex items-center gap-1 rounded-md border border-primary-200 bg-gradient-to-r from-primary-50 to-primary-100 px-1.5 py-0.5 dark:border-primary-700 dark:from-primary-900/20 dark:to-primary-800/20"
                     >
                       <Icon
-                        class="h-3 w-3 text-primary-700 dark:text-primary-400"
+                        class="h-2.5 w-2.5 text-primary-700 dark:text-primary-400"
                         name="GitBranch"
                       />
-                      <span class="text-xs font-semibold text-primary-800 dark:text-primary-300"
+                      <span class="text-[10px] font-semibold text-primary-800 dark:text-primary-300"
                         >CCR</span
                       >
-                      <span class="mx-1 h-4 w-px bg-primary-300 dark:bg-primary-600" />
-                      <span class="text-xs font-medium text-primary-700 dark:text-primary-400"
+                      <span class="mx-0.5 h-3 w-px bg-primary-300 dark:bg-primary-600" />
+                      <span class="text-[10px] font-medium text-primary-700 dark:text-primary-400"
                         >Relay</span
                       >
                     </div>
                     <div
                       v-else-if="account.platform === 'droid'"
-                      class="flex items-center gap-1.5 rounded-lg border border-primary-200 bg-gradient-to-r from-primary-50 to-primary-100 px-2.5 py-1 dark:border-primary-700 dark:from-primary-900/20 dark:to-primary-800/20"
+                      class="flex items-center gap-1 rounded-md border border-primary-200 bg-gradient-to-r from-primary-50 to-primary-100 px-1.5 py-0.5 dark:border-primary-700 dark:from-primary-900/20 dark:to-primary-800/20"
                     >
-                      <Icon class="h-3 w-3 text-primary-700 dark:text-primary-400" name="Bot" />
-                      <span class="text-xs font-semibold text-primary-800 dark:text-primary-300"
+                      <Icon class="h-2.5 w-2.5 text-primary-700 dark:text-primary-400" name="Bot" />
+                      <span class="text-[10px] font-semibold text-primary-800 dark:text-primary-300"
                         >Droid</span
                       >
-                      <span class="mx-1 h-4 w-px bg-primary-300 dark:bg-primary-600" />
-                      <span class="text-xs font-medium text-primary-700 dark:text-primary-400">
+                      <span class="mx-0.5 h-3 w-px bg-primary-300 dark:bg-primary-600" />
+                      <span class="text-[10px] font-medium text-primary-700 dark:text-primary-400">
                         {{ getDroidAuthType(account) }}
                       </span>
                       <span
@@ -585,10 +599,10 @@
                     </div>
                     <div
                       v-else
-                      class="flex items-center gap-1.5 rounded-lg border border-gray-200 bg-gradient-to-r from-gray-100 to-gray-200 px-2.5 py-1"
+                      class="flex items-center gap-1 rounded-md border border-gray-200 bg-gradient-to-r from-gray-100 to-gray-200 px-1.5 py-0.5"
                     >
-                      <Icon class="h-3 w-3 text-gray-700" name="HelpCircle" />
-                      <span class="text-xs font-semibold text-gray-800">未知</span>
+                      <Icon class="h-2.5 w-2.5 text-gray-700" name="HelpCircle" />
+                      <span class="text-[10px] font-semibold text-gray-800">未知</span>
                     </div>
                   </div>
                 </td>
