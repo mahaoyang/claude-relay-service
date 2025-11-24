@@ -165,19 +165,10 @@
                 </td>
                 <td class="p-6">
                   <div class="space-y-3">
-                    <label class="flex cursor-pointer items-center gap-3">
-                      <input v-model="hideAdminButton" class="peer sr-only" type="checkbox" />
-                      <div
-                        class="relative h-6 w-11 rounded-full bg-gray-200 transition-colors peer-checked:bg-primary-600 dark:bg-gray-700"
-                      >
-                        <div
-                          class="absolute left-1 top-1 h-4 w-4 rounded-full bg-white transition-transform peer-checked:translate-x-5"
-                        ></div>
-                      </div>
-                      <span class="font-medium text-gray-700 dark:text-gray-300">
-                        {{ hideAdminButton ? '隐藏登录按钮' : '显示登录按钮' }}
-                      </span>
-                    </label>
+                    <Switch
+                      v-model="hideAdminButton"
+                      :label="hideAdminButton ? '隐藏登录按钮' : '显示登录按钮'"
+                    />
                     <p class="text-sm text-gray-500 dark:text-gray-400">
                       隐藏后，用户需要直接访问 /admin/login 页面登录
                     </p>
@@ -332,19 +323,10 @@
               </div>
             </div>
             <div class="space-y-2">
-              <label class="flex cursor-pointer items-center gap-3">
-                <input v-model="hideAdminButton" class="peer sr-only" type="checkbox" />
-                <div
-                  class="relative h-6 w-11 rounded-full bg-gray-200 transition-colors peer-checked:bg-primary-600 dark:bg-gray-700"
-                >
-                  <div
-                    class="absolute left-1 top-1 h-4 w-4 rounded-full bg-white transition-transform peer-checked:translate-x-5"
-                  ></div>
-                </div>
-                <span class="font-medium text-gray-700 dark:text-gray-300">
-                  {{ hideAdminButton ? '隐藏登录按钮' : '显示登录按钮' }}
-                </span>
-              </label>
+              <Switch
+                v-model="hideAdminButton"
+                :label="hideAdminButton ? '隐藏登录按钮' : '显示登录按钮'"
+              />
               <p class="text-sm text-gray-500 dark:text-gray-400">
                 隐藏后，用户需要直接访问 /admin/login 页面登录
               </p>
@@ -401,21 +383,11 @@
                 开启后，系统将按配置发送通知到指定平台
               </p>
             </div>
-            <label class="flex cursor-pointer items-center gap-3">
-              <input
-                v-model="webhookConfig.enabled"
-                class="peer sr-only"
-                type="checkbox"
-                @change="saveWebhookConfig"
-              />
-              <div
-                class="relative h-7 w-12 rounded-full bg-gray-200 transition-colors peer-checked:bg-primary-600 dark:bg-gray-700"
-              >
-                <div
-                  class="absolute left-1 top-1 h-5 w-5 rounded-full bg-white transition-transform peer-checked:translate-x-5"
-                ></div>
-              </div>
-            </label>
+            <Switch
+              v-model="webhookConfig.enabled"
+              size="lg"
+              @update:model-value="saveWebhookConfig"
+            />
           </div>
         </div>
 
@@ -436,21 +408,10 @@
                   {{ getNotificationTypeDescription(type) }}
                 </span>
               </div>
-              <label class="flex cursor-pointer items-center gap-3">
-                <input
-                  v-model="webhookConfig.notificationTypes[type]"
-                  class="peer sr-only"
-                  type="checkbox"
-                  @change="saveWebhookConfig"
-                />
-                <div
-                  class="relative h-6 w-11 rounded-full bg-gray-200 transition-colors peer-checked:bg-primary-600 dark:bg-gray-700"
-                >
-                  <div
-                    class="absolute left-1 top-1 h-4 w-4 rounded-full bg-white transition-transform peer-checked:translate-x-5"
-                  ></div>
-                </div>
-              </label>
+              <Switch
+                v-model="webhookConfig.notificationTypes[type]"
+                @update:model-value="saveWebhookConfig"
+              />
             </div>
           </div>
         </div>
@@ -551,21 +512,10 @@
                 </div>
                 <div class="flex flex-row items-center gap-2 md:flex-col md:items-end">
                   <!-- 启用/禁用开关 -->
-                  <label class="flex cursor-pointer items-center gap-2">
-                    <input
-                      :checked="platform.enabled"
-                      class="peer sr-only"
-                      type="checkbox"
-                      @change="togglePlatform(platform.id)"
-                    />
-                    <div
-                      class="relative h-6 w-11 rounded-full bg-gray-200 transition-colors peer-checked:bg-primary-600 dark:bg-gray-700"
-                    >
-                      <div
-                        class="absolute left-1 top-1 h-4 w-4 rounded-full bg-white transition-transform peer-checked:translate-x-5"
-                      ></div>
-                    </div>
-                  </label>
+                  <Switch
+                    :model-value="platform.enabled"
+                    @update:model-value="togglePlatform(platform.id)"
+                  />
                   <div class="flex items-center gap-1">
                     <!-- 测试按钮 -->
                     <button
@@ -1107,6 +1057,7 @@ import { showToast } from '@/utils/toast'
 import { useSettingsStore } from '@/stores/settings'
 import { apiClient } from '@/config/api'
 import { Card } from '@/ui'
+import Switch from '@/ui/Switch.vue'
 import PageContainer from '@/components/layout/PageContainer.vue'
 
 // 定义组件名称，用于keep-alive排除
