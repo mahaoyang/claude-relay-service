@@ -1,5 +1,5 @@
 <template>
-  <PageContainer max-width="7xl">
+  <PageContainer max-width="7xl" :show-footer="false">
     <template #header>
       <div class="flex items-center justify-between">
         <div>
@@ -18,12 +18,12 @@
     </template>
 
     <!-- 系统选择标签 -->
-    <Card class="mb-6">
+    <Card class="rounded-b-none">
       <TabGroup v-model="activeTutorialSystem" :options="systemOptions" />
     </Card>
 
     <!-- Windows 教程 -->
-    <Card v-if="activeTutorialSystem === 'windows'">
+    <Card v-if="activeTutorialSystem === 'windows'" class="-mt-px rounded-t-none">
       <div class="space-y-6">
         <!-- 第一步：安装 Node.js -->
         <div>
@@ -593,7 +593,7 @@
     </Card>
 
     <!-- macOS 教程 -->
-    <Card v-else-if="activeTutorialSystem === 'macos'">
+    <Card v-else-if="activeTutorialSystem === 'macos'" class="-mt-px rounded-t-none">
       <div class="space-y-6">
         <!-- 第一步：安装 Node.js -->
         <div>
@@ -1091,7 +1091,7 @@
     </Card>
 
     <!-- Linux 教程 -->
-    <Card v-else-if="activeTutorialSystem === 'linux'">
+    <Card v-else-if="activeTutorialSystem === 'linux'" class="-mt-px rounded-t-none">
       <div class="space-y-6">
         <!-- 第一步：安装 Node.js -->
         <div>
