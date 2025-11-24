@@ -159,7 +159,7 @@
                     </div>
                     <div>
                       <div class="font-medium text-gray-900 dark:text-white">管理入口</div>
-                      <div class="mt-1 text-sm text-gray-500 dark:text-gray-400">登录按钮显示</div>
+                      <div class="mt-1 text-sm text-gray-500 dark:text-gray-400">管理后台按钮显示</div>
                     </div>
                   </div>
                 </td>
@@ -167,10 +167,10 @@
                   <div class="space-y-3">
                     <Switch
                       v-model="hideAdminButton"
-                      :label="hideAdminButton ? '隐藏登录按钮' : '显示登录按钮'"
+                      :label="hideAdminButton ? '已隐藏管理后台按钮' : '显示管理后台按钮'"
                     />
                     <p class="text-sm text-gray-500 dark:text-gray-400">
-                      隐藏后，用户需要直接访问 /admin/login 页面登录
+                      隐藏后，管理后台入口按钮将不会显示在首页
                     </p>
                   </div>
                 </td>
@@ -318,17 +318,17 @@
               <div class="flex-1">
                 <h3 class="font-medium text-gray-900 dark:text-white">管理入口</h3>
                 <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
-                  控制登录按钮在首页的显示
+                  控制管理后台按钮在首页的显示
                 </p>
               </div>
             </div>
             <div class="space-y-2">
               <Switch
                 v-model="hideAdminButton"
-                :label="hideAdminButton ? '隐藏登录按钮' : '显示登录按钮'"
+                :label="hideAdminButton ? '已隐藏管理后台按钮' : '显示管理后台按钮'"
               />
               <p class="text-sm text-gray-500 dark:text-gray-400">
-                隐藏后，用户需要直接访问 /admin/login 页面登录
+                隐藏后，管理后台入口按钮将不会显示在首页
               </p>
             </div>
           </div>
