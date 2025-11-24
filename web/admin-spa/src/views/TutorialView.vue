@@ -18,14 +18,14 @@
     </template>
 
     <!-- 系统选择标签 -->
-    <Card class="rounded-b-none" :no-padding="true">
+    <Card class="rounded-b-none border-b-0" :no-padding="true">
       <div class="pb-1 pl-2 pr-4 pt-4">
         <TabGroup v-model="activeTutorialSystem" :options="systemOptions" />
       </div>
     </Card>
 
     <!-- Windows 教程 -->
-    <Card v-if="activeTutorialSystem === 'windows'" class="-mt-px rounded-t-none">
+    <Card v-if="activeTutorialSystem === 'windows'" class="rounded-t-none border-t-0">
       <div class="space-y-6">
         <!-- 第一步：安装 Node.js -->
         <div>
@@ -595,7 +595,7 @@
     </Card>
 
     <!-- macOS 教程 -->
-    <Card v-else-if="activeTutorialSystem === 'macos'" class="-mt-px rounded-t-none">
+    <Card v-else-if="activeTutorialSystem === 'macos'" class="rounded-t-none border-t-0">
       <div class="space-y-6">
         <!-- 第一步：安装 Node.js -->
         <div>
@@ -1093,7 +1093,7 @@
     </Card>
 
     <!-- Linux 教程 -->
-    <Card v-else-if="activeTutorialSystem === 'linux'" class="-mt-px rounded-t-none">
+    <Card v-else-if="activeTutorialSystem === 'linux'" class="rounded-t-none border-t-0">
       <div class="space-y-6">
         <!-- 第一步：安装 Node.js -->
         <div>
