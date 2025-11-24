@@ -45,7 +45,7 @@ const sizeClasses = {
       :class="[
         modelValue ? 'bg-primary-600 dark:bg-primary-500' : 'bg-gray-200 dark:bg-gray-700',
         sizeClasses[size].container,
-        'relative inline-flex flex-shrink-0 cursor-pointer items-center rounded-full transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:focus:ring-offset-gray-800'
+        'relative inline-flex flex-shrink-0 cursor-pointer items-center rounded-full transition-all duration-200 ease-in-out focus:outline-none focus:ring-4 focus:ring-primary-500/30 disabled:cursor-not-allowed disabled:opacity-50 dark:focus:ring-primary-400/30'
       ]"
       :disabled="disabled"
       :model-value="modelValue"
