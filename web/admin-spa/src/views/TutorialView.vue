@@ -18,9 +18,23 @@
     </template>
 
     <!-- 系统选择标签 -->
-    <Card class="rounded-b-none border-b-0" :no-padding="true">
-      <div class="pb-1 pl-4 pr-4 pt-4">
-        <TabGroup v-model="activeTutorialSystem" :options="systemOptions" />
+    <Card class="rounded-b-none border-b-0">
+      <div class="border-b border-gray-200 dark:border-gray-700">
+        <nav aria-label="System Tabs" class="flex gap-8 px-6">
+          <button
+            v-for="option in systemOptions"
+            :key="option.value"
+            class="relative border-b-2 px-1 pb-4 pt-4 text-sm font-medium transition-colors"
+            :class="
+              activeTutorialSystem === option.value
+                ? 'border-primary-600 text-primary-600 dark:border-primary-400 dark:text-primary-400'
+                : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:border-gray-600 dark:hover:text-gray-200'
+            "
+            @click="activeTutorialSystem = option.value"
+          >
+            {{ option.label }}
+          </button>
+        </nav>
       </div>
     </Card>
 
@@ -1652,7 +1666,6 @@
 <script setup>
 import { computed, ref } from 'vue'
 import CodeBlock from '@/components/common/CodeBlock.vue'
-import TabGroup from '@/components/common/TabGroup.vue'
 import ThemeToggle from '@/components/common/ThemeToggle.vue'
 import PageContainer from '@/components/layout/PageContainer.vue'
 import { Card } from '@/ui'
