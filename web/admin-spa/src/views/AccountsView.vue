@@ -259,7 +259,7 @@
                             <div class="space-y-1 pt-1 text-gray-200 dark:text-gray-600">
                               <div class="flex items-center gap-2">
                                 <div
-                                  class="h-2 w-16 rounded bg-gradient-to-r from-blue-500 to-indigo-600"
+                                  class="h-2 w-16 rounded bg-gradient-to-r from-primary-500 to-primary-600"
                                 ></div>
                                 <span class="font-medium text-white dark:text-gray-900"
                                   >正常：请求正常处理</span
@@ -1230,22 +1230,7 @@
                   @change="updateSelectAllState"
                 />
                 <div
-                  :class="[
-                    'flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg',
-                    account.platform === 'claude'
-                      ? 'bg-gradient-to-br from-purple-500 to-purple-600'
-                      : account.platform === 'bedrock'
-                        ? 'bg-gradient-to-br from-orange-500 to-red-600'
-                        : account.platform === 'azure_openai'
-                          ? 'bg-gradient-to-br from-blue-500 to-cyan-600'
-                          : account.platform === 'openai'
-                            ? 'bg-gradient-to-br from-gray-600 to-gray-700'
-                            : account.platform === 'ccr'
-                              ? 'bg-gradient-to-br from-teal-500 to-emerald-600'
-                              : account.platform === 'droid'
-                                ? 'bg-gradient-to-br from-cyan-500 to-sky-600'
-                                : 'bg-gradient-to-br from-blue-500 to-blue-600'
-                  ]"
+                  class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-primary-500 to-primary-600"
                 >
                   <Icon
                     class="h-4 w-4 text-white"
@@ -3454,8 +3439,8 @@ const formatRelativeTime = (dateString) => {
 const getSessionProgressBarClass = (status, account = null) => {
   // 根据状态返回不同的颜色类，包含防御性检查
   if (!status) {
-    // 无状态信息时默认为蓝色
-    return 'bg-gradient-to-r from-blue-500 to-indigo-600'
+    // 无状态信息时默认为主色
+    return 'bg-gradient-to-r from-primary-500 to-primary-600'
   }
 
   // 检查账号是否处于限流状态
@@ -3481,8 +3466,8 @@ const getSessionProgressBarClass = (status, account = null) => {
     // 警告状态 - 橙色/黄色
     return 'bg-gradient-to-r from-yellow-500 to-orange-500'
   } else {
-    // 正常状态（allowed 或其他） - 蓝色
-    return 'bg-gradient-to-r from-blue-500 to-indigo-600'
+    // 正常状态（allowed 或其他） - 主色
+    return 'bg-gradient-to-r from-primary-500 to-primary-600'
   }
 }
 
@@ -3513,7 +3498,7 @@ const getClaudeUsageWidth = (window) => {
 const getClaudeUsageBarClass = (window) => {
   const util = window?.utilization || 0
   if (util < 60) {
-    return 'bg-gradient-to-r from-blue-500 to-indigo-600'
+    return 'bg-gradient-to-r from-primary-500 to-primary-600'
   }
   if (util < 90) {
     return 'bg-gradient-to-r from-yellow-500 to-orange-500'
