@@ -742,7 +742,7 @@
                   >
                     <div class="h-2 w-16 rounded-full bg-gray-200">
                       <div
-                        class="h-2 rounded-full bg-gradient-to-r from-green-500 to-blue-600 transition-all duration-300"
+                        class="h-2 rounded-full bg-gradient-to-r from-primary-500 to-primary-600 transition-all duration-300"
                         :style="{ width: 101 - (account.priority || 50) + '%' }"
                       />
                     </div>
@@ -767,19 +767,19 @@
                 <td class="whitespace-nowrap px-3 py-4 text-sm">
                   <div v-if="account.usage && account.usage.daily" class="space-y-1">
                     <div class="flex items-center gap-2">
-                      <div class="h-2 w-2 rounded-full bg-blue-500" />
+                      <div class="h-2 w-2 rounded-full bg-primary-500" />
                       <span class="text-sm font-medium text-gray-900 dark:text-gray-100"
                         >{{ account.usage.daily.requests || 0 }} 次</span
                       >
                     </div>
                     <div class="flex items-center gap-2">
-                      <div class="h-2 w-2 rounded-full bg-purple-500" />
+                      <div class="h-2 w-2 rounded-full bg-primary-600" />
                       <span class="text-xs text-gray-600 dark:text-gray-300"
                         >{{ formatNumber(account.usage.daily.allTokens || 0) }}M</span
                       >
                     </div>
                     <div class="flex items-center gap-2">
-                      <div class="h-2 w-2 rounded-full bg-green-500" />
+                      <div class="h-2 w-2 rounded-full bg-primary-400" />
                       <span class="text-xs text-gray-600 dark:text-gray-300"
                         >${{ calculateDailyCost(account) }}</span
                       >
@@ -912,13 +912,13 @@
                         class="flex items-center gap-3 text-xs"
                       >
                         <div class="flex items-center gap-1">
-                          <div class="h-1.5 w-1.5 rounded-full bg-purple-500" />
+                          <div class="h-1.5 w-1.5 rounded-full bg-primary-600" />
                           <span class="font-medium text-gray-900 dark:text-gray-100">
                             {{ formatNumber(account.usage.sessionWindow.totalTokens) }}M
                           </span>
                         </div>
                         <div class="flex items-center gap-1">
-                          <div class="h-1.5 w-1.5 rounded-full bg-green-500" />
+                          <div class="h-1.5 w-1.5 rounded-full bg-primary-400" />
                           <span class="font-medium text-gray-900 dark:text-gray-100">
                             ${{ formatCost(account.usage.sessionWindow.totalCost) }}
                           </span>
@@ -1283,19 +1283,19 @@
                 <p class="text-xs text-gray-500 dark:text-gray-400">今日使用</p>
                 <div class="space-y-1">
                   <div class="flex items-center gap-1.5">
-                    <div class="h-1.5 w-1.5 rounded-full bg-blue-500" />
+                    <div class="h-1.5 w-1.5 rounded-full bg-primary-500" />
                     <p class="text-sm font-semibold text-gray-900 dark:text-gray-100">
                       {{ account.usage?.daily?.requests || 0 }} 次
                     </p>
                   </div>
                   <div class="flex items-center gap-1.5">
-                    <div class="h-1.5 w-1.5 rounded-full bg-purple-500" />
+                    <div class="h-1.5 w-1.5 rounded-full bg-primary-600" />
                     <p class="text-xs text-gray-600 dark:text-gray-400">
                       {{ formatNumber(account.usage?.daily?.allTokens || 0) }}M
                     </p>
                   </div>
                   <div class="flex items-center gap-1.5">
-                    <div class="h-1.5 w-1.5 rounded-full bg-green-500" />
+                    <div class="h-1.5 w-1.5 rounded-full bg-primary-400" />
                     <p class="text-xs text-gray-600 dark:text-gray-400">
                       ${{ calculateDailyCost(account) }}
                     </p>
@@ -1306,13 +1306,13 @@
                 <p class="text-xs text-gray-500 dark:text-gray-400">会话窗口</p>
                 <div v-if="account.usage && account.usage.sessionWindow" class="space-y-1">
                   <div class="flex items-center gap-1.5">
-                    <div class="h-1.5 w-1.5 rounded-full bg-purple-500" />
+                    <div class="h-1.5 w-1.5 rounded-full bg-primary-600" />
                     <p class="text-sm font-semibold text-gray-900 dark:text-gray-100">
                       {{ formatNumber(account.usage.sessionWindow.totalTokens) }}M
                     </p>
                   </div>
                   <div class="flex items-center gap-1.5">
-                    <div class="h-1.5 w-1.5 rounded-full bg-green-500" />
+                    <div class="h-1.5 w-1.5 rounded-full bg-primary-400" />
                     <p class="text-xs text-gray-600 dark:text-gray-400">
                       ${{ formatCost(account.usage.sessionWindow.totalCost) }}
                     </p>
