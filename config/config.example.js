@@ -13,7 +13,10 @@ const config = {
   // 🔐 安全配置
   security: {
     jwtSecret: process.env.JWT_SECRET || 'CHANGE-THIS-JWT-SECRET-IN-PRODUCTION',
-    adminSessionTimeout: parseInt(process.env.ADMIN_SESSION_TIMEOUT) || 86400000, // 24小时
+    // adminSessionTimeout: 环境变量为毫秒，需转换为秒（Redis EXPIRE 使用秒）
+    adminSessionTimeout: process.env.ADMIN_SESSION_TIMEOUT
+      ? Math.floor(parseInt(process.env.ADMIN_SESSION_TIMEOUT) / 1000)
+      : 86400, // 默认 24 小时（秒）
     apiKeyPrefix: process.env.API_KEY_PREFIX || 'cr_',
     encryptionKey: process.env.ENCRYPTION_KEY || 'CHANGE-THIS-32-CHARACTER-KEY-NOW'
   },
