@@ -96,12 +96,12 @@
                 Windows 注意事项
               </h6>
               <ul class="mb-4 list-inside list-disc space-y-2 text-xs text-gray-600 dark:text-gray-400">
-                <li class="text-xs text-gray-600 dark:text-gray-400">• 建议使用 PowerShell 而不是 CMD</li>
+                <li class="text-xs text-gray-600 dark:text-gray-400">建议使用 PowerShell 而不是 CMD</li>
                 <li class="text-xs text-gray-600 dark:text-gray-400">
-                  • 如果遇到权限问题，尝试以管理员身份运行
+                  如果遇到权限问题，尝试以管理员身份运行
                 </li>
                 <li class="text-xs text-gray-600 dark:text-gray-400">
-                  • 某些杀毒软件可能会误报，需要添加白名单
+                  某些杀毒软件可能会误报，需要添加白名单
                 </li>
               </ul>
             </div>
@@ -153,10 +153,10 @@
               <h6 class="mb-2 text-base font-medium text-gray-700 dark:text-white">提示</h6>
               <ul class="mb-4 list-inside list-disc space-y-2 text-xs text-gray-600 dark:text-gray-400">
                 <li class="text-xs text-gray-600 dark:text-gray-400">
-                  • 建议使用 PowerShell 而不是 CMD，功能更强大
+                  建议使用 PowerShell 而不是 CMD，功能更强大
                 </li>
                 <li class="text-xs text-gray-600 dark:text-gray-400">
-                  • 如果遇到权限问题，以管理员身份运行 PowerShell
+                  如果遇到权限问题，以管理员身份运行 PowerShell
                 </li>
               </ul>
             </div>
@@ -656,16 +656,16 @@
               </h6>
               <ul class="mb-4 list-inside list-disc space-y-2 text-xs text-gray-600 dark:text-gray-400">
                 <li class="text-xs text-gray-600 dark:text-gray-400">
-                  • 如果遇到权限问题，可能需要使用
+                  如果遇到权限问题，可能需要使用
                   <code
                     class="rounded bg-gray-100 px-2 py-1 font-mono text-sm text-gray-800 dark:bg-gray-800 dark:text-gray-200"
                     >sudo</code
                   >
                 </li>
                 <li class="text-xs text-gray-600 dark:text-gray-400">
-                  • 首次运行可能需要在系统偏好设置中允许
+                  首次运行可能需要在系统偏好设置中允许
                 </li>
-                <li class="text-xs text-gray-600 dark:text-gray-400">• 建议使用 Terminal 或 iTerm2</li>
+                <li class="text-xs text-gray-600 dark:text-gray-400">建议使用 Terminal 或 iTerm2</li>
               </ul>
             </div>
           </div>
@@ -1151,16 +1151,16 @@
                 Linux 注意事项
               </h6>
               <ul class="mb-4 list-inside list-disc space-y-2 text-xs text-gray-600 dark:text-gray-400">
-                <li class="text-xs text-gray-600 dark:text-gray-400">• 某些发行版可能需要安装额外的依赖</li>
+                <li class="text-xs text-gray-600 dark:text-gray-400">某些发行版可能需要安装额外的依赖</li>
                 <li class="text-xs text-gray-600 dark:text-gray-400">
-                  • 如果遇到权限问题，使用
+                  如果遇到权限问题，使用
                   <code
                     class="rounded bg-gray-100 px-2 py-1 font-mono text-sm text-gray-800 dark:bg-gray-800 dark:text-gray-200"
                     >sudo</code
                   >
                 </li>
                 <li class="text-xs text-gray-600 dark:text-gray-400">
-                  • 确保你的用户在 npm 的全局目录有写权限
+                  确保你的用户在 npm 的全局目录有写权限
                 </li>
               </ul>
             </div>
