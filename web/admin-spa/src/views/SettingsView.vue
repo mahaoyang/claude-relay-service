@@ -24,7 +24,7 @@
       <!-- 品牌设置部分 -->
       <Card v-show="activeSection === 'branding'" class="mb-8">
         <!-- Tab 导航 -->
-        <div class="border-b border-gray-200 dark:border-gray-700">
+        <div class="border-b border-gray-200 pb-2 dark:border-gray-700">
           <nav aria-label="Settings Tabs" class="flex gap-8 px-6">
             <button
               class="relative flex items-center gap-2 border-b-2 px-1 pb-4 pt-4 text-sm font-medium transition-colors"
@@ -376,7 +376,7 @@
       <!-- Webhook 设置部分 -->
       <Card v-show="activeSection === 'webhook'" class="mb-8">
         <!-- Tab 导航 -->
-        <div class="border-b border-gray-200 dark:border-gray-700">
+        <div class="border-b border-gray-200 pb-2 dark:border-gray-700">
           <nav aria-label="Settings Tabs" class="flex gap-8 px-6">
             <button
               class="relative flex items-center gap-2 border-b-2 px-1 pb-4 pt-4 text-sm font-medium transition-colors"
