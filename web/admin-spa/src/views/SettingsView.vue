@@ -634,37 +634,46 @@
   </PageContainer>
 
   <!-- 添加/编辑平台模态框 -->
-  <div v-if="showAddPlatformModal" @click="closePlatformModal">
-    <div @click.stop>
-      <!-- 头部 -->
-      <div>
+  <BaseModal
+    icon="Bell"
+    :show="showAddPlatformModal"
+    size="4xl"
+    :title="`${editingPlatform ? '编辑' : '添加'}通知平台`"
+    @close="closePlatformModal"
+  >
+    <!-- 模态框副标题 -->
+    <template #header>
+      <div class="flex items-center gap-3">
+        <div
+          class="flex h-10 w-10 items-center justify-center rounded-full bg-primary-100 dark:bg-primary-900/30"
+        >
+          <Icon class="h-5 w-5 text-primary-600 dark:text-primary-400" name="Bell" />
+        </div>
         <div>
-          <div>
-            <div>
-              <Icon name="Bell" />
-            </div>
-            <div>
-              <h3>{{ editingPlatform ? '编辑' : '添加' }}通知平台</h3>
-              <p>配置{{ editingPlatform ? '并更新' : '新的' }}Webhook通知渠道</p>
-            </div>
-          </div>
-          <button @click="closePlatformModal">
-            <Icon name="X" />
-          </button>
+          <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+            {{ editingPlatform ? '编辑' : '添加' }}通知平台
+          </h3>
+          <p class="text-sm text-gray-500 dark:text-gray-400">
+            配置{{ editingPlatform ? '并更新' : '新的' }}Webhook通知渠道
+          </p>
         </div>
       </div>
+    </template>
 
-      <!-- 内容区域 -->
-      <div>
-        <div>
+    <!-- 内容区域 -->
+    <div class="space-y-6">
           <!-- 平台类型选择 -->
           <div>
-            <label>
-              <Icon name="Layers" />
+            <label class="mb-2 flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300">
+              <Icon class="h-4 w-4" name="Layers" />
               平台类型
             </label>
-            <div>
-              <select v-model="platformForm.type" :disabled="editingPlatform">
+            <div class="relative">
+              <select
+                v-model="platformForm.type"
+                class="w-full appearance-none rounded-lg border border-gray-300 bg-white px-4 py-2 pr-10 text-sm text-gray-900 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 disabled:cursor-not-allowed disabled:opacity-50 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+                :disabled="editingPlatform"
+              >
                 <option value="wechat_work">🟢 企业微信</option>
                 <option value="dingtalk">🔵 钉钉</option>
                 <option value="feishu">🟦 飞书</option>
@@ -675,25 +684,29 @@
                 <option value="smtp">📧 邮件通知</option>
                 <option value="custom">⚙️ 自定义</option>
               </select>
-              <div>
-                <Icon name="ChevronDown" />
+              <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
+                <Icon class="h-4 w-4 text-gray-400" name="ChevronDown" />
               </div>
             </div>
-            <p v-if="editingPlatform">
-              <Icon name="Info" />
+            <p
+              v-if="editingPlatform"
+              class="mt-1.5 flex items-center gap-1.5 text-xs text-amber-600 dark:text-amber-400"
+            >
+              <Icon class="h-3.5 w-3.5" name="Info" />
               编辑模式下不能更改平台类型
             </p>
           </div>
 
           <!-- 平台名称 -->
           <div>
-            <label>
-              <Icon name="Tag" />
+            <label class="mb-2 flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300">
+              <Icon class="h-4 w-4" name="Tag" />
               名称
-              <span>(可选)</span>
+              <span class="text-xs font-normal text-gray-500">(可选)</span>
             </label>
             <input
               v-model="platformForm.name"
+              class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm text-gray-900 placeholder-gray-500 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
               placeholder="例如：运维群通知、开发测试群"
               type="text"
             />
@@ -707,29 +720,39 @@
               platformForm.type !== 'telegram'
             "
           >
-            <label>
-              <Icon name="Link" />
+            <label class="mb-2 flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300">
+              <Icon class="h-4 w-4" name="Link" />
               Webhook URL
-              <span>*</span>
+              <span class="text-red-500">*</span>
             </label>
-            <div>
+            <div class="relative">
               <input
                 v-model="platformForm.url"
+                class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 pr-10 text-sm text-gray-900 placeholder-gray-500 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
                 placeholder="https://..."
                 required
                 type="url"
                 @input="validateUrl"
               />
-              <div v-if="urlValid">
-                <Icon name="CheckCircle" />
+              <div
+                v-if="urlValid"
+                class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3"
+              >
+                <Icon class="h-5 w-5 text-green-500" name="CheckCircle" />
               </div>
-              <div v-if="urlError">
-                <Icon name="AlertCircle" />
+              <div
+                v-if="urlError"
+                class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3"
+              >
+                <Icon class="h-5 w-5 text-red-500" name="AlertCircle" />
               </div>
             </div>
-            <div v-if="getWebhookHint(platformForm.type)">
-              <Icon name="Info" />
-              <p>
+            <div
+              v-if="getWebhookHint(platformForm.type)"
+              class="mt-1.5 flex items-start gap-1.5 rounded-lg bg-blue-50 p-3 dark:bg-blue-900/20"
+            >
+              <Icon class="mt-0.5 h-4 w-4 flex-shrink-0 text-blue-600 dark:text-blue-400" name="Info" />
+              <p class="text-xs text-blue-700 dark:text-blue-300">
                 {{ getWebhookHint(platformForm.type) }}
               </p>
             </div>
@@ -1020,34 +1043,50 @@
               </transition>
             </div>
           </div>
-        </div>
-      </div>
-
-      <!-- 底部按钮 -->
-      <div>
-        <div>
-          <div>
-            <Icon name="Asterisk" />
-            必填项
-          </div>
-          <div>
-            <button @click="closePlatformModal">
-              <Icon name="X" />
-              取消
-            </button>
-            <button :disabled="testingConnection" @click="testPlatformForm">
-              <Icon name="Loader2" />
-              {{ testingConnection ? '测试中...' : '测试连接' }}
-            </button>
-            <button :disabled="!isPlatformFormValid || savingPlatform" @click="savePlatform">
-              <Icon name="Loader2" />
-              {{ savingPlatform ? '保存中...' : editingPlatform ? '保存修改' : '添加平台' }}
-            </button>
-          </div>
-        </div>
-      </div>
     </div>
-  </div>
+
+    <!-- 底部按钮 -->
+    <template #footer>
+      <div class="flex w-full items-center justify-between">
+        <div class="flex items-center gap-1.5 text-xs text-gray-500 dark:text-gray-400">
+          <Icon class="h-3.5 w-3.5" name="Asterisk" />
+          <span>必填项</span>
+        </div>
+        <div class="flex gap-3">
+          <button
+            class="inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
+            type="button"
+            @click="closePlatformModal"
+          >
+            <Icon class="h-4 w-4" name="X" />
+            取消
+          </button>
+          <button
+            class="inline-flex items-center gap-2 rounded-lg border border-primary-600 bg-white px-4 py-2 text-sm font-medium text-primary-600 transition-colors hover:bg-primary-50 disabled:cursor-not-allowed disabled:opacity-50 dark:border-primary-500 dark:bg-gray-800 dark:text-primary-400 dark:hover:bg-primary-900/20"
+            :disabled="testingConnection"
+            type="button"
+            @click="testPlatformForm"
+          >
+            <Icon
+              class="h-4 w-4"
+              :class="{ 'animate-spin': testingConnection }"
+              name="Loader2"
+            />
+            {{ testingConnection ? '测试中...' : '测试连接' }}
+          </button>
+          <button
+            class="inline-flex items-center gap-2 rounded-lg bg-primary-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-primary-700 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-primary-500 dark:hover:bg-primary-600"
+            :disabled="!isPlatformFormValid || savingPlatform"
+            type="button"
+            @click="savePlatform"
+          >
+            <Icon class="h-4 w-4" :class="{ 'animate-spin': savingPlatform }" name="Loader2" />
+            {{ savingPlatform ? '保存中...' : editingPlatform ? '保存修改' : '添加平台' }}
+          </button>
+        </div>
+      </div>
+    </template>
+  </BaseModal>
 </template>
 
 <script setup>
@@ -1059,6 +1098,7 @@ import { apiClient } from '@/config/api'
 import { Card } from '@/ui'
 import Switch from '@/ui/Switch.vue'
 import PageContainer from '@/components/layout/PageContainer.vue'
+import BaseModal from '@/components/common/BaseModal.vue'
 
 // 定义组件名称，用于keep-alive排除
 defineOptions({
