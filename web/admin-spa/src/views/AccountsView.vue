@@ -1167,7 +1167,9 @@
                         'inline-flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-xs font-medium transition-colors',
                         account.isTogglingSchedulable
                           ? 'cursor-not-allowed bg-gray-100 text-gray-400 dark:bg-gray-700 dark:text-gray-500'
-                          : 'bg-primary-50 text-primary-700 hover:bg-primary-100 dark:bg-primary-900/30 dark:text-primary-300 dark:hover:bg-primary-900/50'
+                          : account.schedulable
+                            ? 'bg-primary-50 text-primary-700 hover:bg-primary-100 dark:bg-primary-900/30 dark:text-primary-300 dark:hover:bg-primary-900/50'
+                            : 'bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-400 dark:hover:bg-gray-600'
                       ]"
                       :disabled="account.isTogglingSchedulable"
                       :title="account.schedulable ? '点击禁用调度' : '点击启用调度'"
@@ -1585,9 +1587,16 @@
             </div>
 
             <!-- 操作按钮 -->
-            <div class="mt-3 flex gap-2 border-t border-gray-100 pt-3">
+            <div class="mt-3 flex gap-2 border-t border-gray-100 pt-3 dark:border-gray-700">
               <button
-                class="flex flex-1 items-center justify-center gap-1 rounded-lg bg-primary-50 px-3 py-2 text-xs font-medium text-primary-600 transition-colors hover:bg-primary-100 dark:bg-primary-900/30 dark:text-primary-300 dark:hover:bg-primary-900/50"
+                :class="[
+                  'flex flex-1 items-center justify-center gap-1 rounded-lg px-3 py-2 text-xs font-medium transition-colors',
+                  account.isTogglingSchedulable
+                    ? 'cursor-not-allowed bg-gray-100 text-gray-400 dark:bg-gray-700 dark:text-gray-500'
+                    : account.schedulable
+                      ? 'bg-primary-50 text-primary-600 hover:bg-primary-100 dark:bg-primary-900/30 dark:text-primary-300 dark:hover:bg-primary-900/50'
+                      : 'bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-400 dark:hover:bg-gray-600'
+                ]"
                 :disabled="account.isTogglingSchedulable"
                 @click="toggleSchedulable(account)"
               >
