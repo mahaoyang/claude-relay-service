@@ -19,7 +19,7 @@
 
     <!-- 系统选择标签 -->
     <Card class="rounded-b-none border-b-0" :no-padding="true">
-      <div class="pb-1 pl-2 pr-4 pt-4">
+      <div class="pb-1 pl-4 pr-4 pt-4">
         <TabGroup v-model="activeTutorialSystem" :options="systemOptions" />
       </div>
     </Card>
