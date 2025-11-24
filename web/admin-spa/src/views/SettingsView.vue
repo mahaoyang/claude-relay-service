@@ -11,32 +11,34 @@
 
     <!-- 设置分类导航 -->
     <Card class="mb-6">
-      <nav class="flex gap-2 p-2">
-        <button
-          class="flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors"
-          :class="
-            activeSection === 'branding'
-              ? 'bg-primary-50 text-primary-600 dark:bg-primary-900/30 dark:text-primary-400'
-              : 'text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700'
-          "
-          @click="activeSection = 'branding'"
-        >
-          <Icon class="h-4 w-4" name="Palette" />
-          品牌设置
-        </button>
-        <button
-          class="flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors"
-          :class="
-            activeSection === 'webhook'
-              ? 'bg-primary-50 text-primary-600 dark:bg-primary-900/30 dark:text-primary-400'
-              : 'text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700'
-          "
-          @click="activeSection = 'webhook'"
-        >
-          <Icon class="h-4 w-4" name="Bell" />
-          通知设置
-        </button>
-      </nav>
+      <div class="border-b border-gray-200 dark:border-gray-700">
+        <nav aria-label="Settings Tabs" class="flex gap-8 px-6">
+          <button
+            class="relative flex items-center gap-2 border-b-2 px-1 pb-4 pt-4 text-sm font-medium transition-colors"
+            :class="
+              activeSection === 'branding'
+                ? 'border-primary-600 text-primary-600 dark:border-primary-400 dark:text-primary-400'
+                : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:border-gray-600 dark:hover:text-gray-200'
+            "
+            @click="activeSection = 'branding'"
+          >
+            <Icon class="h-4 w-4" name="Palette" />
+            品牌设置
+          </button>
+          <button
+            class="relative flex items-center gap-2 border-b-2 px-1 pb-4 pt-4 text-sm font-medium transition-colors"
+            :class="
+              activeSection === 'webhook'
+                ? 'border-primary-600 text-primary-600 dark:border-primary-400 dark:text-primary-400'
+                : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:border-gray-600 dark:hover:text-gray-200'
+            "
+            @click="activeSection = 'webhook'"
+          >
+            <Icon class="h-4 w-4" name="Bell" />
+            通知设置
+          </button>
+        </nav>
+      </div>
     </Card>
 
     <!-- 加载状态 -->
