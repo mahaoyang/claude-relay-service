@@ -1419,15 +1419,12 @@
             <span>共 {{ sortedApiKeys.length }} 条记录</span>
             <div class="flex items-center gap-2">
               <span>每页显示</span>
-              <select
+              <Select
                 v-model="pageSize"
-                class="rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-sm text-gray-900 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:focus:border-primary-400 dark:focus:ring-primary-400"
-                @change="currentPage = 1"
-              >
-                <option v-for="size in pageSizeOptions" :key="size" :value="size">
-                  {{ size }}
-                </option>
-              </select>
+                :options="pageSizeOptions.map((size) => ({ value: size, label: String(size) }))"
+                size="sm"
+                @update:model-value="currentPage = 1"
+              />
               <span>条</span>
             </div>
           </div>
@@ -1905,7 +1902,7 @@ import LimitProgressBar from '@/components/apikeys/LimitProgressBar.vue'
 import CustomDropdown from '@/components/common/CustomDropdown.vue'
 import PageContainer from '@/components/layout/PageContainer.vue'
 import Icon from '@/components/common/Icon.vue'
-import { Card } from '@/ui'
+import { Card, Select } from '@/ui'
 
 // 响应式数据
 const clientsStore = useClientsStore()

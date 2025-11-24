@@ -151,20 +151,32 @@
 
             <!-- Role Filter -->
             <div>
-              <select v-model="selectedRole" @change="loadUsers">
-                <option value="">All Roles</option>
-                <option value="user">User</option>
-                <option value="admin">Admin</option>
-              </select>
+              <Select
+                v-model="selectedRole"
+                :options="[
+                  { value: '', label: 'All Roles' },
+                  { value: 'user', label: 'User' },
+                  { value: 'admin', label: 'Admin' }
+                ]"
+                placeholder="Filter by role"
+                size="sm"
+                @update:model-value="loadUsers"
+              />
             </div>
 
             <!-- Status Filter -->
             <div>
-              <select v-model="selectedStatus" @change="loadUsers">
-                <option value="">All Status</option>
-                <option value="true">Active</option>
-                <option value="false">Disabled</option>
-              </select>
+              <Select
+                v-model="selectedStatus"
+                :options="[
+                  { value: '', label: 'All Status' },
+                  { value: 'true', label: 'Active' },
+                  { value: 'false', label: 'Disabled' }
+                ]"
+                placeholder="Filter by status"
+                size="sm"
+                @update:model-value="loadUsers"
+              />
             </div>
           </div>
         </div>
@@ -358,6 +370,7 @@ import { ref, computed, onMounted } from 'vue'
 import { apiClient } from '@/config/api'
 import { showToast } from '@/utils/toast'
 import { debounce } from 'lodash-es'
+import { Select } from '@/ui'
 import UserUsageStatsModal from '@/components/admin/UserUsageStatsModal.vue'
 import ChangeRoleModal from '@/components/admin/ChangeRoleModal.vue'
 import ConfirmModal from '@/components/common/ConfirmModal.vue'
