@@ -1786,51 +1786,143 @@
     />
 
     <!-- 步骤2: Setup Token授权 -->
-    <div v-if="oauthStep === 2 && form.addType === 'setup-token'">
+    <div v-if="oauthStep === 2 && form.addType === 'setup-token'" class="space-y-6">
       <!-- Claude Setup Token流程 -->
       <div v-if="form.platform === 'claude'">
-        <div>
-          <div>
-            <div></div>
-            <div>
-              <h4>Claude Setup Token 授权</h4>
-              <p>请按照以下步骤通过 Setup Token 完成 Claude 账户的授权：</p>
+        <div
+          class="rounded-lg border border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-gray-800"
+        >
+          <div class="flex items-start gap-4">
+            <div
+              class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-primary-100 dark:bg-primary-900/30"
+            >
+              <svg
+                class="h-5 w-5 text-primary-600 dark:text-primary-400"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"
+                />
+              </svg>
+            </div>
+            <div class="flex-1">
+              <h4 class="text-lg font-semibold text-gray-900 dark:text-white">
+                Claude Setup Token 授权
+              </h4>
+              <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
+                请按照以下步骤通过 Setup Token 完成 Claude 账户的授权：
+              </p>
 
-              <div>
+              <div class="mt-6 space-y-6">
                 <!-- 步骤1: 生成授权链接 -->
-                <div>
-                  <div>
-                    <div>1</div>
-                    <div>
-                      <p>点击下方按钮生成授权链接</p>
-                      <button
-                        v-if="!setupTokenAuthUrl"
-                        :disabled="setupTokenLoading"
-                        @click="generateSetupTokenAuthUrl"
-                      >
-                        <div v-if="setupTokenLoading" />
-                        {{ setupTokenLoading ? '生成中...' : '生成 Setup Token 授权链接' }}
-                      </button>
-                      <div v-else>
-                        <div>
-                          <input readonly type="text" :value="setupTokenAuthUrl" />
-                          <button title="复制链接" @click="copySetupTokenAuthUrl"></button>
+                <div
+                  class="rounded-lg border border-gray-100 bg-gray-50 p-4 dark:border-gray-700 dark:bg-gray-900/50"
+                >
+                  <div class="flex items-start gap-3">
+                    <div
+                      class="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-primary-500 text-xs font-bold text-white"
+                    >
+                      1
+                    </div>
+                    <div class="flex-1">
+                      <p class="font-medium text-gray-900 dark:text-white">
+                        点击下方按钮生成授权链接
+                      </p>
+                      <div class="mt-3">
+                        <button
+                          v-if="!setupTokenAuthUrl"
+                          class="inline-flex items-center gap-2 rounded-lg bg-primary-500 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-primary-600 disabled:opacity-50"
+                          :disabled="setupTokenLoading"
+                          @click="generateSetupTokenAuthUrl"
+                        >
+                          <svg
+                            v-if="setupTokenLoading"
+                            class="h-4 w-4 animate-spin"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                          >
+                            <circle
+                              class="opacity-25"
+                              cx="12"
+                              cy="12"
+                              r="10"
+                              stroke="currentColor"
+                              stroke-width="4"
+                            ></circle>
+                            <path
+                              class="opacity-75"
+                              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                              fill="currentColor"
+                            ></path>
+                          </svg>
+                          {{ setupTokenLoading ? '生成中...' : '生成 Setup Token 授权链接' }}
+                        </button>
+                        <div v-else class="space-y-2">
+                          <div class="flex items-center gap-2">
+                            <input
+                              class="flex-1 rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+                              readonly
+                              type="text"
+                              :value="setupTokenAuthUrl"
+                            />
+                            <button
+                              class="rounded-lg bg-gray-100 p-2 text-gray-600 transition-colors hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-400 dark:hover:bg-gray-600"
+                              title="复制链接"
+                              @click="copySetupTokenAuthUrl"
+                            >
+                              <svg
+                                class="h-5 w-5"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                              >
+                                <path
+                                  stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                  stroke-width="2"
+                                  d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
+                                />
+                              </svg>
+                            </button>
+                          </div>
+                          <button
+                            class="text-sm text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300"
+                            @click="regenerateSetupTokenAuthUrl"
+                          >
+                            重新生成
+                          </button>
                         </div>
-                        <button @click="regenerateSetupTokenAuthUrl">重新生成</button>
                       </div>
                     </div>
                   </div>
                 </div>
 
                 <!-- 步骤2: 访问链接并授权 -->
-                <div>
-                  <div>
-                    <div>2</div>
-                    <div>
-                      <p>在浏览器中打开链接并完成授权</p>
-                      <p>请在新标签页中打开授权链接，登录您的 Claude 账户并授权 Claude Code。</p>
-                      <div>
-                        <p>
+                <div
+                  class="rounded-lg border border-gray-100 bg-gray-50 p-4 dark:border-gray-700 dark:bg-gray-900/50"
+                >
+                  <div class="flex items-start gap-3">
+                    <div
+                      class="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-gray-300 text-xs font-bold text-gray-600 dark:bg-gray-600 dark:text-gray-300"
+                    >
+                      2
+                    </div>
+                    <div class="flex-1">
+                      <p class="font-medium text-gray-900 dark:text-white">
+                        在浏览器中打开链接并完成授权
+                      </p>
+                      <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
+                        请在新标签页中打开授权链接，登录您的 Claude 账户并授权 Claude Code。
+                      </p>
+                      <div
+                        class="mt-2 rounded-lg border border-amber-200 bg-amber-50 p-3 dark:border-amber-800 dark:bg-amber-900/20"
+                      >
+                        <p class="text-sm text-amber-700 dark:text-amber-300">
                           <strong>注意：</strong
                           >如果您设置了代理，请确保浏览器也使用相同的代理访问授权页面。
                         </p>
@@ -1840,22 +1932,37 @@
                 </div>
 
                 <!-- 步骤3: 输入授权码 -->
-                <div>
-                  <div>
-                    <div>3</div>
-                    <div>
-                      <p>输入 Authorization Code</p>
-                      <p>授权完成后，从返回页面复制 Authorization Code，并粘贴到下方输入框：</p>
-                      <div>
-                        <div>
-                          <label> Authorization Code </label>
-                          <textarea
-                            v-model="setupTokenAuthCode"
-                            placeholder="粘贴从Claude Code授权页面获取的Authorization Code..."
-                            rows="3"
-                          />
-                        </div>
-                        <p>请粘贴从Claude Code授权页面复制的Authorization Code</p>
+                <div
+                  class="rounded-lg border border-gray-100 bg-gray-50 p-4 dark:border-gray-700 dark:bg-gray-900/50"
+                >
+                  <div class="flex items-start gap-3">
+                    <div
+                      class="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-gray-300 text-xs font-bold text-gray-600 dark:bg-gray-600 dark:text-gray-300"
+                    >
+                      3
+                    </div>
+                    <div class="flex-1">
+                      <p class="font-medium text-gray-900 dark:text-white">
+                        输入 Authorization Code
+                      </p>
+                      <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
+                        授权完成后，从返回页面复制 Authorization Code，并粘贴到下方输入框：
+                      </p>
+                      <div class="mt-3">
+                        <label
+                          class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
+                        >
+                          Authorization Code
+                        </label>
+                        <textarea
+                          v-model="setupTokenAuthCode"
+                          class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm text-gray-900 placeholder-gray-500 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
+                          placeholder="粘贴从Claude Code授权页面获取的Authorization Code..."
+                          rows="3"
+                        />
+                        <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                          请粘贴从Claude Code授权页面复制的Authorization Code
+                        </p>
                       </div>
                     </div>
                   </div>
@@ -1866,14 +1973,40 @@
         </div>
       </div>
 
-      <div>
-        <button type="button" @click="oauthStep = 1">上一步</button>
+      <div class="flex justify-between gap-3">
         <button
+          class="rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700"
+          type="button"
+          @click="oauthStep = 1"
+        >
+          上一步
+        </button>
+        <button
+          class="inline-flex items-center gap-2 rounded-lg bg-primary-500 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-primary-600 disabled:opacity-50"
           :disabled="!canExchangeSetupToken || setupTokenExchanging"
           type="button"
           @click="exchangeSetupTokenCode"
         >
-          <div v-if="setupTokenExchanging" />
+          <svg
+            v-if="setupTokenExchanging"
+            class="h-4 w-4 animate-spin"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <circle
+              class="opacity-25"
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="currentColor"
+              stroke-width="4"
+            ></circle>
+            <path
+              class="opacity-75"
+              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+              fill="currentColor"
+            ></path>
+          </svg>
           {{ setupTokenExchanging ? '验证中...' : '完成授权' }}
         </button>
       </div>
