@@ -1,46 +1,63 @@
 <template>
-  <div>
-    <div>
-      <h4>代理设置 (可选)</h4>
-      <label>
-        <input v-model="proxy.enabled" type="checkbox" />
-        <span>启用代理</span>
+  <div class="mb-4 rounded-lg border border-gray-200 p-4 dark:border-gray-700">
+    <div class="mb-4 flex items-center justify-between">
+      <h4 class="text-base font-semibold text-gray-900 dark:text-white">代理设置 (可选)</h4>
+      <label
+        class="flex cursor-pointer items-center gap-3 rounded-lg border border-gray-200 px-4 py-2 transition-colors hover:bg-gray-50 dark:border-gray-600 dark:hover:bg-gray-700"
+      >
+        <input
+          v-model="proxy.enabled"
+          class="h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+          type="checkbox"
+        />
+        <span class="text-sm font-medium text-gray-900 dark:text-white">启用代理</span>
       </label>
     </div>
 
-    <div v-if="proxy.enabled">
-      <div>
-        <div></div>
-        <div>
+    <div v-if="proxy.enabled" class="space-y-4">
+      <div class="rounded-lg bg-blue-50 p-4 dark:bg-blue-900/20">
+        <div class="space-y-2 text-sm text-blue-800 dark:text-blue-300">
           <p>配置代理以访问受限的网络资源。支持 SOCKS5 和 HTTP 代理。</p>
-          <p>请确保代理服务器稳定可用，否则会影响账户的正常使用。</p>
+          <p class="text-xs">请确保代理服务器稳定可用，否则会影响账户的正常使用。</p>
         </div>
       </div>
 
       <!-- 快速配置输入框 -->
-      <div>
-        <label>
+      <div class="space-y-2">
+        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
           快速配置
-          <span> (粘贴完整代理URL自动填充) </span>
+          <span class="text-xs font-normal text-gray-500 dark:text-gray-400">
+            (粘贴完整代理URL自动填充)
+          </span>
         </label>
-        <div>
+        <div class="flex gap-2">
           <input
             v-model="proxyUrl"
+            class="flex-1 rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm text-gray-900 placeholder-gray-500 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
             placeholder="例如: socks5://username:password@host:port 或 http://host:port"
             type="text"
             @input="handleInput"
             @keyup.enter="parseProxyUrl"
             @paste="handlePaste"
           />
-          <button v-if="proxyUrl" type="button" @click="clearProxyUrl"></button>
+          <button
+            v-if="proxyUrl"
+            class="rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700"
+            type="button"
+            @click="clearProxyUrl"
+          >
+            清除
+          </button>
         </div>
-        <p v-if="parseError">
+        <p v-if="parseError" class="text-xs text-red-600 dark:text-red-400">
           {{ parseError }}
         </p>
-        <p v-else-if="parseSuccess">代理配置已自动填充</p>
+        <p v-else-if="parseSuccess" class="text-xs text-green-600 dark:text-green-400">
+          ✓ 代理配置已自动填充
+        </p>
       </div>
 
-      <div></div>
+      <div class="border-t border-gray-200 pt-4 dark:border-gray-700"></div>
 
       <div>
         <Select
@@ -55,44 +72,81 @@
         />
       </div>
 
-      <div>
+      <div class="grid grid-cols-2 gap-4">
         <div>
-          <label>主机地址</label>
-          <input v-model="proxy.host" placeholder="例如: 192.168.1.100" type="text" />
+          <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
+            >主机地址</label
+          >
+          <input
+            v-model="proxy.host"
+            class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm text-gray-900 placeholder-gray-500 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
+            placeholder="例如: 192.168.1.100"
+            type="text"
+          />
         </div>
         <div>
-          <label>端口</label>
-          <input v-model="proxy.port" placeholder="例如: 1080" type="number" />
+          <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
+            >端口</label
+          >
+          <input
+            v-model="proxy.port"
+            class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm text-gray-900 placeholder-gray-500 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
+            placeholder="例如: 1080"
+            type="number"
+          />
         </div>
       </div>
 
-      <div>
+      <div class="space-y-4 rounded-lg border border-gray-200 p-4 dark:border-gray-700">
         <div>
-          <input id="proxyAuth" v-model="showAuth" type="checkbox" />
-          <label for="proxyAuth"> 需要身份验证 </label>
+          <label class="flex cursor-pointer items-center gap-3" for="proxyAuth">
+            <input
+              id="proxyAuth"
+              v-model="showAuth"
+              class="h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+              type="checkbox"
+            />
+            <span class="text-sm font-medium text-gray-900 dark:text-white">需要身份验证</span>
+          </label>
         </div>
 
-        <div v-if="showAuth">
+        <div v-if="showAuth" class="grid grid-cols-2 gap-4">
           <div>
-            <label>用户名</label>
-            <input v-model="proxy.username" placeholder="代理用户名" type="text" />
+            <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
+              >用户名</label
+            >
+            <input
+              v-model="proxy.username"
+              class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm text-gray-900 placeholder-gray-500 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
+              placeholder="代理用户名"
+              type="text"
+            />
           </div>
           <div>
-            <label>密码</label>
-            <div>
+            <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
+              >密码</label
+            >
+            <div class="flex gap-2">
               <input
                 v-model="proxy.password"
+                class="flex-1 rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm text-gray-900 placeholder-gray-500 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
                 placeholder="代理密码"
                 :type="showPassword ? 'text' : 'password'"
               />
-              <button type="button" @click="showPassword = !showPassword"></button>
+              <button
+                class="rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700"
+                type="button"
+                @click="showPassword = !showPassword"
+              >
+                {{ showPassword ? '隐藏' : '显示' }}
+              </button>
             </div>
           </div>
         </div>
       </div>
 
-      <div>
-        <p>
+      <div class="rounded-lg bg-amber-50 p-3 dark:bg-amber-900/20">
+        <p class="text-xs text-amber-800 dark:text-amber-300">
           <strong>提示：</strong
           >代理设置将用于所有与此账户相关的API请求。请确保代理服务器支持HTTPS流量转发。
         </p>
