@@ -18,8 +18,10 @@
     </template>
 
     <!-- 系统选择标签 -->
-    <Card class="rounded-b-none">
-      <TabGroup v-model="activeTutorialSystem" :options="systemOptions" />
+    <Card class="rounded-b-none" :no-padding="true">
+      <div class="pb-1 pl-2 pr-4 pt-4">
+        <TabGroup v-model="activeTutorialSystem" :options="systemOptions" />
+      </div>
     </Card>
 
     <!-- Windows 教程 -->
