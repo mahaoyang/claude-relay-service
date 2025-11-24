@@ -671,7 +671,8 @@ const authenticateAdmin = async (req, res, next) => {
     const now = new Date()
     const lastActivity = new Date(adminSession.lastActivity || adminSession.loginTime)
     const inactiveDuration = now - lastActivity
-    const maxInactivity = 24 * 60 * 60 * 1000 // 24小时
+    // 使用配置中的会话超时时间（秒转毫秒）
+    const maxInactivity = config.security.adminSessionTimeout * 1000
 
     if (inactiveDuration > maxInactivity) {
       logger.security(
@@ -692,7 +693,7 @@ const authenticateAdmin = async (req, res, next) => {
           ...adminSession,
           lastActivity: now.toISOString()
         },
-        86400
+        config.security.adminSessionTimeout
       )
       .catch((error) => {
         logger.error('Failed to update admin session activity:', error)
