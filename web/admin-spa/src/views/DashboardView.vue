@@ -501,7 +501,7 @@
         <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
           <!-- 饼图 -->
           <div class="space-y-4">
-            <h4 class="text-base font-medium text-gray-900 dark:text-white">Token使用分布</h4>
+            <h4 class="text-xs font-medium text-gray-900 dark:text-white">Token使用分布</h4>
             <div class="h-[300px]">
               <canvas ref="modelUsageChart" />
             </div>
@@ -509,7 +509,7 @@
 
           <!-- 详细数据表格 -->
           <div class="space-y-4">
-            <h4 class="text-base font-medium text-gray-900 dark:text-white">详细统计数据</h4>
+            <h4 class="text-xs font-medium text-gray-900 dark:text-white">详细统计数据</h4>
             <div
               v-if="dashboardModelStats.length === 0"
               class="flex h-[300px] items-center justify-center text-gray-500 dark:text-gray-400"
