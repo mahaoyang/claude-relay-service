@@ -1,11 +1,11 @@
 <script setup>
 import { computed } from 'vue'
 import { Listbox, ListboxButton, ListboxOptions, ListboxOption } from '@headlessui/vue'
-import { Check, ChevronsUpDown } from 'lucide-vue-next'
+import Icon from '@/components/common/Icon.vue'
 
 const props = defineProps({
   modelValue: {
-    type: [String, Number, Object],
+    type: [String, Number, Boolean, Object],
     default: null
   },
   options: {
@@ -24,7 +24,15 @@ const props = defineProps({
     type: String,
     default: ''
   },
-  disabled: Boolean,
+  disabled: {
+    type: Boolean,
+    default: false
+  },
+  size: {
+    type: String,
+    default: 'md',
+    validator: (value) => ['sm', 'md', 'lg'].includes(value)
+  },
   valueKey: {
     type: String,
     default: 'value'
@@ -37,9 +45,30 @@ const props = defineProps({
 
 const emit = defineEmits(['update:modelValue'])
 
+const sizeClasses = {
+  sm: {
+    button: 'px-3 py-1.5 text-xs',
+    option: 'py-1.5 pl-8 pr-3 text-xs',
+    icon: 'h-3.5 w-3.5'
+  },
+  md: {
+    button: 'px-4 py-2 text-sm',
+    option: 'py-2 pl-10 pr-4 text-sm',
+    icon: 'h-4 w-4'
+  },
+  lg: {
+    button: 'px-4 py-2.5 text-base',
+    option: 'py-2.5 pl-10 pr-4 text-base',
+    icon: 'h-5 w-5'
+  }
+}
+
 const selectedOption = computed(() => {
   if (!props.modelValue) return null
-  return props.options.find((opt) => (opt[props.valueKey] || opt) === props.modelValue)
+  return props.options.find((opt) => {
+    const optValue = opt[props.valueKey] !== undefined ? opt[props.valueKey] : opt
+    return optValue === props.modelValue
+  })
 })
 
 const displayLabel = computed(() => {
@@ -50,7 +79,10 @@ const displayLabel = computed(() => {
 
 <template>
   <div class="w-full">
-    <label v-if="label" class="mb-1.5 block text-sm font-medium text-secondary-300">
+    <label
+      v-if="label"
+      class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
+    >
       {{ label }}
     </label>
     <Listbox
@@ -60,12 +92,17 @@ const displayLabel = computed(() => {
     >
       <div class="relative">
         <ListboxButton
-          class="relative w-full cursor-pointer rounded-xl border border-secondary-700 bg-secondary-900/50 px-4 py-2.5 text-left text-white transition-all duration-200 focus:border-primary-500 focus:bg-secondary-900 focus:outline-none focus:ring-2 focus:ring-primary-500/20 disabled:cursor-not-allowed disabled:opacity-50"
-          :class="[error ? 'border-red-500 focus:border-red-500 focus:ring-red-500/20' : '']"
+          :class="[
+            sizeClasses[size].button,
+            'relative w-full cursor-pointer rounded-lg border border-gray-300 bg-white text-left text-gray-900 transition-all duration-200 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 disabled:cursor-not-allowed disabled:opacity-50 dark:border-gray-600 dark:bg-gray-700 dark:text-white',
+            error ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : ''
+          ]"
         >
-          <span class="block truncate">{{ displayLabel }}</span>
+          <span class="block truncate" :class="!selectedOption ? 'text-gray-500' : ''">
+            {{ displayLabel }}
+          </span>
           <span class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
-            <ChevronsUpDown class="h-4 w-4 text-secondary-400" />
+            <Icon :class="sizeClasses[size].icon" class="text-gray-400" name="ChevronDown" />
           </span>
         </ListboxButton>
 
@@ -75,20 +112,23 @@ const displayLabel = computed(() => {
           leave-to-class="opacity-0"
         >
           <ListboxOptions
-            class="absolute z-50 mt-1 max-h-60 w-full overflow-auto rounded-xl border border-secondary-700 bg-secondary-900/95 py-1 shadow-lg shadow-primary-500/10 backdrop-blur-xl focus:outline-none"
+            class="absolute z-50 mt-1 max-h-60 w-full overflow-auto rounded-lg border border-gray-200 bg-white py-1 shadow-lg focus:outline-none dark:border-gray-700 dark:bg-gray-800"
           >
             <ListboxOption
               v-for="(option, index) in options"
               :key="index"
-              as="template"
-              :value="option[valueKey] || option"
               v-slot="{ active, selected }"
+              as="template"
+              :value="option[valueKey] !== undefined ? option[valueKey] : option"
             >
               <li
-                class="relative cursor-pointer select-none py-2.5 pl-10 pr-4 transition-colors"
                 :class="[
-                  active ? 'bg-primary-500/30 text-white' : 'text-white',
-                  selected ? 'bg-primary-500/20 font-medium' : 'font-normal'
+                  sizeClasses[size].option,
+                  'relative cursor-pointer select-none transition-colors',
+                  active
+                    ? 'bg-primary-50 text-primary-600 dark:bg-primary-900/30 dark:text-primary-400'
+                    : 'text-gray-900 dark:text-gray-100',
+                  selected ? 'font-semibold' : 'font-normal'
                 ]"
               >
                 <span class="block truncate">
@@ -96,9 +136,9 @@ const displayLabel = computed(() => {
                 </span>
                 <span
                   v-if="selected"
-                  class="absolute inset-y-0 left-0 flex items-center pl-3 text-primary-400"
+                  class="absolute inset-y-0 left-0 flex items-center pl-3 text-primary-600 dark:text-primary-400"
                 >
-                  <Check class="h-4 w-4" />
+                  <Icon :class="sizeClasses[size].icon" name="Check" />
                 </span>
               </li>
             </ListboxOption>
@@ -106,6 +146,6 @@ const displayLabel = computed(() => {
         </transition>
       </div>
     </Listbox>
-    <p v-if="error" class="mt-1.5 animate-slide-up text-sm text-red-400">{{ error }}</p>
+    <p v-if="error" class="mt-1.5 text-sm text-red-500 dark:text-red-400">{{ error }}</p>
   </div>
 </template>
