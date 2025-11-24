@@ -43,12 +43,16 @@
       <div></div>
 
       <div>
-        <label>代理类型</label>
-        <select v-model="proxy.type">
-          <option value="socks5">SOCKS5</option>
-          <option value="http">HTTP</option>
-          <option value="https">HTTPS</option>
-        </select>
+        <Select
+          v-model="proxy.type"
+          label="代理类型"
+          :options="[
+            { value: 'socks5', label: 'SOCKS5' },
+            { value: 'http', label: 'HTTP' },
+            { value: 'https', label: 'HTTPS' }
+          ]"
+          size="sm"
+        />
       </div>
 
       <div>
@@ -99,6 +103,7 @@
 
 <script setup>
 import { ref, watch, onUnmounted } from 'vue'
+import { Select } from '@/ui'
 
 const props = defineProps({
   modelValue: {
