@@ -24,7 +24,7 @@
           <button
             v-for="option in systemOptions"
             :key="option.value"
-            class="relative border-b-2 px-1 pb-4 pt-4 text-sm font-medium transition-colors"
+            class="relative border-b-2 px-1 pb-3 pt-3 text-sm font-medium transition-colors"
             :class="
               activeTutorialSystem === option.value
                 ? 'border-primary-600 text-primary-600 dark:border-primary-400 dark:text-primary-400'
@@ -44,7 +44,7 @@
         <!-- 第一步：安装 Node.js -->
         <div>
           <h4
-            class="relative mb-3 mt-6 border-b-2 border-gray-100 pb-3 text-xl font-semibold text-gray-800 after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-16 after:bg-primary-500 after:content-[''] dark:border-gray-700 dark:text-white"
+            class="relative mb-3 mt-4 border-b-2 border-gray-100 pb-3 text-xl font-semibold text-gray-800 after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-16 after:bg-primary-500 after:content-[''] dark:border-gray-700 dark:text-white"
           >
             <span
               class="mr-2 inline-flex h-8 w-8 items-center justify-center rounded-full bg-primary-500 font-bold text-white"
@@ -632,7 +632,7 @@
         <!-- 第一步：安装 Node.js -->
         <div>
           <h4
-            class="relative mb-3 mt-6 border-b-2 border-gray-100 pb-3 text-xl font-semibold text-gray-800 after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-16 after:bg-primary-500 after:content-[''] dark:border-gray-700 dark:text-white"
+            class="relative mb-3 mt-4 border-b-2 border-gray-100 pb-3 text-xl font-semibold text-gray-800 after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-16 after:bg-primary-500 after:content-[''] dark:border-gray-700 dark:text-white"
           >
             <span
               class="mr-2 inline-flex h-8 w-8 items-center justify-center rounded-full bg-primary-500 font-bold text-white"
@@ -1146,7 +1146,7 @@
         <!-- 第一步：安装 Node.js -->
         <div>
           <h4
-            class="relative mb-3 mt-6 border-b-2 border-gray-100 pb-3 text-xl font-semibold text-gray-800 after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-16 after:bg-primary-500 after:content-[''] dark:border-gray-700 dark:text-white"
+            class="relative mb-3 mt-4 border-b-2 border-gray-100 pb-3 text-xl font-semibold text-gray-800 after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-16 after:bg-primary-500 after:content-[''] dark:border-gray-700 dark:text-white"
           >
             <span
               class="mr-2 inline-flex h-8 w-8 items-center justify-center rounded-full bg-primary-500 font-bold text-white"

@@ -28,7 +28,7 @@
           <div class="border-b border-gray-200 dark:border-gray-700">
             <nav aria-label="Settings Tabs" class="flex gap-8 px-6">
               <button
-                class="relative flex items-center gap-2 border-b-2 px-1 pb-4 pt-4 text-sm font-medium transition-colors"
+                class="relative flex items-center gap-2 border-b-2 px-1 pb-3 pt-3 text-sm font-medium transition-colors"
                 :class="
                   activeSection === 'branding'
                     ? 'border-primary-600 text-primary-600 dark:border-primary-400 dark:text-primary-400'
@@ -40,7 +40,7 @@
                 品牌设置
               </button>
               <button
-                class="relative flex items-center gap-2 border-b-2 px-1 pb-4 pt-4 text-sm font-medium transition-colors"
+                class="relative flex items-center gap-2 border-b-2 px-1 pb-3 pt-3 text-sm font-medium transition-colors"
                 :class="
                   activeSection === 'webhook'
                     ? 'border-primary-600 text-primary-600 dark:border-primary-400 dark:text-primary-400'
@@ -224,7 +224,9 @@
         <!-- 移动端卡片视图 -->
         <div class="space-y-4 md:hidden">
           <!-- 站点名称卡片 -->
-          <div class="rounded-lg border-b border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-800">
+          <div
+            class="rounded-lg border-b border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-800"
+          >
             <div class="mb-3 flex items-start gap-3">
               <div
                 class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-primary-50 dark:bg-primary-900/20"
@@ -246,7 +248,9 @@
           </div>
 
           <!-- 站点图标卡片 -->
-          <div class="rounded-lg border-b border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-800">
+          <div
+            class="rounded-lg border-b border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-800"
+          >
             <div class="mb-3 flex items-start gap-3">
               <div
                 class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-primary-50 dark:bg-primary-900/20"
@@ -376,7 +380,7 @@
           <div class="border-b border-gray-200 dark:border-gray-700">
             <nav aria-label="Settings Tabs" class="flex gap-8 px-6">
               <button
-                class="relative flex items-center gap-2 border-b-2 px-1 pb-4 pt-4 text-sm font-medium transition-colors"
+                class="relative flex items-center gap-2 border-b-2 px-1 pb-3 pt-3 text-sm font-medium transition-colors"
                 :class="
                   activeSection === 'branding'
                     ? 'border-primary-600 text-primary-600 dark:border-primary-400 dark:text-primary-400'
@@ -388,7 +392,7 @@
                 品牌设置
               </button>
               <button
-                class="relative flex items-center gap-2 border-b-2 px-1 pb-4 pt-4 text-sm font-medium transition-colors"
+                class="relative flex items-center gap-2 border-b-2 px-1 pb-3 pt-3 text-sm font-medium transition-colors"
                 :class="
                   activeSection === 'webhook'
                     ? 'border-primary-600 text-primary-600 dark:border-primary-400 dark:text-primary-400'
@@ -693,7 +697,9 @@
     <div class="space-y-6">
       <!-- 平台类型选择 -->
       <div>
-        <div class="mb-2 flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300">
+        <div
+          class="mb-2 flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300"
+        >
           <Icon class="h-4 w-4" name="Layers" />
           平台类型
         </div>
@@ -887,7 +893,9 @@
 
         <!-- 通知级别 -->
         <div>
-          <div class="mb-2 flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300">
+          <div
+            class="mb-2 flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300"
+          >
             <Icon class="h-4 w-4" name="Flag" />
             通知级别
           </div>
@@ -906,7 +914,9 @@
 
         <!-- 通知声音 -->
         <div>
-          <div class="mb-2 flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300">
+          <div
+            class="mb-2 flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300"
+          >
             <Icon class="h-4 w-4" name="Volume2" />
             通知声音
           </div>
@@ -983,7 +993,9 @@
           </div>
 
           <div>
-            <div class="mb-2 flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300">
+            <div
+              class="mb-2 flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300"
+            >
               <Icon class="h-4 w-4" name="Shield" />
               加密方式
             </div>
