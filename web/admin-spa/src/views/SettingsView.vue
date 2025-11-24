@@ -224,9 +224,7 @@
         <!-- 移动端卡片视图 -->
         <div class="space-y-4 md:hidden">
           <!-- 站点名称卡片 -->
-          <div
-            class="rounded-lg border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-800"
-          >
+          <div class="rounded-lg bg-white p-4 dark:bg-gray-800">
             <div class="mb-3 flex items-start gap-3">
               <div
                 class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-primary-50 dark:bg-primary-900/20"
