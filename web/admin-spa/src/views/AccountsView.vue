@@ -1643,15 +1643,12 @@
             </span>
             <div class="flex items-center gap-2">
               <span class="text-sm text-gray-600 dark:text-gray-400">每页显示</span>
-              <select
+              <Select
                 v-model="pageSize"
-                class="rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm text-gray-700 transition-colors hover:border-gray-400 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 dark:hover:border-gray-500"
-                @change="currentPage = 1"
-              >
-                <option v-for="size in pageSizeOptions" :key="size" :value="size">
-                  {{ size }}
-                </option>
-              </select>
+                :options="pageSizeOptions.map((size) => ({ value: size, label: String(size) }))"
+                size="sm"
+                @update:model-value="currentPage = 1"
+              />
               <span class="text-sm text-gray-600 dark:text-gray-400">条</span>
             </div>
           </div>
@@ -1797,6 +1794,7 @@ import ConfirmModal from '@/components/common/ConfirmModal.vue'
 import CustomDropdown from '@/components/common/CustomDropdown.vue'
 import PageContainer from '@/components/layout/PageContainer.vue'
 import Card from '@/ui/Card.vue'
+import { Select } from '@/ui'
 import Icon from '@/components/common/Icon.vue'
 
 // 使用确认弹窗
