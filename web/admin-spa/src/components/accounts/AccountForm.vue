@@ -9,47 +9,110 @@
     @close="$emit('close')"
   >
     <!-- 步骤指示器 -->
-    <div v-if="!isEdit && (form.addType === 'oauth' || form.addType === 'setup-token')">
-      <div>
-        <div>
-          <div>1</div>
-          <span>基本信息</span>
+    <div
+      v-if="!isEdit && (form.addType === 'oauth' || form.addType === 'setup-token')"
+      class="mb-6"
+    >
+      <div class="flex items-center justify-center">
+        <div class="flex items-center">
+          <div
+            class="flex h-8 w-8 items-center justify-center rounded-full text-sm font-medium"
+            :class="
+              oauthStep === 1
+                ? 'bg-primary-500 text-white'
+                : 'bg-primary-100 text-primary-600 dark:bg-primary-900 dark:text-primary-400'
+            "
+          >
+            1
+          </div>
+          <span
+            class="ml-2 text-sm font-medium"
+            :class="
+              oauthStep === 1
+                ? 'text-primary-600 dark:text-primary-400'
+                : 'text-gray-500 dark:text-gray-400'
+            "
+            >基本信息</span
+          >
         </div>
-        <div />
-        <div>
-          <div>2</div>
-          <span>授权认证</span>
+        <div class="mx-4 h-0.5 w-16 bg-gray-200 dark:bg-gray-700" />
+        <div class="flex items-center">
+          <div
+            class="flex h-8 w-8 items-center justify-center rounded-full text-sm font-medium"
+            :class="
+              oauthStep === 2
+                ? 'bg-primary-500 text-white'
+                : 'bg-gray-200 text-gray-600 dark:bg-gray-700 dark:text-gray-400'
+            "
+          >
+            2
+          </div>
+          <span
+            class="ml-2 text-sm font-medium"
+            :class="
+              oauthStep === 2
+                ? 'text-primary-600 dark:text-primary-400'
+                : 'text-gray-500 dark:text-gray-400'
+            "
+            >授权认证</span
+          >
         </div>
       </div>
     </div>
 
     <!-- 步骤1: 基本信息和代理设置 -->
-    <div v-if="oauthStep === 1 && !isEdit">
-      <div>
-        <div v-if="!isEdit">
-          <label>选择平台</label>
+    <div v-if="oauthStep === 1 && !isEdit" class="space-y-4">
+      <div class="space-y-4">
+        <div v-if="!isEdit" class="mb-4">
+          <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
+            >选择平台</label
+          >
           <!-- 平台分组选择器 -->
-          <div>
+          <div class="space-y-4">
             <!-- 分组选择器 -->
-            <div>
+            <div class="grid grid-cols-2 gap-3 sm:grid-cols-4">
               <!-- Claude 分组 -->
-              <div @click="selectPlatformGroup('claude')">
-                <div>
-                  <div>
-                    <div></div>
-                    <div v-if="platformGroup === 'claude'"></div>
+              <div
+                class="cursor-pointer rounded-lg border-2 p-3 text-center transition-all hover:border-primary-300 dark:hover:border-primary-600"
+                :class="
+                  platformGroup === 'claude'
+                    ? 'border-primary-500 bg-primary-50 dark:border-primary-500 dark:bg-primary-900/20'
+                    : 'border-gray-200 dark:border-gray-700'
+                "
+                @click="selectPlatformGroup('claude')"
+              >
+                <div class="flex flex-col items-center">
+                  <div class="relative mb-2">
+                    <div
+                      class="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-orange-400 to-orange-600 text-white"
+                    ></div>
+                    <div
+                      v-if="platformGroup === 'claude'"
+                      class="absolute -right-1 -top-1 h-4 w-4 rounded-full border-2 border-white bg-primary-500 dark:border-gray-800"
+                    ></div>
                   </div>
-                  <h4>Claude</h4>
-                  <p>Anthropic</p>
+                  <h4 class="text-sm font-medium text-gray-900 dark:text-white">Claude</h4>
+                  <p class="text-xs text-gray-500 dark:text-gray-400">Anthropic</p>
                 </div>
               </div>
 
               <!-- OpenAI 分组 -->
-              <div @click="selectPlatformGroup('openai')">
-                <div>
-                  <div>
-                    <div>
+              <div
+                class="cursor-pointer rounded-lg border-2 p-3 text-center transition-all hover:border-primary-300 dark:hover:border-primary-600"
+                :class="
+                  platformGroup === 'openai'
+                    ? 'border-primary-500 bg-primary-50 dark:border-primary-500 dark:bg-primary-900/20'
+                    : 'border-gray-200 dark:border-gray-700'
+                "
+                @click="selectPlatformGroup('openai')"
+              >
+                <div class="flex flex-col items-center">
+                  <div class="relative mb-2">
+                    <div
+                      class="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-emerald-400 to-emerald-600 text-white"
+                    >
                       <svg
+                        class="h-5 w-5"
                         fill="currentColor"
                         viewBox="0 0 24 24"
                         xmlns="http://www.w3.org/2000/svg"
@@ -59,150 +122,325 @@
                         />
                       </svg>
                     </div>
-                    <div v-if="platformGroup === 'openai'"></div>
+                    <div
+                      v-if="platformGroup === 'openai'"
+                      class="absolute -right-1 -top-1 h-4 w-4 rounded-full border-2 border-white bg-primary-500 dark:border-gray-800"
+                    ></div>
                   </div>
-                  <h4>OpenAI</h4>
-                  <p>GPT 系列</p>
+                  <h4 class="text-sm font-medium text-gray-900 dark:text-white">OpenAI</h4>
+                  <p class="text-xs text-gray-500 dark:text-gray-400">GPT 系列</p>
                 </div>
               </div>
 
               <!-- Gemini 分组 -->
-              <div @click="selectPlatformGroup('gemini')">
-                <div>
-                  <div>
-                    <div></div>
-                    <div v-if="platformGroup === 'gemini'"></div>
+              <div
+                class="cursor-pointer rounded-lg border-2 p-3 text-center transition-all hover:border-primary-300 dark:hover:border-primary-600"
+                :class="
+                  platformGroup === 'gemini'
+                    ? 'border-primary-500 bg-primary-50 dark:border-primary-500 dark:bg-primary-900/20'
+                    : 'border-gray-200 dark:border-gray-700'
+                "
+                @click="selectPlatformGroup('gemini')"
+              >
+                <div class="flex flex-col items-center">
+                  <div class="relative mb-2">
+                    <div
+                      class="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-blue-400 to-blue-600 text-white"
+                    ></div>
+                    <div
+                      v-if="platformGroup === 'gemini'"
+                      class="absolute -right-1 -top-1 h-4 w-4 rounded-full border-2 border-white bg-primary-500 dark:border-gray-800"
+                    ></div>
                   </div>
-                  <h4>Gemini</h4>
-                  <p>Google AI</p>
+                  <h4 class="text-sm font-medium text-gray-900 dark:text-white">Gemini</h4>
+                  <p class="text-xs text-gray-500 dark:text-gray-400">Google AI</p>
                 </div>
               </div>
 
               <!-- Droid 分组 -->
-              <div @click="selectPlatformGroup('droid')">
-                <div>
-                  <div>
-                    <div></div>
-                    <div v-if="platformGroup === 'droid'"></div>
+              <div
+                class="cursor-pointer rounded-lg border-2 p-3 text-center transition-all hover:border-primary-300 dark:hover:border-primary-600"
+                :class="
+                  platformGroup === 'droid'
+                    ? 'border-primary-500 bg-primary-50 dark:border-primary-500 dark:bg-primary-900/20'
+                    : 'border-gray-200 dark:border-gray-700'
+                "
+                @click="selectPlatformGroup('droid')"
+              >
+                <div class="flex flex-col items-center">
+                  <div class="relative mb-2">
+                    <div
+                      class="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-purple-400 to-purple-600 text-white"
+                    ></div>
+                    <div
+                      v-if="platformGroup === 'droid'"
+                      class="absolute -right-1 -top-1 h-4 w-4 rounded-full border-2 border-white bg-primary-500 dark:border-gray-800"
+                    ></div>
                   </div>
-                  <h4>Droid</h4>
-                  <p>Claude Droid</p>
+                  <h4 class="text-sm font-medium text-gray-900 dark:text-white">Droid</h4>
+                  <p class="text-xs text-gray-500 dark:text-gray-400">Claude Droid</p>
                 </div>
               </div>
             </div>
 
             <!-- 子平台选择器 -->
-            <div v-if="platformGroup">
-              <p>选择具体平台类型：</p>
-              <div>
+            <div v-if="platformGroup" class="mt-4">
+              <p class="mb-2 text-sm text-gray-600 dark:text-gray-400">选择具体平台类型：</p>
+              <div class="grid grid-cols-2 gap-2 sm:grid-cols-4">
                 <!-- Claude 子选项 -->
                 <template v-if="platformGroup === 'claude'">
-                  <label>
-                    <input v-model="form.platform" type="radio" value="claude" />
-                    <div>
-                      <div>
-                        <span>Claude Code</span>
-                        <span>官方</span>
+                  <label
+                    class="relative flex cursor-pointer flex-col rounded-lg border-2 p-3 transition-all hover:border-primary-300 dark:hover:border-primary-600"
+                    :class="
+                      form.platform === 'claude'
+                        ? 'border-primary-500 bg-primary-50 dark:border-primary-500 dark:bg-primary-900/20'
+                        : 'border-gray-200 dark:border-gray-700'
+                    "
+                  >
+                    <input v-model="form.platform" class="sr-only" type="radio" value="claude" />
+                    <div class="flex flex-col">
+                      <div class="flex items-center justify-between">
+                        <span class="text-sm font-medium text-gray-900 dark:text-white"
+                          >Claude Code</span
+                        >
+                        <span
+                          class="rounded-full bg-orange-100 px-2 py-0.5 text-xs text-orange-600 dark:bg-orange-900/30 dark:text-orange-400"
+                          >官方</span
+                        >
                       </div>
                     </div>
-                    <div v-if="form.platform === 'claude'"></div>
+                    <div
+                      v-if="form.platform === 'claude'"
+                      class="absolute -right-1 -top-1 h-4 w-4 rounded-full border-2 border-white bg-primary-500 dark:border-gray-800"
+                    ></div>
                   </label>
 
-                  <label>
-                    <input v-model="form.platform" type="radio" value="claude-console" />
-                    <div>
-                      <div>
-                        <span>Claude Console</span>
-                        <span>标准API</span>
+                  <label
+                    class="relative flex cursor-pointer flex-col rounded-lg border-2 p-3 transition-all hover:border-primary-300 dark:hover:border-primary-600"
+                    :class="
+                      form.platform === 'claude-console'
+                        ? 'border-primary-500 bg-primary-50 dark:border-primary-500 dark:bg-primary-900/20'
+                        : 'border-gray-200 dark:border-gray-700'
+                    "
+                  >
+                    <input
+                      v-model="form.platform"
+                      class="sr-only"
+                      type="radio"
+                      value="claude-console"
+                    />
+                    <div class="flex flex-col">
+                      <div class="flex items-center justify-between">
+                        <span class="text-sm font-medium text-gray-900 dark:text-white"
+                          >Claude Console</span
+                        >
+                        <span
+                          class="rounded-full bg-blue-100 px-2 py-0.5 text-xs text-blue-600 dark:bg-blue-900/30 dark:text-blue-400"
+                          >标准API</span
+                        >
                       </div>
                     </div>
-                    <div v-if="form.platform === 'claude-console'"></div>
+                    <div
+                      v-if="form.platform === 'claude-console'"
+                      class="absolute -right-1 -top-1 h-4 w-4 rounded-full border-2 border-white bg-primary-500 dark:border-gray-800"
+                    ></div>
                   </label>
 
-                  <label>
-                    <input v-model="form.platform" type="radio" value="bedrock" />
-                    <div>
-                      <div>
-                        <span>Bedrock</span>
-                        <span>AWS</span>
+                  <label
+                    class="relative flex cursor-pointer flex-col rounded-lg border-2 p-3 transition-all hover:border-primary-300 dark:hover:border-primary-600"
+                    :class="
+                      form.platform === 'bedrock'
+                        ? 'border-primary-500 bg-primary-50 dark:border-primary-500 dark:bg-primary-900/20'
+                        : 'border-gray-200 dark:border-gray-700'
+                    "
+                  >
+                    <input v-model="form.platform" class="sr-only" type="radio" value="bedrock" />
+                    <div class="flex flex-col">
+                      <div class="flex items-center justify-between">
+                        <span class="text-sm font-medium text-gray-900 dark:text-white"
+                          >Bedrock</span
+                        >
+                        <span
+                          class="rounded-full bg-amber-100 px-2 py-0.5 text-xs text-amber-600 dark:bg-amber-900/30 dark:text-amber-400"
+                          >AWS</span
+                        >
                       </div>
                     </div>
-                    <div v-if="form.platform === 'bedrock'"></div>
+                    <div
+                      v-if="form.platform === 'bedrock'"
+                      class="absolute -right-1 -top-1 h-4 w-4 rounded-full border-2 border-white bg-primary-500 dark:border-gray-800"
+                    ></div>
                   </label>
 
-                  <label>
-                    <input v-model="form.platform" type="radio" value="ccr" />
-                    <div>
-                      <div>
-                        <span>CCR</span>
-                        <span>Claude Code Router</span>
+                  <label
+                    class="relative flex cursor-pointer flex-col rounded-lg border-2 p-3 transition-all hover:border-primary-300 dark:hover:border-primary-600"
+                    :class="
+                      form.platform === 'ccr'
+                        ? 'border-primary-500 bg-primary-50 dark:border-primary-500 dark:bg-primary-900/20'
+                        : 'border-gray-200 dark:border-gray-700'
+                    "
+                  >
+                    <input v-model="form.platform" class="sr-only" type="radio" value="ccr" />
+                    <div class="flex flex-col">
+                      <div class="flex items-center justify-between">
+                        <span class="text-sm font-medium text-gray-900 dark:text-white">CCR</span>
+                        <span
+                          class="rounded-full bg-purple-100 px-2 py-0.5 text-xs text-purple-600 dark:bg-purple-900/30 dark:text-purple-400"
+                          >Router</span
+                        >
                       </div>
                     </div>
-                    <div v-if="form.platform === 'ccr'"></div>
+                    <div
+                      v-if="form.platform === 'ccr'"
+                      class="absolute -right-1 -top-1 h-4 w-4 rounded-full border-2 border-white bg-primary-500 dark:border-gray-800"
+                    ></div>
                   </label>
                 </template>
 
                 <!-- OpenAI 子选项 -->
                 <template v-if="platformGroup === 'openai'">
-                  <label>
-                    <input v-model="form.platform" type="radio" value="openai" />
-                    <div>
-                      <div>
-                        <span>Codex Cli</span>
-                        <span>官方</span>
+                  <label
+                    class="relative flex cursor-pointer flex-col rounded-lg border-2 p-3 transition-all hover:border-primary-300 dark:hover:border-primary-600"
+                    :class="
+                      form.platform === 'openai'
+                        ? 'border-primary-500 bg-primary-50 dark:border-primary-500 dark:bg-primary-900/20'
+                        : 'border-gray-200 dark:border-gray-700'
+                    "
+                  >
+                    <input v-model="form.platform" class="sr-only" type="radio" value="openai" />
+                    <div class="flex flex-col">
+                      <div class="flex items-center justify-between">
+                        <span class="text-sm font-medium text-gray-900 dark:text-white"
+                          >Codex Cli</span
+                        >
+                        <span
+                          class="rounded-full bg-emerald-100 px-2 py-0.5 text-xs text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400"
+                          >官方</span
+                        >
                       </div>
                     </div>
-                    <div v-if="form.platform === 'openai'"></div>
+                    <div
+                      v-if="form.platform === 'openai'"
+                      class="absolute -right-1 -top-1 h-4 w-4 rounded-full border-2 border-white bg-primary-500 dark:border-gray-800"
+                    ></div>
                   </label>
 
-                  <label>
-                    <input v-model="form.platform" type="radio" value="openai-responses" />
-                    <div>
-                      <div>
-                        <span>Responses</span>
-                        <span>Openai-Responses</span>
+                  <label
+                    class="relative flex cursor-pointer flex-col rounded-lg border-2 p-3 transition-all hover:border-primary-300 dark:hover:border-primary-600"
+                    :class="
+                      form.platform === 'openai-responses'
+                        ? 'border-primary-500 bg-primary-50 dark:border-primary-500 dark:bg-primary-900/20'
+                        : 'border-gray-200 dark:border-gray-700'
+                    "
+                  >
+                    <input
+                      v-model="form.platform"
+                      class="sr-only"
+                      type="radio"
+                      value="openai-responses"
+                    />
+                    <div class="flex flex-col">
+                      <div class="flex items-center justify-between">
+                        <span class="text-sm font-medium text-gray-900 dark:text-white"
+                          >Responses</span
+                        >
+                        <span
+                          class="rounded-full bg-teal-100 px-2 py-0.5 text-xs text-teal-600 dark:bg-teal-900/30 dark:text-teal-400"
+                          >API</span
+                        >
                       </div>
                     </div>
-                    <div v-if="form.platform === 'openai-responses'"></div>
+                    <div
+                      v-if="form.platform === 'openai-responses'"
+                      class="absolute -right-1 -top-1 h-4 w-4 rounded-full border-2 border-white bg-primary-500 dark:border-gray-800"
+                    ></div>
                   </label>
 
-                  <label>
-                    <input v-model="form.platform" type="radio" value="azure_openai" />
-                    <div>
-                      <div>
-                        <span>Azure</span>
-                        <span>Azure Openai</span>
+                  <label
+                    class="relative flex cursor-pointer flex-col rounded-lg border-2 p-3 transition-all hover:border-primary-300 dark:hover:border-primary-600"
+                    :class="
+                      form.platform === 'azure_openai'
+                        ? 'border-primary-500 bg-primary-50 dark:border-primary-500 dark:bg-primary-900/20'
+                        : 'border-gray-200 dark:border-gray-700'
+                    "
+                  >
+                    <input
+                      v-model="form.platform"
+                      class="sr-only"
+                      type="radio"
+                      value="azure_openai"
+                    />
+                    <div class="flex flex-col">
+                      <div class="flex items-center justify-between">
+                        <span class="text-sm font-medium text-gray-900 dark:text-white">Azure</span>
+                        <span
+                          class="rounded-full bg-sky-100 px-2 py-0.5 text-xs text-sky-600 dark:bg-sky-900/30 dark:text-sky-400"
+                          >Azure</span
+                        >
                       </div>
                     </div>
-                    <div v-if="form.platform === 'azure_openai'"></div>
+                    <div
+                      v-if="form.platform === 'azure_openai'"
+                      class="absolute -right-1 -top-1 h-4 w-4 rounded-full border-2 border-white bg-primary-500 dark:border-gray-800"
+                    ></div>
                   </label>
                 </template>
 
                 <!-- Gemini 子选项 -->
                 <template v-if="platformGroup === 'gemini'">
-                  <label>
-                    <input v-model="form.platform" type="radio" value="gemini" />
-                    <div>
-                      <div>
-                        <span>Gemini Cli</span>
-                        <span>官方</span>
+                  <label
+                    class="relative flex cursor-pointer flex-col rounded-lg border-2 p-3 transition-all hover:border-primary-300 dark:hover:border-primary-600"
+                    :class="
+                      form.platform === 'gemini'
+                        ? 'border-primary-500 bg-primary-50 dark:border-primary-500 dark:bg-primary-900/20'
+                        : 'border-gray-200 dark:border-gray-700'
+                    "
+                  >
+                    <input v-model="form.platform" class="sr-only" type="radio" value="gemini" />
+                    <div class="flex flex-col">
+                      <div class="flex items-center justify-between">
+                        <span class="text-sm font-medium text-gray-900 dark:text-white"
+                          >Gemini Cli</span
+                        >
+                        <span
+                          class="rounded-full bg-blue-100 px-2 py-0.5 text-xs text-blue-600 dark:bg-blue-900/30 dark:text-blue-400"
+                          >官方</span
+                        >
                       </div>
                     </div>
-                    <div v-if="form.platform === 'gemini'"></div>
+                    <div
+                      v-if="form.platform === 'gemini'"
+                      class="absolute -right-1 -top-1 h-4 w-4 rounded-full border-2 border-white bg-primary-500 dark:border-gray-800"
+                    ></div>
                   </label>
                 </template>
 
                 <!-- Droid 子选项 -->
                 <template v-if="platformGroup === 'droid'">
-                  <label>
-                    <input v-model="form.platform" type="radio" value="droid" />
-                    <div>
-                      <div>
-                        <span>Droid 专属</span>
-                        <span>官方</span>
+                  <label
+                    class="relative flex cursor-pointer flex-col rounded-lg border-2 p-3 transition-all hover:border-primary-300 dark:hover:border-primary-600"
+                    :class="
+                      form.platform === 'droid'
+                        ? 'border-primary-500 bg-primary-50 dark:border-primary-500 dark:bg-primary-900/20'
+                        : 'border-gray-200 dark:border-gray-700'
+                    "
+                  >
+                    <input v-model="form.platform" class="sr-only" type="radio" value="droid" />
+                    <div class="flex flex-col">
+                      <div class="flex items-center justify-between">
+                        <span class="text-sm font-medium text-gray-900 dark:text-white"
+                          >Droid 专属</span
+                        >
+                        <span
+                          class="rounded-full bg-purple-100 px-2 py-0.5 text-xs text-purple-600 dark:bg-purple-900/30 dark:text-purple-400"
+                          >官方</span
+                        >
                       </div>
                     </div>
-                    <div v-if="form.platform === 'droid'"></div>
+                    <div
+                      v-if="form.platform === 'droid'"
+                      class="absolute -right-1 -top-1 h-4 w-4 rounded-full border-2 border-white bg-primary-500 dark:border-gray-800"
+                    ></div>
                   </label>
                 </template>
               </div>
@@ -219,77 +457,152 @@
             form.platform !== 'azure_openai' &&
             form.platform !== 'openai-responses'
           "
+          class="mb-4"
         >
-          <label>添加方式</label>
-          <div>
-            <label>
-              <input v-model="form.addType" type="radio" value="oauth" />
-              <span>
-                OAuth 授权<span v-if="form.platform === 'claude' || form.platform === 'openai'">
+          <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
+            >添加方式</label
+          >
+          <div class="flex flex-wrap gap-3">
+            <label
+              class="flex cursor-pointer items-center gap-2 rounded-lg border border-gray-200 px-3 py-2 transition-colors hover:bg-gray-50 dark:border-gray-600 dark:hover:bg-gray-700"
+            >
+              <input
+                v-model="form.addType"
+                class="h-4 w-4 border-gray-300 text-primary-600 focus:ring-primary-500"
+                type="radio"
+                value="oauth"
+              />
+              <span class="text-sm text-gray-700 dark:text-gray-300">
+                OAuth 授权<span
+                  v-if="form.platform === 'claude' || form.platform === 'openai'"
+                  class="text-primary-600 dark:text-primary-400"
+                >
                   (用量可视化)</span
                 >
               </span>
             </label>
-            <label v-if="form.platform === 'claude'">
-              <input v-model="form.addType" type="radio" value="setup-token" />
-              <span>Setup Token (效期长)</span>
+            <label
+              v-if="form.platform === 'claude'"
+              class="flex cursor-pointer items-center gap-2 rounded-lg border border-gray-200 px-3 py-2 transition-colors hover:bg-gray-50 dark:border-gray-600 dark:hover:bg-gray-700"
+            >
+              <input
+                v-model="form.addType"
+                class="h-4 w-4 border-gray-300 text-primary-600 focus:ring-primary-500"
+                type="radio"
+                value="setup-token"
+              />
+              <span class="text-sm text-gray-700 dark:text-gray-300">Setup Token (效期长)</span>
             </label>
-            <label>
-              <input v-model="form.addType" type="radio" value="manual" />
-              <span>手动输入 Access Token</span>
+            <label
+              class="flex cursor-pointer items-center gap-2 rounded-lg border border-gray-200 px-3 py-2 transition-colors hover:bg-gray-50 dark:border-gray-600 dark:hover:bg-gray-700"
+            >
+              <input
+                v-model="form.addType"
+                class="h-4 w-4 border-gray-300 text-primary-600 focus:ring-primary-500"
+                type="radio"
+                value="manual"
+              />
+              <span class="text-sm text-gray-700 dark:text-gray-300">手动输入 Access Token</span>
             </label>
-            <label v-if="form.platform === 'droid'">
-              <input v-model="form.addType" type="radio" value="apikey" />
-              <span>使用 API Key (支持多个)</span>
+            <label
+              v-if="form.platform === 'droid'"
+              class="flex cursor-pointer items-center gap-2 rounded-lg border border-gray-200 px-3 py-2 transition-colors hover:bg-gray-50 dark:border-gray-600 dark:hover:bg-gray-700"
+            >
+              <input
+                v-model="form.addType"
+                class="h-4 w-4 border-gray-300 text-primary-600 focus:ring-primary-500"
+                type="radio"
+                value="apikey"
+              />
+              <span class="text-sm text-gray-700 dark:text-gray-300">使用 API Key (支持多个)</span>
             </label>
           </div>
         </div>
 
-        <div>
-          <label>账户名称</label>
+        <div class="mb-4">
+          <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
+            >账户名称</label
+          >
           <input
             v-model="form.name"
+            class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm text-gray-900 placeholder-gray-500 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
             placeholder="为账户设置一个易识别的名称"
             required
             type="text"
           />
-          <p v-if="errors.name">
+          <p v-if="errors.name" class="mt-1 text-sm text-red-500">
             {{ errors.name }}
           </p>
         </div>
 
-        <div>
-          <label>描述 (可选)</label>
-          <textarea v-model="form.description" placeholder="账户用途说明..." rows="3" />
+        <div class="mb-4">
+          <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
+            >描述 (可选)</label
+          >
+          <textarea
+            v-model="form.description"
+            class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm text-gray-900 placeholder-gray-500 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
+            placeholder="账户用途说明..."
+            rows="3"
+          />
         </div>
 
-        <div>
-          <label>账户类型</label>
-          <div>
-            <label>
-              <input v-model="form.accountType" type="radio" value="shared" />
-              <span>共享账户</span>
+        <div class="mb-4">
+          <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
+            >账户类型</label
+          >
+          <div class="flex flex-wrap gap-3">
+            <label
+              class="flex cursor-pointer items-center gap-2 rounded-lg border border-gray-200 px-3 py-2 transition-colors hover:bg-gray-50 dark:border-gray-600 dark:hover:bg-gray-700"
+            >
+              <input
+                v-model="form.accountType"
+                class="h-4 w-4 border-gray-300 text-primary-600 focus:ring-primary-500"
+                type="radio"
+                value="shared"
+              />
+              <span class="text-sm text-gray-700 dark:text-gray-300">共享账户</span>
             </label>
-            <label>
-              <input v-model="form.accountType" type="radio" value="dedicated" />
-              <span>专属账户</span>
+            <label
+              class="flex cursor-pointer items-center gap-2 rounded-lg border border-gray-200 px-3 py-2 transition-colors hover:bg-gray-50 dark:border-gray-600 dark:hover:bg-gray-700"
+            >
+              <input
+                v-model="form.accountType"
+                class="h-4 w-4 border-gray-300 text-primary-600 focus:ring-primary-500"
+                type="radio"
+                value="dedicated"
+              />
+              <span class="text-sm text-gray-700 dark:text-gray-300">专属账户</span>
             </label>
-            <label>
-              <input v-model="form.accountType" type="radio" value="group" />
-              <span>分组调度</span>
+            <label
+              class="flex cursor-pointer items-center gap-2 rounded-lg border border-gray-200 px-3 py-2 transition-colors hover:bg-gray-50 dark:border-gray-600 dark:hover:bg-gray-700"
+            >
+              <input
+                v-model="form.accountType"
+                class="h-4 w-4 border-gray-300 text-primary-600 focus:ring-primary-500"
+                type="radio"
+                value="group"
+              />
+              <span class="text-sm text-gray-700 dark:text-gray-300">分组调度</span>
             </label>
           </div>
-          <p>
+          <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
             共享账户：供所有API Key使用；专属账户：仅供特定API
             Key使用；分组调度：加入分组供分组内调度
           </p>
         </div>
 
         <!-- 到期时间 - 仅在创建账户时显示，编辑时使用独立的过期时间编辑弹窗 -->
-        <div v-if="!isEdit">
-          <label>到期时间 (可选)</label>
-          <div>
-            <select v-model="form.expireDuration" @change="updateAccountExpireAt">
+        <div v-if="!isEdit" class="mb-4">
+          <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
+            >到期时间 (可选)</label
+          >
+          <div class="space-y-2">
+            <select
+              v-model="form.expireDuration"
+              class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm text-gray-900 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+              @change="updateAccountExpireAt"
+            >
               <option value="">永不过期</option>
               <option value="30d">30 天</option>
               <option value="90d">90 天</option>
@@ -300,219 +613,335 @@
             <div v-if="form.expireDuration === 'custom'">
               <input
                 v-model="form.customExpireDate"
+                class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm text-gray-900 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
                 :min="minDateTime"
                 type="datetime-local"
                 @change="updateAccountCustomExpireAt"
               />
             </div>
-            <p v-if="form.expiresAt">将于 {{ formatExpireDate(form.expiresAt) }} 过期</p>
-            <p v-else>账户永不过期</p>
+            <p v-if="form.expiresAt" class="text-sm text-primary-600 dark:text-primary-400">
+              将于 {{ formatExpireDate(form.expiresAt) }} 过期
+            </p>
+            <p v-else class="text-sm text-gray-500 dark:text-gray-400">账户永不过期</p>
           </div>
-          <p>设置 Claude Max/Pro 订阅的到期时间，到期后将停止调度此账户</p>
+          <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+            设置 Claude Max/Pro 订阅的到期时间，到期后将停止调度此账户
+          </p>
         </div>
 
         <!-- 分组选择器 -->
-        <div v-if="form.accountType === 'group'">
-          <label>选择分组 *</label>
-          <div>
-            <div>
+        <div v-if="form.accountType === 'group'" class="mb-4">
+          <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
+            >选择分组 *</label
+          >
+          <div class="flex items-start gap-2">
+            <div
+              class="flex-1 rounded-lg border border-gray-200 bg-gray-50 p-3 dark:border-gray-700 dark:bg-gray-800"
+            >
               <!-- 多选分组界面 -->
-              <div>
-                <div v-if="filteredGroups.length === 0">暂无可用分组</div>
-                <label v-for="group in filteredGroups" :key="group.id">
-                  <input v-model="form.groupIds" type="checkbox" :value="group.id" />
-                  <span> {{ group.name }} ({{ group.memberCount || 0 }} 个成员) </span>
+              <div class="space-y-2">
+                <div
+                  v-if="filteredGroups.length === 0"
+                  class="py-4 text-center text-sm text-gray-500 dark:text-gray-400"
+                >
+                  暂无可用分组
+                </div>
+                <label
+                  v-for="group in filteredGroups"
+                  :key="group.id"
+                  class="flex cursor-pointer items-center gap-2 rounded-md px-2 py-1.5 transition-colors hover:bg-gray-100 dark:hover:bg-gray-700"
+                >
+                  <input
+                    v-model="form.groupIds"
+                    class="h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+                    type="checkbox"
+                    :value="group.id"
+                  />
+                  <span class="text-sm text-gray-700 dark:text-gray-300">
+                    {{ group.name }} ({{ group.memberCount || 0 }} 个成员)
+                  </span>
                 </label>
                 <!-- 新建分组选项 -->
-                <div>
-                  <button type="button" @click="handleNewGroup">新建分组</button>
+                <div class="border-t border-gray-200 pt-2 dark:border-gray-700">
+                  <button
+                    class="w-full rounded-md bg-primary-500 px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-primary-600"
+                    type="button"
+                    @click="handleNewGroup"
+                  >
+                    新建分组
+                  </button>
                 </div>
               </div>
             </div>
-            <button type="button" @click="refreshGroups"></button>
+            <button
+              class="rounded-lg border border-gray-300 bg-white p-2 text-gray-500 transition-colors hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-400 dark:hover:bg-gray-600"
+              type="button"
+              @click="refreshGroups"
+            >
+              <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                />
+              </svg>
+            </button>
           </div>
         </div>
 
         <!-- Gemini 项目 ID 字段 -->
-        <div v-if="form.platform === 'gemini'">
-          <label>项目 ID (可选)</label>
-          <input v-model="form.projectId" placeholder="例如：verdant-wares-464411-k9" type="text" />
-          <div>
-            <div>
-              <div>
-                <p>Google Cloud/Workspace 账号需要提供项目 ID</p>
-                <p>
-                  某些 Google 账号（特别是绑定了 Google Cloud 的账号）会被识别为 Workspace
-                  账号，需要提供额外的项目 ID。
-                </p>
-                <div>
-                  <p>如何获取项目 ID：</p>
-                  <ol>
-                    <li>
-                      访问
-                      <a href="https://console.cloud.google.com/welcome" target="_blank"
-                        >Google Cloud Console</a
-                      >
-                    </li>
-                    <li>复制<span>项目 ID（Project ID）</span>，通常是字符串格式</li>
-                    <li>
-                      ⚠️ 注意：要复制项目 ID（Project ID），不要复制项目编号（Project Number）！
-                    </li>
-                  </ol>
-                </div>
-                <p>
-                  <strong>提示：</strong>如果您的账号是普通个人账号（未绑定 Google
-                  Cloud），请留空此字段。
-                </p>
+        <div v-if="form.platform === 'gemini'" class="mb-4">
+          <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
+            >项目 ID (可选)</label
+          >
+          <input
+            v-model="form.projectId"
+            class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm text-gray-900 placeholder-gray-500 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
+            placeholder="例如：verdant-wares-464411-k9"
+            type="text"
+          />
+          <div
+            class="mt-2 rounded-lg border border-blue-200 bg-blue-50 p-3 dark:border-blue-800 dark:bg-blue-900/20"
+          >
+            <div class="text-sm text-blue-700 dark:text-blue-300">
+              <p class="font-medium">Google Cloud/Workspace 账号需要提供项目 ID</p>
+              <p class="mt-1">
+                某些 Google 账号（特别是绑定了 Google Cloud 的账号）会被识别为 Workspace
+                账号，需要提供额外的项目 ID。
+              </p>
+              <div class="mt-2">
+                <p class="font-medium">如何获取项目 ID：</p>
+                <ol class="ml-4 mt-1 list-decimal space-y-1">
+                  <li>
+                    访问
+                    <a
+                      class="text-blue-600 underline hover:text-blue-800 dark:text-blue-400"
+                      href="https://console.cloud.google.com/welcome"
+                      target="_blank"
+                      >Google Cloud Console</a
+                    >
+                  </li>
+                  <li>
+                    复制<span class="font-medium">项目 ID（Project ID）</span>，通常是字符串格式
+                  </li>
+                  <li>
+                    ⚠️ 注意：要复制项目 ID（Project ID），不要复制项目编号（Project Number）！
+                  </li>
+                </ol>
               </div>
+              <p class="mt-2">
+                <strong>提示：</strong>如果您的账号是普通个人账号（未绑定 Google
+                Cloud），请留空此字段。
+              </p>
             </div>
           </div>
         </div>
 
         <!-- Bedrock 特定字段 -->
-        <div v-if="form.platform === 'bedrock' && !isEdit">
-          <div>
-            <label>AWS 访问密钥 ID *</label>
+        <div v-if="form.platform === 'bedrock' && !isEdit" class="space-y-4">
+          <div class="mb-4">
+            <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
+              >AWS 访问密钥 ID *</label
+            >
             <input
               v-model="form.accessKeyId"
+              class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm text-gray-900 placeholder-gray-500 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
               placeholder="请输入 AWS Access Key ID"
               required
               type="text"
             />
-            <p v-if="errors.accessKeyId">
+            <p v-if="errors.accessKeyId" class="mt-1 text-sm text-red-500">
               {{ errors.accessKeyId }}
             </p>
           </div>
 
-          <div>
-            <label>AWS 秘密访问密钥 *</label>
+          <div class="mb-4">
+            <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
+              >AWS 秘密访问密钥 *</label
+            >
             <input
               v-model="form.secretAccessKey"
+              class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm text-gray-900 placeholder-gray-500 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
               placeholder="请输入 AWS Secret Access Key"
               required
               type="password"
             />
-            <p v-if="errors.secretAccessKey">
+            <p v-if="errors.secretAccessKey" class="mt-1 text-sm text-red-500">
               {{ errors.secretAccessKey }}
             </p>
           </div>
 
-          <div>
-            <label>AWS 区域 *</label>
-            <input v-model="form.region" placeholder="例如：us-east-1" required type="text" />
-            <p v-if="errors.region">
+          <div class="mb-4">
+            <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
+              >AWS 区域 *</label
+            >
+            <input
+              v-model="form.region"
+              class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm text-gray-900 placeholder-gray-500 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
+              placeholder="例如：us-east-1"
+              required
+              type="text"
+            />
+            <p v-if="errors.region" class="mt-1 text-sm text-red-500">
               {{ errors.region }}
             </p>
-            <div>
-              <div>
-                <div>
-                  <p>常用 AWS 区域参考：</p>
-                  <div>
-                    <span>• us-east-1 (美国东部)</span>
-                    <span>• us-west-2 (美国西部)</span>
-                    <span>• eu-west-1 (欧洲爱尔兰)</span>
-                    <span>• ap-southeast-1 (新加坡)</span>
-                    <span>• ap-northeast-1 (东京)</span>
-                    <span>• eu-central-1 (法兰克福)</span>
-                  </div>
-                  <p>💡 请输入完整的区域代码，如 us-east-1</p>
+            <div
+              class="mt-2 rounded-lg border border-amber-200 bg-amber-50 p-3 dark:border-amber-800 dark:bg-amber-900/20"
+            >
+              <div class="text-sm text-amber-700 dark:text-amber-300">
+                <p class="font-medium">常用 AWS 区域参考：</p>
+                <div class="mt-1 grid grid-cols-2 gap-1">
+                  <span>• us-east-1 (美国东部)</span>
+                  <span>• us-west-2 (美国西部)</span>
+                  <span>• eu-west-1 (欧洲爱尔兰)</span>
+                  <span>• ap-southeast-1 (新加坡)</span>
+                  <span>• ap-northeast-1 (东京)</span>
+                  <span>• eu-central-1 (法兰克福)</span>
                 </div>
+                <p class="mt-2">💡 请输入完整的区域代码，如 us-east-1</p>
               </div>
             </div>
           </div>
 
-          <div>
-            <label>会话令牌 (可选)</label>
+          <div class="mb-4">
+            <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
+              >会话令牌 (可选)</label
+            >
             <input
               v-model="form.sessionToken"
+              class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm text-gray-900 placeholder-gray-500 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
               placeholder="如果使用临时凭证，请输入会话令牌"
               type="password"
             />
-            <p>仅在使用临时 AWS 凭证时需要填写</p>
+            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+              仅在使用临时 AWS 凭证时需要填写
+            </p>
           </div>
 
-          <div>
-            <label>默认主模型 (可选)</label>
+          <div class="mb-4">
+            <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
+              >默认主模型 (可选)</label
+            >
             <input
               v-model="form.defaultModel"
+              class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm text-gray-900 placeholder-gray-500 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
               placeholder="例如：us.anthropic.claude-sonnet-4-20250514-v1:0"
               type="text"
             />
-            <p>留空将使用系统默认模型。支持 inference profile ID 或 ARN</p>
-            <div>
-              <div>
-                <div>
-                  <p>Bedrock 模型配置说明：</p>
-                  <ul>
-                    <li>支持 Inference Profile ID（推荐）</li>
-                    <li>支持 Application Inference Profile ARN</li>
-                    <li>常用模型：us.anthropic.claude-sonnet-4-20250514-v1:0</li>
-                    <li>留空将使用系统配置的默认模型</li>
-                  </ul>
-                </div>
+            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+              留空将使用系统默认模型。支持 inference profile ID 或 ARN
+            </p>
+            <div
+              class="mt-2 rounded-lg border border-gray-200 bg-gray-50 p-3 dark:border-gray-700 dark:bg-gray-800"
+            >
+              <div class="text-sm text-gray-600 dark:text-gray-400">
+                <p class="font-medium">Bedrock 模型配置说明：</p>
+                <ul class="ml-4 mt-1 list-disc space-y-1">
+                  <li>支持 Inference Profile ID（推荐）</li>
+                  <li>支持 Application Inference Profile ARN</li>
+                  <li>常用模型：us.anthropic.claude-sonnet-4-20250514-v1:0</li>
+                  <li>留空将使用系统配置的默认模型</li>
+                </ul>
               </div>
             </div>
           </div>
 
-          <div>
-            <label>小快速模型 (可选)</label>
+          <div class="mb-4">
+            <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
+              >小快速模型 (可选)</label
+            >
             <input
               v-model="form.smallFastModel"
+              class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm text-gray-900 placeholder-gray-500 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
               placeholder="例如：us.anthropic.claude-3-5-haiku-20241022-v1:0"
               type="text"
             />
-            <p>用于快速响应的轻量级模型，留空将使用系统默认</p>
+            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+              用于快速响应的轻量级模型，留空将使用系统默认
+            </p>
           </div>
         </div>
 
         <!-- Azure OpenAI 特定字段 -->
-        <div v-if="form.platform === 'azure_openai' && !isEdit">
-          <div>
-            <label>Azure Endpoint *</label>
+        <div v-if="form.platform === 'azure_openai' && !isEdit" class="space-y-4">
+          <div class="mb-4">
+            <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
+              >Azure Endpoint *</label
+            >
             <input
               v-model="form.azureEndpoint"
+              class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm text-gray-900 placeholder-gray-500 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
               placeholder="https://your-resource.openai.azure.com"
               required
               type="url"
             />
-            <p v-if="errors.azureEndpoint">
+            <p v-if="errors.azureEndpoint" class="mt-1 text-sm text-red-500">
               {{ errors.azureEndpoint }}
             </p>
-            <p>Azure OpenAI 资源的终结点 URL，格式：https://your-resource.openai.azure.com</p>
+            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+              Azure OpenAI 资源的终结点 URL，格式：https://your-resource.openai.azure.com
+            </p>
           </div>
 
-          <div>
-            <label>API 版本</label>
-            <input v-model="form.apiVersion" placeholder="2024-02-01" type="text" />
-            <p>Azure OpenAI API 版本，默认使用最新稳定版本 2024-02-01</p>
+          <div class="mb-4">
+            <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
+              >API 版本</label
+            >
+            <input
+              v-model="form.apiVersion"
+              class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm text-gray-900 placeholder-gray-500 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
+              placeholder="2024-02-01"
+              type="text"
+            />
+            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+              Azure OpenAI API 版本，默认使用最新稳定版本 2024-02-01
+            </p>
           </div>
 
-          <div>
-            <label>部署名称 *</label>
-            <input v-model="form.deploymentName" placeholder="gpt-4" required type="text" />
-            <p v-if="errors.deploymentName">
+          <div class="mb-4">
+            <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
+              >部署名称 *</label
+            >
+            <input
+              v-model="form.deploymentName"
+              class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm text-gray-900 placeholder-gray-500 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
+              placeholder="gpt-4"
+              required
+              type="text"
+            />
+            <p v-if="errors.deploymentName" class="mt-1 text-sm text-red-500">
               {{ errors.deploymentName }}
             </p>
-            <p>在 Azure OpenAI Studio 中创建的部署名称</p>
+            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+              在 Azure OpenAI Studio 中创建的部署名称
+            </p>
           </div>
 
-          <div>
-            <label>API Key *</label>
+          <div class="mb-4">
+            <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
+              >API Key *</label
+            >
             <input
               v-model="form.apiKey"
+              class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm text-gray-900 placeholder-gray-500 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
               placeholder="请输入 Azure OpenAI API Key"
               required
               type="password"
             />
-            <p v-if="errors.apiKey">
+            <p v-if="errors.apiKey" class="mt-1 text-sm text-red-500">
               {{ errors.apiKey }}
             </p>
-            <p>从 Azure 门户获取的 API 密钥</p>
+            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+              从 Azure 门户获取的 API 密钥
+            </p>
           </div>
 
-          <div>
-            <label>支持的模型</label>
-            <div>
+          <div class="mb-4">
+            <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
+              >支持的模型</label
+            >
+            <div class="flex flex-wrap gap-2">
               <label
                 v-for="model in [
                   'gpt-4',
@@ -526,152 +955,282 @@
                   'codex-mini'
                 ]"
                 :key="model"
+                class="flex cursor-pointer items-center gap-2 rounded-lg border border-gray-200 px-3 py-1.5 transition-colors hover:bg-gray-50 dark:border-gray-600 dark:hover:bg-gray-700"
               >
-                <input v-model="form.supportedModels" type="checkbox" :value="model" />
-                <span>{{ model }}</span>
+                <input
+                  v-model="form.supportedModels"
+                  class="h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+                  type="checkbox"
+                  :value="model"
+                />
+                <span class="text-sm text-gray-700 dark:text-gray-300">{{ model }}</span>
               </label>
             </div>
-            <p>选择此部署支持的模型类型</p>
+            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">选择此部署支持的模型类型</p>
           </div>
         </div>
 
-        <div v-if="form.platform === 'bedrock' && !isEdit">
-          <div>
-            <label>限流机制</label>
-            <div>
-              <label>
-                <input v-model="form.enableRateLimit" type="checkbox" />
-                <span>启用限流机制</span>
+        <div v-if="form.platform === 'bedrock' && !isEdit" class="space-y-4">
+          <div class="mb-4">
+            <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
+              >限流机制</label
+            >
+            <div class="space-y-2">
+              <label
+                class="flex cursor-pointer items-center gap-2 rounded-lg border border-gray-200 px-3 py-2 transition-colors hover:bg-gray-50 dark:border-gray-600 dark:hover:bg-gray-700"
+              >
+                <input
+                  v-model="form.enableRateLimit"
+                  class="h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+                  type="checkbox"
+                />
+                <span class="text-sm text-gray-700 dark:text-gray-300">启用限流机制</span>
               </label>
-              <p>启用后，当账号返回429错误时将暂停调度一段时间</p>
+              <p class="text-xs text-gray-500 dark:text-gray-400">
+                启用后，当账号返回429错误时将暂停调度一段时间
+              </p>
             </div>
 
-            <div v-if="form.enableRateLimit">
-              <label>限流时间 (分钟)</label>
+            <div v-if="form.enableRateLimit" class="mt-3">
+              <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
+                >限流时间 (分钟)</label
+              >
               <input
                 v-model.number="form.rateLimitDuration"
+                class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm text-gray-900 placeholder-gray-500 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
                 min="1"
                 placeholder="默认60分钟"
                 type="number"
               />
-              <p>账号被限流后暂停调度的时间（分钟）</p>
+              <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                账号被限流后暂停调度的时间（分钟）
+              </p>
             </div>
           </div>
         </div>
 
         <!-- Claude Console 和 CCR 特定字段 -->
-        <div v-if="(form.platform === 'claude-console' || form.platform === 'ccr') && !isEdit">
-          <div>
-            <label>API URL *</label>
+        <div
+          v-if="(form.platform === 'claude-console' || form.platform === 'ccr') && !isEdit"
+          class="space-y-4"
+        >
+          <div class="mb-4">
+            <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
+              >API URL *</label
+            >
             <input
               v-model="form.apiUrl"
+              class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm text-gray-900 placeholder-gray-500 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
               placeholder="例如：https://api.example.com"
               required
               type="text"
             />
-            <p v-if="errors.apiUrl">
+            <p v-if="errors.apiUrl" class="mt-1 text-sm text-red-500">
               {{ errors.apiUrl }}
             </p>
           </div>
 
-          <div>
-            <label>API Key *</label>
-            <input v-model="form.apiKey" placeholder="请输入API Key" required type="password" />
-            <p v-if="errors.apiKey">
+          <div class="mb-4">
+            <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
+              >API Key *</label
+            >
+            <input
+              v-model="form.apiKey"
+              class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm text-gray-900 placeholder-gray-500 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
+              placeholder="请输入API Key"
+              required
+              type="password"
+            />
+            <p v-if="errors.apiKey" class="mt-1 text-sm text-red-500">
               {{ errors.apiKey }}
             </p>
           </div>
 
           <!-- 额度管理字段 -->
-          <div>
-            <div>
-              <label> 每日额度限制 ($) </label>
+          <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <div class="mb-4">
+              <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
+                每日额度限制 ($)
+              </label>
               <input
                 v-model.number="form.dailyQuota"
+                class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm text-gray-900 placeholder-gray-500 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
                 min="0"
                 placeholder="0 表示不限制"
                 step="0.01"
                 type="number"
               />
-              <p>设置每日使用额度，0 表示不限制</p>
+              <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                设置每日使用额度，0 表示不限制
+              </p>
             </div>
 
-            <div>
-              <label> 额度重置时间 </label>
-              <input v-model="form.quotaResetTime" placeholder="00:00" type="time" />
-              <p>每日自动重置额度的时间</p>
+            <div class="mb-4">
+              <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
+                额度重置时间
+              </label>
+              <input
+                v-model="form.quotaResetTime"
+                class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm text-gray-900 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+                placeholder="00:00"
+                type="time"
+              />
+              <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">每日自动重置额度的时间</p>
             </div>
           </div>
 
           <!-- 并发控制字段 -->
-          <div>
-            <label> 最大并发任务数 </label>
+          <div class="mb-4">
+            <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
+              最大并发任务数
+            </label>
             <input
               v-model.number="form.maxConcurrentTasks"
+              class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm text-gray-900 placeholder-gray-500 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
               min="0"
               placeholder="0 表示不限制"
               type="number"
             />
-            <p>限制该账户的并发请求数量，0 表示不限制</p>
+            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+              限制该账户的并发请求数量，0 表示不限制
+            </p>
           </div>
 
-          <div>
-            <label>模型限制 (可选)</label>
+          <div class="mb-4">
+            <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
+              >模型限制 (可选)</label
+            >
 
             <!-- 模式切换 -->
-            <div>
-              <button type="button" @click="modelRestrictionMode = 'whitelist'">模型白名单</button>
-              <button type="button" @click="modelRestrictionMode = 'mapping'">模型映射</button>
+            <div class="mb-3 flex gap-2">
+              <button
+                class="rounded-lg px-4 py-2 text-sm font-medium transition-colors"
+                :class="
+                  modelRestrictionMode === 'whitelist'
+                    ? 'bg-primary-500 text-white'
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'
+                "
+                type="button"
+                @click="modelRestrictionMode = 'whitelist'"
+              >
+                模型白名单
+              </button>
+              <button
+                class="rounded-lg px-4 py-2 text-sm font-medium transition-colors"
+                :class="
+                  modelRestrictionMode === 'mapping'
+                    ? 'bg-primary-500 text-white'
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'
+                "
+                type="button"
+                @click="modelRestrictionMode = 'mapping'"
+              >
+                模型映射
+              </button>
             </div>
 
             <!-- 白名单模式 -->
-            <div v-if="modelRestrictionMode === 'whitelist'">
-              <div>
-                <p>选择允许使用此账户的模型。留空表示支持所有模型。</p>
+            <div v-if="modelRestrictionMode === 'whitelist'" class="space-y-3">
+              <div
+                class="rounded-lg border border-blue-200 bg-blue-50 p-3 dark:border-blue-800 dark:bg-blue-900/20"
+              >
+                <p class="text-sm text-blue-700 dark:text-blue-300">
+                  选择允许使用此账户的模型。留空表示支持所有模型。
+                </p>
               </div>
 
               <!-- 模型复选框列表 -->
-              <div>
-                <label v-for="model in commonModels" :key="model.value">
-                  <input v-model="allowedModels" type="checkbox" :value="model.value" />
-                  <span>{{ model.label }}</span>
+              <div class="flex flex-wrap gap-2">
+                <label
+                  v-for="model in commonModels"
+                  :key="model.value"
+                  class="flex cursor-pointer items-center gap-2 rounded-lg border border-gray-200 px-3 py-1.5 transition-colors hover:bg-gray-50 dark:border-gray-600 dark:hover:bg-gray-700"
+                >
+                  <input
+                    v-model="allowedModels"
+                    class="h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+                    type="checkbox"
+                    :value="model.value"
+                  />
+                  <span class="text-sm text-gray-700 dark:text-gray-300">{{ model.label }}</span>
                 </label>
               </div>
 
-              <p>
+              <p class="text-sm text-gray-600 dark:text-gray-400">
                 已选择 {{ allowedModels.length }} 个模型
-                <span v-if="allowedModels.length === 0">（支持所有模型）</span>
+                <span v-if="allowedModels.length === 0" class="text-gray-500"
+                  >（支持所有模型）</span
+                >
               </p>
             </div>
 
             <!-- 映射模式 -->
-            <div v-else>
-              <div>
-                <p>配置模型映射关系。左侧是客户端请求的模型，右侧是实际发送给API的模型。</p>
+            <div v-else class="space-y-3">
+              <div
+                class="rounded-lg border border-blue-200 bg-blue-50 p-3 dark:border-blue-800 dark:bg-blue-900/20"
+              >
+                <p class="text-sm text-blue-700 dark:text-blue-300">
+                  配置模型映射关系。左侧是客户端请求的模型，右侧是实际发送给API的模型。
+                </p>
               </div>
 
               <!-- 模型映射表 -->
-              <div>
-                <div v-for="(mapping, index) in modelMappings" :key="index">
-                  <input v-model="mapping.from" placeholder="原始模型名称" type="text" />
-
-                  <input v-model="mapping.to" placeholder="映射后的模型名称" type="text" />
-                  <button type="button" @click="removeModelMapping(index)"></button>
+              <div class="space-y-2">
+                <div
+                  v-for="(mapping, index) in modelMappings"
+                  :key="index"
+                  class="flex items-center gap-2"
+                >
+                  <input
+                    v-model="mapping.from"
+                    class="flex-1 rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 placeholder-gray-500 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
+                    placeholder="原始模型名称"
+                    type="text"
+                  />
+                  <span class="text-gray-400">→</span>
+                  <input
+                    v-model="mapping.to"
+                    class="flex-1 rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 placeholder-gray-500 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
+                    placeholder="映射后的模型名称"
+                    type="text"
+                  />
+                  <button
+                    class="rounded-lg p-2 text-red-500 transition-colors hover:bg-red-50 dark:hover:bg-red-900/20"
+                    type="button"
+                    @click="removeModelMapping(index)"
+                  >
+                    <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                      />
+                    </svg>
+                  </button>
                 </div>
               </div>
 
               <!-- 添加映射按钮 -->
-              <button type="button" @click="addModelMapping">添加模型映射</button>
+              <button
+                class="w-full rounded-lg border-2 border-dashed border-gray-300 px-4 py-2 text-sm font-medium text-gray-600 transition-colors hover:border-primary-500 hover:text-primary-500 dark:border-gray-600 dark:text-gray-400 dark:hover:border-primary-500 dark:hover:text-primary-400"
+                type="button"
+                @click="addModelMapping"
+              >
+                + 添加模型映射
+              </button>
 
               <!-- 快捷添加按钮 -->
-              <div>
+              <div class="flex flex-wrap gap-2">
                 <button
+                  class="rounded-md bg-orange-100 px-2 py-1 text-xs font-medium text-orange-700 transition-colors hover:bg-orange-200 dark:bg-orange-900/30 dark:text-orange-400 dark:hover:bg-orange-900/50"
                   type="button"
                   @click="addPresetMapping('claude-sonnet-4-20250514', 'claude-sonnet-4-20250514')"
                 >
                   + Sonnet 4
                 </button>
                 <button
+                  class="rounded-md bg-orange-100 px-2 py-1 text-xs font-medium text-orange-700 transition-colors hover:bg-orange-200 dark:bg-orange-900/30 dark:text-orange-400 dark:hover:bg-orange-900/50"
                   type="button"
                   @click="
                     addPresetMapping('claude-sonnet-4-5-20250929', 'claude-sonnet-4-5-20250929')
@@ -680,12 +1239,14 @@
                   + Sonnet 4.5
                 </button>
                 <button
+                  class="rounded-md bg-purple-100 px-2 py-1 text-xs font-medium text-purple-700 transition-colors hover:bg-purple-200 dark:bg-purple-900/30 dark:text-purple-400 dark:hover:bg-purple-900/50"
                   type="button"
                   @click="addPresetMapping('claude-opus-4-1-20250805', 'claude-opus-4-1-20250805')"
                 >
                   + Opus 4.1
                 </button>
                 <button
+                  class="rounded-md bg-blue-100 px-2 py-1 text-xs font-medium text-blue-700 transition-colors hover:bg-blue-200 dark:bg-blue-900/30 dark:text-blue-400 dark:hover:bg-blue-900/50"
                   type="button"
                   @click="
                     addPresetMapping('claude-3-5-haiku-20241022', 'claude-3-5-haiku-20241022')
@@ -694,6 +1255,7 @@
                   + Haiku 3.5
                 </button>
                 <button
+                  class="rounded-md bg-blue-100 px-2 py-1 text-xs font-medium text-blue-700 transition-colors hover:bg-blue-200 dark:bg-blue-900/30 dark:text-blue-400 dark:hover:bg-blue-900/50"
                   type="button"
                   @click="
                     addPresetMapping('claude-haiku-4-5-20251001', 'claude-haiku-4-5-20251001')
@@ -701,13 +1263,36 @@
                 >
                   + Haiku 4.5
                 </button>
-                <button type="button" @click="addPresetMapping('deepseek-chat', 'deepseek-chat')">
+                <button
+                  class="rounded-md bg-emerald-100 px-2 py-1 text-xs font-medium text-emerald-700 transition-colors hover:bg-emerald-200 dark:bg-emerald-900/30 dark:text-emerald-400 dark:hover:bg-emerald-900/50"
+                  type="button"
+                  @click="addPresetMapping('deepseek-chat', 'deepseek-chat')"
+                >
                   + DeepSeek
                 </button>
-                <button type="button" @click="addPresetMapping('Qwen', 'Qwen')">+ Qwen</button>
-                <button type="button" @click="addPresetMapping('Kimi', 'Kimi')">+ Kimi</button>
-                <button type="button" @click="addPresetMapping('GLM', 'GLM')">+ GLM</button>
                 <button
+                  class="rounded-md bg-cyan-100 px-2 py-1 text-xs font-medium text-cyan-700 transition-colors hover:bg-cyan-200 dark:bg-cyan-900/30 dark:text-cyan-400 dark:hover:bg-cyan-900/50"
+                  type="button"
+                  @click="addPresetMapping('Qwen', 'Qwen')"
+                >
+                  + Qwen
+                </button>
+                <button
+                  class="rounded-md bg-pink-100 px-2 py-1 text-xs font-medium text-pink-700 transition-colors hover:bg-pink-200 dark:bg-pink-900/30 dark:text-pink-400 dark:hover:bg-pink-900/50"
+                  type="button"
+                  @click="addPresetMapping('Kimi', 'Kimi')"
+                >
+                  + Kimi
+                </button>
+                <button
+                  class="rounded-md bg-indigo-100 px-2 py-1 text-xs font-medium text-indigo-700 transition-colors hover:bg-indigo-200 dark:bg-indigo-900/30 dark:text-indigo-400 dark:hover:bg-indigo-900/50"
+                  type="button"
+                  @click="addPresetMapping('GLM', 'GLM')"
+                >
+                  + GLM
+                </button>
+                <button
+                  class="rounded-md bg-amber-100 px-2 py-1 text-xs font-medium text-amber-700 transition-colors hover:bg-amber-200 dark:bg-amber-900/30 dark:text-amber-400 dark:hover:bg-amber-900/50"
                   type="button"
                   @click="addPresetMapping('claude-opus-4-1-20250805', 'claude-sonnet-4-20250514')"
                 >
@@ -717,70 +1302,128 @@
             </div>
           </div>
 
-          <div>
-            <label>自定义 User-Agent (可选)</label>
-            <input v-model="form.userAgent" placeholder="留空则透传客户端 User-Agent" type="text" />
-            <p>留空时将自动使用客户端的 User-Agent，仅在需要固定特定 UA 时填写</p>
+          <div class="mb-4">
+            <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
+              >自定义 User-Agent (可选)</label
+            >
+            <input
+              v-model="form.userAgent"
+              class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm text-gray-900 placeholder-gray-500 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
+              placeholder="留空则透传客户端 User-Agent"
+              type="text"
+            />
+            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+              留空时将自动使用客户端的 User-Agent，仅在需要固定特定 UA 时填写
+            </p>
           </div>
 
-          <div>
-            <label>限流机制</label>
-            <div>
-              <label>
-                <input v-model="form.enableRateLimit" type="checkbox" />
-                <span>启用限流机制</span>
+          <div class="mb-4">
+            <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
+              >限流机制</label
+            >
+            <div class="space-y-2">
+              <label
+                class="flex cursor-pointer items-center gap-2 rounded-lg border border-gray-200 px-3 py-2 transition-colors hover:bg-gray-50 dark:border-gray-600 dark:hover:bg-gray-700"
+              >
+                <input
+                  v-model="form.enableRateLimit"
+                  class="h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+                  type="checkbox"
+                />
+                <span class="text-sm text-gray-700 dark:text-gray-300">启用限流机制</span>
               </label>
-              <p>启用后，当账号返回429错误时将暂停调度一段时间</p>
+              <p class="text-xs text-gray-500 dark:text-gray-400">
+                启用后，当账号返回429错误时将暂停调度一段时间
+              </p>
             </div>
 
-            <div v-if="form.enableRateLimit">
-              <label>限流时间 (分钟)</label>
+            <div v-if="form.enableRateLimit" class="mt-3">
+              <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
+                >限流时间 (分钟)</label
+              >
               <input
                 v-model.number="form.rateLimitDuration"
+                class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm text-gray-900 placeholder-gray-500 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
                 min="1"
                 placeholder="默认60分钟"
                 type="number"
               />
-              <p>账号被限流后暂停调度的时间（分钟）</p>
+              <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                账号被限流后暂停调度的时间（分钟）
+              </p>
             </div>
           </div>
         </div>
 
         <!-- OpenAI-Responses 特定字段 -->
-        <div v-if="form.platform === 'openai-responses' && !isEdit">
-          <div>
-            <label>API 基础地址 *</label>
+        <div v-if="form.platform === 'openai-responses' && !isEdit" class="space-y-4">
+          <div class="mb-4">
+            <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
+              >API 基础地址 *</label
+            >
             <input
               v-model="form.baseApi"
+              class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm text-gray-900 placeholder-gray-500 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
               placeholder="https://api.example.com/v1"
               required
               type="url"
             />
-            <p>第三方 OpenAI 兼容 API 的基础地址，不要包含具体路径</p>
+            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+              第三方 OpenAI 兼容 API 的基础地址，不要包含具体路径
+            </p>
           </div>
 
-          <div>
-            <label>API 密钥 *</label>
-            <div>
+          <div class="mb-4">
+            <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
+              >API 密钥 *</label
+            >
+            <div class="flex items-center gap-2">
               <input
                 v-model="form.apiKey"
+                class="flex-1 rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm text-gray-900 placeholder-gray-500 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
                 placeholder="sk-xxxxxxxxxxxx"
                 required
                 :type="showApiKey ? 'text' : 'password'"
               />
-              <button type="button" @click="showApiKey = !showApiKey"></button>
+              <button
+                class="rounded-lg border border-gray-300 bg-white p-2 text-gray-500 transition-colors hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-400 dark:hover:bg-gray-600"
+                type="button"
+                @click="showApiKey = !showApiKey"
+              >
+                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path
+                    v-if="showApiKey"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"
+                  />
+                  <path
+                    v-else
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                  />
+                </svg>
+              </button>
             </div>
-            <p>第三方服务提供的 API 密钥</p>
+            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">第三方服务提供的 API 密钥</p>
           </div>
 
-          <div>
-            <label>自定义 User-Agent (可选)</label>
+          <div class="mb-4">
+            <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
+              >自定义 User-Agent (可选)</label
+            >
             <input
               v-model="form.userAgent"
+              class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm text-gray-900 placeholder-gray-500 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
               placeholder="留空则透传原始请求的 User-Agent"
               type="text"
             />
-            <p>可选项。如果设置，所有请求将使用此 User-Agent；否则透传客户端的 User-Agent</p>
+            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+              可选项。如果设置，所有请求将使用此 User-Agent；否则透传客户端的 User-Agent
+            </p>
           </div>
 
           <!-- 限流时长字段 - 隐藏不显示，使用默认值60 -->
@@ -788,28 +1431,54 @@
         </div>
 
         <!-- Claude 订阅类型选择 -->
-        <div v-if="form.platform === 'claude'">
-          <label>订阅类型</label>
-          <div>
-            <label>
-              <input v-model="form.subscriptionType" type="radio" value="claude_max" />
-              <span>Claude Max</span>
+        <div v-if="form.platform === 'claude'" class="mb-4">
+          <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
+            >订阅类型</label
+          >
+          <div class="flex flex-wrap gap-3">
+            <label
+              class="flex cursor-pointer items-center gap-2 rounded-lg border border-gray-200 px-3 py-2 transition-colors hover:bg-gray-50 dark:border-gray-600 dark:hover:bg-gray-700"
+            >
+              <input
+                v-model="form.subscriptionType"
+                class="h-4 w-4 border-gray-300 text-primary-600 focus:ring-primary-500"
+                type="radio"
+                value="claude_max"
+              />
+              <span class="text-sm text-gray-700 dark:text-gray-300">Claude Max</span>
             </label>
-            <label>
-              <input v-model="form.subscriptionType" type="radio" value="claude_pro" />
-              <span>Claude Pro</span>
+            <label
+              class="flex cursor-pointer items-center gap-2 rounded-lg border border-gray-200 px-3 py-2 transition-colors hover:bg-gray-50 dark:border-gray-600 dark:hover:bg-gray-700"
+            >
+              <input
+                v-model="form.subscriptionType"
+                class="h-4 w-4 border-gray-300 text-primary-600 focus:ring-primary-500"
+                type="radio"
+                value="claude_pro"
+              />
+              <span class="text-sm text-gray-700 dark:text-gray-300">Claude Pro</span>
             </label>
           </div>
-          <p>Pro 账号不支持 Claude Opus 4 模型</p>
+          <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+            Pro 账号不支持 Claude Opus 4 模型
+          </p>
         </div>
 
         <!-- Claude 5小时限制自动停止调度选项 -->
-        <div v-if="form.platform === 'claude'">
-          <label>
-            <input v-model="form.autoStopOnWarning" type="checkbox" />
+        <div v-if="form.platform === 'claude'" class="mb-4">
+          <label
+            class="flex cursor-pointer items-start gap-3 rounded-lg border border-gray-200 p-3 transition-colors hover:bg-gray-50 dark:border-gray-600 dark:hover:bg-gray-700"
+          >
+            <input
+              v-model="form.autoStopOnWarning"
+              class="mt-0.5 h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+              type="checkbox"
+            />
             <div>
-              <span> 5小时使用量接近限制时自动停止调度 </span>
-              <p>
+              <span class="text-sm font-medium text-gray-700 dark:text-gray-300">
+                5小时使用量接近限制时自动停止调度
+              </span>
+              <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
                 当系统检测到账户接近5小时使用限制时，自动暂停调度该账户。进入新的时间窗口后会自动恢复调度。
               </p>
             </div>
@@ -817,24 +1486,64 @@
         </div>
 
         <!-- Claude User-Agent 版本配置 -->
-        <div v-if="form.platform === 'claude'">
-          <label>
-            <input v-model="form.useUnifiedUserAgent" type="checkbox" />
-            <div>
-              <span> 使用统一 Claude Code 版本 </span>
-              <p>开启后将使用从真实 Claude Code 客户端捕获的统一 User-Agent，提高兼容性</p>
-              <div v-if="unifiedUserAgent">
-                <div>
-                  <p>💡 当前统一版本：{{ unifiedUserAgent }}</p>
-                  <button :disabled="clearingCache" type="button" @click="clearUnifiedCache">
-                    <div v-if="clearingCache"></div>
-                    {{ clearingCache ? '清除中...' : '清除缓存' }}
+        <div v-if="form.platform === 'claude'" class="mb-4">
+          <label
+            class="flex cursor-pointer items-start gap-3 rounded-lg border border-gray-200 p-3 transition-colors hover:bg-gray-50 dark:border-gray-600 dark:hover:bg-gray-700"
+          >
+            <input
+              v-model="form.useUnifiedUserAgent"
+              class="mt-0.5 h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+              type="checkbox"
+            />
+            <div class="flex-1">
+              <span class="text-sm font-medium text-gray-700 dark:text-gray-300">
+                使用统一 Claude Code 版本
+              </span>
+              <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                开启后将使用从真实 Claude Code 客户端捕获的统一 User-Agent，提高兼容性
+              </p>
+              <div
+                v-if="unifiedUserAgent"
+                class="mt-2 rounded-lg border border-green-200 bg-green-50 p-2 dark:border-green-800 dark:bg-green-900/20"
+              >
+                <div class="flex items-center justify-between gap-2">
+                  <p class="text-xs text-green-700 dark:text-green-300">
+                    💡 当前统一版本：{{ unifiedUserAgent }}
+                  </p>
+                  <button
+                    class="rounded-md bg-green-100 px-2 py-1 text-xs font-medium text-green-700 transition-colors hover:bg-green-200 disabled:opacity-50 dark:bg-green-900/50 dark:text-green-400"
+                    :disabled="clearingCache"
+                    type="button"
+                    @click="clearUnifiedCache"
+                  >
+                    <span v-if="clearingCache" class="flex items-center gap-1">
+                      <svg
+                        class="h-3 w-3 animate-spin"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke-width="4"></circle>
+                        <path
+                          class="opacity-75"
+                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                          fill="currentColor"
+                        ></path>
+                      </svg>
+                      清除中...
+                    </span>
+                    <span v-else>清除缓存</span>
                   </button>
                 </div>
               </div>
-              <div v-else>
-                <p>⏳ 等待从 Claude Code 客户端捕获 User-Agent</p>
-                <p>
+              <div
+                v-else
+                class="mt-2 rounded-lg border border-amber-200 bg-amber-50 p-2 dark:border-amber-800 dark:bg-amber-900/20"
+              >
+                <p class="text-xs text-amber-700 dark:text-amber-300">
+                  ⏳ 等待从 Claude Code 客户端捕获 User-Agent
+                </p>
+                <p class="mt-1 text-xs text-amber-600 dark:text-amber-400">
                   💡 提示：如果长时间未能捕获，请确认有 Claude Code 客户端正在使用此账户，
                   或联系开发者检查 User-Agent 格式是否发生变化
                 </p>
@@ -844,14 +1553,17 @@
         </div>
 
         <!-- Claude 统一客户端标识配置 -->
-        <div v-if="form.platform === 'claude'">
-          <label>
+        <div v-if="form.platform === 'claude'" class="mb-4">
+          <label
+            class="flex cursor-pointer items-start gap-3 rounded-lg border border-gray-200 p-3 transition-colors hover:bg-gray-50 dark:border-gray-600 dark:hover:bg-gray-700"
+          >
             <input
               v-model="form.useUnifiedClientId"
+              class="mt-0.5 h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500"
               type="checkbox"
               @change="handleUnifiedClientIdChange"
             />
-            <div>
+            <div class="flex-1">
               <span> 使用统一的客户端标识 </span>
               <p>开启后将使用固定的客户端标识，使所有请求看起来来自同一个客户端，减少特征</p>
               <div v-if="form.useUnifiedClientId">
