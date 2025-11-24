@@ -24,33 +24,35 @@
       <!-- 品牌设置部分 -->
       <Card v-show="activeSection === 'branding'" class="mb-8">
         <!-- Tab 导航 -->
-        <div class="border-b border-gray-200 pb-2 dark:border-gray-700">
-          <nav aria-label="Settings Tabs" class="flex gap-8 px-6">
-            <button
-              class="relative flex items-center gap-2 border-b-2 px-1 pb-4 pt-4 text-sm font-medium transition-colors"
-              :class="
-                activeSection === 'branding'
-                  ? 'border-primary-600 text-primary-600 dark:border-primary-400 dark:text-primary-400'
-                  : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:border-gray-600 dark:hover:text-gray-200'
-              "
-              @click="activeSection = 'branding'"
-            >
-              <Icon class="h-4 w-4" name="Palette" />
-              品牌设置
-            </button>
-            <button
-              class="relative flex items-center gap-2 border-b-2 px-1 pb-4 pt-4 text-sm font-medium transition-colors"
-              :class="
-                activeSection === 'webhook'
-                  ? 'border-primary-600 text-primary-600 dark:border-primary-400 dark:text-primary-400'
-                  : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:border-gray-600 dark:hover:text-gray-200'
-              "
-              @click="activeSection = 'webhook'"
-            >
-              <Icon class="h-4 w-4" name="Bell" />
-              通知设置
-            </button>
-          </nav>
+        <div class="pb-2">
+          <div class="border-b border-gray-200 dark:border-gray-700">
+            <nav aria-label="Settings Tabs" class="flex gap-8 px-6">
+              <button
+                class="relative flex items-center gap-2 border-b-2 px-1 pb-4 pt-4 text-sm font-medium transition-colors"
+                :class="
+                  activeSection === 'branding'
+                    ? 'border-primary-600 text-primary-600 dark:border-primary-400 dark:text-primary-400'
+                    : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:border-gray-600 dark:hover:text-gray-200'
+                "
+                @click="activeSection = 'branding'"
+              >
+                <Icon class="h-4 w-4" name="Palette" />
+                品牌设置
+              </button>
+              <button
+                class="relative flex items-center gap-2 border-b-2 px-1 pb-4 pt-4 text-sm font-medium transition-colors"
+                :class="
+                  activeSection === 'webhook'
+                    ? 'border-primary-600 text-primary-600 dark:border-primary-400 dark:text-primary-400'
+                    : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:border-gray-600 dark:hover:text-gray-200'
+                "
+                @click="activeSection = 'webhook'"
+              >
+                <Icon class="h-4 w-4" name="Bell" />
+                通知设置
+              </button>
+            </nav>
+          </div>
         </div>
         <!-- 桌面端表格视图 -->
         <div class="hidden overflow-hidden md:block">
@@ -376,33 +378,35 @@
       <!-- Webhook 设置部分 -->
       <Card v-show="activeSection === 'webhook'" class="mb-8">
         <!-- Tab 导航 -->
-        <div class="border-b border-gray-200 pb-2 dark:border-gray-700">
-          <nav aria-label="Settings Tabs" class="flex gap-8 px-6">
-            <button
-              class="relative flex items-center gap-2 border-b-2 px-1 pb-4 pt-4 text-sm font-medium transition-colors"
-              :class="
-                activeSection === 'branding'
-                  ? 'border-primary-600 text-primary-600 dark:border-primary-400 dark:text-primary-400'
-                  : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:border-gray-600 dark:hover:text-gray-200'
-              "
-              @click="activeSection = 'branding'"
-            >
-              <Icon class="h-4 w-4" name="Palette" />
-              品牌设置
-            </button>
-            <button
-              class="relative flex items-center gap-2 border-b-2 px-1 pb-4 pt-4 text-sm font-medium transition-colors"
-              :class="
-                activeSection === 'webhook'
-                  ? 'border-primary-600 text-primary-600 dark:border-primary-400 dark:text-primary-400'
-                  : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:border-gray-600 dark:hover:text-gray-200'
-              "
-              @click="activeSection = 'webhook'"
-            >
-              <Icon class="h-4 w-4" name="Bell" />
-              通知设置
-            </button>
-          </nav>
+        <div class="pb-2">
+          <div class="border-b border-gray-200 dark:border-gray-700">
+            <nav aria-label="Settings Tabs" class="flex gap-8 px-6">
+              <button
+                class="relative flex items-center gap-2 border-b-2 px-1 pb-4 pt-4 text-sm font-medium transition-colors"
+                :class="
+                  activeSection === 'branding'
+                    ? 'border-primary-600 text-primary-600 dark:border-primary-400 dark:text-primary-400'
+                    : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:border-gray-600 dark:hover:text-gray-200'
+                "
+                @click="activeSection = 'branding'"
+              >
+                <Icon class="h-4 w-4" name="Palette" />
+                品牌设置
+              </button>
+              <button
+                class="relative flex items-center gap-2 border-b-2 px-1 pb-4 pt-4 text-sm font-medium transition-colors"
+                :class="
+                  activeSection === 'webhook'
+                    ? 'border-primary-600 text-primary-600 dark:border-primary-400 dark:text-primary-400'
+                    : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:border-gray-600 dark:hover:text-gray-200'
+                "
+                @click="activeSection = 'webhook'"
+              >
+                <Icon class="h-4 w-4" name="Bell" />
+                通知设置
+              </button>
+            </nav>
+          </div>
         </div>
 
         <!-- 主开关 -->
