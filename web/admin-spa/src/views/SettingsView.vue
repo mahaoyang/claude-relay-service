@@ -666,32 +666,26 @@
     <div class="space-y-6">
       <!-- 平台类型选择 -->
       <div>
-        <label
-          class="mb-2 flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300"
-        >
+        <div class="mb-2 flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300">
           <Icon class="h-4 w-4" name="Layers" />
           平台类型
-        </label>
-        <div class="relative">
-          <select
-            v-model="platformForm.type"
-            class="w-full appearance-none rounded-lg border border-gray-300 bg-white px-4 py-2 pr-10 text-sm text-gray-900 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 disabled:cursor-not-allowed disabled:opacity-50 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
-            :disabled="editingPlatform"
-          >
-            <option value="wechat_work">企业微信</option>
-            <option value="dingtalk">钉钉</option>
-            <option value="feishu">飞书</option>
-            <option value="slack">Slack</option>
-            <option value="discord">Discord</option>
-            <option value="telegram">Telegram</option>
-            <option value="bark">Bark</option>
-            <option value="smtp">邮件通知</option>
-            <option value="custom">自定义</option>
-          </select>
-          <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
-            <Icon class="h-4 w-4 text-gray-400" name="ChevronDown" />
-          </div>
         </div>
+        <Select
+          v-model="platformForm.type"
+          :disabled="editingPlatform"
+          :options="[
+            { value: 'wechat_work', label: '企业微信' },
+            { value: 'dingtalk', label: '钉钉' },
+            { value: 'feishu', label: '飞书' },
+            { value: 'slack', label: 'Slack' },
+            { value: 'discord', label: 'Discord' },
+            { value: 'telegram', label: 'Telegram' },
+            { value: 'bark', label: 'Bark' },
+            { value: 'smtp', label: '邮件通知' },
+            { value: 'custom', label: '自定义' }
+          ]"
+          placeholder="选择平台类型"
+        />
         <p
           v-if="editingPlatform"
           class="mt-1.5 flex items-center gap-1.5 text-xs text-amber-600 dark:text-amber-400"
@@ -866,36 +860,44 @@
 
         <!-- 通知级别 -->
         <div>
-          <label>
-            <Icon name="Flag" />
+          <div class="mb-2 flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300">
+            <Icon class="h-4 w-4" name="Flag" />
             通知级别
-          </label>
-          <select v-model="platformForm.level">
-            <option value="">自动（根据通知类型）</option>
-            <option value="passive">被动</option>
-            <option value="active">默认</option>
-            <option value="timeSensitive">时效性</option>
-            <option value="critical">紧急</option>
-          </select>
+          </div>
+          <Select
+            v-model="platformForm.level"
+            :options="[
+              { value: '', label: '自动（根据通知类型）' },
+              { value: 'passive', label: '被动' },
+              { value: 'active', label: '默认' },
+              { value: 'timeSensitive', label: '时效性' },
+              { value: 'critical', label: '紧急' }
+            ]"
+            placeholder="选择通知级别"
+          />
         </div>
 
         <!-- 通知声音 -->
         <div>
-          <label>
-            <Icon name="Volume2" />
+          <div class="mb-2 flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300">
+            <Icon class="h-4 w-4" name="Volume2" />
             通知声音
-          </label>
-          <select v-model="platformForm.sound">
-            <option value="">自动（根据通知类型）</option>
-            <option value="default">默认</option>
-            <option value="alarm">警报</option>
-            <option value="bell">铃声</option>
-            <option value="birdsong">鸟鸣</option>
-            <option value="electronic">电子音</option>
-            <option value="glass">玻璃</option>
-            <option value="horn">喇叭</option>
-            <option value="silence">静音</option>
-          </select>
+          </div>
+          <Select
+            v-model="platformForm.sound"
+            :options="[
+              { value: '', label: '自动（根据通知类型）' },
+              { value: 'default', label: '默认' },
+              { value: 'alarm', label: '警报' },
+              { value: 'bell', label: '铃声' },
+              { value: 'birdsong', label: '鸟鸣' },
+              { value: 'electronic', label: '电子音' },
+              { value: 'glass', label: '玻璃' },
+              { value: 'horn', label: '喇叭' },
+              { value: 'silence', label: '静音' }
+            ]"
+            placeholder="选择通知声音"
+          />
         </div>
 
         <!-- 分组 -->
@@ -954,14 +956,18 @@
           </div>
 
           <div>
-            <label>
-              <Icon name="Shield" />
+            <div class="mb-2 flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300">
+              <Icon class="h-4 w-4" name="Shield" />
               加密方式
-            </label>
-            <select v-model="platformForm.secure">
-              <option :value="false">STARTTLS (端口587)</option>
-              <option :value="true">SSL/TLS (端口465)</option>
-            </select>
+            </div>
+            <Select
+              v-model="platformForm.secure"
+              :options="[
+                { value: false, label: 'STARTTLS (端口587)' },
+                { value: true, label: 'SSL/TLS (端口465)' }
+              ]"
+              placeholder="选择加密方式"
+            />
           </div>
         </div>
 
@@ -1089,7 +1095,7 @@ import { storeToRefs } from 'pinia'
 import { showToast } from '@/utils/toast'
 import { useSettingsStore } from '@/stores/settings'
 import { apiClient } from '@/config/api'
-import { Card } from '@/ui'
+import { Card, Select } from '@/ui'
 import Switch from '@/ui/Switch.vue'
 import PageContainer from '@/components/layout/PageContainer.vue'
 import BaseModal from '@/components/common/BaseModal.vue'
