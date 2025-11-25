@@ -20,7 +20,7 @@
         Token 使用分布
       </span>
       <span
-        class="rounded-full bg-gradient-to-r from-blue-500/10 to-purple-500/10 px-3 py-1 text-xs font-medium text-blue-600 dark:text-blue-400"
+        class="rounded-full bg-primary-50 px-3 py-1 text-xs font-medium text-primary-600 dark:bg-primary-900/30 dark:text-primary-400"
         >({{ statsPeriod === 'daily' ? '今日' : '本月' }})</span
       >
     </h3>
