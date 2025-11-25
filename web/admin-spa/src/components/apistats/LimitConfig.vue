@@ -1,5 +1,5 @@
 <template>
-  <Card>
+  <Card class="h-full">
     <div class="space-y-6">
       <!-- 标题 -->
       <div
