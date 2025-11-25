@@ -9229,4 +9229,304 @@ router.delete('/codex-request-logs', authenticateAdmin, async (req, res) => {
   }
 })
 
+// ==================== Gemini-API 账户管理 API ====================
+
+// 获取所有 Gemini-API 账户
+router.get('/gemini-api-accounts', authenticateAdmin, async (req, res) => {
+  try {
+    const geminiApiAccountService = require('../services/geminiApiAccountService')
+    const { platform, groupId } = req.query
+    let accounts = await geminiApiAccountService.getAllAccounts(true)
+
+    // 根据查询参数进行筛选
+    if (platform && platform !== 'gemini-api') {
+      accounts = []
+    }
+
+    // 根据分组ID筛选
+    if (groupId) {
+      const group = await accountGroupService.getGroup(groupId)
+      if (group && group.platform === 'gemini' && group.memberIds && group.memberIds.length > 0) {
+        accounts = accounts.filter((account) => group.memberIds.includes(account.id))
+      } else {
+        accounts = []
+      }
+    }
+
+    // 处理使用统计和绑定的 API Key 数量
+    const accountsWithStats = await Promise.all(
+      accounts.map(async (account) => {
+        // 检查并清除过期的限流状态
+        await geminiApiAccountService.checkAndClearRateLimit(account.id)
+
+        // 获取使用统计信息
+        let usageStats
+        try {
+          usageStats = await redis.getAccountUsageStats(account.id, 'gemini-api')
+        } catch (error) {
+          logger.debug(`Failed to get usage stats for Gemini-API account ${account.id}:`, error)
+          usageStats = {
+            daily: { requests: 0, tokens: 0, allTokens: 0 },
+            total: { requests: 0, tokens: 0, allTokens: 0 },
+            monthly: { requests: 0, tokens: 0, allTokens: 0 }
+          }
+        }
+
+        // 计算绑定的API Key数量（支持 api: 前缀）
+        const allKeys = await redis.getAllApiKeys()
+        let boundCount = 0
+
+        for (const key of allKeys) {
+          if (key.geminiAccountId) {
+            // 检查是否绑定了此 Gemini-API 账户（支持 api: 前缀）
+            if (key.geminiAccountId === `api:${account.id}`) {
+              boundCount++
+            }
+          }
+        }
+
+        return {
+          ...account,
+          usage: {
+            daily: usageStats.daily,
+            total: usageStats.total,
+            averages: usageStats.averages || usageStats.monthly
+          },
+          boundApiKeys: boundCount
+        }
+      })
+    )
+
+    res.json({ success: true, data: accountsWithStats })
+  } catch (error) {
+    logger.error('Failed to get Gemini-API accounts:', error)
+    res.status(500).json({ success: false, message: error.message })
+  }
+})
+
+// 创建 Gemini-API 账户
+router.post('/gemini-api-accounts', authenticateAdmin, async (req, res) => {
+  try {
+    const geminiApiAccountService = require('../services/geminiApiAccountService')
+    const { accountType, groupId, groupIds } = req.body
+
+    // 验证accountType的有效性
+    if (accountType && !['shared', 'dedicated', 'group'].includes(accountType)) {
+      return res.status(400).json({
+        success: false,
+        error: 'Invalid account type. Must be "shared", "dedicated" or "group"'
+      })
+    }
+
+    // 如果是分组类型，验证groupId或groupIds
+    if (accountType === 'group' && !groupId && (!groupIds || groupIds.length === 0)) {
+      return res.status(400).json({
+        success: false,
+        error: 'Group ID or Group IDs are required for group type accounts'
+      })
+    }
+
+    const account = await geminiApiAccountService.createAccount(req.body)
+
+    // 如果是分组类型，将账户添加到分组
+    if (accountType === 'group') {
+      if (groupIds && groupIds.length > 0) {
+        // 使用多分组设置
+        await accountGroupService.setAccountGroups(account.id, groupIds, 'gemini')
+      } else if (groupId) {
+        // 兼容单分组模式
+        await accountGroupService.addAccountToGroup(account.id, groupId, 'gemini')
+      }
+    }
+
+    logger.success(
+      `🏢 Admin created new Gemini-API account: ${account.name} (${accountType || 'shared'})`
+    )
+
+    res.json({ success: true, data: account })
+  } catch (error) {
+    logger.error('Failed to create Gemini-API account:', error)
+    res.status(500).json({
+      success: false,
+      error: error.message
+    })
+  }
+})
+
+// 获取单个 Gemini-API 账户
+router.get('/gemini-api-accounts/:id', authenticateAdmin, async (req, res) => {
+  try {
+    const geminiApiAccountService = require('../services/geminiApiAccountService')
+    const account = await geminiApiAccountService.getAccount(req.params.id, true)
+
+    if (!account) {
+      return res.status(404).json({ success: false, message: 'Gemini-API account not found' })
+    }
+
+    res.json({ success: true, data: account })
+  } catch (error) {
+    logger.error('Failed to get Gemini-API account:', error)
+    res.status(500).json({ success: false, message: error.message })
+  }
+})
+
+// 更新 Gemini-API 账户
+router.put('/gemini-api-accounts/:id', authenticateAdmin, async (req, res) => {
+  try {
+    const geminiApiAccountService = require('../services/geminiApiAccountService')
+    const { accountType, groupId, groupIds } = req.body
+
+    // 验证accountType的有效性
+    if (accountType && !['shared', 'dedicated', 'group'].includes(accountType)) {
+      return res.status(400).json({
+        success: false,
+        error: 'Invalid account type. Must be "shared", "dedicated" or "group"'
+      })
+    }
+
+    // 如果是分组类型，验证groupId或groupIds
+    if (accountType === 'group' && !groupId && (!groupIds || groupIds.length === 0)) {
+      return res.status(400).json({
+        success: false,
+        error: 'Group ID or Group IDs are required for group type accounts'
+      })
+    }
+
+    const account = await geminiApiAccountService.updateAccount(req.params.id, req.body)
+
+    // 如果修改为分组类型，更新账户所属分组
+    if (accountType === 'group') {
+      if (groupIds && groupIds.length > 0) {
+        // 使用多分组设置
+        await accountGroupService.setAccountGroups(account.id, groupIds, 'gemini')
+      } else if (groupId) {
+        // 兼容单分组模式
+        const existingGroups = await accountGroupService.getAccountGroups(account.id, 'gemini')
+        if (existingGroups.length === 0 || !existingGroups.some((g) => g.id === groupId)) {
+          await accountGroupService.addAccountToGroup(account.id, groupId, 'gemini')
+        }
+      }
+    } else if (accountType !== 'group') {
+      // 如果不是分组类型，清除所有分组关联
+      await accountGroupService.clearAccountGroups(account.id, 'gemini')
+    }
+
+    logger.success(`✅ Admin updated Gemini-API account: ${account.name} (${account.id})`)
+
+    res.json({ success: true, data: account })
+  } catch (error) {
+    logger.error('Failed to update Gemini-API account:', error)
+    res.status(500).json({ success: false, message: error.message })
+  }
+})
+
+// 删除 Gemini-API 账户
+router.delete('/gemini-api-accounts/:id', authenticateAdmin, async (req, res) => {
+  try {
+    const geminiApiAccountService = require('../services/geminiApiAccountService')
+    const account = await geminiApiAccountService.getAccount(req.params.id)
+
+    if (!account) {
+      return res.status(404).json({ success: false, message: 'Gemini-API account not found' })
+    }
+
+    await geminiApiAccountService.deleteAccount(req.params.id)
+
+    // 清除所有分组关联
+    try {
+      await accountGroupService.clearAccountGroups(req.params.id, 'gemini')
+    } catch (groupError) {
+      logger.warn(`Failed to clear groups for Gemini-API account ${req.params.id}:`, groupError)
+    }
+
+    logger.success(`🗑️ Admin deleted Gemini-API account: ${account.name} (${account.id})`)
+
+    res.json({
+      success: true,
+      message: 'Gemini-API account deleted successfully'
+    })
+  } catch (error) {
+    logger.error('Failed to delete Gemini-API account:', error)
+    res.status(500).json({ success: false, message: error.message })
+  }
+})
+
+// 切换 Gemini-API 账户的可调度状态
+router.put('/gemini-api-accounts/:id/toggle-schedulable', authenticateAdmin, async (req, res) => {
+  try {
+    const geminiApiAccountService = require('../services/geminiApiAccountService')
+    const result = await geminiApiAccountService.toggleSchedulable(req.params.id)
+
+    logger.success(
+      `🔄 Admin toggled schedulable status for Gemini-API account: ${req.params.id} -> ${result.schedulable}`
+    )
+
+    res.json({ success: true, data: result })
+  } catch (error) {
+    logger.error('Failed to toggle Gemini-API account schedulable status:', error)
+    res.status(500).json({ success: false, message: error.message })
+  }
+})
+
+// 切换 Gemini-API 账户状态
+router.put('/gemini-api-accounts/:id/toggle', authenticateAdmin, async (req, res) => {
+  try {
+    const geminiApiAccountService = require('../services/geminiApiAccountService')
+    const account = await geminiApiAccountService.getAccount(req.params.id)
+
+    if (!account) {
+      return res.status(404).json({ success: false, message: 'Gemini-API account not found' })
+    }
+
+    const newStatus = account.status === 'active' ? 'inactive' : 'active'
+    const updatedAccount = await geminiApiAccountService.updateAccount(req.params.id, {
+      status: newStatus
+    })
+
+    logger.success(
+      `🔄 Admin toggled Gemini-API account status: ${account.name} (${account.id}) -> ${newStatus}`
+    )
+
+    res.json({ success: true, data: updatedAccount })
+  } catch (error) {
+    logger.error('Failed to toggle Gemini-API account status:', error)
+    res.status(500).json({ success: false, message: error.message })
+  }
+})
+
+// 重置 Gemini-API 账户速率限制
+router.post('/gemini-api-accounts/:id/reset-rate-limit', authenticateAdmin, async (req, res) => {
+  try {
+    const geminiApiAccountService = require('../services/geminiApiAccountService')
+    const { id } = req.params
+
+    await geminiApiAccountService.resetRateLimit(id)
+
+    logger.success(`🔄 Admin reset rate limit for Gemini-API account: ${id}`)
+    return res.json({
+      success: true,
+      message: 'Rate limit reset successfully'
+    })
+  } catch (error) {
+    logger.error('❌ Failed to reset Gemini-API account rate limit:', error)
+    return res.status(500).json({ error: 'Failed to reset rate limit', message: error.message })
+  }
+})
+
+// 重置 Gemini-API 账户状态（清除所有异常状态）
+router.post('/gemini-api-accounts/:id/reset-status', authenticateAdmin, async (req, res) => {
+  try {
+    const geminiApiAccountService = require('../services/geminiApiAccountService')
+    const { id } = req.params
+
+    const result = await geminiApiAccountService.resetAccountStatus(id)
+
+    logger.success(`✅ Admin reset status for Gemini-API account: ${id}`)
+    return res.json({ success: true, data: result })
+  } catch (error) {
+    logger.error('❌ Failed to reset Gemini-API account status:', error)
+    return res.status(500).json({ error: 'Failed to reset status', message: error.message })
+  }
+})
+
 module.exports = router
