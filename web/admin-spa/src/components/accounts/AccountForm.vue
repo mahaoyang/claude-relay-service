@@ -1618,16 +1618,21 @@
         </div>
 
         <!-- 所有平台的优先级设置 -->
-        <div>
-          <label>调度优先级 (1-100)</label>
+        <div class="mb-4">
+          <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
+            >调度优先级 (1-100)</label
+          >
           <input
             v-model.number="form.priority"
+            class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm text-gray-900 placeholder-gray-500 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
             max="100"
             min="1"
             placeholder="数字越小优先级越高，默认50"
             type="number"
           />
-          <p>数字越小优先级越高，建议范围：1-100</p>
+          <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+            数字越小优先级越高，建议范围：1-100
+          </p>
         </div>
 
         <!-- 手动输入 Token 字段 -->
@@ -1640,91 +1645,136 @@
             form.platform !== 'azure_openai' &&
             form.platform !== 'openai-responses'
           "
+          class="mb-6"
         >
-          <div>
-            <div></div>
-            <div>
-              <h5>手动输入 Token</h5>
-              <p v-if="form.platform === 'claude'">
-                请输入有效的 Claude Access Token。如果您有 Refresh
-                Token，建议也一并填写以支持自动刷新。
+          <div
+            class="mb-4 rounded-lg border border-blue-200 bg-blue-50 p-4 dark:border-blue-900 dark:bg-blue-900/20"
+          >
+            <h5 class="mb-2 text-base font-semibold text-gray-900 dark:text-white">
+              手动输入 Token
+            </h5>
+            <p
+              v-if="form.platform === 'claude'"
+              class="mb-2 text-sm text-gray-700 dark:text-gray-300"
+            >
+              请输入有效的 Claude Access Token。如果您有 Refresh
+              Token，建议也一并填写以支持自动刷新。
+            </p>
+            <p
+              v-else-if="form.platform === 'gemini'"
+              class="mb-2 text-sm text-gray-700 dark:text-gray-300"
+            >
+              请输入有效的 Gemini Access Token。如果您有 Refresh
+              Token，建议也一并填写以支持自动刷新。
+            </p>
+            <p
+              v-else-if="form.platform === 'openai'"
+              class="mb-2 text-sm text-gray-700 dark:text-gray-300"
+            >
+              请输入有效的 OpenAI Access Token。如果您有 Refresh
+              Token，建议也一并填写以支持自动刷新。
+            </p>
+            <p
+              v-else-if="form.platform === 'droid'"
+              class="mb-2 text-sm text-gray-700 dark:text-gray-300"
+            >
+              请输入有效的 Droid Access Token，并同时提供 Refresh Token 以支持自动刷新。
+            </p>
+            <div class="mt-3 space-y-2">
+              <p class="text-sm font-medium text-gray-700 dark:text-gray-300">
+                获取 Access Token 的方法：
               </p>
-              <p v-else-if="form.platform === 'gemini'">
-                请输入有效的 Gemini Access Token。如果您有 Refresh
-                Token，建议也一并填写以支持自动刷新。
+              <p v-if="form.platform === 'claude'" class="text-sm text-gray-600 dark:text-gray-400">
+                请从已登录 Claude Code 的机器上获取
+                <code
+                  class="rounded bg-gray-100 px-1.5 py-0.5 font-mono text-xs text-gray-800 dark:bg-gray-700 dark:text-gray-200"
+                  >~/.claude/.credentials.json</code
+                >
+                文件中的凭证， 请勿使用 Claude 官网 API Keys 页面的密钥。
               </p>
-              <p v-else-if="form.platform === 'openai'">
-                请输入有效的 OpenAI Access Token。如果您有 Refresh
-                Token，建议也一并填写以支持自动刷新。
+              <p
+                v-else-if="form.platform === 'gemini'"
+                class="text-sm text-gray-600 dark:text-gray-400"
+              >
+                请从已登录 Gemini CLI 的机器上获取
+                <code
+                  class="rounded bg-gray-100 px-1.5 py-0.5 font-mono text-xs text-gray-800 dark:bg-gray-700 dark:text-gray-200"
+                  >~/.config/gemini/credentials.json</code
+                >
+                文件中的凭证。
               </p>
-              <p v-else-if="form.platform === 'droid'">
-                请输入有效的 Droid Access Token，并同时提供 Refresh Token 以支持自动刷新。
+              <p
+                v-else-if="form.platform === 'openai'"
+                class="text-sm text-gray-600 dark:text-gray-400"
+              >
+                请从已登录 OpenAI 账户的机器上获取认证凭证， 或通过 OAuth 授权流程获取 Access
+                Token。
               </p>
-              <div>
-                <p>获取 Access Token 的方法：</p>
-                <p v-if="form.platform === 'claude'">
-                  请从已登录 Claude Code 的机器上获取
-                  <code>~/.claude/.credentials.json</code>
-                  文件中的凭证， 请勿使用 Claude 官网 API Keys 页面的密钥。
-                </p>
-                <p v-else-if="form.platform === 'gemini'">
-                  请从已登录 Gemini CLI 的机器上获取
-                  <code>~/.config/gemini/credentials.json</code>
-                  文件中的凭证。
-                </p>
-                <p v-else-if="form.platform === 'openai'">
-                  请从已登录 OpenAI 账户的机器上获取认证凭证， 或通过 OAuth 授权流程获取 Access
-                  Token。
-                </p>
-                <p v-else-if="form.platform === 'droid'">
-                  请从已完成授权的 Droid CLI 或 Factory.ai 导出的凭证中获取 Access Token 与 Refresh
-                  Token。
-                </p>
-              </div>
-              <p v-if="form.platform !== 'droid'">
-                💡 如果未填写 Refresh Token，Token 过期后需要手动更新。
-              </p>
-              <p v-else>
-                ⚠️ Droid 账户必须填写 Refresh Token，缺失将导致无法自动刷新 Access Token。
+              <p
+                v-else-if="form.platform === 'droid'"
+                class="text-sm text-gray-600 dark:text-gray-400"
+              >
+                请从已完成授权的 Droid CLI 或 Factory.ai 导出的凭证中获取 Access Token 与 Refresh
+                Token。
               </p>
             </div>
+            <p
+              v-if="form.platform !== 'droid'"
+              class="mt-3 text-sm text-gray-600 dark:text-gray-400"
+            >
+              💡 如果未填写 Refresh Token，Token 过期后需要手动更新。
+            </p>
+            <p v-else class="mt-3 text-sm text-amber-600 dark:text-amber-400">
+              ⚠️ Droid 账户必须填写 Refresh Token，缺失将导致无法自动刷新 Access Token。
+            </p>
           </div>
 
-          <div v-if="form.platform === 'openai'">
-            <label>Access Token (可选)</label>
+          <div v-if="form.platform === 'openai'" class="mb-4">
+            <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
+              >Access Token (可选)</label
+            >
             <textarea
               v-model="form.accessToken"
+              class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm text-gray-900 placeholder-gray-500 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
               placeholder="可选：如果不填写，系统会自动通过 Refresh Token 获取..."
               rows="4"
             />
-            <p>Access Token 可选填。如果不提供，系统会通过 Refresh Token 自动获取。</p>
+            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+              Access Token 可选填。如果不提供，系统会通过 Refresh Token 自动获取。
+            </p>
           </div>
 
-          <div v-else>
-            <label>Access Token *</label>
+          <div v-else class="mb-4">
+            <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
+              >Access Token *</label
+            >
             <textarea
               v-model="form.accessToken"
+              class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm text-gray-900 placeholder-gray-500 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
               placeholder="请输入 Access Token..."
               required
               rows="4"
             />
-            <p v-if="errors.accessToken">
+            <p v-if="errors.accessToken" class="mt-1 text-sm text-red-500">
               {{ errors.accessToken }}
             </p>
           </div>
 
-          <div v-if="form.platform === 'openai' || form.platform === 'droid'">
-            <label>Refresh Token *</label>
+          <div v-if="form.platform === 'openai' || form.platform === 'droid'" class="mb-4">
+            <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
+              >Refresh Token *</label
+            >
             <textarea
               v-model="form.refreshToken"
+              class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm text-gray-900 placeholder-gray-500 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
               placeholder="请输入 Refresh Token（必填）..."
               required
               rows="4"
             />
-            <p v-if="errors.refreshToken">
+            <p v-if="errors.refreshToken" class="mt-1 text-sm text-red-500">
               {{ errors.refreshToken }}
             </p>
-            <p>
+            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
               <template v-if="form.platform === 'openai'">
                 系统将使用 Refresh Token 自动获取 Access Token 和用户信息
               </template>
@@ -1734,9 +1784,16 @@
             </p>
           </div>
 
-          <div v-else>
-            <label>Refresh Token (可选)</label>
-            <textarea v-model="form.refreshToken" placeholder="请输入 Refresh Token..." rows="4" />
+          <div v-else class="mb-4">
+            <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
+              >Refresh Token (可选)</label
+            >
+            <textarea
+              v-model="form.refreshToken"
+              class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm text-gray-900 placeholder-gray-500 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
+              placeholder="请输入 Refresh Token..."
+              rows="4"
+            />
           </div>
         </div>
 
@@ -1782,8 +1839,14 @@
         <!-- 代理设置 -->
         <ProxyConfig v-model="form.proxy" />
 
-        <div>
-          <button type="button" @click="$emit('close')">取消</button>
+        <div class="mt-6 flex justify-end gap-3">
+          <button
+            type="button"
+            class="rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm transition-colors hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700"
+            @click="$emit('close')"
+          >
+            取消
+          </button>
           <button
             v-if="
               (form.addType === 'oauth' || form.addType === 'setup-token') &&
@@ -1793,14 +1856,25 @@
               form.platform !== 'azure_openai' &&
               form.platform !== 'openai-responses'
             "
-            :disabled="loading"
+            :disabled="loading || !canProceed"
             type="button"
+            class="inline-flex items-center gap-2 rounded-lg bg-primary-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-primary-700 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-primary-500 dark:hover:bg-primary-600"
             @click="nextStep"
           >
             下一步
+            <Icon name="ChevronRight" class="h-4 w-4" />
           </button>
-          <button v-else :disabled="loading" type="button" @click="createAccount">
-            <div v-if="loading" />
+          <button
+            v-else
+            :disabled="loading"
+            type="button"
+            class="inline-flex items-center gap-2 rounded-lg bg-primary-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-primary-700 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-primary-500 dark:hover:bg-primary-600"
+            @click="createAccount"
+          >
+            <div
+              v-if="loading"
+              class="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"
+            />
             {{ loading ? '创建中...' : '创建' }}
           </button>
         </div>
@@ -3597,6 +3671,7 @@ const commonModels = [
   { value: 'claude-haiku-4-5-20251001', label: 'Claude Haiku 4.5', color: 'emerald' },
   { value: 'claude-opus-4-20250514', label: 'Claude Opus 4', color: 'purple' },
   { value: 'claude-opus-4-1-20250805', label: 'Claude Opus 4.1', color: 'purple' },
+  { value: 'claude-opus-4-5-20251101', label: 'Claude Opus 4.5', color: 'violet' },
   { value: 'deepseek-chat', label: 'DeepSeek Chat', color: 'cyan' },
   { value: 'Qwen', label: 'Qwen', color: 'orange' },
   { value: 'Kimi', label: 'Kimi', color: 'pink' },

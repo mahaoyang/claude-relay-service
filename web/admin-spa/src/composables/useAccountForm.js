@@ -384,6 +384,7 @@ export function useAccountForm(props) {
     { value: 'claude-haiku-4-5-20251001', label: 'Claude Haiku 4.5', color: 'emerald' },
     { value: 'claude-opus-4-20250514', label: 'Claude Opus 4', color: 'purple' },
     { value: 'claude-opus-4-1-20250805', label: 'Claude Opus 4.1', color: 'purple' },
+    { value: 'claude-opus-4-5-20251101', label: 'Claude Opus 4.5', color: 'violet' },
     { value: 'deepseek-chat', label: 'DeepSeek Chat', color: 'cyan' },
     { value: 'Qwen', label: 'Qwen', color: 'orange' },
     { value: 'Kimi', label: 'Kimi', color: 'pink' },
