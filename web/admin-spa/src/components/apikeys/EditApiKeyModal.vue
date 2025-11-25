@@ -30,8 +30,9 @@
             class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm text-gray-900 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
           >
             <option v-for="user in availableUsers" :key="user.id" :value="user.id">
-              {{ user.displayName }} ({{ user.username }})
-              <span v-if="user.role === 'admin'">- 管理员</span>
+              {{ user.displayName }} ({{ user.username }}){{
+                user.role === 'admin' ? ' - 管理员' : ''
+              }}
             </option>
           </select>
           <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
