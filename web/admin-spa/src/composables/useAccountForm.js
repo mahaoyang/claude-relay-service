@@ -7,7 +7,7 @@ import { useAccountsStore } from '@/stores/accounts'
  * Composable for account form shared logic
  * Handles form state, validation, proxy configuration, and common operations
  */
-export function useAccountForm(props, emit) {
+export function useAccountForm(props) {
   const accountsStore = useAccountsStore()
 
   // Loading states

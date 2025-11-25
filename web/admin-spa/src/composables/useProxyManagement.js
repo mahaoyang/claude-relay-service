@@ -1,4 +1,4 @@
-import { ref, reactive, computed } from 'vue'
+import { reactive, computed } from 'vue'
 
 /**
  * 通用的代理配置管理 Composable
