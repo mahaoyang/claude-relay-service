@@ -12,8 +12,8 @@
             <th v-if="selectable" class="w-12 px-4 py-3" scope="col">
               <input
                 :checked="selectAllChecked"
-                :indeterminate="isIndeterminate"
                 class="h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+                :indeterminate="isIndeterminate"
                 type="checkbox"
                 @change="$emit('select-all', $event.target.checked)"
               />
@@ -81,7 +81,7 @@
         <tbody class="divide-y divide-gray-200 bg-white dark:divide-gray-700 dark:bg-gray-800">
           <!-- 空状态 -->
           <tr v-if="!apiKeys || apiKeys.length === 0">
-            <td :colspan="columnCount" class="px-6 py-12 text-center">
+            <td class="px-6 py-12 text-center" :colspan="columnCount">
               <div class="flex flex-col items-center justify-center">
                 <Icon class="mb-3 h-12 w-12 text-gray-400" name="Key" />
                 <p class="mb-1 text-sm font-medium text-gray-900 dark:text-white">
@@ -240,8 +240,8 @@
 
         <div class="flex gap-2">
           <button
-            :disabled="currentPage === 1"
             class="rounded-lg border border-gray-300 bg-white px-3 py-1 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
+            :disabled="currentPage === 1"
             type="button"
             @click="$emit('page-change', currentPage - 1)"
           >
@@ -249,8 +249,8 @@
           </button>
 
           <button
-            :disabled="currentPage === totalPages"
             class="rounded-lg border border-gray-300 bg-white px-3 py-1 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
+            :disabled="currentPage === totalPages"
             type="button"
             @click="$emit('page-change', currentPage + 1)"
           >
@@ -334,7 +334,7 @@ const props = defineProps({
   }
 })
 
-const emit = defineEmits([
+defineEmits([
   'select-all',
   'toggle-select',
   'copy-key',
@@ -383,8 +383,6 @@ const formatApiKey = (key) => {
  * 获取权限列表
  */
 const getPermissions = (apiKey) => {
-  const permissions = []
-
   if (apiKey.permissions) {
     if (Array.isArray(apiKey.permissions)) {
       return apiKey.permissions
