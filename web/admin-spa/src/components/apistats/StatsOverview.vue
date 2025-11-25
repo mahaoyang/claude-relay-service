@@ -219,7 +219,7 @@
               <p class="text-[10px] uppercase tracking-wider text-gray-400 dark:text-gray-500">
                 名称
               </p>
-              <p class="truncate text-[10px] font-bold text-gray-900 dark:text-white">
+              <p class="truncate text-xs font-bold text-gray-900 dark:text-white">
                 {{ statsData.name }}
               </p>
             </div>
@@ -248,7 +248,7 @@
                 状态
               </p>
               <p
-                class="text-[10px] font-bold"
+                class="text-xs font-bold"
                 :class="
                   statsData.isActive
                     ? 'text-green-600 dark:text-green-400'
@@ -282,7 +282,7 @@
               <p class="text-[10px] uppercase tracking-wider text-gray-400 dark:text-gray-500">
                 权限
               </p>
-              <p class="text-[10px] font-bold text-gray-900 dark:text-white">
+              <p class="text-xs font-bold text-gray-900 dark:text-white">
                 {{ formatPermissions(statsData.permissions) }}
               </p>
             </div>
@@ -310,7 +310,7 @@
               <p class="text-[10px] uppercase tracking-wider text-gray-400 dark:text-gray-500">
                 创建时间
               </p>
-              <p class="text-[10px] font-bold text-gray-900 dark:text-white">
+              <p class="text-xs font-bold text-gray-900 dark:text-white">
                 {{ formatDate(statsData.createdAt) }}
               </p>
             </div>
@@ -338,7 +338,7 @@
               <p class="text-[10px] uppercase tracking-wider text-gray-400 dark:text-gray-500">
                 过期时间
               </p>
-              <div class="text-[10px]">
+              <div class="text-xs">
                 <template
                   v-if="statsData.expirationMode === 'activation' && !statsData.isActivated"
                 >
