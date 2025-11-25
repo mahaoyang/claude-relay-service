@@ -13,7 +13,6 @@
 const codexDisguiseHelper = require('../src/utils/codexDisguiseHelper')
 const apiKeyService = require('../src/services/apiKeyService')
 const redis = require('../src/models/redis')
-const logger = require('../src/utils/logger')
 
 async function testAPIKeySessionCollection() {
   console.log('\n========== 测试 1: API Key sessionCollection 字段 ==========')
