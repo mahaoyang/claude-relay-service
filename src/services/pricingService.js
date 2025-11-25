@@ -33,6 +33,8 @@ class PricingService {
     // ephemeral_1h 的价格需要硬编码
     this.ephemeral1hPricing = {
       // Opus 系列: $30/MTok
+      'claude-opus-4-5': 0.00003,
+      'claude-opus-4-5-20251101': 0.00003,
       'claude-opus-4-1': 0.00003,
       'claude-opus-4-1-20250805': 0.00003,
       'claude-opus-4': 0.00003,
