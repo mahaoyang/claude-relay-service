@@ -139,7 +139,13 @@ class UnifiedClaudeScheduler {
   }
 
   // 🎯 统一调度Claude账号（官方和Console）
-  async selectAccountForApiKey(apiKeyData, sessionHash = null, requestedModel = null) {
+  // excludedAccountIds: 故障转移时需要排除的账户ID集合（Set或Array）
+  async selectAccountForApiKey(
+    apiKeyData,
+    sessionHash = null,
+    requestedModel = null,
+    excludedAccountIds = null
+  ) {
     try {
       // 解析供应商前缀
       const { vendor, baseModel } = parseVendorPrefixedModel(requestedModel)
@@ -302,9 +308,23 @@ class UnifiedClaudeScheduler {
         false // 仅前缀才走 CCR：默认池不包含 CCR 账户
       )
 
-      if (availableAccounts.length === 0) {
+      // ===== 故障转移：过滤已排除的账户 =====
+      let filteredAccounts = availableAccounts
+      if (excludedAccountIds && excludedAccountIds.size > 0) {
+        filteredAccounts = availableAccounts.filter((acc) => !excludedAccountIds.has(acc.accountId))
+        logger.info(
+          `[Failover] Filtered accounts: ${availableAccounts.length} -> ${filteredAccounts.length} ` +
+            `(excluded: ${excludedAccountIds.size})`
+        )
+      }
+
+      if (filteredAccounts.length === 0) {
         // 提供更详细的错误信息
-        if (effectiveModel) {
+        if (excludedAccountIds && excludedAccountIds.size > 0) {
+          throw new Error(
+            `No available Claude accounts after excluding ${excludedAccountIds.size} failed accounts`
+          )
+        } else if (effectiveModel) {
           throw new Error(
             `No available Claude accounts support the requested model: ${effectiveModel}`
           )
@@ -313,11 +333,25 @@ class UnifiedClaudeScheduler {
         }
       }
 
-      // 按优先级和最后使用时间排序
-      const sortedAccounts = this._sortAccountsByPriority(availableAccounts)
-
-      // 选择第一个账户
-      const selectedAccount = sortedAccounts[0]
+      // ===== 调度策略拦截点 =====
+      const scheduling = require('../scheduling')
+      let selectedAccount
+      if (scheduling.isEnabled()) {
+        // 使用可插拔策略选择账户
+        selectedAccount = await scheduling.selectAccount(filteredAccounts, {
+          apiKey: apiKeyData,
+          sessionHash,
+          requestedModel: effectiveModel
+        })
+        if (!selectedAccount) {
+          throw new Error('Scheduling strategy returned no account')
+        }
+      } else {
+        // 原逻辑：按优先级和最后使用时间排序，选择第一个
+        const sortedAccounts = this._sortAccountsByPriority(filteredAccounts)
+        selectedAccount = sortedAccounts[0]
+      }
+      // ===== 拦截点结束 =====
 
       // 如果有会话哈希，建立新的映射
       if (sessionHash) {

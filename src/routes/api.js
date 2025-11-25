@@ -12,6 +12,7 @@ const disguiseMiddleware = require('../middleware/disguise')
 const logger = require('../utils/logger')
 const { getEffectiveModel, parseVendorPrefixedModel } = require('../utils/modelHelper')
 const sessionHelper = require('../utils/sessionHelper')
+const scheduling = require('../scheduling')
 const { updateRateLimitCounters } = require('../utils/rateLimitHelper')
 const { sanitizeUpstreamError } = require('../utils/errorSanitizer')
 const router = express.Router()
@@ -151,9 +152,11 @@ async function handleMessagesRequest(req, res) {
         const selection = await unifiedClaudeScheduler.selectAccountForApiKey(
           req.apiKey,
           sessionHash,
-          requestedModel
+          requestedModel,
+          req._failoverExcludedAccounts // 故障转移：传递排除的账户列表
         )
         ;({ accountId, accountType } = selection)
+        req._lastSelectedAccountId = accountId // 故障转移：记录选中的账户
       } catch (error) {
         if (error.code === 'CLAUDE_DEDICATED_RATE_LIMITED') {
           const limitMessage = claudeRelayService._buildStandardRateLimitMessage(
@@ -513,9 +516,11 @@ async function handleMessagesRequest(req, res) {
         const selection = await unifiedClaudeScheduler.selectAccountForApiKey(
           req.apiKey,
           sessionHash,
-          requestedModel
+          requestedModel,
+          req._failoverExcludedAccounts // 故障转移：传递排除的账户列表
         )
         ;({ accountId, accountType } = selection)
+        req._lastSelectedAccountId = accountId // 故障转移：记录选中的账户
       } catch (error) {
         if (error.code === 'CLAUDE_DEDICATED_RATE_LIMITED') {
           const limitMessage = claudeRelayService._buildStandardRateLimitMessage(
@@ -762,6 +767,53 @@ async function handleMessagesRequest(req, res) {
         return undefined
       }
     }
+
+    // ===== 故障转移：可重试错误的自动降级 =====
+    const { failover } = scheduling
+    if (failover.isEnabled() && !res.headersSent) {
+      const retryCount = req._failoverRetryCount || 0
+      const { maxRetries } = failover.getConfig()
+
+      if (retryCount < maxRetries) {
+        const { retryable, reason } = failover.isRetryable(handledError, handledError.statusCode)
+
+        if (retryable) {
+          req._failoverRetryCount = retryCount + 1
+
+          // 记录失败的账户（如果有）
+          const failedAccountId = handledError.accountId || req._lastSelectedAccountId
+          if (failedAccountId) {
+            req._failoverExcludedAccounts = req._failoverExcludedAccounts || new Set()
+            req._failoverExcludedAccounts.add(failedAccountId)
+
+            // 更新健康分
+            if (scheduling.isEnabled()) {
+              scheduling.recordResult(failedAccountId, false, {
+                statusCode: handledError.statusCode,
+                errorCode: handledError.code
+              })
+            }
+          }
+
+          logger.warn(
+            `[Failover] Retry ${retryCount + 1}/${maxRetries}: ${reason}, ` +
+              `excluded accounts: ${req._failoverExcludedAccounts?.size || 0}`
+          )
+
+          // 清理粘性会话映射
+          try {
+            const sessionHash = sessionHelper.generateSessionHash(req.body)
+            await unifiedClaudeScheduler.clearSessionMapping(sessionHash)
+          } catch (clearError) {
+            logger.debug('[Failover] Failed to clear session mapping:', clearError.message)
+          }
+
+          // 递归重试
+          return await handleMessagesRequest(req, res)
+        }
+      }
+    }
+    // ===== 故障转移结束 =====
 
     logger.error('❌ Claude relay error:', handledError.message, {
       code: handledError.code,

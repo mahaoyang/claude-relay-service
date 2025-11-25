@@ -393,6 +393,8 @@ class ClaudeRelayService {
           )
 
           if (dedicatedRateLimitMessage) {
+            // ===== 健康分更新：限流错误 =====
+            this._recordHealthScore(accountId, response.statusCode)
             return {
               statusCode: 403,
               headers: { 'Content-Type': 'application/json' },
@@ -404,6 +406,9 @@ class ClaudeRelayService {
             }
           }
         }
+
+        // ===== 健康分更新：其他错误 =====
+        this._recordHealthScore(accountId, response.statusCode)
       } else if (response.statusCode === 200 || response.statusCode === 201) {
         // 提取5小时会话窗口状态
         // 使用大小写不敏感的方式获取响应头
@@ -459,6 +464,9 @@ class ClaudeRelayService {
         ) {
           await claudeCodeHeadersService.storeAccountHeaders(accountId, clientHeaders)
         }
+
+        // ===== 健康分更新：成功 =====
+        this._recordHealthScore(accountId, response.statusCode)
       }
 
       // 记录成功的API调用并打印详细的usage数据
@@ -2126,6 +2134,22 @@ class ClaudeRelayService {
     }
 
     return 0 // 两个版本号相等
+  }
+
+  // ===== 健康分记录（概率调度策略使用）=====
+  _recordHealthScore(accountId, statusCode, errorCode = null) {
+    // 异步执行，不阻塞主流程
+    const scheduling = require('../scheduling')
+    if (scheduling.isEnabled()) {
+      scheduling
+        .recordResult(accountId, statusCode >= 200 && statusCode < 300, {
+          statusCode,
+          errorCode
+        })
+        .catch((err) => {
+          logger.debug(`[HealthScore] Failed to record result for ${accountId}: ${err.message}`)
+        })
+    }
   }
 
   // 🎯 健康检查
