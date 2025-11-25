@@ -40,7 +40,7 @@
       </div>
 
       <!-- 模型统计数据 -->
-      <div v-else-if="modelStats.length > 0" class="grid grid-cols-1 gap-6 lg:grid-cols-2">
+      <div v-else-if="modelStats.length > 0" class="space-y-6">
         <!-- 饼图 -->
         <div class="space-y-4">
           <h4 class="text-xs font-medium text-gray-900 dark:text-white">Token使用分布</h4>
