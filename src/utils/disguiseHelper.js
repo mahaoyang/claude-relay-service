@@ -76,14 +76,6 @@ const rotationMetrics = {
 }
 
 /**
- * 获取当天的日期字符串 (YYYY-MM-DD)
- */
-function getTodayDateString() {
-  const now = new Date()
-  return now.toISOString().split('T')[0]
-}
-
-/**
  * 从 user_id 中提取 sessionId
  * 格式: user_{clientId}_account__session_{sessionId}
  */

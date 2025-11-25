@@ -13,7 +13,6 @@
  * - 双层概率：p1 控制是否轮换，p2 控制轮换几个
  */
 
-const crypto = require('crypto')
 const logger = require('./logger')
 const redisClient = require('../models/redis')
 
@@ -61,14 +60,6 @@ const rotationMetrics = {
   rotationSuccess: 0,
   rotationSessionCount: 0,
   lastRotationTime: null
-}
-
-/**
- * 获取当天的日期字符串 (YYYY-MM-DD)
- */
-function getTodayDateString() {
-  const now = new Date()
-  return now.toISOString().split('T')[0]
 }
 
 /**
