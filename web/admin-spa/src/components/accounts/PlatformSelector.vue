@@ -129,31 +129,31 @@
             <template v-if="platformGroup === 'claude'">
               <PlatformOption
                 v-model="selectedPlatform"
-                value="claude"
-                label="Claude Code"
                 badge="官方"
                 badge-color="orange"
+                label="Claude Code"
+                value="claude"
               />
               <PlatformOption
                 v-model="selectedPlatform"
-                value="claude-console"
-                label="Claude Console"
                 badge="标准API"
                 badge-color="blue"
+                label="Claude Console"
+                value="claude-console"
               />
               <PlatformOption
                 v-model="selectedPlatform"
-                value="bedrock"
-                label="Bedrock"
                 badge="AWS"
                 badge-color="amber"
+                label="Bedrock"
+                value="bedrock"
               />
               <PlatformOption
                 v-model="selectedPlatform"
-                value="ccr"
-                label="CCR"
                 badge="Router"
                 badge-color="purple"
+                label="CCR"
+                value="ccr"
               />
             </template>
 
@@ -161,24 +161,24 @@
             <template v-if="platformGroup === 'openai'">
               <PlatformOption
                 v-model="selectedPlatform"
-                value="openai"
-                label="Codex Cli"
                 badge="官方"
                 badge-color="emerald"
+                label="Codex Cli"
+                value="openai"
               />
               <PlatformOption
                 v-model="selectedPlatform"
-                value="openai-responses"
-                label="Responses"
                 badge="API"
                 badge-color="teal"
+                label="Responses"
+                value="openai-responses"
               />
               <PlatformOption
                 v-model="selectedPlatform"
-                value="azure_openai"
-                label="Azure"
                 badge="Azure"
                 badge-color="sky"
+                label="Azure"
+                value="azure_openai"
               />
             </template>
 
@@ -186,10 +186,10 @@
             <template v-if="platformGroup === 'gemini'">
               <PlatformOption
                 v-model="selectedPlatform"
-                value="gemini"
-                label="Gemini Cli"
                 badge="官方"
                 badge-color="blue"
+                label="Gemini Cli"
+                value="gemini"
               />
             </template>
 
@@ -197,10 +197,10 @@
             <template v-if="platformGroup === 'droid'">
               <PlatformOption
                 v-model="selectedPlatform"
-                value="droid"
-                label="Droid 专属"
                 badge="Droid"
                 badge-color="purple"
+                label="Droid 专属"
+                value="droid"
               />
             </template>
           </div>

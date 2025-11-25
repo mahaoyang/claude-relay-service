@@ -50,7 +50,7 @@ export function useApiKeysData() {
     preset: 'today',
     customStart: '',
     customEnd: '',
-    customRange: null,
+    customRange: null
   })
 
   // Default time for date picker
@@ -70,7 +70,7 @@ export function useApiKeysData() {
     claudeGroups: [],
     geminiGroups: [],
     openaiGroups: [],
-    droidGroups: [],
+    droidGroups: []
   })
 
   // Time range options
@@ -79,13 +79,13 @@ export function useApiKeysData() {
     { value: '7days', label: '最近7天', icon: 'CalendarRange' },
     { value: '30days', label: '最近30天', icon: 'Calendar' },
     { value: 'all', label: '全部时间', icon: 'Infinity' },
-    { value: 'custom', label: '自定义范围', icon: 'CalendarCheck' },
+    { value: 'custom', label: '自定义范围', icon: 'CalendarCheck' }
   ])
 
   // Search mode options
   const searchModeOptions = computed(() => [
     { value: 'apiKey', label: '按Key名称', icon: 'Key' },
-    { value: 'bindingAccount', label: '按所属账号', icon: 'IdCard' },
+    { value: 'bindingAccount', label: '按所属账号', icon: 'IdCard' }
   ])
 
   // Tag options
@@ -138,7 +138,9 @@ export function useApiKeysData() {
     const openaiAccount = accounts.value.openai.find((acc) => acc.id === accountId)
     if (openaiAccount) return `${openaiAccount.name}`
 
-    const openaiResponsesAccount = accounts.value.openaiResponses.find((acc) => acc.id === accountId)
+    const openaiResponsesAccount = accounts.value.openaiResponses.find(
+      (acc) => acc.id === accountId
+    )
     if (openaiResponsesAccount) return `${openaiResponsesAccount.name}`
 
     const bedrockAccount = accounts.value.bedrock.find((acc) => acc.id === accountId)
@@ -238,7 +240,10 @@ export function useApiKeysData() {
 
     const sanitize = (text) => {
       if (typeof text !== 'string') return ''
-      return text.replace(/^⚠️\s*/, '').replace(/^🔒\s*/, '').trim()
+      return text
+        .replace(/^⚠️\s*/, '')
+        .replace(/^🔒\s*/, '')
+        .trim()
     }
 
     const appendBindingRow = (label, info) => {
@@ -513,7 +518,7 @@ export function useApiKeysData() {
         openaiResponsesData,
         bedrockData,
         droidData,
-        groupsData,
+        groupsData
       ] = await Promise.all([
         apiClient.get('/admin/claude-accounts'),
         apiClient.get('/admin/claude-console-accounts'),
@@ -522,7 +527,7 @@ export function useApiKeysData() {
         apiClient.get('/admin/openai-responses-accounts'),
         apiClient.get('/admin/bedrock-accounts'),
         apiClient.get('/admin/droid-accounts'),
-        apiClient.get('/admin/account-groups'),
+        apiClient.get('/admin/account-groups')
       ])
 
       const claudeAccounts = []
@@ -532,7 +537,7 @@ export function useApiKeysData() {
           claudeAccounts.push({
             ...account,
             platform: 'claude-oauth',
-            isDedicated: account.accountType === 'dedicated',
+            isDedicated: account.accountType === 'dedicated'
           })
         })
       }
@@ -542,7 +547,7 @@ export function useApiKeysData() {
           claudeAccounts.push({
             ...account,
             platform: 'claude-console',
-            isDedicated: account.accountType === 'dedicated',
+            isDedicated: account.accountType === 'dedicated'
           })
         })
       }
@@ -552,28 +557,28 @@ export function useApiKeysData() {
       if (geminiData.success) {
         accounts.value.gemini = (geminiData.data || []).map((account) => ({
           ...account,
-          isDedicated: account.accountType === 'dedicated',
+          isDedicated: account.accountType === 'dedicated'
         }))
       }
 
       if (openaiData.success) {
         accounts.value.openai = (openaiData.data || []).map((account) => ({
           ...account,
-          isDedicated: account.accountType === 'dedicated',
+          isDedicated: account.accountType === 'dedicated'
         }))
       }
 
       if (openaiResponsesData.success) {
         accounts.value.openaiResponses = (openaiResponsesData.data || []).map((account) => ({
           ...account,
-          isDedicated: account.accountType === 'dedicated',
+          isDedicated: account.accountType === 'dedicated'
         }))
       }
 
       if (bedrockData.success) {
         accounts.value.bedrock = (bedrockData.data || []).map((account) => ({
           ...account,
-          isDedicated: account.accountType === 'dedicated',
+          isDedicated: account.accountType === 'dedicated'
         }))
       }
 
@@ -581,7 +586,7 @@ export function useApiKeysData() {
         accounts.value.droid = (droidData.data || []).map((account) => ({
           ...account,
           platform: 'droid',
-          isDedicated: account.accountType === 'dedicated',
+          isDedicated: account.accountType === 'dedicated'
         }))
       }
 
@@ -743,8 +748,8 @@ export function useApiKeysData() {
         { value: 'today', label: '今日', days: 1 },
         { value: '7days', label: '7天', days: 7 },
         { value: '30days', label: '30天', days: 30 },
-        { value: 'custom', label: '自定义', days: -1 },
-      ],
+        { value: 'custom', label: '自定义', days: -1 }
+      ]
     }
   }
 
@@ -999,6 +1004,6 @@ export function useApiKeysData() {
     // Load functions
     loadAccounts,
     loadApiKeys,
-    loadDeletedApiKeys,
+    loadDeletedApiKeys
   }
 }
