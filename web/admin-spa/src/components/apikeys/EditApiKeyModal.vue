@@ -700,7 +700,7 @@
                   type="number"
                 />
                 <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
-                  优先级越高，收集的 SessionId 越优先被使用
+                  数字越大优先级越高，收集的 SessionId 越优先被使用
                 </p>
               </div>
               <div>
