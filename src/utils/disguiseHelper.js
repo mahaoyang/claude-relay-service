@@ -1,11 +1,16 @@
 /**
- * 请求伪装工具
- * 用于将多个下游用户伪装成单一上游身份
+ * Claude CLI 请求伪装工具（增强版）
  *
- * SessionId 池管理：
- * - 从真实请求中收集 sessionId
- * - 池最多保存 3 个
- * - 每天从池中 hash 选择 1 个用于伪装
+ * 功能：
+ * - 优先级队列管理 sessionId
+ * - 双层概率式轮换策略
+ * - 多 sessionId 并发在线
+ * - 白名单控制收集来源
+ *
+ * 架构：
+ * - sessionId 队列：Redis Sorted Set（按优先级排序）
+ * - 在线集合：当前活跃使用的 sessionId（最多 n 个）
+ * - 双层概率：p1 控制是否轮换，p2 控制轮换几个
  */
 
 const crypto = require('crypto')
@@ -24,13 +29,33 @@ const DISGUISE_CONFIG = {
     '4fe5b286-192b-4929-a25e-8bc1789b5de4'
   ],
 
-  // SessionId 池配置
-  sessionPoolSize: parseInt(process.env.DISGUISE_SESSION_POOL_SIZE || '3', 10),
-  sessionPoolKey: 'disguise:session_pool',
-  sessionPoolTTL: parseInt(process.env.DISGUISE_SESSION_POOL_TTL_DAYS || '5', 10) * 24 * 60 * 60, // 转换为秒
-
   // 是否启用伪装
   enabled: process.env.DISGUISE_ENABLED === 'true' || false,
+
+  // 优先级队列配置
+  sessionQueueSize: parseInt(process.env.DISGUISE_SESSION_QUEUE_SIZE || '15', 10),
+  queueKey: 'disguise:session_queue', // Sorted Set
+
+  // 在线集合配置
+  maxOnlineSessions: parseInt(process.env.DISGUISE_MAX_ONLINE_SESSIONS || '3', 10),
+  minOnlineSessions: parseInt(process.env.DISGUISE_MIN_ONLINE_SESSIONS || '2', 10),
+  onlineSetKey: 'disguise:online_set', // Sorted Set (score = timestamp)
+
+  // 双层概率配置
+  rotationP1: parseFloat(process.env.DISGUISE_ROTATION_P1 || '0.15'), // 15% 概率考虑轮换
+  rotationP2: parseFloat(process.env.DISGUISE_ROTATION_P2 || '0.4'), // 40% 概率换掉一个
+  maxRotationCount: parseInt(process.env.DISGUISE_MAX_ROTATION_COUNT || '1', 10), // 每次最多换 1 个
+
+  // 保护配置
+  minRotationInterval: parseInt(process.env.DISGUISE_MIN_ROTATION_INTERVAL || '30', 10), // 最小轮换间隔（秒）
+  lastRotationKey: 'disguise:last_rotation_time',
+
+  // 收集配置
+  collectionMinInterval: parseInt(process.env.DISGUISE_COLLECTION_MIN_INTERVAL || '60', 10), // 同一 Key 最小收集间隔（秒）
+
+  // 轮换锁
+  rotationLockKey: 'disguise:rotation_lock',
+  rotationLockTTL: 2, // 锁超时时间（秒）
 
   // 是否自动使用最新版本
   autoUseLatestVersion: process.env.DISGUISE_AUTO_VERSION === 'true' || true
@@ -40,6 +65,14 @@ const DISGUISE_CONFIG = {
 const latestVersion = {
   userAgent: 'claude-cli/2.0.42 (external, cli)',
   lastUpdated: null
+}
+
+// 轮换统计（内存缓存）
+const rotationMetrics = {
+  rotationAttempts: 0,
+  rotationSuccess: 0,
+  rotationSessionCount: 0,
+  lastRotationTime: null
 }
 
 /**
@@ -63,105 +96,359 @@ function extractSessionIdFromUserId(userId) {
 }
 
 /**
- * 从 Redis 池中获取所有 sessionId
- * 池为空时返回默认 sessionIds 作为兜底
+ * 验证 sessionId 格式（UUID v4）
  */
-async function getSessionIdsFromPool() {
+function isValidSessionId(sessionId) {
+  if (!sessionId || typeof sessionId !== 'string') {
+    return false
+  }
+  const uuidRegex = /^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/i
+  return uuidRegex.test(sessionId)
+}
+
+/**
+ * 添加 sessionId 到优先级队列
+ * @param {string} sessionId - UUID 格式的会话ID
+ * @param {object} metadata - { apiKeyId, apiKeyName, priority, timestamp }
+ * @returns {Promise<boolean>} 是否添加成功
+ */
+async function addSessionIdToQueue(sessionId, metadata = {}) {
+  if (!isValidSessionId(sessionId)) {
+    logger.warn(`⚠️  Invalid Claude sessionId format: ${sessionId}`)
+    return false
+  }
+
+  try {
+    const client = redisClient.getClient()
+    if (!client) {
+      return false
+    }
+
+    // 计算 score = priority * 1e12 + timestamp
+    // 高优先级 score 更大，会排在后面（ZPOPMAX 取最大的）
+    const priority = metadata.priority || 1
+    const timestamp = metadata.timestamp || Date.now()
+    const score = priority * 1e12 + timestamp
+
+    // 检查队列大小
+    const queueSize = await client.zcard(DISGUISE_CONFIG.queueKey)
+
+    if (queueSize >= DISGUISE_CONFIG.sessionQueueSize) {
+      // 队列满了，移除最低优先级的（score 最小的）
+      await client.zpopmin(DISGUISE_CONFIG.queueKey)
+      logger.debug('📤 Claude queue full, removed lowest priority sessionId')
+    }
+
+    // 添加到队列（如果已存在会更新 score）
+    await client.zadd(DISGUISE_CONFIG.queueKey, score, sessionId)
+
+    // 存储元数据（可选，用于调试）
+    if (metadata.apiKeyId) {
+      const metadataKey = `${DISGUISE_CONFIG.queueKey}:metadata:${sessionId}`
+      await client.setex(metadataKey, 7 * 24 * 60 * 60, JSON.stringify(metadata))
+    }
+
+    logger.info(
+      `📥 Collected Claude sessionId [priority=${priority}] from API Key: ${metadata.apiKeyName || 'Unknown'}`
+    )
+
+    return true
+  } catch (error) {
+    logger.error('Failed to add Claude sessionId to queue:', error)
+    return false
+  }
+}
+
+/**
+ * 从优先级队列取出一个 sessionId（高优先级优先）
+ * @returns {Promise<string|null>}
+ */
+async function popFromQueue() {
+  try {
+    const client = redisClient.getClient()
+    if (!client) {
+      return null
+    }
+
+    // ZPOPMAX 取最高优先级的（score 最大的）
+    const result = await client.zpopmax(DISGUISE_CONFIG.queueKey)
+
+    if (result && result.length >= 1) {
+      return result[0] // 返回 sessionId
+    }
+
+    return null
+  } catch (error) {
+    logger.error('Failed to pop from Claude priority queue:', error)
+    return null
+  }
+}
+
+/**
+ * 获取随机默认 sessionId（兜底）
+ */
+function getRandomDefaultSessionId() {
+  const defaults = DISGUISE_CONFIG.defaultSessionIds
+  return defaults[Math.floor(Math.random() * defaults.length)]
+}
+
+/**
+ * 获取在线集合中的所有 sessionId
+ * @returns {Promise<string[]>}
+ */
+async function getOnlineSessionIds() {
   try {
     const client = redisClient.getClient()
     if (!client) {
       logger.warn('⚠️  Redis not connected, using default sessionIds')
-      return DISGUISE_CONFIG.defaultSessionIds
+      return DISGUISE_CONFIG.defaultSessionIds.slice(0, DISGUISE_CONFIG.minOnlineSessions)
     }
-    const sessionIds = await client.smembers(DISGUISE_CONFIG.sessionPoolKey)
 
-    // 池为空（过期或未收集），使用默认 sessionIds 兜底
+    const sessionIds = await client.zrange(DISGUISE_CONFIG.onlineSetKey, 0, -1)
+
+    // 如果在线集合为空，初始化
     if (!sessionIds || sessionIds.length === 0) {
-      logger.info('🔄 SessionId pool is empty, using default sessionIds as fallback')
-      return DISGUISE_CONFIG.defaultSessionIds
+      await initializeOnlineSet()
+      return await client.zrange(DISGUISE_CONFIG.onlineSetKey, 0, -1)
     }
 
     return sessionIds
   } catch (error) {
-    logger.error('Failed to get sessionIds from pool:', error)
-    return DISGUISE_CONFIG.defaultSessionIds
+    logger.error('Failed to get online sessionIds:', error)
+    return DISGUISE_CONFIG.defaultSessionIds.slice(0, DISGUISE_CONFIG.minOnlineSessions)
   }
 }
 
 /**
- * 添加 sessionId 到池中
- * @returns {boolean} 是否添加成功
+ * 初始化在线集合（从队列或默认值）
  */
-async function addSessionIdToPool(sessionId) {
-  if (!sessionId) {
-    return false
-  }
-
+async function initializeOnlineSet() {
   try {
     const client = redisClient.getClient()
     if (!client) {
       return false
     }
 
-    // 检查池大小
-    const poolSize = await client.scard(DISGUISE_CONFIG.sessionPoolKey)
+    const now = Date.now()
 
-    if (poolSize >= DISGUISE_CONFIG.sessionPoolSize) {
-      // 池已满，不再收集
-      return false
-    }
-
-    // 添加到池中（Set 自动去重）
-    const added = await client.sadd(DISGUISE_CONFIG.sessionPoolKey, sessionId)
-
-    if (added > 0) {
-      const newSize = poolSize + 1
-      logger.info(
-        `📥 Collected sessionId to pool [${newSize}/${DISGUISE_CONFIG.sessionPoolSize}]: ${sessionId}`
-      )
-
-      // 设置或刷新 TTL（5天后自动清理）
-      await client.expire(DISGUISE_CONFIG.sessionPoolKey, DISGUISE_CONFIG.sessionPoolTTL)
-
-      // 如果是第一个添加的 sessionId，记录 TTL 设置
-      if (newSize === 1) {
-        const ttlDays = DISGUISE_CONFIG.sessionPoolTTL / (24 * 60 * 60)
-        logger.info(`⏰ SessionId pool TTL set to ${ttlDays} days`)
+    // 尝试从队列中取出 minOnlineSessions 个
+    for (let i = 0; i < DISGUISE_CONFIG.minOnlineSessions; i++) {
+      const sessionId = await popFromQueue()
+      if (sessionId) {
+        await client.zadd(DISGUISE_CONFIG.onlineSetKey, now + i, sessionId)
+      } else {
+        // 队列为空，使用默认值
+        const defaultId = DISGUISE_CONFIG.defaultSessionIds[i]
+        if (defaultId) {
+          await client.zadd(DISGUISE_CONFIG.onlineSetKey, now + i, defaultId)
+        }
       }
-
-      return true
     }
 
-    return false
+    logger.info(
+      `🎬 Initialized Claude online set with ${DISGUISE_CONFIG.minOnlineSessions} sessionIds`
+    )
+
+    return true
   } catch (error) {
-    logger.error('Failed to add sessionId to pool:', error)
+    logger.error('Failed to initialize online set:', error)
     return false
   }
 }
 
 /**
- * 基于日期hash从池中选择当天的sessionId
- * 池会自动在空时返回默认 sessionIds
+ * 从在线集合中随机选择一个 sessionId
+ * @returns {Promise<string>}
  */
-async function getDailySessionId() {
-  // 获取池中的 sessionIds（自动兜底）
-  const sessionIds = await getSessionIdsFromPool()
+async function selectSessionIdFromOnline() {
+  const onlineIds = await getOnlineSessionIds()
 
-  // 从池中 hash 选择
-  const dateString = getTodayDateString()
-  const hash = crypto.createHash('sha256').update(dateString).digest('hex')
-  const hashNum = parseInt(hash.substring(0, 8), 16)
-  const index = hashNum % sessionIds.length
+  if (onlineIds.length === 0) {
+    logger.warn('⚠️  Online set is empty, using random default')
+    return getRandomDefaultSessionId()
+  }
 
-  return sessionIds[index]
+  // 随机选择（均匀分布）
+  const randomIndex = Math.floor(Math.random() * onlineIds.length)
+  return onlineIds[randomIndex]
 }
 
 /**
  * 生成伪装的user_id
  */
 async function getDisguisedUserId() {
-  const sessionId = await getDailySessionId()
+  const sessionId = await selectSessionIdFromOnline()
   return `user_${DISGUISE_CONFIG.clientId}_account__session_${sessionId}`
+}
+
+/**
+ * 获取分布式锁
+ */
+async function acquireLock(key, ttl) {
+  try {
+    const client = redisClient.getClient()
+    if (!client) {
+      return false
+    }
+
+    const result = await client.set(key, '1', 'EX', ttl, 'NX')
+    return result === 'OK'
+  } catch (error) {
+    logger.error('Failed to acquire lock:', error)
+    return false
+  }
+}
+
+/**
+ * 释放分布式锁
+ */
+async function releaseLock(key) {
+  try {
+    const client = redisClient.getClient()
+    if (!client) {
+      return false
+    }
+
+    await client.del(key)
+    return true
+  } catch (error) {
+    logger.error('Failed to release lock:', error)
+    return false
+  }
+}
+
+/**
+ * 检查是否可以进行轮换（最小间隔保护）
+ */
+async function canRotate() {
+  try {
+    const client = redisClient.getClient()
+    if (!client) {
+      return true
+    }
+
+    const lastRotation = await client.get(DISGUISE_CONFIG.lastRotationKey)
+    if (!lastRotation) {
+      return true
+    }
+
+    const elapsed = Date.now() - parseInt(lastRotation)
+    return elapsed >= DISGUISE_CONFIG.minRotationInterval * 1000
+  } catch (error) {
+    return true
+  }
+}
+
+/**
+ * 记录轮换时间
+ */
+async function recordRotationTime() {
+  try {
+    const client = redisClient.getClient()
+    if (!client) {
+      return
+    }
+
+    await client.set(DISGUISE_CONFIG.lastRotationKey, Date.now().toString())
+  } catch (error) {
+    logger.error('Failed to record rotation time:', error)
+  }
+}
+
+/**
+ * 双层概率式轮换逻辑
+ * @returns {Promise<number>} 轮换的 sessionId 数量
+ */
+async function maybeRotateSessionIds() {
+  // 第一层概率：是否轮换
+  if (Math.random() > DISGUISE_CONFIG.rotationP1) {
+    return 0
+  }
+
+  rotationMetrics.rotationAttempts++
+
+  // 检查最小间隔
+  if (!(await canRotate())) {
+    logger.debug('⏳ Claude rotation skipped due to min interval protection')
+    return 0
+  }
+
+  // 获取分布式锁（防止并发轮换）
+  const lockAcquired = await acquireLock(
+    DISGUISE_CONFIG.rotationLockKey,
+    DISGUISE_CONFIG.rotationLockTTL
+  )
+  if (!lockAcquired) {
+    logger.debug('🔒 Claude rotation skipped due to lock')
+    return 0
+  }
+
+  try {
+    const client = redisClient.getClient()
+    if (!client) {
+      return 0
+    }
+
+    const onlineSize = await client.zcard(DISGUISE_CONFIG.onlineSetKey)
+    let rotationCount = 0
+
+    // 第二层概率：轮换几个（最多 m 个）
+    for (let i = 0; i < DISGUISE_CONFIG.maxRotationCount; i++) {
+      if (Math.random() > DISGUISE_CONFIG.rotationP2) {
+        break
+      }
+
+      // 决定是添加还是替换
+      if (onlineSize + rotationCount < DISGUISE_CONFIG.maxOnlineSessions) {
+        // 在线数量未达上限，直接添加
+        const newSessionId = await popFromQueue()
+        if (newSessionId) {
+          const now = Date.now()
+          await client.zadd(DISGUISE_CONFIG.onlineSetKey, now, newSessionId)
+          rotationCount++
+          logger.info(`➕ Added Claude sessionId to online set: ${newSessionId}`)
+        } else {
+          // 队列为空，无法添加
+          break
+        }
+      } else {
+        // 达到上限，替换最老的
+        const oldestResult = await client.zpopmin(DISGUISE_CONFIG.onlineSetKey)
+        if (oldestResult && oldestResult.length >= 1) {
+          const oldSessionId = oldestResult[0]
+
+          const newSessionId = await popFromQueue()
+          if (newSessionId) {
+            const now = Date.now()
+            await client.zadd(DISGUISE_CONFIG.onlineSetKey, now, newSessionId)
+            rotationCount++
+            logger.info(`🔄 Replaced Claude sessionId: ${oldSessionId} → ${newSessionId}`)
+          } else {
+            // 队列为空，把旧的放回去
+            await client.zadd(DISGUISE_CONFIG.onlineSetKey, Date.now(), oldSessionId)
+            break
+          }
+        }
+      }
+    }
+
+    if (rotationCount > 0) {
+      rotationMetrics.rotationSuccess++
+      rotationMetrics.rotationSessionCount += rotationCount
+      rotationMetrics.lastRotationTime = new Date().toISOString()
+      await recordRotationTime()
+
+      const currentOnlineSize = await client.zcard(DISGUISE_CONFIG.onlineSetKey)
+      logger.info(`🔄 Rotated ${rotationCount} Claude sessionIds, online: ${currentOnlineSize}`)
+    }
+
+    return rotationCount
+  } catch (error) {
+    logger.error('Failed to rotate Claude sessionIds:', error)
+    return 0
+  } finally {
+    await releaseLock(DISGUISE_CONFIG.rotationLockKey)
+  }
 }
 
 /**
@@ -259,16 +546,6 @@ async function disguiseRequest(requestBody, headers) {
     return { body: requestBody, headers }
   }
 
-  // ====== 步骤 1: 收集真实 sessionId 到池 ======
-  const originalUserId = requestBody?.metadata?.user_id
-  if (originalUserId) {
-    const realSessionId = extractSessionIdFromUserId(originalUserId)
-    if (realSessionId) {
-      // 尝试添加到池中（池未满时才会添加）
-      await addSessionIdToPool(realSessionId)
-    }
-  }
-
   // 仅做浅拷贝以减少大请求体的开销
   const disguisedBody = { ...(requestBody || {}) }
   const disguisedHeaders = { ...(headers || {}) }
@@ -281,7 +558,7 @@ async function disguiseRequest(requestBody, headers) {
     updateLatestVersion(headers['user-agent'])
   }
 
-  // ====== 步骤 2: 从池中选择 sessionId 用于伪装 ======
+  // ====== 步骤 1: 从在线集合中选择 sessionId 用于伪装 ======
   // 1. 伪装 metadata.user_id
   if (disguisedBody.metadata) {
     disguisedBody.metadata.user_id = await getDisguisedUserId()
@@ -302,6 +579,13 @@ async function disguiseRequest(requestBody, headers) {
   disguisedHeaders['sentry-trace'] = sentryTrace
   disguisedHeaders['baggage'] = generateBaggage(sentryTraceId, version)
 
+  // 异步触发轮换逻辑（不阻塞当前请求）
+  setImmediate(() => {
+    maybeRotateSessionIds().catch((err) => {
+      logger.error('Async rotation failed:', err)
+    })
+  })
+
   return {
     body: disguisedBody,
     headers: disguisedHeaders
@@ -312,54 +596,95 @@ async function disguiseRequest(requestBody, headers) {
  * 获取伪装信息（用于日志和调试）
  */
 async function getDisguiseInfo() {
-  const poolSessionIds = await getSessionIdsFromPool()
-
-  if (!DISGUISE_CONFIG.enabled) {
-    return {
-      enabled: false,
-      latestVersion: latestVersion.userAgent,
-      versionLastUpdated: latestVersion.lastUpdated,
-      sessionPool: {
-        size: poolSessionIds.length,
-        maxSize: DISGUISE_CONFIG.sessionPoolSize,
-        sessionIds: poolSessionIds
+  try {
+    const client = redisClient.getClient()
+    if (!client) {
+      return {
+        enabled: DISGUISE_CONFIG.enabled,
+        error: 'Redis not connected'
       }
     }
-  }
 
-  return {
-    enabled: true,
-    clientId: DISGUISE_CONFIG.clientId,
-    todaySessionId: await getDailySessionId(),
-    todayUserId: await getDisguisedUserId(),
-    date: getTodayDateString(),
-    sessionPool: {
-      size: poolSessionIds.length,
-      maxSize: DISGUISE_CONFIG.sessionPoolSize,
-      sessionIds: poolSessionIds,
-      isFull: poolSessionIds.length >= DISGUISE_CONFIG.sessionPoolSize
-    },
-    defaultSessionIds: DISGUISE_CONFIG.defaultSessionIds,
-    latestVersion: latestVersion.userAgent,
-    versionLastUpdated: latestVersion.lastUpdated,
-    autoUseLatestVersion: DISGUISE_CONFIG.autoUseLatestVersion
+    const onlineSessionIds = await getOnlineSessionIds()
+    const queueSize = await client.zcard(DISGUISE_CONFIG.queueKey)
+    const queueItems = await client.zrange(DISGUISE_CONFIG.queueKey, 0, -1, 'WITHSCORES')
+
+    // 解析队列项（包含 score）
+    const queueWithPriority = []
+    for (let i = 0; i < queueItems.length; i += 2) {
+      const sessionId = queueItems[i]
+      const score = parseFloat(queueItems[i + 1])
+      const priority = Math.floor(score / 1e12)
+      const timestamp = score % 1e12
+
+      // 获取元数据
+      const metadataKey = `${DISGUISE_CONFIG.queueKey}:metadata:${sessionId}`
+      const metadataStr = await client.get(metadataKey)
+      const metadata = metadataStr ? JSON.parse(metadataStr) : {}
+
+      queueWithPriority.push({
+        sessionId,
+        priority,
+        addedAt: new Date(timestamp).toISOString(),
+        source: metadata.apiKeyName || 'Unknown'
+      })
+    }
+
+    return {
+      enabled: DISGUISE_CONFIG.enabled,
+      clientId: DISGUISE_CONFIG.clientId,
+      config: {
+        rotationP1: DISGUISE_CONFIG.rotationP1,
+        rotationP2: DISGUISE_CONFIG.rotationP2,
+        maxRotationCount: DISGUISE_CONFIG.maxRotationCount,
+        maxOnlineSessions: DISGUISE_CONFIG.maxOnlineSessions,
+        minOnlineSessions: DISGUISE_CONFIG.minOnlineSessions,
+        sessionQueueSize: DISGUISE_CONFIG.sessionQueueSize,
+        minRotationInterval: DISGUISE_CONFIG.minRotationInterval
+      },
+      onlineSet: {
+        size: onlineSessionIds.length,
+        sessionIds: onlineSessionIds
+      },
+      queue: {
+        size: queueSize,
+        maxSize: DISGUISE_CONFIG.sessionQueueSize,
+        items: queueWithPriority
+      },
+      metrics: {
+        ...rotationMetrics
+      },
+      defaultSessionIds: DISGUISE_CONFIG.defaultSessionIds,
+      latestVersion: latestVersion.userAgent,
+      versionLastUpdated: latestVersion.lastUpdated,
+      autoUseLatestVersion: DISGUISE_CONFIG.autoUseLatestVersion
+    }
+  } catch (error) {
+    logger.error('Failed to get Claude disguise info:', error)
+    return {
+      enabled: DISGUISE_CONFIG.enabled,
+      error: error.message
+    }
   }
 }
 
 /**
- * 清空 sessionId 池（用于重新收集）
+ * 清空队列和在线集合（用于重新收集）
  */
-async function clearSessionPool() {
+async function clearAllSessions() {
   try {
     const client = redisClient.getClient()
     if (!client) {
       return false
     }
-    await client.del(DISGUISE_CONFIG.sessionPoolKey)
-    logger.info('🗑️  SessionId pool cleared')
+
+    await client.del(DISGUISE_CONFIG.queueKey)
+    await client.del(DISGUISE_CONFIG.onlineSetKey)
+
+    logger.info('🗑️  Cleared Claude session queue and online set')
     return true
   } catch (error) {
-    logger.error('Failed to clear sessionId pool:', error)
+    logger.error('Failed to clear Claude sessions:', error)
     return false
   }
 }
@@ -367,13 +692,15 @@ async function clearSessionPool() {
 module.exports = {
   disguiseRequest,
   getDisguiseInfo,
-  getDailySessionId,
+  addSessionIdToQueue,
+  getOnlineSessionIds,
+  selectSessionIdFromOnline,
   getDisguisedUserId,
+  maybeRotateSessionIds,
   updateLatestVersion,
   getLatestUserAgent,
-  addSessionIdToPool,
-  getSessionIdsFromPool,
-  clearSessionPool,
   extractSessionIdFromUserId,
+  clearAllSessions,
+  initializeOnlineSet,
   DISGUISE_CONFIG
 }

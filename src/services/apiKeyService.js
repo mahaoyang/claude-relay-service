@@ -97,7 +97,15 @@ class ApiKeyService {
       activationDays = 0, // 新增：激活后有效天数（0表示不使用此功能）
       activationUnit = 'days', // 新增：激活时间单位 'hours' 或 'days'
       expirationMode = 'fixed', // 新增：过期模式 'fixed'(固定时间) 或 'activation'(首次使用后激活)
-      icon = '' // 新增：图标（base64编码）
+      icon = '', // 新增：图标（base64编码）
+      sessionCollection = {
+        enabled: false,
+        priority: 1,
+        quota: -1,
+        collectedCount: 0,
+        lastCollectedAt: null,
+        tags: []
+      } // 新增：sessionId 收集配置
     } = options
 
     // 生成简单的API Key (64字符十六进制)
@@ -143,7 +151,15 @@ class ApiKeyService {
       createdBy: options.createdBy || 'admin',
       userId: options.userId || '',
       userUsername: options.userUsername || '',
-      icon: icon || '' // 新增：图标（base64编码）
+      icon: icon || '', // 新增：图标（base64编码）
+      sessionCollection: JSON.stringify({
+        enabled: sessionCollection?.enabled || false,
+        priority: sessionCollection?.priority || 1,
+        quota: sessionCollection?.quota ?? -1,
+        collectedCount: sessionCollection?.collectedCount || 0,
+        lastCollectedAt: sessionCollection?.lastCollectedAt || null,
+        tags: sessionCollection?.tags || []
+      }) // 新增：sessionId 收集配置
     }
 
     // 保存API Key数据并建立哈希映射
@@ -577,6 +593,27 @@ class ApiKeyService {
           key.tags = key.tags ? JSON.parse(key.tags) : []
         } catch (e) {
           key.tags = []
+        }
+        try {
+          key.sessionCollection = key.sessionCollection
+            ? JSON.parse(key.sessionCollection)
+            : {
+                enabled: false,
+                priority: 1,
+                quota: -1,
+                collectedCount: 0,
+                lastCollectedAt: null,
+                tags: []
+              }
+        } catch (e) {
+          key.sessionCollection = {
+            enabled: false,
+            priority: 1,
+            quota: -1,
+            collectedCount: 0,
+            lastCollectedAt: null,
+            tags: []
+          }
         }
         // 不暴露已弃用字段
         if (Object.prototype.hasOwnProperty.call(key, 'ccrAccountId')) {
@@ -1752,6 +1789,39 @@ class ApiKeyService {
     } catch (error) {
       logger.error('❌ Failed to cleanup expired keys:', error)
       return 0
+    }
+  }
+
+  // 📥 更新 sessionCollection 统计信息
+  async updateSessionCollectionStats(keyId) {
+    try {
+      const keyData = await redis.getApiKey(keyId)
+      if (!keyData) {
+        return false
+      }
+
+      const sessionCollection = keyData.sessionCollection
+        ? JSON.parse(keyData.sessionCollection)
+        : {
+            enabled: false,
+            priority: 1,
+            quota: -1,
+            collectedCount: 0,
+            lastCollectedAt: null,
+            tags: []
+          }
+
+      sessionCollection.collectedCount = (sessionCollection.collectedCount || 0) + 1
+      sessionCollection.lastCollectedAt = Date.now()
+
+      keyData.sessionCollection = JSON.stringify(sessionCollection)
+
+      await redis.setApiKey(keyId, keyData, keyData.apiKey)
+
+      return true
+    } catch (error) {
+      logger.error(`❌ Failed to update sessionCollection stats for key ${keyId}:`, error)
+      return false
     }
   }
 }

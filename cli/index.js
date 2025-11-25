@@ -13,6 +13,8 @@ const redis = require('../src/models/redis')
 const apiKeyService = require('../src/services/apiKeyService')
 const claudeAccountService = require('../src/services/claudeAccountService')
 const bedrockAccountService = require('../src/services/bedrockAccountService')
+const disguiseHelper = require('../src/utils/disguiseHelper')
+const codexDisguiseHelper = require('../src/utils/codexDisguiseHelper')
 
 const program = new Command()
 
@@ -1007,6 +1009,328 @@ async function deleteBedrockAccount() {
   }
 }
 
+// 🎭 伪装管理
+program
+  .command('disguise')
+  .description('SessionId 伪装管理操作')
+  .action(async () => {
+    await initialize()
+
+    const { action } = await inquirer.prompt([
+      {
+        type: 'list',
+        name: 'action',
+        message: '请选择操作:',
+        choices: [
+          { name: '📊 查看伪装状态', value: 'status' },
+          { name: '📋 查看收集统计', value: 'collection-stats' },
+          { name: '✅ 启用 API Key 收集', value: 'enable-collection' },
+          { name: '❌ 禁用 API Key 收集', value: 'disable-collection' },
+          { name: '🗑️  清空 SessionId 池', value: 'clear' }
+        ]
+      }
+    ])
+
+    switch (action) {
+      case 'status':
+        await showDisguiseStatus()
+        break
+      case 'collection-stats':
+        await showCollectionStats()
+        break
+      case 'enable-collection':
+        await enableKeyCollection()
+        break
+      case 'disable-collection':
+        await disableKeyCollection()
+        break
+      case 'clear':
+        await clearSessionPools()
+        break
+    }
+
+    await redis.disconnect()
+  })
+
+// 查看伪装状态
+async function showDisguiseStatus() {
+  try {
+    const spinner = ora('正在获取伪装状态...').start()
+
+    const claudeInfo = await disguiseHelper.getDisguiseInfo()
+    const codexInfo = await codexDisguiseHelper.getCodexDisguiseInfo()
+
+    spinner.succeed('获取状态成功')
+
+    console.log(`\n${styles.title('=== Claude CLI 伪装状态 ===')}`)
+    console.log(
+      `状态: ${claudeInfo.enabled ? styles.success('✅ 已启用') : styles.dim('⏸️  已禁用')}`
+    )
+
+    if (claudeInfo.enabled) {
+      console.log('\n配置:')
+      console.log(`  轮换概率 P1: ${claudeInfo.config.rotationP1 * 100}%`)
+      console.log(`  轮换概率 P2: ${claudeInfo.config.rotationP2 * 100}%`)
+      console.log(`  最大轮换数: ${claudeInfo.config.maxRotationCount}`)
+      console.log(
+        `  在线 SessionId: ${claudeInfo.onlineSet.size}/${claudeInfo.config.maxOnlineSessions}`
+      )
+      console.log(`  队列大小: ${claudeInfo.queue.size}/${claudeInfo.queue.maxSize}`)
+
+      if (claudeInfo.metrics) {
+        console.log('\n轮换指标:')
+        console.log(`  尝试次数: ${claudeInfo.metrics.rotationAttempts}`)
+        console.log(`  成功次数: ${claudeInfo.metrics.rotationSuccess}`)
+        console.log(`  累计轮换: ${claudeInfo.metrics.rotationSessionCount} 个`)
+        if (claudeInfo.metrics.lastRotationTime) {
+          console.log(`  最后轮换: ${claudeInfo.metrics.lastRotationTime}`)
+        }
+      }
+
+      if (claudeInfo.queue.items && claudeInfo.queue.items.length > 0) {
+        console.log('\n队列详情:')
+        const queueData = [
+          ['SessionId', '优先级', '来源', '添加时间'],
+          ...claudeInfo.queue.items
+            .slice(0, 5)
+            .map((item) => [
+              item.sessionId,
+              item.priority,
+              item.source,
+              new Date(item.addedAt).toLocaleString()
+            ])
+        ]
+        console.log(table(queueData))
+        if (claudeInfo.queue.items.length > 5) {
+          console.log(styles.dim(`  ... 还有 ${claudeInfo.queue.items.length - 5} 项`))
+        }
+      }
+    }
+
+    console.log(`\n${styles.title('=== Codex 伪装状态 ===')}`)
+    console.log(
+      `状态: ${codexInfo.enabled ? styles.success('✅ 已启用') : styles.dim('⏸️  已禁用')}`
+    )
+
+    if (codexInfo.enabled) {
+      console.log('\n配置:')
+      console.log(`  轮换概率 P1: ${codexInfo.config.rotationP1 * 100}%`)
+      console.log(`  轮换概率 P2: ${codexInfo.config.rotationP2 * 100}%`)
+      console.log(`  最大轮换数: ${codexInfo.config.maxRotationCount}`)
+      console.log(
+        `  在线 SessionId: ${codexInfo.onlineSet.size}/${codexInfo.config.maxOnlineSessions}`
+      )
+      console.log(`  队列大小: ${codexInfo.queue.size}/${codexInfo.queue.maxSize}`)
+
+      if (codexInfo.metrics) {
+        console.log('\n轮换指标:')
+        console.log(`  尝试次数: ${codexInfo.metrics.rotationAttempts}`)
+        console.log(`  成功次数: ${codexInfo.metrics.rotationSuccess}`)
+        console.log(`  累计轮换: ${codexInfo.metrics.rotationSessionCount} 个`)
+        if (codexInfo.metrics.lastRotationTime) {
+          console.log(`  最后轮换: ${codexInfo.metrics.lastRotationTime}`)
+        }
+      }
+
+      if (codexInfo.queue.items && codexInfo.queue.items.length > 0) {
+        console.log('\n队列详情:')
+        const queueData = [
+          ['SessionId', '优先级', '来源', '添加时间'],
+          ...codexInfo.queue.items
+            .slice(0, 5)
+            .map((item) => [
+              item.sessionId,
+              item.priority,
+              item.source,
+              new Date(item.addedAt).toLocaleString()
+            ])
+        ]
+        console.log(table(queueData))
+        if (codexInfo.queue.items.length > 5) {
+          console.log(styles.dim(`  ... 还有 ${codexInfo.queue.items.length - 5} 项`))
+        }
+      }
+    }
+  } catch (error) {
+    console.error(styles.error('获取伪装状态失败:'), error.message)
+  }
+}
+
+// 查看收集统计
+async function showCollectionStats() {
+  try {
+    const spinner = ora('正在获取收集统计...').start()
+
+    const apiKeys = await apiKeyService.getAllApiKeys()
+    const collectionKeys = apiKeys.filter((k) => k.sessionCollection?.enabled)
+
+    spinner.succeed('获取统计成功')
+
+    if (collectionKeys.length === 0) {
+      console.log(styles.warning('\n⚠️  没有启用收集的 API Key'))
+      return
+    }
+
+    console.log(`\n${styles.title('=== SessionId 收集统计 ===\n')}`)
+
+    const statsData = [
+      ['API Key', '优先级', '已收集', '配额', '最后收集时间'],
+      ...collectionKeys.map((key) => [
+        key.name.substring(0, 20),
+        key.sessionCollection.priority,
+        key.sessionCollection.collectedCount || 0,
+        key.sessionCollection.quota === -1 ? '无限' : key.sessionCollection.quota,
+        key.sessionCollection.lastCollectedAt
+          ? new Date(key.sessionCollection.lastCollectedAt).toLocaleString()
+          : '从未'
+      ])
+    ]
+
+    console.log(table(statsData))
+
+    const totalCollected = collectionKeys.reduce(
+      (sum, k) => sum + (k.sessionCollection.collectedCount || 0),
+      0
+    )
+    console.log(`\n总计: ${collectionKeys.length} 个 API Key，累计收集 ${totalCollected} 次\n`)
+  } catch (error) {
+    console.error(styles.error('获取收集统计失败:'), error.message)
+  }
+}
+
+// 启用 API Key 收集
+async function enableKeyCollection() {
+  try {
+    const apiKeys = await apiKeyService.getAllApiKeys()
+
+    const { keyId } = await inquirer.prompt([
+      {
+        type: 'list',
+        name: 'keyId',
+        message: '选择要启用收集的 API Key:',
+        choices: apiKeys.map((k) => ({
+          name: `${k.name} (${k.sessionCollection?.enabled ? '✅ 已启用' : '⏸️  已禁用'})`,
+          value: k.id
+        }))
+      }
+    ])
+
+    const { priority, quota } = await inquirer.prompt([
+      {
+        type: 'number',
+        name: 'priority',
+        message: '设置优先级 (1-10):',
+        default: 1,
+        validate: (input) => (input >= 1 && input <= 10) || '优先级必须在 1-10 之间'
+      },
+      {
+        type: 'number',
+        name: 'quota',
+        message: '设置收集配额 (-1 表示无限):',
+        default: -1,
+        validate: (input) => input >= -1 || '配额必须 >= -1'
+      }
+    ])
+
+    const spinner = ora('正在更新配置...').start()
+
+    const keyData = await redis.getApiKey(keyId)
+    if (!keyData) {
+      throw new Error('API Key 不存在')
+    }
+
+    const sessionCollection = keyData.sessionCollection ? JSON.parse(keyData.sessionCollection) : {}
+
+    sessionCollection.enabled = true
+    sessionCollection.priority = priority
+    sessionCollection.quota = quota
+
+    keyData.sessionCollection = JSON.stringify(sessionCollection)
+    await redis.setApiKey(keyId, keyData, keyData.apiKey)
+
+    spinner.succeed('启用收集成功')
+    console.log(styles.success(`\n✅ 已为 API Key 启用 SessionId 收集`))
+    console.log(`   优先级: ${priority}`)
+    console.log(`   配额: ${quota === -1 ? '无限' : quota}`)
+  } catch (error) {
+    console.error(styles.error('启用收集失败:'), error.message)
+  }
+}
+
+// 禁用 API Key 收集
+async function disableKeyCollection() {
+  try {
+    const apiKeys = await apiKeyService.getAllApiKeys()
+    const enabledKeys = apiKeys.filter((k) => k.sessionCollection?.enabled)
+
+    if (enabledKeys.length === 0) {
+      console.log(styles.warning('\n⚠️  没有启用收集的 API Key'))
+      return
+    }
+
+    const { keyId } = await inquirer.prompt([
+      {
+        type: 'list',
+        name: 'keyId',
+        message: '选择要禁用收集的 API Key:',
+        choices: enabledKeys.map((k) => ({
+          name: `${k.name} (优先级: ${k.sessionCollection.priority}, 已收集: ${k.sessionCollection.collectedCount || 0})`,
+          value: k.id
+        }))
+      }
+    ])
+
+    const spinner = ora('正在更新配置...').start()
+
+    const keyData = await redis.getApiKey(keyId)
+    if (!keyData) {
+      throw new Error('API Key 不存在')
+    }
+
+    const sessionCollection = keyData.sessionCollection ? JSON.parse(keyData.sessionCollection) : {}
+
+    sessionCollection.enabled = false
+
+    keyData.sessionCollection = JSON.stringify(sessionCollection)
+    await redis.setApiKey(keyId, keyData, keyData.apiKey)
+
+    spinner.succeed('禁用收集成功')
+    console.log(styles.success('\n✅ 已禁用 SessionId 收集'))
+  } catch (error) {
+    console.error(styles.error('禁用收集失败:'), error.message)
+  }
+}
+
+// 清空 SessionId 池
+async function clearSessionPools() {
+  try {
+    const { confirm } = await inquirer.prompt([
+      {
+        type: 'confirm',
+        name: 'confirm',
+        message: styles.warning('⚠️  确定要清空所有 SessionId 池吗？（包括队列和在线集合）'),
+        default: false
+      }
+    ])
+
+    if (!confirm) {
+      console.log(styles.info('已取消操作'))
+      return
+    }
+
+    const spinner = ora('正在清空池...').start()
+
+    await disguiseHelper.clearAllSessions()
+    await codexDisguiseHelper.clearAllSessions()
+
+    spinner.succeed('清空成功')
+    console.log(styles.success('\n✅ 已清空所有 SessionId 池'))
+    console.log(styles.dim('   下次请求时会自动使用默认 SessionId 初始化'))
+  } catch (error) {
+    console.error(styles.error('清空池失败:'), error.message)
+  }
+}
+
 // 程序信息
 program.name('claude-relay-cli').description('Claude Relay Service 命令行管理工具').version('1.0.0')
 
@@ -1021,5 +1345,8 @@ if (!process.argv.slice(2).length) {
   console.log('  claude-relay-cli keys          - API Key 管理（查看/修改过期时间/续期/删除）')
   console.log('  claude-relay-cli bedrock       - Bedrock 账户管理（创建/查看/编辑/测试/删除）')
   console.log('  claude-relay-cli status        - 查看系统状态')
+  console.log(
+    '  claude-relay-cli disguise      - SessionId 伪装管理（查看状态/收集统计/启用禁用/清空池）'
+  )
   console.log('\n使用 --help 查看详细帮助信息')
 }
