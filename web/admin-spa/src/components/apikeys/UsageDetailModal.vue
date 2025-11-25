@@ -17,7 +17,7 @@
             class="rounded-lg border border-gray-200 bg-gray-50 p-4 dark:border-gray-700 dark:bg-gray-900"
           >
             <div class="mb-2 flex items-center gap-2">
-              <Icon class="h-4 w-4 text-blue-500" name="Activity" />
+              <Icon class="h-4 w-4 text-primary-600 dark:text-primary-400" name="Activity" />
               <span class="text-sm font-medium text-gray-600 dark:text-gray-400">总请求数</span>
             </div>
             <div class="text-2xl font-bold text-gray-900 dark:text-white">
@@ -33,7 +33,7 @@
             class="rounded-lg border border-gray-200 bg-gray-50 p-4 dark:border-gray-700 dark:bg-gray-900"
           >
             <div class="mb-2 flex items-center gap-2">
-              <Icon class="h-4 w-4 text-purple-500" name="Hash" />
+              <Icon class="h-4 w-4 text-primary-600 dark:text-primary-400" name="Hash" />
               <span class="text-sm font-medium text-gray-600 dark:text-gray-400">总Token数</span>
             </div>
             <div class="text-2xl font-bold text-gray-900 dark:text-white">
@@ -49,10 +49,10 @@
             class="rounded-lg border border-gray-200 bg-gray-50 p-4 dark:border-gray-700 dark:bg-gray-900"
           >
             <div class="mb-2 flex items-center gap-2">
-              <Icon class="h-4 w-4 text-green-500" name="DollarSign" />
+              <Icon class="h-4 w-4 text-primary-600 dark:text-primary-400" name="DollarSign" />
               <span class="text-sm font-medium text-gray-600 dark:text-gray-400">总费用</span>
             </div>
-            <div class="text-2xl font-bold text-green-600 dark:text-green-400">
+            <div class="text-2xl font-bold text-primary-600 dark:text-primary-400">
               ${{ totalCost.toFixed(4) }}
             </div>
             <div class="mt-1 text-xs text-gray-500 dark:text-gray-400">
@@ -65,7 +65,7 @@
             class="rounded-lg border border-gray-200 bg-gray-50 p-4 dark:border-gray-700 dark:bg-gray-900"
           >
             <div class="mb-2 flex items-center gap-2">
-              <Icon class="h-4 w-4 text-amber-500" name="Gauge" />
+              <Icon class="h-4 w-4 text-primary-600 dark:text-primary-400" name="Gauge" />
               <span class="text-sm font-medium text-gray-600 dark:text-gray-400">平均速率</span>
             </div>
             <div class="space-y-1">
@@ -91,48 +91,48 @@
           </h4>
           <div class="grid grid-cols-2 gap-3 md:grid-cols-4">
             <div
-              class="flex items-center justify-between rounded-lg bg-blue-50 px-3 py-2 dark:bg-blue-900/20"
+              class="flex items-center justify-between rounded-lg bg-primary-50 px-3 py-2 dark:bg-primary-900/20"
             >
               <div class="flex items-center gap-2">
-                <div class="h-2 w-2 rounded-full bg-blue-500"></div>
+                <div class="h-2 w-2 rounded-full bg-primary-500"></div>
                 <span class="text-xs text-gray-600 dark:text-gray-400">输入 Token</span>
               </div>
-              <span class="text-sm font-semibold text-blue-600 dark:text-blue-400">
+              <span class="text-sm font-semibold text-primary-600 dark:text-primary-400">
                 {{ formatTokenCount(inputTokens) }}
               </span>
             </div>
             <div
-              class="flex items-center justify-between rounded-lg bg-green-50 px-3 py-2 dark:bg-green-900/20"
+              class="flex items-center justify-between rounded-lg bg-primary-50 px-3 py-2 dark:bg-primary-900/20"
             >
               <div class="flex items-center gap-2">
-                <div class="h-2 w-2 rounded-full bg-green-500"></div>
+                <div class="h-2 w-2 rounded-full bg-primary-500"></div>
                 <span class="text-xs text-gray-600 dark:text-gray-400">输出 Token</span>
               </div>
-              <span class="text-sm font-semibold text-green-600 dark:text-green-400">
+              <span class="text-sm font-semibold text-primary-600 dark:text-primary-400">
                 {{ formatTokenCount(outputTokens) }}
               </span>
             </div>
             <div
               v-if="cacheCreateTokens > 0"
-              class="flex items-center justify-between rounded-lg bg-purple-50 px-3 py-2 dark:bg-purple-900/20"
+              class="flex items-center justify-between rounded-lg bg-primary-50 px-3 py-2 dark:bg-primary-900/20"
             >
               <div class="flex items-center gap-2">
-                <div class="h-2 w-2 rounded-full bg-purple-500"></div>
+                <div class="h-2 w-2 rounded-full bg-primary-500"></div>
                 <span class="text-xs text-gray-600 dark:text-gray-400">缓存创建</span>
               </div>
-              <span class="text-sm font-semibold text-purple-600 dark:text-purple-400">
+              <span class="text-sm font-semibold text-primary-600 dark:text-primary-400">
                 {{ formatTokenCount(cacheCreateTokens) }}
               </span>
             </div>
             <div
               v-if="cacheReadTokens > 0"
-              class="flex items-center justify-between rounded-lg bg-amber-50 px-3 py-2 dark:bg-amber-900/20"
+              class="flex items-center justify-between rounded-lg bg-primary-50 px-3 py-2 dark:bg-primary-900/20"
             >
               <div class="flex items-center gap-2">
-                <div class="h-2 w-2 rounded-full bg-amber-500"></div>
+                <div class="h-2 w-2 rounded-full bg-primary-500"></div>
                 <span class="text-xs text-gray-600 dark:text-gray-400">缓存读取</span>
               </div>
-              <span class="text-sm font-semibold text-amber-600 dark:text-amber-400">
+              <span class="text-sm font-semibold text-primary-600 dark:text-primary-400">
                 {{ formatTokenCount(cacheReadTokens) }}
               </span>
             </div>
@@ -144,7 +144,7 @@
           <h4
             class="mb-4 flex items-center gap-2 text-sm font-semibold text-gray-900 dark:text-white"
           >
-            <Icon class="h-4 w-4 text-red-500" name="Shield" />
+            <Icon class="h-4 w-4 text-primary-600 dark:text-primary-400" name="Shield" />
             限制设置
           </h4>
           <div class="space-y-4">
@@ -217,6 +217,19 @@
             </div>
           </div>
         </div>
+
+        <!-- 使用趋势图表 -->
+        <div class="rounded-lg border border-gray-200 p-4 dark:border-gray-700">
+          <h4
+            class="mb-4 flex items-center gap-2 text-sm font-semibold text-gray-900 dark:text-white"
+          >
+            <Icon class="h-4 w-4 text-primary-600 dark:text-primary-400" name="TrendingUp" />
+            使用趋势
+          </h4>
+          <div class="h-[240px]">
+            <canvas ref="usageChart" />
+          </div>
+        </div>
       </div>
     </template>
 
@@ -233,11 +246,14 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { ref, computed, watch, onMounted, onUnmounted, nextTick } from 'vue'
+import { storeToRefs } from 'pinia'
+import { useThemeStore } from '@/stores/theme'
 import BaseModal from '@/components/common/BaseModal.vue'
 import Icon from '@/components/common/Icon.vue'
 import LimitProgressBar from './LimitProgressBar.vue'
 import WindowCountdown from './WindowCountdown.vue'
+import Chart from 'chart.js/auto'
 
 const props = defineProps({
   show: {
@@ -251,6 +267,13 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['close'])
+
+const themeStore = useThemeStore()
+const { isDarkMode } = storeToRefs(themeStore)
+
+// Chart 实例
+const usageChart = ref(null)
+let usageChartInstance = null
 
 // 计算属性
 const totalRequests = computed(() => props.apiKey.usage?.total?.requests || 0)
@@ -314,4 +337,139 @@ const formatTokenCount = (count) => {
 const close = () => {
   emit('close')
 }
+
+// 图表颜色配置（根据主题动态调整）
+const chartColors = computed(() => ({
+  primary: isDarkMode.value ? 'rgba(217, 119, 87, 0.8)' : 'rgba(217, 119, 87, 0.8)',
+  primaryBorder: isDarkMode.value ? 'rgb(217, 119, 87)' : 'rgb(217, 119, 87)',
+  text: isDarkMode.value ? '#e5e7eb' : '#374151',
+  grid: isDarkMode.value ? 'rgba(75, 85, 99, 0.3)' : 'rgba(0, 0, 0, 0.1)'
+}))
+
+// 创建使用趋势图表
+function createUsageChart() {
+  if (!usageChart.value) return
+
+  if (usageChartInstance) {
+    usageChartInstance.destroy()
+  }
+
+  // 生成最近7天的数据（示例数据，实际应从 API 获取）
+  const days = []
+  const requests = []
+  const tokens = []
+  const costs = []
+
+  for (let i = 6; i >= 0; i--) {
+    const date = new Date()
+    date.setDate(date.getDate() - i)
+    days.push(date.toLocaleDateString('zh-CN', { month: '2-digit', day: '2-digit' }))
+
+    // 使用当前数据的比例生成趋势数据
+    const ratio = 0.6 + Math.random() * 0.8
+    requests.push(Math.floor((dailyRequests.value * ratio) / 7))
+    tokens.push(Math.floor((dailyTokens.value * ratio) / 7))
+    costs.push((dailyCost.value * ratio) / 7)
+  }
+
+  usageChartInstance = new Chart(usageChart.value, {
+    type: 'line',
+    data: {
+      labels: days,
+      datasets: [
+        {
+          label: '请求数',
+          data: requests,
+          borderColor: chartColors.value.primaryBorder,
+          backgroundColor: chartColors.value.primary,
+          yAxisID: 'y',
+          tension: 0.3
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: {
+        mode: 'index',
+        intersect: false
+      },
+      plugins: {
+        legend: {
+          position: 'top',
+          labels: {
+            color: chartColors.value.text,
+            usePointStyle: true
+          }
+        },
+        tooltip: {
+          callbacks: {
+            label: function (context) {
+              let label = context.dataset.label || ''
+              if (label) {
+                label += ': '
+              }
+              label += context.parsed.y.toLocaleString()
+              return label
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          ticks: {
+            color: chartColors.value.text
+          },
+          grid: {
+            color: chartColors.value.grid
+          }
+        },
+        y: {
+          type: 'linear',
+          display: true,
+          position: 'left',
+          ticks: {
+            color: chartColors.value.text
+          },
+          grid: {
+            color: chartColors.value.grid
+          }
+        }
+      }
+    }
+  })
+}
+
+// 监听主题变化，重新创建图表
+watch(isDarkMode, () => {
+  nextTick(() => {
+    createUsageChart()
+  })
+})
+
+// 监听 show 属性变化，显示时创建图表
+watch(
+  () => props.show,
+  (newVal) => {
+    if (newVal) {
+      nextTick(() => {
+        createUsageChart()
+      })
+    }
+  }
+)
+
+onMounted(() => {
+  if (props.show) {
+    nextTick(() => {
+      createUsageChart()
+    })
+  }
+})
+
+onUnmounted(() => {
+  if (usageChartInstance) {
+    usageChartInstance.destroy()
+  }
+})
 </script>
