@@ -3,6 +3,7 @@
  * 用于捕获 Claude Code 的真实请求信息
  *
  * 通过环境变量 CAPTURE_REQUESTS_ENABLED 控制开关
+ * 通过环境变量 LOG_USER_MESSAGE 控制是否打印用户消息
  */
 
 const fs = require('fs')
@@ -14,6 +15,12 @@ const MAX_CAPTURES = 50 // 增加到50个请求，用于多窗口测试
 
 // 捕获开关（默认禁用）
 const CAPTURE_ENABLED = process.env.CAPTURE_REQUESTS_ENABLED === 'true'
+
+// 用户消息打印开关（默认禁用）
+const LOG_USER_MESSAGE = process.env.LOG_USER_MESSAGE === 'true'
+
+// 错误请求打印开关（默认禁用）
+const LOG_ERROR_REQUEST = process.env.LOG_ERROR_REQUEST === 'true'
 
 // 确保目录存在（仅在启用时）
 if (CAPTURE_ENABLED && !fs.existsSync(CAPTURE_DIR)) {
@@ -231,9 +238,256 @@ function getCaptureStatus() {
   }
 }
 
+/**
+ * 打印用户消息的中间件
+ * 从请求体中提取用户发送的消息内容并打印到控制台
+ */
+function logUserMessage(req, res, next) {
+  // 检查是否启用
+  if (!LOG_USER_MESSAGE) {
+    return next()
+  }
+
+  // 只处理 POST 请求
+  if (req.method !== 'POST') {
+    return next()
+  }
+
+  // 只处理 AI API 相关路由
+  const isAIRoute =
+    req.originalUrl.includes('/messages') ||
+    req.originalUrl.includes('/chat/completions') ||
+    req.originalUrl.includes('/generateContent') ||
+    req.originalUrl.includes('/responses')
+
+  if (!isAIRoute) {
+    return next()
+  }
+
+  try {
+    const { body } = req
+    if (!body) {
+      return next()
+    }
+
+    // 提取用户消息
+    let userMessage = null
+    const model = body.model || 'unknown'
+
+    // Claude 格式: messages 数组
+    if (body.messages && Array.isArray(body.messages)) {
+      // 找到最后一条用户消息
+      for (let i = body.messages.length - 1; i >= 0; i--) {
+        const msg = body.messages[i]
+        if (msg.role === 'user') {
+          if (typeof msg.content === 'string') {
+            userMessage = msg.content
+          } else if (Array.isArray(msg.content)) {
+            // 多模态消息，提取文本部分
+            const textParts = msg.content
+              .filter((part) => part.type === 'text')
+              .map((part) => part.text)
+            userMessage = textParts.join('\n')
+          }
+          break
+        }
+      }
+    }
+
+    // OpenAI Responses 格式: input 字段
+    if (!userMessage && body.input) {
+      if (typeof body.input === 'string') {
+        userMessage = body.input
+      } else if (Array.isArray(body.input)) {
+        // 数组格式的 input
+        const textParts = body.input
+          .filter((item) => item.type === 'message' && item.role === 'user')
+          .map((item) => {
+            if (typeof item.content === 'string') {
+              return item.content
+            }
+            if (Array.isArray(item.content)) {
+              return item.content
+                .filter((c) => c.type === 'input_text')
+                .map((c) => c.text)
+                .join('\n')
+            }
+            return ''
+          })
+        userMessage = textParts.join('\n')
+      }
+    }
+
+    // Gemini 格式: contents 数组
+    if (!userMessage && body.contents && Array.isArray(body.contents)) {
+      for (let i = body.contents.length - 1; i >= 0; i--) {
+        const content = body.contents[i]
+        if (content.role === 'user' && content.parts) {
+          const textParts = content.parts.filter((p) => p.text).map((p) => p.text)
+          userMessage = textParts.join('\n')
+          break
+        }
+      }
+    }
+
+    if (userMessage) {
+      // 截断过长的消息
+      const maxLength = 500
+      const displayMessage =
+        userMessage.length > maxLength ? `${userMessage.substring(0, maxLength)}...` : userMessage
+
+      // 打印到控制台
+      console.log(`\n${'─'.repeat(60)}`)
+      console.log(`📨 用户消息 [${model}]`)
+      console.log('─'.repeat(60))
+      console.log(displayMessage)
+      console.log(`${'─'.repeat(60)}\n`)
+    }
+  } catch (error) {
+    // 忽略解析错误，不影响正常请求
+    logger.debug('Failed to parse user message:', error.message)
+  }
+
+  next()
+}
+
+/**
+ * 错误请求日志中间件
+ * 当上游返回错误（4xx/5xx）时，打印完整的请求信息��于调试
+ */
+function logErrorRequest(req, res, next) {
+  // 检查是否启用
+  if (!LOG_ERROR_REQUEST) {
+    return next()
+  }
+
+  // 只处理 POST 请求
+  if (req.method !== 'POST') {
+    return next()
+  }
+
+  // 只处理 AI API 相关路由
+  const isAIRoute =
+    req.originalUrl.includes('/messages') ||
+    req.originalUrl.includes('/chat/completions') ||
+    req.originalUrl.includes('/generateContent') ||
+    req.originalUrl.includes('/responses')
+
+  if (!isAIRoute) {
+    return next()
+  }
+
+  // 保存原始请求信息
+  const requestInfo = {
+    timestamp: new Date().toISOString(),
+    method: req.method,
+    url: req.originalUrl,
+    headers: { ...req.headers },
+    body: req.body ? JSON.parse(JSON.stringify(req.body)) : null
+  }
+
+  // 拦截响应
+  const originalSend = res.send
+  const originalJson = res.json
+  const originalEnd = res.end
+
+  const logRequest = (statusCode, responseBody) => {
+    // 只在错误响应时打印
+    if (statusCode >= 400) {
+      console.log(`\n${'🔴'.repeat(30)}`)
+      console.log(`❌ 上游返回错误 [${statusCode}]`)
+      console.log('🔴'.repeat(30))
+      console.log(`\n时间: ${requestInfo.timestamp}`)
+      console.log(`URL: ${requestInfo.method} ${requestInfo.url}`)
+
+      // 打印响应错误信息
+      console.log('\n--- 错误响应 ---')
+      if (typeof responseBody === 'string') {
+        try {
+          const parsed = JSON.parse(responseBody)
+          console.log(JSON.stringify(parsed, null, 2))
+        } catch {
+          console.log(responseBody.substring(0, 500))
+        }
+      } else if (responseBody) {
+        console.log(JSON.stringify(responseBody, null, 2))
+      }
+
+      // 打印请求模型
+      if (requestInfo.body?.model) {
+        console.log(`\n--- 请求模型 ---`)
+        console.log(`model: ${requestInfo.body.model}`)
+      }
+
+      // 打印用户消息
+      if (requestInfo.body?.messages) {
+        console.log('\n--- 用户消息 ---')
+        requestInfo.body.messages.forEach((msg, index) => {
+          console.log(`\n[${index}] role: ${msg.role}`)
+          if (typeof msg.content === 'string') {
+            // 打印完整消息（用于调试敏感词拦截）
+            console.log(`content: ${msg.content}`)
+          } else if (Array.isArray(msg.content)) {
+            msg.content.forEach((part, partIndex) => {
+              if (part.type === 'text') {
+                console.log(`content[${partIndex}]: ${part.text}`)
+              } else if (part.type === 'image') {
+                console.log(`content[${partIndex}]: [图片]`)
+              } else if (part.type === 'tool_use') {
+                console.log(`content[${partIndex}]: [工具调用: ${part.name}]`)
+              } else if (part.type === 'tool_result') {
+                console.log(`content[${partIndex}]: [工具结果]`)
+              }
+            })
+          }
+        })
+      }
+
+      // 打印 system prompt（可能包含敏感词）
+      if (requestInfo.body?.system) {
+        console.log('\n--- System Prompt ---')
+        if (Array.isArray(requestInfo.body.system)) {
+          requestInfo.body.system.forEach((item, index) => {
+            if (item.text) {
+              console.log(`[${index}]: ${item.text}`)
+            }
+          })
+        } else if (typeof requestInfo.body.system === 'string') {
+          console.log(requestInfo.body.system)
+        }
+      }
+
+      console.log(`\n${'🔴'.repeat(30)}\n`)
+    }
+  }
+
+  res.send = function (body) {
+    logRequest(res.statusCode, body)
+    return originalSend.call(this, body)
+  }
+
+  res.json = function (body) {
+    logRequest(res.statusCode, body)
+    return originalJson.call(this, body)
+  }
+
+  res.end = function (chunk) {
+    if (chunk && res.statusCode >= 400) {
+      logRequest(res.statusCode, chunk.toString())
+    }
+    return originalEnd.call(this, chunk)
+  }
+
+  next()
+}
+
 module.exports = {
   captureClaudeCodeRequest,
+  logUserMessage,
+  logErrorRequest,
   resetCapture,
   getCaptureStatus,
-  CAPTURE_ENABLED
+  CAPTURE_ENABLED,
+  LOG_USER_MESSAGE,
+  LOG_ERROR_REQUEST
 }

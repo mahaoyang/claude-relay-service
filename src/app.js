@@ -38,6 +38,7 @@ const {
   requestSizeLimit
 } = require('./middleware/auth')
 const { browserFallbackMiddleware } = require('./middleware/browserFallback')
+const { logUserMessage, logErrorRequest } = require('./middleware/requestCapture')
 
 class Application {
   constructor() {
@@ -237,6 +238,13 @@ class Application {
         })
       )
       this.app.use(express.urlencoded({ extended: true, limit: '10mb' }))
+
+      // 📨 用户消息打印中间件（LOG_USER_MESSAGE=true 时启用）
+      this.app.use(logUserMessage)
+
+      // ❌ 错误请求日志中间件（LOG_ERROR_REQUEST=true 时启用）
+      this.app.use(logErrorRequest)
+
       this.app.use(securityMiddleware)
 
       // 🎯 信任代理
