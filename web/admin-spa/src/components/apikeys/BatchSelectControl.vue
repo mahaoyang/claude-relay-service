@@ -26,8 +26,8 @@
       <button
         v-if="showBatchEdit"
         class="flex items-center gap-2 rounded-lg bg-primary-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-primary-700 disabled:opacity-50"
-        type="button"
         :disabled="selectedCount === 0"
+        type="button"
         @click="$emit('batch-edit')"
       >
         <Icon class="h-4 w-4" name="Edit" />
@@ -36,8 +36,8 @@
 
       <button
         class="flex items-center gap-2 rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-red-700 disabled:opacity-50"
-        type="button"
         :disabled="selectedCount === 0"
+        type="button"
         @click="$emit('batch-delete')"
       >
         <Icon class="h-4 w-4" name="Trash2" />

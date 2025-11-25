@@ -92,7 +92,9 @@
               formatters.getAccountStatusClass(account)
             ]"
           >
-            <span :class="['h-1.5 w-1.5 rounded-full', formatters.getAccountStatusDotClass(account)]" />
+            <span
+              :class="['h-1.5 w-1.5 rounded-full', formatters.getAccountStatusDotClass(account)]"
+            />
             {{ formatters.getAccountStatusText(account) }}
           </span>
         </div>
@@ -135,11 +137,15 @@
     <td class="px-4 py-3">
       <div class="flex flex-col gap-0.5 text-xs">
         <div class="text-gray-900 dark:text-white">
-          <span class="font-medium">{{ formatters.formatNumber(account.usage?.daily?.totalInputTokens || 0) }}</span>
+          <span class="font-medium">{{
+            formatters.formatNumber(account.usage?.daily?.totalInputTokens || 0)
+          }}</span>
           <span class="text-gray-500 dark:text-gray-400">M in</span>
         </div>
         <div class="text-gray-900 dark:text-white">
-          <span class="font-medium">{{ formatters.formatNumber(account.usage?.daily?.totalOutputTokens || 0) }}</span>
+          <span class="font-medium">{{
+            formatters.formatNumber(account.usage?.daily?.totalOutputTokens || 0)
+          }}</span>
           <span class="text-gray-500 dark:text-gray-400">M out</span>
         </div>
         <div class="font-medium text-primary-600 dark:text-primary-400">
@@ -159,16 +165,18 @@
             class="flex flex-col gap-0.5"
           >
             <div class="flex items-center justify-between">
-              <span class="text-gray-600 dark:text-gray-400">{{ type === 'primary' ? '5h' : '24h' }}</span>
+              <span class="text-gray-600 dark:text-gray-400">{{
+                type === 'primary' ? '5h' : '24h'
+              }}</span>
               <span class="font-medium text-gray-900 dark:text-white">
                 {{ formatters.formatClaudeUsagePercent(window) }}
               </span>
             </div>
             <div class="h-1.5 w-full overflow-hidden rounded-full bg-gray-200 dark:bg-gray-700">
               <div
+                class="h-full transition-all duration-300"
                 :class="formatters.getClaudeUsageBarClass(window)"
                 :style="{ width: formatters.getClaudeUsageWidth(window) }"
-                class="h-full transition-all duration-300"
               />
             </div>
             <div class="text-gray-500 dark:text-gray-400">
@@ -179,11 +187,7 @@
 
         <!-- OpenAI/Codex 平台显示 -->
         <div v-else-if="account.platform === 'openai' && account.codexUsage" class="space-y-1">
-          <div
-            v-for="type in ['primary', 'secondary']"
-            :key="type"
-            class="flex flex-col gap-0.5"
-          >
+          <div v-for="type in ['primary', 'secondary']" :key="type" class="flex flex-col gap-0.5">
             <div class="flex items-center justify-between">
               <span class="text-gray-600 dark:text-gray-400">
                 {{ formatters.getCodexWindowLabel(type) }}
@@ -194,9 +198,9 @@
             </div>
             <div class="h-1.5 w-full overflow-hidden rounded-full bg-gray-200 dark:bg-gray-700">
               <div
+                class="h-full transition-all duration-300"
                 :class="formatters.getCodexUsageBarClass(account.codexUsage[type])"
                 :style="{ width: formatters.getCodexUsageWidth(account.codexUsage[type]) }"
-                class="h-full transition-all duration-300"
               />
             </div>
             <div class="text-gray-500 dark:text-gray-400">
@@ -217,9 +221,9 @@
             </div>
             <div class="h-1.5 w-full overflow-hidden rounded-full bg-gray-200 dark:bg-gray-700">
               <div
+                class="h-full transition-all duration-300"
                 :class="formatters.getQuotaBarClass(formatters.getQuotaUsagePercent(account))"
                 :style="{ width: `${formatters.getQuotaUsagePercent(account)}%` }"
-                class="h-full transition-all duration-300"
               />
             </div>
             <div class="text-gray-500 dark:text-gray-400">
@@ -237,9 +241,13 @@
             </div>
             <div class="h-1.5 w-full overflow-hidden rounded-full bg-gray-200 dark:bg-gray-700">
               <div
-                :class="formatters.getConcurrencyBarClass(formatters.getConsoleConcurrencyPercent(account))"
-                :style="{ width: `${formatters.getConsoleConcurrencyPercent(account)}%` }"
                 class="h-full transition-all duration-300"
+                :class="
+                  formatters.getConcurrencyBarClass(
+                    formatters.getConsoleConcurrencyPercent(account)
+                  )
+                "
+                :style="{ width: `${formatters.getConsoleConcurrencyPercent(account)}%` }"
               />
             </div>
           </div>
@@ -386,7 +394,8 @@ const getPlatformBadgeClass = (platform) => {
     'inline-flex items-center gap-1 rounded-md px-2 py-0.5 text-xs font-medium shadow-sm'
 
   const platformClasses = {
-    claude: 'bg-purple-100 text-purple-800 border border-purple-200 dark:bg-purple-900/30 dark:text-purple-300 dark:border-purple-700',
+    claude:
+      'bg-purple-100 text-purple-800 border border-purple-200 dark:bg-purple-900/30 dark:text-purple-300 dark:border-purple-700',
     'claude-official':
       'bg-purple-100 text-purple-800 border border-purple-200 dark:bg-purple-900/30 dark:text-purple-300 dark:border-purple-700',
     'claude-console':

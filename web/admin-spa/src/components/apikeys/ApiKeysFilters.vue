@@ -8,10 +8,10 @@
           <Icon class="h-5 w-5 text-gray-400" name="Search" />
         </div>
         <input
-          :value="searchQuery"
           class="block w-full rounded-lg border border-gray-300 bg-white py-2 pl-10 pr-3 text-sm placeholder-gray-500 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
           placeholder="搜索 API Key 名称..."
           type="text"
+          :value="searchQuery"
           @input="$emit('update:search-query', $event.target.value)"
         />
       </div>
@@ -61,9 +61,9 @@
             开始日期
           </label>
           <input
-            :value="customStartDate"
             class="block w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
             type="date"
+            :value="customStartDate"
             @input="handleCustomStartDateChange($event.target.value)"
           />
         </div>
@@ -73,9 +73,9 @@
             结束日期
           </label>
           <input
-            :value="customEndDate"
             class="block w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
             type="date"
+            :value="customEndDate"
             @input="handleCustomEndDateChange($event.target.value)"
           />
         </div>

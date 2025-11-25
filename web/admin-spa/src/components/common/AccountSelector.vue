@@ -2,17 +2,17 @@
   <div ref="triggerRef" class="relative">
     <!-- 选择器主体 -->
     <button
-      type="button"
-      :disabled="disabled"
       class="relative w-full cursor-pointer rounded-lg border border-gray-300 bg-white py-2 pl-3 pr-10 text-left text-sm shadow-sm transition-colors duration-200 hover:border-indigo-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-400 dark:border-gray-600 dark:bg-gray-700 dark:hover:border-indigo-500 dark:focus:border-indigo-400 dark:disabled:bg-gray-800"
+      :disabled="disabled"
+      type="button"
       @click="!disabled && toggleDropdown()"
     >
       <span class="block truncate">{{ selectedLabel }}</span>
       <span class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
         <Icon
-          name="ChevronDown"
           class="h-4 w-4 text-gray-400 transition-transform duration-200"
           :class="{ 'rotate-180': showDropdown }"
+          name="ChevronDown"
         />
       </span>
     </button>
@@ -30,8 +30,8 @@
         <div
           v-if="showDropdown"
           ref="dropdownRef"
-          :style="dropdownStyle"
           class="z-[9999] overflow-hidden rounded-lg border border-gray-200 bg-white shadow-xl dark:border-gray-700 dark:bg-gray-800"
+          :style="dropdownStyle"
         >
           <!-- 搜索框 -->
           <div
@@ -41,22 +41,22 @@
               <input
                 ref="searchInput"
                 v-model="searchQuery"
-                type="text"
-                placeholder="搜索账号名称..."
                 class="w-full rounded-md border border-gray-300 bg-white py-1.5 pl-9 pr-8 text-sm placeholder-gray-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 dark:placeholder-gray-500 dark:focus:border-indigo-400"
+                placeholder="搜索账号名称..."
+                type="text"
                 @input="handleSearch"
               />
               <Icon
-                name="Search"
                 class="absolute left-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400 dark:text-gray-500"
+                name="Search"
               />
               <button
                 v-if="searchQuery"
-                type="button"
                 class="absolute right-2 top-1/2 -translate-y-1/2 rounded p-0.5 text-gray-400 hover:bg-gray-200 hover:text-gray-600 dark:hover:bg-gray-600 dark:hover:text-gray-300"
+                type="button"
                 @click="clearSearch"
               >
-                <Icon name="X" class="h-3.5 w-3.5" />
+                <Icon class="h-3.5 w-3.5" name="X" />
               </button>
             </div>
           </div>
@@ -68,12 +68,12 @@
               <button
                 v-for="option in specialOptionsList"
                 :key="`special-${option.value}`"
-                type="button"
                 class="flex w-full items-center justify-between rounded-md px-3 py-2 text-left text-sm transition-colors hover:bg-indigo-50 dark:hover:bg-indigo-900/20"
                 :class="{
                   'bg-indigo-100 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-400':
                     modelValue === option.value
                 }"
+                type="button"
                 @click="selectAccount(option.value)"
               >
                 <span class="font-medium">{{ option.label }}</span>
@@ -85,16 +85,16 @@
 
             <!-- 默认选项（使用共享账号池） -->
             <button
-              type="button"
               class="mb-1 flex w-full items-center rounded-md px-3 py-2.5 text-left text-sm font-medium transition-colors hover:bg-gray-100 dark:hover:bg-gray-700"
               :class="{
                 'bg-indigo-100 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-400':
                   !modelValue,
                 'text-gray-700 dark:text-gray-200': modelValue
               }"
+              type="button"
               @click="selectAccount(null)"
             >
-              <Icon name="Layers" class="mr-2 h-4 w-4" />
+              <Icon class="mr-2 h-4 w-4" name="Layers" />
               <span>{{ defaultOptionText }}</span>
             </button>
 
@@ -108,16 +108,16 @@
               <button
                 v-for="group in filteredGroups"
                 :key="`group:${group.id}`"
-                type="button"
                 class="flex w-full items-center justify-between rounded-md px-3 py-2 text-left text-sm transition-colors hover:bg-gray-100 dark:hover:bg-gray-700"
                 :class="{
                   'bg-indigo-100 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-400':
                     modelValue === `group:${group.id}`
                 }"
+                type="button"
                 @click="selectAccount(`group:${group.id}`)"
               >
                 <div class="flex items-center">
-                  <Icon name="Users" class="mr-2 h-4 w-4" />
+                  <Icon class="mr-2 h-4 w-4" name="Users" />
                   <span class="font-medium">{{ group.name }}</span>
                 </div>
                 <span class="text-xs text-gray-500 dark:text-gray-400">
@@ -148,12 +148,12 @@
               <button
                 v-for="account in filteredOAuthAccounts"
                 :key="account.id"
-                type="button"
                 class="flex w-full items-center justify-between rounded-md px-3 py-2 text-left text-sm transition-colors hover:bg-gray-100 dark:hover:bg-gray-700"
                 :class="{
                   'bg-indigo-100 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-400':
                     modelValue === account.id
                 }"
+                type="button"
                 @click="selectAccount(account.id)"
               >
                 <div class="min-w-0 flex-1">
@@ -192,12 +192,12 @@
               <button
                 v-for="account in filteredConsoleAccounts"
                 :key="account.id"
-                type="button"
                 class="flex w-full items-center justify-between rounded-md px-3 py-2 text-left text-sm transition-colors hover:bg-gray-100 dark:hover:bg-gray-700"
                 :class="{
                   'bg-indigo-100 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-400':
                     modelValue === `console:${account.id}`
                 }"
+                type="button"
                 @click="selectAccount(`console:${account.id}`)"
               >
                 <div class="min-w-0 flex-1">
@@ -239,12 +239,12 @@
               <button
                 v-for="account in filteredOpenAIResponsesAccounts"
                 :key="account.id"
-                type="button"
                 class="flex w-full items-center justify-between rounded-md px-3 py-2 text-left text-sm transition-colors hover:bg-gray-100 dark:hover:bg-gray-700"
                 :class="{
                   'bg-indigo-100 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-400':
                     modelValue === `responses:${account.id}`
                 }"
+                type="button"
                 @click="selectAccount(`responses:${account.id}`)"
               >
                 <div class="min-w-0 flex-1">
@@ -278,11 +278,11 @@
               v-if="searchQuery && !hasResults"
               class="flex flex-col items-center justify-center py-8 text-center"
             >
-              <Icon name="Search" class="mb-2 h-12 w-12 text-gray-300 dark:text-gray-600" />
+              <Icon class="mb-2 h-12 w-12 text-gray-300 dark:text-gray-600" name="Search" />
               <p class="text-sm text-gray-500 dark:text-gray-400">没有找到匹配的账号</p>
               <button
-                type="button"
                 class="mt-3 text-sm text-indigo-600 hover:text-indigo-500 dark:text-indigo-400"
+                type="button"
                 @click="clearSearch"
               >
                 清除搜索
