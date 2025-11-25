@@ -43,9 +43,9 @@
                 />
               </svg>
             </div>
-            <span class="font-medium text-gray-700 dark:text-gray-300">输入 Token</span>
+            <span class="text-sm font-medium text-gray-700 dark:text-gray-300">输入 Token</span>
           </span>
-          <span class="font-mono text-base font-semibold text-blue-600 dark:text-blue-400">{{
+          <span class="font-mono text-sm font-semibold text-blue-600 dark:text-blue-400">{{
             formatNumber(currentPeriodData.inputTokens)
           }}</span>
         </div>
@@ -70,9 +70,9 @@
                 />
               </svg>
             </div>
-            <span class="font-medium text-gray-700 dark:text-gray-300">输出 Token</span>
+            <span class="text-sm font-medium text-gray-700 dark:text-gray-300">输出 Token</span>
           </span>
-          <span class="font-mono text-base font-semibold text-green-600 dark:text-green-400">{{
+          <span class="font-mono text-sm font-semibold text-green-600 dark:text-green-400">{{
             formatNumber(currentPeriodData.outputTokens)
           }}</span>
         </div>
@@ -97,9 +97,9 @@
                 />
               </svg>
             </div>
-            <span class="font-medium text-gray-700 dark:text-gray-300">缓存创建 Token</span>
+            <span class="text-sm font-medium text-gray-700 dark:text-gray-300">缓存创建 Token</span>
           </span>
-          <span class="font-mono text-base font-semibold text-amber-600 dark:text-amber-400">{{
+          <span class="font-mono text-sm font-semibold text-amber-600 dark:text-amber-400">{{
             formatNumber(currentPeriodData.cacheCreateTokens)
           }}</span>
         </div>
@@ -124,9 +124,9 @@
                 />
               </svg>
             </div>
-            <span class="font-medium text-gray-700 dark:text-gray-300">缓存读取 Token</span>
+            <span class="text-sm font-medium text-gray-700 dark:text-gray-300">缓存读取 Token</span>
           </span>
-          <span class="font-mono text-base font-semibold text-purple-600 dark:text-purple-400">{{
+          <span class="font-mono text-sm font-semibold text-purple-600 dark:text-purple-400">{{
             formatNumber(currentPeriodData.cacheReadTokens)
           }}</span>
         </div>
@@ -156,7 +156,7 @@
             <span>{{ statsPeriod === 'daily' ? '今日' : '本月' }}总计</span>
           </span>
           <span
-            class="bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text font-mono text-xl font-bold text-transparent dark:from-indigo-400 dark:to-purple-400"
+            class="bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text font-mono text-lg font-bold text-transparent dark:from-indigo-400 dark:to-purple-400"
             >{{ formatNumber(currentPeriodData.allTokens) }}</span
           >
         </div>
