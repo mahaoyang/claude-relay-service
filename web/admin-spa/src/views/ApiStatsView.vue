@@ -157,7 +157,7 @@
 
           <!-- 教程内容 -->
           <div v-else-if="currentTab === 'tutorial'" key="tutorial">
-            <TutorialView />
+            <TutorialView transparent />
           </div>
         </Transition>
       </div>
