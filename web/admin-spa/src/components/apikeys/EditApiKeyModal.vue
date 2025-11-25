@@ -22,19 +22,12 @@
 
         <!-- 所有者选择 -->
         <div class="mb-4">
-          <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
-            >所有者</label
-          >
-          <select
+          <Select
             v-model="form.ownerId"
-            class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm text-gray-900 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
-          >
-            <option v-for="user in availableUsers" :key="user.id" :value="user.id">
-              {{ user.displayName }} ({{ user.username }}){{
-                user.role === 'admin' ? ' - 管理员' : ''
-              }}
-            </option>
-          </select>
+            :options="userOptions"
+            label="所有者"
+            placeholder="请选择所有者"
+          />
           <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
             分配此 API Key 给指定用户或管理员，管理员分配时不受用户 API Key 数量限制
           </p>
@@ -706,6 +699,7 @@ import { apiClient } from '@/config/api'
 import BaseModal from '@/components/common/BaseModal.vue'
 import AccountSelector from '@/components/common/AccountSelector.vue'
 import Icon from '@/components/common/Icon.vue'
+import Select from '@/ui/Select.vue'
 
 const props = defineProps({
   apiKey: {
@@ -753,6 +747,14 @@ const supportedClients = ref([])
 
 // 可用用户列表
 const availableUsers = ref([])
+
+// 转换用户列表为 Select 组件格式
+const userOptions = computed(() => {
+  return availableUsers.value.map((user) => ({
+    value: user.id,
+    label: `${user.displayName} (${user.username})${user.role === 'admin' ? ' - 管理员' : ''}`
+  }))
+})
 
 // 标签相关
 const newTag = ref('')
