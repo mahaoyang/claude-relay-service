@@ -4,7 +4,12 @@
       class="mb-4 flex items-center justify-between text-sm font-semibold text-gray-900 dark:text-gray-100"
     >
       <span class="flex items-center gap-2">
-        <svg class="h-4 w-4 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg
+          class="h-4 w-4 text-primary-600 dark:text-primary-400"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
           <path
             d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
             stroke-linecap="round"
@@ -25,12 +30,12 @@
       <div class="space-y-2">
         <!-- 输入 Token -->
         <div
-          class="group flex items-center justify-between rounded-xl border border-gray-200 bg-gray-50 p-3 transition-all hover:border-gray-300 hover:shadow-sm dark:border-gray-700 dark:bg-gray-800/50"
+          class="group flex items-center justify-between rounded-xl border border-gray-200 bg-gray-50 p-3 transition-all hover:border-primary-200 hover:shadow-sm dark:border-gray-700 dark:bg-gray-800/50"
         >
           <span class="flex items-center gap-3">
-            <div class="rounded-lg bg-gray-200 p-1.5 dark:bg-gray-700">
+            <div class="rounded-lg bg-primary-50 p-1.5 dark:bg-primary-900/20">
               <svg
-                class="h-4 w-4 text-gray-600 dark:text-gray-400"
+                class="h-4 w-4 text-primary-600 dark:text-primary-400"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -52,12 +57,12 @@
 
         <!-- 输出 Token -->
         <div
-          class="group flex items-center justify-between rounded-xl border border-gray-200 bg-gray-50 p-3 transition-all hover:border-gray-300 hover:shadow-sm dark:border-gray-700 dark:bg-gray-800/50"
+          class="group flex items-center justify-between rounded-xl border border-gray-200 bg-gray-50 p-3 transition-all hover:border-primary-200 hover:shadow-sm dark:border-gray-700 dark:bg-gray-800/50"
         >
           <span class="flex items-center gap-3">
-            <div class="rounded-lg bg-gray-200 p-1.5 dark:bg-gray-700">
+            <div class="rounded-lg bg-primary-50 p-1.5 dark:bg-primary-900/20">
               <svg
-                class="h-4 w-4 text-gray-600 dark:text-gray-400"
+                class="h-4 w-4 text-primary-600 dark:text-primary-400"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -79,12 +84,12 @@
 
         <!-- 缓存创建 Token -->
         <div
-          class="group flex items-center justify-between rounded-xl border border-gray-200 bg-gray-50 p-3 transition-all hover:border-gray-300 hover:shadow-sm dark:border-gray-700 dark:bg-gray-800/50"
+          class="group flex items-center justify-between rounded-xl border border-gray-200 bg-gray-50 p-3 transition-all hover:border-primary-200 hover:shadow-sm dark:border-gray-700 dark:bg-gray-800/50"
         >
           <span class="flex items-center gap-3">
-            <div class="rounded-lg bg-gray-200 p-1.5 dark:bg-gray-700">
+            <div class="rounded-lg bg-primary-50 p-1.5 dark:bg-primary-900/20">
               <svg
-                class="h-4 w-4 text-gray-600 dark:text-gray-400"
+                class="h-4 w-4 text-primary-600 dark:text-primary-400"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -106,12 +111,12 @@
 
         <!-- 缓存读取 Token -->
         <div
-          class="group flex items-center justify-between rounded-xl border border-gray-200 bg-gray-50 p-3 transition-all hover:border-gray-300 hover:shadow-sm dark:border-gray-700 dark:bg-gray-800/50"
+          class="group flex items-center justify-between rounded-xl border border-gray-200 bg-gray-50 p-3 transition-all hover:border-primary-200 hover:shadow-sm dark:border-gray-700 dark:bg-gray-800/50"
         >
           <span class="flex items-center gap-3">
-            <div class="rounded-lg bg-gray-200 p-1.5 dark:bg-gray-700">
+            <div class="rounded-lg bg-primary-50 p-1.5 dark:bg-primary-900/20">
               <svg
-                class="h-4 w-4 text-gray-600 dark:text-gray-400"
+                class="h-4 w-4 text-primary-600 dark:text-primary-400"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -134,14 +139,14 @@
 
       <!-- 总计 -->
       <div
-        class="mt-4 rounded-xl border-2 border-dashed border-gray-300 bg-gray-50 p-4 dark:border-gray-600 dark:bg-gray-800"
+        class="mt-4 rounded-xl border-2 border-dashed border-primary-200 bg-primary-50/30 p-4 dark:border-primary-800 dark:bg-primary-900/10"
       >
         <div class="flex items-center justify-between">
           <span
             class="flex items-center gap-2 text-sm font-semibold text-gray-900 dark:text-gray-100"
           >
             <svg
-              class="h-4 w-4 text-gray-600 dark:text-gray-400"
+              class="h-4 w-4 text-primary-600 dark:text-primary-400"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -155,7 +160,7 @@
             </svg>
             <span>{{ statsPeriod === 'daily' ? '今日' : '本月' }}总计</span>
           </span>
-          <span class="font-mono text-lg font-bold text-gray-900 dark:text-white">{{
+          <span class="font-mono text-lg font-bold text-primary-600 dark:text-primary-400">{{
             formatNumber(currentPeriodData.allTokens)
           }}</span>
         </div>

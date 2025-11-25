@@ -62,26 +62,26 @@
           </div>
           <div class="space-y-3">
             <div
-              class="flex items-center justify-between rounded-lg bg-gray-100 p-3 dark:bg-gray-800"
+              class="flex items-center justify-between rounded-lg bg-primary-50 p-3 dark:bg-primary-900/20"
             >
               <span class="text-sm text-gray-700 dark:text-gray-300"> 总请求数 </span>
-              <span class="font-semibold text-gray-900 dark:text-white">
+              <span class="font-semibold text-primary-600 dark:text-primary-400">
                 {{ formatNumber(aggregatedStats.usage.requests) }}
               </span>
             </div>
             <div
-              class="flex items-center justify-between rounded-lg bg-gray-100 p-3 dark:bg-gray-800"
+              class="flex items-center justify-between rounded-lg bg-primary-50 p-3 dark:bg-primary-900/20"
             >
               <span class="text-sm text-gray-700 dark:text-gray-300"> 总 Tokens </span>
-              <span class="font-semibold text-gray-900 dark:text-white">
+              <span class="font-semibold text-primary-600 dark:text-primary-400">
                 {{ formatNumber(aggregatedStats.usage.allTokens) }}
               </span>
             </div>
             <div
-              class="flex items-center justify-between rounded-lg bg-gray-100 p-3 dark:bg-gray-800"
+              class="flex items-center justify-between rounded-lg bg-primary-50 p-3 dark:bg-primary-900/20"
             >
               <span class="text-sm text-gray-700 dark:text-gray-300"> 总费用 </span>
-              <span class="font-semibold text-gray-900 dark:text-white">
+              <span class="font-semibold text-primary-600 dark:text-primary-400">
                 {{ aggregatedStats.usage.formattedCost }}
               </span>
             </div>
@@ -352,7 +352,7 @@ const getDailyCostProgress = () => {
 }
 
 const getDailyCostProgressColor = () => {
-  return 'bg-gray-500 dark:bg-gray-400'
+  return 'bg-primary-500 dark:bg-primary-400'
 }
 
 const getTotalCostProgress = () => {
@@ -364,7 +364,7 @@ const getTotalCostProgress = () => {
 }
 
 const getTotalCostProgressColor = () => {
-  return 'bg-gray-500 dark:bg-gray-400'
+  return 'bg-primary-500 dark:bg-primary-400'
 }
 
 const getOpusWeeklyCostProgress = () => {
@@ -379,7 +379,7 @@ const getOpusWeeklyCostProgress = () => {
 }
 
 const getOpusWeeklyCostProgressColor = () => {
-  return 'bg-gray-500 dark:bg-gray-400'
+  return 'bg-primary-500 dark:bg-primary-400'
 }
 
 // 格式化数字
