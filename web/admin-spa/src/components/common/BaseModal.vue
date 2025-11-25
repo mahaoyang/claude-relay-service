@@ -49,7 +49,7 @@
         <!-- 底部按钮区 -->
         <div
           v-if="$slots.footer"
-          class="flex justify-end gap-3 border-t border-gray-200 bg-gray-50 px-6 py-4 dark:border-gray-700 dark:bg-gray-900"
+          class="flex justify-end gap-3 rounded-b-lg border-t border-gray-200 bg-gray-50 px-6 py-4 dark:border-gray-700 dark:bg-gray-900"
         >
           <slot name="footer" />
         </div>
