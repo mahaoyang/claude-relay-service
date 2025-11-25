@@ -663,6 +663,82 @@
             </div>
           </div>
         </div>
+
+        <!-- SessionId 收集配置 (伪装白名单) -->
+        <div class="mb-4 rounded-lg border border-gray-200 p-4 dark:border-gray-700">
+          <div class="flex items-center gap-3">
+            <input
+              id="editEnableSessionCollection"
+              v-model="form.sessionCollection.enabled"
+              class="h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700"
+              type="checkbox"
+            />
+            <label
+              class="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300"
+              for="editEnableSessionCollection"
+            >
+              <Icon class="h-4 w-4 text-purple-500" name="Fingerprint" />
+              启用 SessionId 收集 (伪装白名单)
+            </label>
+          </div>
+          <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">
+            启用后，此 API Key 的请求会被纳入伪装中间件的 SessionId
+            收集白名单，收集的会话ID将用于请求伪装
+          </p>
+
+          <div v-if="form.sessionCollection.enabled" class="mt-4 space-y-4">
+            <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+              <div>
+                <label class="mb-1 block text-xs font-medium text-gray-700 dark:text-gray-300"
+                  >优先级 (1-10)</label
+                >
+                <input
+                  v-model.number="form.sessionCollection.priority"
+                  class="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 placeholder-gray-500 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
+                  max="10"
+                  min="1"
+                  type="number"
+                />
+                <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                  优先级越高，收集的 SessionId 越优先被使用
+                </p>
+              </div>
+              <div>
+                <label class="mb-1 block text-xs font-medium text-gray-700 dark:text-gray-300"
+                  >收集配额</label
+                >
+                <input
+                  v-model.number="form.sessionCollection.quota"
+                  class="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 placeholder-gray-500 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
+                  min="-1"
+                  placeholder="-1 表示无限制"
+                  type="number"
+                />
+                <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                  此 Key 最多收集的 SessionId 数量，-1 表示无限制
+                </p>
+              </div>
+            </div>
+
+            <!-- 收集统计信息 -->
+            <div
+              v-if="form.sessionCollection.collectedCount > 0"
+              class="rounded-lg bg-purple-50 p-3 dark:bg-purple-900/20"
+            >
+              <div class="flex items-center gap-2 text-xs text-purple-700 dark:text-purple-300">
+                <Icon class="h-4 w-4" name="BarChart3" />
+                <span>
+                  已收集
+                  <strong>{{ form.sessionCollection.collectedCount }}</strong> 个 SessionId
+                  <span v-if="form.sessionCollection.lastCollectedAt">
+                    ，最后收集于
+                    {{ formatDate(form.sessionCollection.lastCollectedAt) }}
+                  </span>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </template>
 
@@ -789,7 +865,14 @@ const form = reactive({
   allowedClients: [],
   tags: [],
   isActive: true,
-  ownerId: '' // 新增：所有者ID
+  ownerId: '', // 新增：所有者ID
+  sessionCollection: {
+    enabled: false,
+    priority: 1,
+    quota: -1,
+    collectedCount: 0,
+    lastCollectedAt: null
+  }
 })
 
 // 添加限制的模型
@@ -963,6 +1046,13 @@ const updateApiKey = async () => {
     // 所有者
     if (form.ownerId !== undefined) {
       data.ownerId = form.ownerId
+    }
+
+    // SessionId 收集配置
+    data.sessionCollection = {
+      enabled: form.sessionCollection.enabled,
+      priority: form.sessionCollection.priority,
+      quota: form.sessionCollection.quota
     }
 
     const result = await apiClient.put(`/admin/api-keys/${props.apiKey.id}`, data)
@@ -1259,5 +1349,28 @@ onMounted(async () => {
 
   // 初始化所有者
   form.ownerId = props.apiKey.userId || 'admin'
+
+  // 初始化 sessionCollection
+  const sc = props.apiKey.sessionCollection || {}
+  form.sessionCollection = {
+    enabled: sc.enabled === true || sc.enabled === 'true',
+    priority: parseInt(sc.priority) || 1,
+    quota: sc.quota !== undefined ? parseInt(sc.quota) : -1,
+    collectedCount: parseInt(sc.collectedCount) || 0,
+    lastCollectedAt: sc.lastCollectedAt || null
+  }
 })
+
+// 格式化日期
+const formatDate = (dateString) => {
+  if (!dateString) return ''
+  const date = new Date(dateString)
+  return date.toLocaleString('zh-CN', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit'
+  })
+}
 </script>
