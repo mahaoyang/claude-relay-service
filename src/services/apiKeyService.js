@@ -722,7 +722,8 @@ class ApiKeyService {
         'tags',
         'userId', // 新增：用户ID（所有者变更）
         'userUsername', // 新增：用户名（所有者变更）
-        'createdBy' // 新增：创建者（所有者变更）
+        'createdBy', // 新增：创建者（所有者变更）
+        'sessionCollection' // sessionId 收集配置
       ]
       const updatedData = { ...keyData }
 
@@ -731,6 +732,20 @@ class ApiKeyService {
           if (field === 'restrictedModels' || field === 'allowedClients' || field === 'tags') {
             // 特殊处理数组字段
             updatedData[field] = JSON.stringify(value || [])
+          } else if (field === 'sessionCollection') {
+            // 特殊处理 sessionCollection ���象字段
+            const currentCollection = keyData.sessionCollection
+              ? JSON.parse(keyData.sessionCollection)
+              : {}
+            const merged = {
+              enabled: value?.enabled ?? currentCollection.enabled ?? false,
+              priority: value?.priority ?? currentCollection.priority ?? 1,
+              quota: value?.quota ?? currentCollection.quota ?? -1,
+              collectedCount: currentCollection.collectedCount || 0, // 保留统计数据
+              lastCollectedAt: currentCollection.lastCollectedAt || null, // 保留统计数据
+              tags: value?.tags ?? currentCollection.tags ?? []
+            }
+            updatedData[field] = JSON.stringify(merged)
           } else if (
             field === 'enableModelRestriction' ||
             field === 'enableClientRestriction' ||

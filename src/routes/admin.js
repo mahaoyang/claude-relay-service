@@ -1145,7 +1145,8 @@ router.put('/api-keys/:keyId', authenticateAdmin, async (req, res) => {
       totalCostLimit,
       weeklyOpusCostLimit,
       tags,
-      ownerId // 新增：所有者ID字段
+      ownerId, // 新增：所有者ID字段
+      sessionCollection // sessionId 收集配置
     } = req.body
 
     // 只允许更新指定字段
@@ -1330,6 +1331,39 @@ router.put('/api-keys/:keyId', authenticateAdmin, async (req, res) => {
         return res.status(400).json({ error: 'All tags must be non-empty strings' })
       }
       updates.tags = tags
+    }
+
+    // 处理 sessionCollection (sessionId 收集配置)
+    if (sessionCollection !== undefined) {
+      if (typeof sessionCollection !== 'object' || sessionCollection === null) {
+        return res.status(400).json({ error: 'sessionCollection must be an object' })
+      }
+      // 验证 enabled 字段
+      if (
+        sessionCollection.enabled !== undefined &&
+        typeof sessionCollection.enabled !== 'boolean'
+      ) {
+        return res.status(400).json({ error: 'sessionCollection.enabled must be a boolean' })
+      }
+      // 验证 priority 字段 (1-10)
+      if (sessionCollection.priority !== undefined) {
+        const priority = Number(sessionCollection.priority)
+        if (!Number.isInteger(priority) || priority < 1 || priority > 10) {
+          return res
+            .status(400)
+            .json({ error: 'sessionCollection.priority must be an integer between 1 and 10' })
+        }
+      }
+      // 验证 quota 字段 (-1 表示无限制)
+      if (sessionCollection.quota !== undefined) {
+        const quota = Number(sessionCollection.quota)
+        if (!Number.isInteger(quota) || quota < -1) {
+          return res.status(400).json({
+            error: 'sessionCollection.quota must be an integer >= -1 (-1 means unlimited)'
+          })
+        }
+      }
+      updates.sessionCollection = sessionCollection
     }
 
     // 处理活跃/禁用状态状态, 放在过期处理后，以确保后续增加禁用key功能
