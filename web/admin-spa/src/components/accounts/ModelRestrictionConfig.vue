@@ -150,6 +150,7 @@ const props = defineProps({
       { value: 'claude-sonnet-4-20250514', label: 'Sonnet 4' },
       { value: 'claude-sonnet-4-5-20250929', label: 'Sonnet 4.5' },
       { value: 'claude-opus-4-1-20250805', label: 'Opus 4.1' },
+      { value: 'claude-opus-4-5-20251101', label: 'Opus 4.5' },
       { value: 'claude-3-5-haiku-20241022', label: 'Haiku 3.5' },
       { value: 'claude-3-5-sonnet-20241022', label: 'Sonnet 3.5' },
       { value: 'claude-3-5-sonnet-20240620', label: 'Sonnet 3.5 (旧)' },
@@ -189,6 +190,12 @@ const presetMappings = computed(() => [
     label: 'Opus 4.1',
     colorClass:
       'bg-purple-100 text-purple-700 hover:bg-purple-200 dark:bg-purple-900/30 dark:text-purple-400 dark:hover:bg-purple-900/50'
+  },
+  {
+    model: 'claude-opus-4-5-20251101',
+    label: 'Opus 4.5',
+    colorClass:
+      'bg-violet-100 text-violet-700 hover:bg-violet-200 dark:bg-violet-900/30 dark:text-violet-400 dark:hover:bg-violet-900/50'
   },
   {
     model: 'claude-3-5-haiku-20241022',
