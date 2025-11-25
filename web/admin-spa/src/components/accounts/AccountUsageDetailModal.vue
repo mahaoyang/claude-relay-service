@@ -425,6 +425,7 @@ const platformLabelMap = {
   openai: 'OpenAI',
   'openai-responses': 'OpenAI Responses',
   gemini: 'Gemini',
+  'gemini-api': 'Gemini API',
   droid: 'Droid'
 }
 

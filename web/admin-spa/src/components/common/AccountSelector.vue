@@ -472,7 +472,9 @@ const filteredOAuthAccounts = computed(() => {
   } else if (props.platform === 'droid') {
     accounts = sortedAccounts.value.filter((a) => a.platform === 'droid')
   } else if (props.platform === 'gemini') {
-    accounts = sortedAccounts.value.filter((a) => a.platform === 'gemini')
+    accounts = sortedAccounts.value.filter(
+      (a) => a.platform === 'gemini' || a.platform === 'gemini-api'
+    )
   } else if (props.platform === 'bedrock') {
     accounts = sortedAccounts.value.filter((a) => a.platform === 'bedrock')
   } else {

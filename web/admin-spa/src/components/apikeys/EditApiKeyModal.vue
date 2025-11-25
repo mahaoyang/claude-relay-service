@@ -988,6 +988,7 @@ const refreshAccounts = async () => {
       claudeData,
       claudeConsoleData,
       geminiData,
+      geminiApiData,
       openaiData,
       openaiResponsesData,
       bedrockData,
@@ -997,6 +998,7 @@ const refreshAccounts = async () => {
       apiClient.get('/admin/claude-accounts'),
       apiClient.get('/admin/claude-console-accounts'),
       apiClient.get('/admin/gemini-accounts'),
+      apiClient.get('/admin/gemini-api-accounts'),
       apiClient.get('/admin/openai-accounts'),
       apiClient.get('/admin/openai-responses-accounts'),
       apiClient.get('/admin/bedrock-accounts'),
@@ -1029,12 +1031,30 @@ const refreshAccounts = async () => {
 
     localAccounts.value.claude = claudeAccounts
 
+    // 合并 Gemini OAuth 和 Gemini API 账号
+    const geminiAccounts = []
+
     if (geminiData.success) {
-      localAccounts.value.gemini = (geminiData.data || []).map((account) => ({
-        ...account,
-        isDedicated: account.accountType === 'dedicated'
-      }))
+      ;(geminiData.data || []).forEach((account) => {
+        geminiAccounts.push({
+          ...account,
+          platform: 'gemini',
+          isDedicated: account.accountType === 'dedicated'
+        })
+      })
     }
+
+    if (geminiApiData.success) {
+      ;(geminiApiData.data || []).forEach((account) => {
+        geminiAccounts.push({
+          ...account,
+          platform: 'gemini-api',
+          isDedicated: account.accountType === 'dedicated'
+        })
+      })
+    }
+
+    localAccounts.value.gemini = geminiAccounts
 
     // 合并 OpenAI 和 OpenAI-Responses 账号
     const openaiAccounts = []
@@ -1135,6 +1155,25 @@ onMounted(async () => {
 
   // 初始化账号数据
   if (props.accounts) {
+    // 合并 Gemini OAuth 和 Gemini API 账号
+    const geminiAccounts = []
+    if (props.accounts.gemini) {
+      props.accounts.gemini.forEach((account) => {
+        geminiAccounts.push({
+          ...account,
+          platform: 'gemini'
+        })
+      })
+    }
+    if (props.accounts.geminiApi) {
+      props.accounts.geminiApi.forEach((account) => {
+        geminiAccounts.push({
+          ...account,
+          platform: 'gemini-api'
+        })
+      })
+    }
+
     // 合并 OpenAI 和 OpenAI-Responses 账号
     const openaiAccounts = []
     if (props.accounts.openai) {
@@ -1156,7 +1195,7 @@ onMounted(async () => {
 
     localAccounts.value = {
       claude: props.accounts.claude || [],
-      gemini: props.accounts.gemini || [],
+      gemini: geminiAccounts,
       openai: openaiAccounts,
       bedrock: props.accounts.bedrock || [],
       droid: (props.accounts.droid || []).map((account) => ({
@@ -1170,8 +1209,7 @@ onMounted(async () => {
     }
   }
 
-  // 自动加载账号数据
-  await refreshAccounts()
+  // 使用缓存的账号数据，不自动刷新（用户可点击"刷新账号"按钮手动刷新）
 
   form.name = props.apiKey.name
 
@@ -1208,11 +1246,16 @@ onMounted(async () => {
   form.restrictedModels = props.apiKey.restrictedModels || []
   form.allowedClients = props.apiKey.allowedClients || []
   form.tags = props.apiKey.tags || []
-  // 从后端数据中获取实际的启用状态，而不是根据数组长度推断
-  form.enableModelRestriction = props.apiKey.enableModelRestriction || false
-  form.enableClientRestriction = props.apiKey.enableClientRestriction || false
-  // 初始化活跃状态，默认为 true
-  form.isActive = props.apiKey.isActive !== undefined ? props.apiKey.isActive : true
+  // 从后端数据中获取实际的启用状态，强制转换为布尔值（Redis返回的是字符串）
+  form.enableModelRestriction =
+    props.apiKey.enableModelRestriction === true || props.apiKey.enableModelRestriction === 'true'
+  form.enableClientRestriction =
+    props.apiKey.enableClientRestriction === true || props.apiKey.enableClientRestriction === 'true'
+  // 初始化活跃状态，默认为 true（强制转换为布尔值，因为Redis返回字符串）
+  form.isActive =
+    props.apiKey.isActive === undefined ||
+    props.apiKey.isActive === true ||
+    props.apiKey.isActive === 'true'
 
   // 初始化所有者
   form.ownerId = props.apiKey.userId || 'admin'

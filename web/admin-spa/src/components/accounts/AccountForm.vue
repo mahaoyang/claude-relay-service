@@ -413,6 +413,37 @@
                       class="absolute -right-1 -top-1 h-4 w-4 rounded-full border-2 border-white bg-primary-500 dark:border-gray-800"
                     ></div>
                   </label>
+
+                  <label
+                    class="relative flex cursor-pointer flex-col rounded-lg border-2 p-3 transition-all hover:border-primary-300 dark:hover:border-primary-600"
+                    :class="
+                      form.platform === 'gemini-api'
+                        ? 'border-primary-500 bg-primary-50 dark:border-primary-500 dark:bg-primary-900/20'
+                        : 'border-gray-200 dark:border-gray-700'
+                    "
+                  >
+                    <input
+                      v-model="form.platform"
+                      class="sr-only"
+                      type="radio"
+                      value="gemini-api"
+                    />
+                    <div class="flex flex-col">
+                      <div class="flex items-center justify-between">
+                        <span class="text-sm font-medium text-gray-900 dark:text-white"
+                          >Gemini API</span
+                        >
+                        <span
+                          class="rounded-full bg-green-100 px-2 py-0.5 text-xs text-green-600 dark:bg-green-900/30 dark:text-green-400"
+                          >API Key</span
+                        >
+                      </div>
+                    </div>
+                    <div
+                      v-if="form.platform === 'gemini-api'"
+                      class="absolute -right-1 -top-1 h-4 w-4 rounded-full border-2 border-white bg-primary-500 dark:border-gray-800"
+                    ></div>
+                  </label>
                 </template>
 
                 <!-- Droid 子选项 -->
