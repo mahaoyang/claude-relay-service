@@ -1,75 +1,136 @@
 <template>
-  <div ref="triggerRef">
+  <div ref="triggerRef" class="relative">
     <!-- 选择器主体 -->
-    <div @click="!disabled && toggleDropdown()">
-      <span>{{ selectedLabel }}</span>
-    </div>
+    <button
+      type="button"
+      :disabled="disabled"
+      class="relative w-full cursor-pointer rounded-lg border border-gray-300 bg-white py-2 pl-3 pr-10 text-left text-sm shadow-sm transition-colors duration-200 hover:border-indigo-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-400 dark:border-gray-600 dark:bg-gray-700 dark:hover:border-indigo-500 dark:focus:border-indigo-400 dark:disabled:bg-gray-800"
+      @click="!disabled && toggleDropdown()"
+    >
+      <span class="block truncate">{{ selectedLabel }}</span>
+      <span class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
+        <Icon
+          name="ChevronDown"
+          class="h-4 w-4 text-gray-400 transition-transform duration-200"
+          :class="{ 'rotate-180': showDropdown }"
+        />
+      </span>
+    </button>
 
     <!-- 下拉菜单 -->
     <Teleport to="body">
       <Transition
         enter-active-class="transition ease-out duration-100"
-        enter-from-class="opacity-0"
-        enter-to-class="opacity-100"
+        enter-from-class="opacity-0 scale-95"
+        enter-to-class="opacity-100 scale-100"
         leave-active-class="transition ease-in duration-75"
-        leave-from-class="opacity-100"
-        leave-to-class="opacity-0"
+        leave-from-class="opacity-100 scale-100"
+        leave-to-class="opacity-0 scale-95"
       >
-        <div v-if="showDropdown" ref="dropdownRef">
+        <div
+          v-if="showDropdown"
+          ref="dropdownRef"
+          :style="dropdownStyle"
+          class="z-[9999] overflow-hidden rounded-lg border border-gray-200 bg-white shadow-xl dark:border-gray-700 dark:bg-gray-800"
+        >
           <!-- 搜索框 -->
-          <div>
-            <div>
+          <div
+            class="border-b border-gray-200 bg-gray-50 p-2 dark:border-gray-700 dark:bg-gray-800"
+          >
+            <div class="relative">
               <input
                 ref="searchInput"
                 v-model="searchQuery"
-                placeholder="搜索账号名称..."
                 type="text"
+                placeholder="搜索账号名称..."
+                class="w-full rounded-md border border-gray-300 bg-white py-1.5 pl-9 pr-8 text-sm placeholder-gray-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 dark:placeholder-gray-500 dark:focus:border-indigo-400"
                 @input="handleSearch"
               />
-              <Icon name="Search" />
-              <button v-if="searchQuery" type="button" @click="clearSearch"></button>
+              <Icon
+                name="Search"
+                class="absolute left-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400 dark:text-gray-500"
+              />
+              <button
+                v-if="searchQuery"
+                type="button"
+                class="absolute right-2 top-1/2 -translate-y-1/2 rounded p-0.5 text-gray-400 hover:bg-gray-200 hover:text-gray-600 dark:hover:bg-gray-600 dark:hover:text-gray-300"
+                @click="clearSearch"
+              >
+                <Icon name="X" class="h-3.5 w-3.5" />
+              </button>
             </div>
           </div>
 
           <!-- 选项列表 -->
-          <div>
+          <div class="max-h-80 overflow-y-auto p-1">
             <!-- 特殊选项 -->
-            <div v-if="specialOptionsList.length > 0">
-              <div
+            <div v-if="specialOptionsList.length > 0" class="mb-1">
+              <button
                 v-for="option in specialOptionsList"
                 :key="`special-${option.value}`"
+                type="button"
+                class="flex w-full items-center justify-between rounded-md px-3 py-2 text-left text-sm transition-colors hover:bg-indigo-50 dark:hover:bg-indigo-900/20"
+                :class="{
+                  'bg-indigo-100 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-400':
+                    modelValue === option.value
+                }"
                 @click="selectAccount(option.value)"
               >
-                <span>{{ option.label }}</span>
-                <span v-if="option.description">
+                <span class="font-medium">{{ option.label }}</span>
+                <span v-if="option.description" class="text-xs text-gray-500 dark:text-gray-400">
                   {{ option.description }}
                 </span>
-              </div>
+              </button>
             </div>
 
-            <!-- 默认选项 -->
-            <div @click="selectAccount(null)">
+            <!-- 默认选项（使用共享账号池） -->
+            <button
+              type="button"
+              class="mb-1 flex w-full items-center rounded-md px-3 py-2.5 text-left text-sm font-medium transition-colors hover:bg-gray-100 dark:hover:bg-gray-700"
+              :class="{
+                'bg-indigo-100 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-400':
+                  !modelValue,
+                'text-gray-700 dark:text-gray-200': modelValue
+              }"
+              @click="selectAccount(null)"
+            >
+              <Icon name="Layers" class="mr-2 h-4 w-4" />
               <span>{{ defaultOptionText }}</span>
-            </div>
+            </button>
 
             <!-- 分组选项 -->
-            <div v-if="filteredGroups.length > 0">
-              <div>调度分组</div>
+            <div v-if="filteredGroups.length > 0" class="mb-2">
               <div
+                class="mb-1 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400"
+              >
+                调度分组
+              </div>
+              <button
                 v-for="group in filteredGroups"
                 :key="`group:${group.id}`"
+                type="button"
+                class="flex w-full items-center justify-between rounded-md px-3 py-2 text-left text-sm transition-colors hover:bg-gray-100 dark:hover:bg-gray-700"
+                :class="{
+                  'bg-indigo-100 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-400':
+                    modelValue === `group:${group.id}`
+                }"
                 @click="selectAccount(`group:${group.id}`)"
               >
-                <div>
-                  <span>{{ group.name }}</span>
-                  <span>{{ group.memberCount || 0 }} 个成员</span>
+                <div class="flex items-center">
+                  <Icon name="Users" class="mr-2 h-4 w-4" />
+                  <span class="font-medium">{{ group.name }}</span>
                 </div>
-              </div>
+                <span class="text-xs text-gray-500 dark:text-gray-400">
+                  {{ group.memberCount || 0 }} 个成员
+                </span>
+              </button>
             </div>
 
             <!-- OAuth 账号 -->
-            <div v-if="filteredOAuthAccounts.length > 0">
-              <div>
+            <div v-if="filteredOAuthAccounts.length > 0" class="mb-2">
+              <div
+                class="mb-1 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400"
+              >
                 {{
                   platform === 'claude'
                     ? 'Claude OAuth 专属账号'
@@ -77,76 +138,164 @@
                       ? 'OpenAI 专属账号'
                       : platform === 'droid'
                         ? 'Droid 专属账号'
-                        : 'OAuth 专属账号'
+                        : platform === 'gemini'
+                          ? 'Gemini 专属账号'
+                          : platform === 'bedrock'
+                            ? 'Bedrock 专属账号'
+                            : 'OAuth 专属账号'
                 }}
               </div>
-              <div
+              <button
                 v-for="account in filteredOAuthAccounts"
                 :key="account.id"
+                type="button"
+                class="flex w-full items-center justify-between rounded-md px-3 py-2 text-left text-sm transition-colors hover:bg-gray-100 dark:hover:bg-gray-700"
+                :class="{
+                  'bg-indigo-100 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-400':
+                    modelValue === account.id
+                }"
                 @click="selectAccount(account.id)"
               >
-                <div>
-                  <div>
-                    <span>{{ account.name }}</span>
-                    <span>
+                <div class="min-w-0 flex-1">
+                  <div class="flex items-center gap-2">
+                    <span class="truncate font-medium">{{ account.name }}</span>
+                    <span
+                      class="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium"
+                      :class="{
+                        'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400':
+                          getAccountStatusText(account) === '正常',
+                        'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400':
+                          getAccountStatusText(account) === '限流中',
+                        'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400': ![
+                          '正常',
+                          '限流中'
+                        ].includes(getAccountStatusText(account))
+                      }"
+                    >
                       {{ getAccountStatusText(account) }}
                     </span>
                   </div>
-                  <span>
+                  <span class="mt-0.5 block text-xs text-gray-500 dark:text-gray-400">
                     {{ formatDate(account.createdAt) }}
                   </span>
                 </div>
-              </div>
+              </button>
             </div>
 
             <!-- Console 账号（仅 Claude） -->
-            <div v-if="platform === 'claude' && filteredConsoleAccounts.length > 0">
-              <div>Claude Console 专属账号</div>
+            <div v-if="platform === 'claude' && filteredConsoleAccounts.length > 0" class="mb-2">
               <div
+                class="mb-1 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400"
+              >
+                Claude Console 专属账号
+              </div>
+              <button
                 v-for="account in filteredConsoleAccounts"
                 :key="account.id"
+                type="button"
+                class="flex w-full items-center justify-between rounded-md px-3 py-2 text-left text-sm transition-colors hover:bg-gray-100 dark:hover:bg-gray-700"
+                :class="{
+                  'bg-indigo-100 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-400':
+                    modelValue === `console:${account.id}`
+                }"
                 @click="selectAccount(`console:${account.id}`)"
               >
-                <div>
-                  <div>
-                    <span>{{ account.name }}</span>
-                    <span>
+                <div class="min-w-0 flex-1">
+                  <div class="flex items-center gap-2">
+                    <span class="truncate font-medium">{{ account.name }}</span>
+                    <span
+                      class="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium"
+                      :class="{
+                        'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400':
+                          getAccountStatusText(account) === '正常',
+                        'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400':
+                          getAccountStatusText(account) === '限流中',
+                        'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400': ![
+                          '正常',
+                          '限流中'
+                        ].includes(getAccountStatusText(account))
+                      }"
+                    >
                       {{ getAccountStatusText(account) }}
                     </span>
                   </div>
-                  <span>
+                  <span class="mt-0.5 block text-xs text-gray-500 dark:text-gray-400">
                     {{ formatDate(account.createdAt) }}
                   </span>
                 </div>
-              </div>
+              </button>
             </div>
 
             <!-- OpenAI-Responses 账号（仅 OpenAI） -->
-            <div v-if="platform === 'openai' && filteredOpenAIResponsesAccounts.length > 0">
-              <div>OpenAI-Responses 专属账号</div>
+            <div
+              v-if="platform === 'openai' && filteredOpenAIResponsesAccounts.length > 0"
+              class="mb-2"
+            >
               <div
+                class="mb-1 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400"
+              >
+                OpenAI-Responses 专属账号
+              </div>
+              <button
                 v-for="account in filteredOpenAIResponsesAccounts"
                 :key="account.id"
+                type="button"
+                class="flex w-full items-center justify-between rounded-md px-3 py-2 text-left text-sm transition-colors hover:bg-gray-100 dark:hover:bg-gray-700"
+                :class="{
+                  'bg-indigo-100 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-400':
+                    modelValue === `responses:${account.id}`
+                }"
                 @click="selectAccount(`responses:${account.id}`)"
               >
-                <div>
-                  <div>
-                    <span>{{ account.name }}</span>
-                    <span>
+                <div class="min-w-0 flex-1">
+                  <div class="flex items-center gap-2">
+                    <span class="truncate font-medium">{{ account.name }}</span>
+                    <span
+                      class="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium"
+                      :class="{
+                        'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400':
+                          getAccountStatusText(account) === '正常',
+                        'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400':
+                          getAccountStatusText(account) === '限流中',
+                        'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400': ![
+                          '正常',
+                          '限流中'
+                        ].includes(getAccountStatusText(account))
+                      }"
+                    >
                       {{ getAccountStatusText(account) }}
                     </span>
                   </div>
-                  <span>
+                  <span class="mt-0.5 block text-xs text-gray-500 dark:text-gray-400">
                     {{ formatDate(account.createdAt) }}
                   </span>
                 </div>
-              </div>
+              </button>
             </div>
 
             <!-- 无搜索结果 -->
-            <div v-if="searchQuery && !hasResults">
-              <p>没有找到匹配的账号</p>
+            <div
+              v-if="searchQuery && !hasResults"
+              class="flex flex-col items-center justify-center py-8 text-center"
+            >
+              <Icon name="Search" class="mb-2 h-12 w-12 text-gray-300 dark:text-gray-600" />
+              <p class="text-sm text-gray-500 dark:text-gray-400">没有找到匹配的账号</p>
+              <button
+                type="button"
+                class="mt-3 text-sm text-indigo-600 hover:text-indigo-500 dark:text-indigo-400"
+                @click="clearSearch"
+              >
+                清除搜索
+              </button>
             </div>
+          </div>
+
+          <!-- 底部提示 -->
+          <div
+            v-if="!searchQuery && hasResults"
+            class="border-t border-gray-200 bg-gray-50 px-3 py-2 text-xs text-gray-500 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400"
+          >
+            修改绑定账号将影响此 API Key 的请求路由
           </div>
         </div>
       </Transition>
@@ -156,6 +305,7 @@
 
 <script setup>
 import { ref, computed, watch, nextTick, onMounted, onUnmounted } from 'vue'
+import Icon from '@/components/common/Icon.vue'
 
 const props = defineProps({
   modelValue: {
@@ -321,6 +471,10 @@ const filteredOAuthAccounts = computed(() => {
     accounts = sortedAccounts.value.filter((a) => a.platform === 'openai')
   } else if (props.platform === 'droid') {
     accounts = sortedAccounts.value.filter((a) => a.platform === 'droid')
+  } else if (props.platform === 'gemini') {
+    accounts = sortedAccounts.value.filter((a) => a.platform === 'gemini')
+  } else if (props.platform === 'bedrock') {
+    accounts = sortedAccounts.value.filter((a) => a.platform === 'bedrock')
   } else {
     // 其他平台显示所有非特殊类型的账号
     accounts = sortedAccounts.value.filter(
@@ -407,9 +561,6 @@ const updateDropdownPosition = () => {
   const spaceAbove = rect.top
   const margin = 8 // 边距
 
-  // 获取下拉框的高度
-  // const dropdownHeight = dropdownRef.value.offsetHeight
-
   // 计算最大可用高度
   const maxHeightBelow = spaceBelow - margin
   const maxHeightAbove = spaceAbove - margin
@@ -450,7 +601,7 @@ const updateDropdownPosition = () => {
     position: 'fixed',
     left: `${left}px`,
     width: `${rect.width}px`,
-    maxHeight: `${Math.min(maxHeight, 400)}px`, // 限制最大高度为400px
+    maxHeight: `${Math.min(maxHeight, 450)}px`, // 限制最大高度为450px
     ...(showAbove ? { bottom: `${windowHeight - rect.top}px` } : { top: `${rect.bottom}px` })
   }
 }
@@ -469,7 +620,7 @@ const toggleDropdown = () => {
       position: 'fixed',
       left: `${rect.left}px`,
       width: `${rect.width}px`,
-      maxHeight: `${Math.min(spaceBelow - margin, 400)}px`,
+      maxHeight: `${Math.min(spaceBelow - margin, 450)}px`,
       top: `${rect.bottom}px`
     }
   }
