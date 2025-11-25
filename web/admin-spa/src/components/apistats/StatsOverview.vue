@@ -196,7 +196,7 @@
         </div>
 
         <!-- 单 Key 模式 -->
-        <div v-else class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-7">
+        <div v-else class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-5">
           <div class="flex items-start gap-3">
             <div
               class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-primary-50 dark:bg-primary-900/20"
