@@ -127,45 +127,45 @@
 
               <div class="mb-3 flex items-center justify-between">
                 <div
-                  class="flex items-center gap-2 rounded-lg bg-green-50 px-3 py-1.5 dark:bg-green-900/20"
+                  class="flex items-center gap-2 rounded-lg bg-primary-50 px-3 py-1.5 dark:bg-primary-900/20"
                 >
-                  <span class="text-xs font-medium text-green-700 dark:text-green-400">
+                  <span class="text-xs font-medium text-primary-700 dark:text-primary-400">
                     {{ model.formatted?.total || '$0.000000' }}
                   </span>
-                  <span class="text-xs text-green-600 dark:text-green-500">总费用</span>
+                  <span class="text-xs text-primary-600 dark:text-primary-500">总费用</span>
                 </div>
               </div>
 
               <div class="grid grid-cols-2 gap-3">
                 <div
-                  class="rounded-lg border border-blue-200 bg-blue-50 p-2 dark:border-blue-800 dark:bg-blue-900/20"
+                  class="rounded-lg border border-primary-200 bg-primary-50 p-2 dark:border-primary-800 dark:bg-primary-900/20"
                 >
-                  <div class="text-xs text-blue-600 dark:text-blue-400">输入 Token</div>
-                  <div class="mt-1 text-sm font-semibold text-blue-700 dark:text-blue-300">
+                  <div class="text-xs text-primary-600 dark:text-primary-400">输入 Token</div>
+                  <div class="mt-1 text-sm font-semibold text-primary-700 dark:text-primary-300">
                     {{ formatNumber(model.inputTokens) }}
                   </div>
                 </div>
                 <div
-                  class="rounded-lg border border-green-200 bg-green-50 p-2 dark:border-green-800 dark:bg-green-900/20"
+                  class="rounded-lg border border-primary-200 bg-primary-50 p-2 dark:border-primary-800 dark:bg-primary-900/20"
                 >
-                  <div class="text-xs text-green-600 dark:text-green-400">输出 Token</div>
-                  <div class="mt-1 text-sm font-semibold text-green-700 dark:text-green-300">
+                  <div class="text-xs text-primary-600 dark:text-primary-400">输出 Token</div>
+                  <div class="mt-1 text-sm font-semibold text-primary-700 dark:text-primary-300">
                     {{ formatNumber(model.outputTokens) }}
                   </div>
                 </div>
                 <div
-                  class="rounded-lg border border-amber-200 bg-amber-50 p-2 dark:border-amber-800 dark:bg-amber-900/20"
+                  class="rounded-lg border border-primary-200 bg-primary-50 p-2 dark:border-primary-800 dark:bg-primary-900/20"
                 >
-                  <div class="text-xs text-amber-600 dark:text-amber-400">缓存创建</div>
-                  <div class="mt-1 text-sm font-semibold text-amber-700 dark:text-amber-300">
+                  <div class="text-xs text-primary-600 dark:text-primary-400">缓存创建</div>
+                  <div class="mt-1 text-sm font-semibold text-primary-700 dark:text-primary-300">
                     {{ formatNumber(model.cacheCreateTokens) }}
                   </div>
                 </div>
                 <div
-                  class="rounded-lg border border-purple-200 bg-purple-50 p-2 dark:border-purple-800 dark:bg-purple-900/20"
+                  class="rounded-lg border border-primary-200 bg-primary-50 p-2 dark:border-primary-800 dark:bg-primary-900/20"
                 >
-                  <div class="text-xs text-purple-600 dark:text-purple-400">缓存读取</div>
-                  <div class="mt-1 text-sm font-semibold text-purple-700 dark:text-purple-300">
+                  <div class="text-xs text-primary-600 dark:text-primary-400">缓存读取</div>
+                  <div class="mt-1 text-sm font-semibold text-primary-700 dark:text-primary-300">
                     {{ formatNumber(model.cacheReadTokens) }}
                   </div>
                 </div>
