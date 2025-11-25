@@ -182,6 +182,11 @@
                   <Icon v-else class="ml-1 inline h-3 w-3 text-gray-400" name="ArrowUpDown" />
                 </th>
                 <th
+                  class="w-[7%] min-w-[90px] px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-700 dark:text-gray-300"
+                >
+                  类型
+                </th>
+                <th
                   class="w-[13%] min-w-[140px] cursor-pointer px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-700 transition-colors hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700/50"
                   @click="sortAccounts('platform')"
                 >
@@ -368,7 +373,7 @@
                   最后使用
                 </th>
                 <th
-                  class="w-[18%] min-w-[190px] px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-700 dark:text-gray-300"
+                  class="w-[14%] min-w-[150px] px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-700 dark:text-gray-300"
                 >
                   操作
                 </th>
@@ -399,31 +404,11 @@
                       <Icon class="h-3 w-3 text-white" name="UserCircle" />
                     </div>
                     <div class="min-w-0">
-                      <div class="flex items-center gap-2">
-                        <div
-                          class="truncate text-sm font-semibold text-gray-900 dark:text-gray-100"
-                          :title="account.name"
-                        >
-                          {{ account.name }}
-                        </div>
-                        <span
-                          v-if="account.accountType === 'dedicated'"
-                          class="inline-flex items-center rounded-full bg-purple-100 px-2 py-0.5 text-xs font-medium text-purple-800"
-                        >
-                          <Icon class="mr-1 h-3 w-3" name="Lock" />专属
-                        </span>
-                        <span
-                          v-else-if="account.accountType === 'group'"
-                          class="inline-flex items-center rounded-full bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-800"
-                        >
-                          <Icon class="mr-1 h-3 w-3" name="Layers" />分组调度
-                        </span>
-                        <span
-                          v-else
-                          class="inline-flex items-center rounded-full bg-green-100 px-2 py-0.5 text-xs font-medium text-green-800"
-                        >
-                          <Icon class="mr-1 h-3 w-3" name="Share2" />共享
-                        </span>
+                      <div
+                        class="truncate text-sm font-semibold text-gray-900 dark:text-gray-100"
+                        :title="account.name"
+                      >
+                        {{ account.name }}
                       </div>
                       <!-- 显示所有分组 - 换行显示 -->
                       <div
@@ -447,6 +432,26 @@
                       </div>
                     </div>
                   </div>
+                </td>
+                <td class="px-4 py-4">
+                  <span
+                    v-if="account.accountType === 'dedicated'"
+                    class="inline-flex items-center rounded-full bg-purple-100 px-2 py-0.5 text-xs font-medium text-purple-800 dark:bg-purple-900/30 dark:text-purple-300"
+                  >
+                    <Icon class="mr-1 h-3 w-3" name="Lock" />专属
+                  </span>
+                  <span
+                    v-else-if="account.accountType === 'group'"
+                    class="inline-flex items-center rounded-full bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-800 dark:bg-blue-900/30 dark:text-blue-300"
+                  >
+                    <Icon class="mr-1 h-3 w-3" name="Layers" />分组调度
+                  </span>
+                  <span
+                    v-else
+                    class="inline-flex items-center rounded-full bg-green-100 px-2 py-0.5 text-xs font-medium text-green-800 dark:bg-green-900/30 dark:text-green-300"
+                  >
+                    <Icon class="mr-1 h-3 w-3" name="Share2" />共享
+                  </span>
                 </td>
                 <td class="px-4 py-4">
                   <div class="flex items-center gap-1">
