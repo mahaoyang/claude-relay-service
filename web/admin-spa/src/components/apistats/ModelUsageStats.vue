@@ -42,9 +42,13 @@
       <!-- 模型统计数据 -->
       <div v-else-if="modelStats.length > 0" class="space-y-6">
         <!-- 饼图 -->
-        <div class="space-y-4">
-          <h4 class="text-xs font-medium text-gray-900 dark:text-white">Token使用分布</h4>
-          <div class="h-[300px]">
+        <div class="space-y-3">
+          <h4
+            class="text-[10px] font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400"
+          >
+            Token使用分布
+          </h4>
+          <div class="h-[240px]">
             <canvas ref="modelUsageChart" />
           </div>
         </div>
