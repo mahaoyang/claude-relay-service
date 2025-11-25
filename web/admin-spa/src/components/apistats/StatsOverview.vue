@@ -403,10 +403,10 @@
         <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
           <div class="flex items-start gap-3">
             <div
-              class="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-lg bg-blue-50 dark:bg-blue-900/20"
+              class="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-lg bg-gray-100 dark:bg-gray-800"
             >
               <svg
-                class="h-5 w-5 text-blue-600 dark:text-blue-400"
+                class="h-5 w-5 text-gray-600 dark:text-gray-400"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -431,10 +431,10 @@
 
           <div class="flex items-start gap-3">
             <div
-              class="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-lg bg-primary-50 dark:bg-primary-900/20"
+              class="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-lg bg-gray-100 dark:bg-gray-800"
             >
               <svg
-                class="h-5 w-5 text-primary-600 dark:text-primary-400"
+                class="h-5 w-5 text-gray-600 dark:text-gray-400"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -459,10 +459,10 @@
 
           <div class="flex items-start gap-3">
             <div
-              class="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-lg bg-green-50 dark:bg-green-900/20"
+              class="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-lg bg-gray-100 dark:bg-gray-800"
             >
               <svg
-                class="h-5 w-5 text-green-600 dark:text-green-400"
+                class="h-5 w-5 text-gray-600 dark:text-gray-400"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -479,7 +479,7 @@
               <p class="text-[10px] uppercase tracking-wider text-gray-400 dark:text-gray-500">
                 {{ statsPeriod === 'daily' ? '今日' : '本月' }}费用
               </p>
-              <p class="mt-1 text-lg font-bold text-green-600 dark:text-green-400">
+              <p class="mt-1 text-lg font-bold text-gray-900 dark:text-white">
                 {{ currentPeriodData.formattedCost || '$0.000000' }}
               </p>
             </div>
@@ -487,10 +487,10 @@
 
           <div class="flex items-start gap-3">
             <div
-              class="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-lg bg-amber-50 dark:bg-amber-900/20"
+              class="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-lg bg-gray-100 dark:bg-gray-800"
             >
               <svg
-                class="h-5 w-5 text-amber-600 dark:text-amber-400"
+                class="h-5 w-5 text-gray-600 dark:text-gray-400"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"

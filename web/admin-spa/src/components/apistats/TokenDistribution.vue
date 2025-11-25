@@ -25,12 +25,12 @@
       <div class="space-y-2">
         <!-- 输入 Token -->
         <div
-          class="group flex items-center justify-between rounded-xl border border-gray-200/50 bg-gradient-to-r from-blue-50/50 to-transparent p-3 transition-all hover:border-blue-300/50 hover:shadow-md dark:border-gray-700/50 dark:from-blue-900/10"
+          class="group flex items-center justify-between rounded-xl border border-gray-200 bg-gray-50 p-3 transition-all hover:border-gray-300 hover:shadow-sm dark:border-gray-700 dark:bg-gray-800/50"
         >
           <span class="flex items-center gap-3">
-            <div class="rounded-lg bg-blue-500/10 p-1.5">
+            <div class="rounded-lg bg-gray-200 p-1.5 dark:bg-gray-700">
               <svg
-                class="h-4 w-4 text-blue-500"
+                class="h-4 w-4 text-gray-600 dark:text-gray-400"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -45,19 +45,19 @@
             </div>
             <span class="text-sm font-medium text-gray-700 dark:text-gray-300">输入 Token</span>
           </span>
-          <span class="font-mono text-sm font-semibold text-blue-600 dark:text-blue-400">{{
+          <span class="font-mono text-sm font-semibold text-gray-900 dark:text-white">{{
             formatNumber(currentPeriodData.inputTokens)
           }}</span>
         </div>
 
         <!-- 输出 Token -->
         <div
-          class="group flex items-center justify-between rounded-xl border border-gray-200/50 bg-gradient-to-r from-green-50/50 to-transparent p-3 transition-all hover:border-green-300/50 hover:shadow-md dark:border-gray-700/50 dark:from-green-900/10"
+          class="group flex items-center justify-between rounded-xl border border-gray-200 bg-gray-50 p-3 transition-all hover:border-gray-300 hover:shadow-sm dark:border-gray-700 dark:bg-gray-800/50"
         >
           <span class="flex items-center gap-3">
-            <div class="rounded-lg bg-green-500/10 p-1.5">
+            <div class="rounded-lg bg-gray-200 p-1.5 dark:bg-gray-700">
               <svg
-                class="h-4 w-4 text-green-500"
+                class="h-4 w-4 text-gray-600 dark:text-gray-400"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -72,19 +72,19 @@
             </div>
             <span class="text-sm font-medium text-gray-700 dark:text-gray-300">输出 Token</span>
           </span>
-          <span class="font-mono text-sm font-semibold text-green-600 dark:text-green-400">{{
+          <span class="font-mono text-sm font-semibold text-gray-900 dark:text-white">{{
             formatNumber(currentPeriodData.outputTokens)
           }}</span>
         </div>
 
         <!-- 缓存创建 Token -->
         <div
-          class="group flex items-center justify-between rounded-xl border border-gray-200/50 bg-gradient-to-r from-amber-50/50 to-transparent p-3 transition-all hover:border-amber-300/50 hover:shadow-md dark:border-gray-700/50 dark:from-amber-900/10"
+          class="group flex items-center justify-between rounded-xl border border-gray-200 bg-gray-50 p-3 transition-all hover:border-gray-300 hover:shadow-sm dark:border-gray-700 dark:bg-gray-800/50"
         >
           <span class="flex items-center gap-3">
-            <div class="rounded-lg bg-amber-500/10 p-1.5">
+            <div class="rounded-lg bg-gray-200 p-1.5 dark:bg-gray-700">
               <svg
-                class="h-4 w-4 text-amber-500"
+                class="h-4 w-4 text-gray-600 dark:text-gray-400"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -99,19 +99,19 @@
             </div>
             <span class="text-sm font-medium text-gray-700 dark:text-gray-300">缓存创建 Token</span>
           </span>
-          <span class="font-mono text-sm font-semibold text-amber-600 dark:text-amber-400">{{
+          <span class="font-mono text-sm font-semibold text-gray-900 dark:text-white">{{
             formatNumber(currentPeriodData.cacheCreateTokens)
           }}</span>
         </div>
 
         <!-- 缓存读取 Token -->
         <div
-          class="group flex items-center justify-between rounded-xl border border-gray-200/50 bg-gradient-to-r from-purple-50/50 to-transparent p-3 transition-all hover:border-purple-300/50 hover:shadow-md dark:border-gray-700/50 dark:from-purple-900/10"
+          class="group flex items-center justify-between rounded-xl border border-gray-200 bg-gray-50 p-3 transition-all hover:border-gray-300 hover:shadow-sm dark:border-gray-700 dark:bg-gray-800/50"
         >
           <span class="flex items-center gap-3">
-            <div class="rounded-lg bg-purple-500/10 p-1.5">
+            <div class="rounded-lg bg-gray-200 p-1.5 dark:bg-gray-700">
               <svg
-                class="h-4 w-4 text-purple-500"
+                class="h-4 w-4 text-gray-600 dark:text-gray-400"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -126,7 +126,7 @@
             </div>
             <span class="text-sm font-medium text-gray-700 dark:text-gray-300">缓存读取 Token</span>
           </span>
-          <span class="font-mono text-sm font-semibold text-purple-600 dark:text-purple-400">{{
+          <span class="font-mono text-sm font-semibold text-gray-900 dark:text-white">{{
             formatNumber(currentPeriodData.cacheReadTokens)
           }}</span>
         </div>
@@ -134,14 +134,14 @@
 
       <!-- 总计 -->
       <div
-        class="mt-4 rounded-xl border-2 border-dashed border-gray-300 bg-gradient-to-br from-gray-50 to-white p-4 dark:border-gray-600 dark:from-gray-800 dark:to-gray-900"
+        class="mt-4 rounded-xl border-2 border-dashed border-gray-300 bg-gray-50 p-4 dark:border-gray-600 dark:bg-gray-800"
       >
         <div class="flex items-center justify-between">
           <span
             class="flex items-center gap-2 text-sm font-semibold text-gray-900 dark:text-gray-100"
           >
             <svg
-              class="h-4 w-4 text-indigo-500"
+              class="h-4 w-4 text-gray-600 dark:text-gray-400"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -155,10 +155,9 @@
             </svg>
             <span>{{ statsPeriod === 'daily' ? '今日' : '本月' }}总计</span>
           </span>
-          <span
-            class="bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text font-mono text-lg font-bold text-transparent dark:from-indigo-400 dark:to-purple-400"
-            >{{ formatNumber(currentPeriodData.allTokens) }}</span
-          >
+          <span class="font-mono text-lg font-bold text-gray-900 dark:text-white">{{
+            formatNumber(currentPeriodData.allTokens)
+          }}</span>
         </div>
       </div>
     </div>
