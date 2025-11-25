@@ -1,5 +1,5 @@
 <template>
-  <Card>
+  <Card class="h-full">
     <h3
       class="mb-4 flex items-center justify-between text-sm font-semibold text-gray-900 dark:text-gray-100"
     >
