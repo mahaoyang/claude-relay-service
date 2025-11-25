@@ -47,7 +47,7 @@
               <div class="text-xs text-gray-500 dark:text-gray-400">总计 Keys</div>
             </div>
             <div class="rounded-lg bg-white p-3 text-center dark:bg-gray-900">
-              <div class="text-2xl font-bold text-green-600 dark:text-green-400">
+              <div class="text-2xl font-bold text-gray-900 dark:text-white">
                 {{ aggregatedStats.activeKeys }}
               </div>
               <div class="text-xs text-gray-500 dark:text-gray-400">激活 Keys</div>
@@ -62,26 +62,26 @@
           </div>
           <div class="space-y-3">
             <div
-              class="flex items-center justify-between rounded-lg bg-blue-50 p-3 dark:bg-blue-900/20"
+              class="flex items-center justify-between rounded-lg bg-gray-100 p-3 dark:bg-gray-800"
             >
               <span class="text-sm text-gray-700 dark:text-gray-300"> 总请求数 </span>
-              <span class="font-semibold text-blue-600 dark:text-blue-400">
+              <span class="font-semibold text-gray-900 dark:text-white">
                 {{ formatNumber(aggregatedStats.usage.requests) }}
               </span>
             </div>
             <div
-              class="flex items-center justify-between rounded-lg bg-green-50 p-3 dark:bg-green-900/20"
+              class="flex items-center justify-between rounded-lg bg-gray-100 p-3 dark:bg-gray-800"
             >
               <span class="text-sm text-gray-700 dark:text-gray-300"> 总 Tokens </span>
-              <span class="font-semibold text-green-600 dark:text-green-400">
+              <span class="font-semibold text-gray-900 dark:text-white">
                 {{ formatNumber(aggregatedStats.usage.allTokens) }}
               </span>
             </div>
             <div
-              class="flex items-center justify-between rounded-lg bg-amber-50 p-3 dark:bg-amber-900/20"
+              class="flex items-center justify-between rounded-lg bg-gray-100 p-3 dark:bg-gray-800"
             >
               <span class="text-sm text-gray-700 dark:text-gray-300"> 总费用 </span>
-              <span class="font-semibold text-amber-600 dark:text-amber-400">
+              <span class="font-semibold text-gray-900 dark:text-white">
                 {{ aggregatedStats.usage.formattedCost }}
               </span>
             </div>
@@ -91,7 +91,7 @@
         <!-- 无效 Keys 提示 -->
         <div
           v-if="invalidKeys && invalidKeys.length > 0"
-          class="flex items-center gap-2 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700 dark:border-red-800 dark:bg-red-900/20 dark:text-red-400"
+          class="flex items-center gap-2 rounded-lg border border-gray-300 bg-gray-100 p-3 text-sm text-gray-700 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300"
         >
           <svg class="h-5 w-5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
             <path
@@ -259,7 +259,7 @@
               <span v-if="hasModelRestrictions">
                 限制 {{ statsData.restrictions.restrictedModels.length }} 个模型
               </span>
-              <span v-else class="text-green-600 dark:text-green-400"> 允许所有模型 </span>
+              <span v-else> 允许所有模型 </span>
             </div>
           </div>
 
@@ -269,13 +269,13 @@
               <span v-if="hasClientRestrictions">
                 限制 {{ statsData.restrictions.allowedClients.length }} 种客户端
               </span>
-              <span v-else class="text-green-600 dark:text-green-400"> 允许所有客户端 </span>
+              <span v-else> 允许所有客户端 </span>
             </div>
             <div v-if="hasClientRestrictions" class="mt-2 flex flex-wrap gap-2">
               <span
                 v-for="client in statsData.restrictions.allowedClients"
                 :key="client"
-                class="rounded-full bg-blue-100 px-2 py-1 text-xs text-blue-700 dark:bg-blue-900/30 dark:text-blue-400"
+                class="rounded-full bg-gray-100 px-2 py-1 text-xs text-gray-700 dark:bg-gray-700 dark:text-gray-300"
               >
                 {{ client }}
               </span>
@@ -292,19 +292,21 @@
       <h3 class="text-sm font-semibold text-gray-900 dark:text-white">详细限制信息</h3>
 
       <div
-        class="rounded-lg border border-red-200 bg-red-50 p-4 dark:border-red-800 dark:bg-red-900/20"
+        class="rounded-lg border border-gray-300 bg-gray-100 p-4 dark:border-gray-600 dark:bg-gray-800"
       >
-        <h4 class="mb-3 text-sm font-medium text-red-700 dark:text-red-400">受限模型列表</h4>
+        <h4 class="mb-3 text-sm font-medium text-gray-900 dark:text-white">受限模型列表</h4>
         <div class="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
           <div
             v-for="model in statsData.restrictions.restrictedModels"
             :key="model"
-            class="rounded bg-white px-3 py-2 text-sm text-gray-700 dark:bg-red-950 dark:text-gray-300"
+            class="rounded bg-white px-3 py-2 text-sm text-gray-700 dark:bg-gray-900 dark:text-gray-300"
           >
             <span>{{ model }}</span>
           </div>
         </div>
-        <p class="mt-3 text-xs text-red-600 dark:text-red-400">此 API Key 不能访问以上列出的模型</p>
+        <p class="mt-3 text-xs text-gray-600 dark:text-gray-400">
+          此 API Key 不能访问以上列出的模型
+        </p>
       </div>
     </div>
   </Card>
@@ -350,10 +352,7 @@ const getDailyCostProgress = () => {
 }
 
 const getDailyCostProgressColor = () => {
-  const progress = getDailyCostProgress()
-  if (progress >= 100) return 'bg-red-500 dark:bg-red-400'
-  if (progress >= 80) return 'bg-amber-500 dark:bg-amber-400'
-  return 'bg-green-500 dark:bg-green-400'
+  return 'bg-gray-500 dark:bg-gray-400'
 }
 
 const getTotalCostProgress = () => {
@@ -365,10 +364,7 @@ const getTotalCostProgress = () => {
 }
 
 const getTotalCostProgressColor = () => {
-  const progress = getTotalCostProgress()
-  if (progress >= 100) return 'bg-red-500 dark:bg-red-400'
-  if (progress >= 80) return 'bg-amber-500 dark:bg-amber-400'
-  return 'bg-green-500 dark:bg-green-400'
+  return 'bg-gray-500 dark:bg-gray-400'
 }
 
 const getOpusWeeklyCostProgress = () => {
@@ -383,10 +379,7 @@ const getOpusWeeklyCostProgress = () => {
 }
 
 const getOpusWeeklyCostProgressColor = () => {
-  const progress = getOpusWeeklyCostProgress()
-  if (progress >= 100) return 'bg-red-500 dark:bg-red-400'
-  if (progress >= 80) return 'bg-amber-500 dark:bg-amber-400'
-  return 'bg-purple-500 dark:bg-purple-400'
+  return 'bg-gray-500 dark:bg-gray-400'
 }
 
 // 格式化数字
