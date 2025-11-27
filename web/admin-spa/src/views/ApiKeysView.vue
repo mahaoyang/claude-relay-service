@@ -761,6 +761,14 @@
                           <span>编辑</span>
                         </button>
                         <button
+                          class="inline-flex items-center gap-0.5 rounded px-1.5 py-0.5 text-[11px] font-medium text-primary-700 transition-colors hover:bg-primary-50 dark:text-primary-400 dark:hover:bg-primary-900/30"
+                          title="修改有效期"
+                          @click="startEditExpiry(key)"
+                        >
+                          <Icon class="h-3 w-3" name="CalendarClock" />
+                          <span>修改有效期</span>
+                        </button>
+                        <button
                           v-if="
                             key.expiresAt &&
                             (isApiKeyExpired(key.expiresAt) || isApiKeyExpiringSoon(key.expiresAt))
@@ -1378,6 +1386,13 @@
               >
                 <Icon class="h-3.5 w-3.5" name="Edit" />
                 编辑
+              </button>
+              <button
+                class="inline-flex items-center gap-1.5 rounded-lg border border-primary-200 bg-primary-50 px-3 py-1.5 text-xs font-medium text-primary-700 transition-colors hover:bg-primary-100 dark:border-primary-800 dark:bg-primary-900/30 dark:text-primary-300 dark:hover:bg-primary-900/40"
+                @click="startEditExpiry(key)"
+              >
+                <Icon class="h-3.5 w-3.5" name="CalendarClock" />
+                修改有效期
               </button>
               <button
                 v-if="
