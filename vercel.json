@@ -26,6 +26,10 @@
       "destination": "/web/admin-spa/dist/index.html"
     },
     {
+      "source": "/",
+      "destination": "/api/serverless.js"
+    },
+    {
       "source": "/:path*",
       "destination": "/api/serverless.js"
     }
