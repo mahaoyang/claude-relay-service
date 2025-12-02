@@ -22,9 +22,11 @@ const droidAccountsRoutes = require('./droidAccounts')
 const dashboardRoutes = require('./dashboard')
 const usageStatsRoutes = require('./usageStats')
 const systemRoutes = require('./system')
+const publicStatsRoutes = require('./publicStats')
 
 // 挂载所有子路由
 // 使用完整路径的模块（直接挂载到根路径）
+router.use('/', publicStatsRoutes)
 router.use('/', apiKeysRoutes)
 router.use('/', claudeAccountsRoutes)
 router.use('/', claudeConsoleAccountsRoutes)
