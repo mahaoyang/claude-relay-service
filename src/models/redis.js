@@ -58,16 +58,29 @@ class RedisClient {
 
   async connect() {
     try {
-      this.client = new Redis({
-        host: config.redis.host,
-        port: config.redis.port,
-        password: config.redis.password,
-        db: config.redis.db,
-        retryDelayOnFailover: config.redis.retryDelayOnFailover,
-        maxRetriesPerRequest: config.redis.maxRetriesPerRequest,
-        lazyConnect: config.redis.lazyConnect,
-        tls: config.redis.enableTLS ? {} : false
-      })
+      // 如果配置了 URL（生产环境的 CRS_REDIS_URL），优先使用 URL 连接
+      if (config.redis.url) {
+        logger.info(
+          `🔗 Connecting to Redis using URL: ${config.redis.url.replace(/:[^:@]+@/, ':****@')}`
+        )
+        this.client = new Redis(config.redis.url, {
+          retryDelayOnFailover: config.redis.retryDelayOnFailover,
+          maxRetriesPerRequest: config.redis.maxRetriesPerRequest,
+          lazyConnect: config.redis.lazyConnect
+        })
+      } else {
+        // 使用传统的 host/port 配置
+        this.client = new Redis({
+          host: config.redis.host,
+          port: config.redis.port,
+          password: config.redis.password,
+          db: config.redis.db,
+          retryDelayOnFailover: config.redis.retryDelayOnFailover,
+          maxRetriesPerRequest: config.redis.maxRetriesPerRequest,
+          lazyConnect: config.redis.lazyConnect,
+          tls: config.redis.enableTLS ? {} : false
+        })
+      }
 
       this.client.on('connect', () => {
         this.isConnected = true
