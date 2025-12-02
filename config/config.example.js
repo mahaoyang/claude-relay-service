@@ -23,6 +23,11 @@ const config = {
 
   // 📊 Redis配置
   redis: {
+    // 生产环境优先使用 CRS_REDIS_URL（支持 redis:// 或 rediss:// 格式）
+    url:
+      process.env.NODE_ENV === 'production' && process.env.CRS_REDIS_URL
+        ? process.env.CRS_REDIS_URL
+        : null,
     host: process.env.REDIS_HOST || '127.0.0.1',
     port: parseInt(process.env.REDIS_PORT) || 6379,
     password: process.env.REDIS_PASSWORD || '',
