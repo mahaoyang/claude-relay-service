@@ -1,0 +1,29 @@
+{
+  "version": 2,
+  "name": "claude-relay-service",
+  "builds": [
+    {
+      "src": "package.json",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/admin-next/(.*)",
+      "dest": "/web/admin-spa/dist/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/src/app.js"
+    }
+  ],
+  "env": {
+    "NODE_ENV": "production"
+  },
+  "functions": {
+    "src/app.js": {
+      "memory": 1024,
+      "maxDuration": 60
+    }
+  }
+}
