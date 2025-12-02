@@ -7,6 +7,7 @@ const bedrockAccountService = require('../services/bedrockAccountService')
 const unifiedClaudeScheduler = require('../services/unifiedClaudeScheduler')
 const apiKeyService = require('../services/apiKeyService')
 const { authenticateApiKey } = require('../middleware/auth')
+const disguiseMiddleware = require('../middleware/disguise')
 const logger = require('../utils/logger')
 const { getEffectiveModel, parseVendorPrefixedModel } = require('../utils/modelHelper')
 const sessionHelper = require('../utils/sessionHelper')
@@ -808,10 +809,10 @@ async function handleMessagesRequest(req, res) {
 }
 
 // 🚀 Claude API messages 端点 - /api/v1/messages
-router.post('/v1/messages', authenticateApiKey, handleMessagesRequest)
+router.post('/v1/messages', authenticateApiKey, disguiseMiddleware, handleMessagesRequest)
 
 // 🚀 Claude API messages 端点 - /claude/v1/messages (别名)
-router.post('/claude/v1/messages', authenticateApiKey, handleMessagesRequest)
+router.post('/claude/v1/messages', authenticateApiKey, disguiseMiddleware, handleMessagesRequest)
 
 // 📋 模型列表端点 - 支持 Claude, OpenAI, Gemini
 router.get('/v1/models', authenticateApiKey, async (req, res) => {
