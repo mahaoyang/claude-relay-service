@@ -302,7 +302,9 @@ export function useAccountsData() {
     try {
       const response = await apiClient.get('/admin/api-keys')
       if (response.success) {
-        apiKeys.value = response.data || []
+        const payload = response?.data
+        const items = Array.isArray(payload) ? payload : payload?.items || []
+        apiKeys.value = items
         apiKeysLoaded.value = true
       }
     } catch (error) {
@@ -500,25 +502,32 @@ export function useAccountsData() {
 
       const allAccounts = []
 
+      const extractItems = (resp) => {
+        if (!resp || !resp.success) return []
+        const payload = resp.data
+        if (Array.isArray(payload)) return payload
+        if (payload?.items) return payload.items
+        if (payload?.data) return payload.data
+        return []
+      }
+
       const processAccounts = (data, platform, boundKeyField) => {
-        if (data.success) {
-          const processed = (data.data || []).map((acc) => {
-            let boundApiKeysCount = 0
-            if (boundKeyField) {
-              if (platform === 'openai-responses') {
-                boundApiKeysCount = apiKeys.value.filter(
-                  (key) => key.openaiAccountId === `responses:${acc.id}`
-                ).length
-              } else {
-                boundApiKeysCount = apiKeys.value.filter(
-                  (key) => key[boundKeyField] === acc.id
-                ).length
-              }
+        const items = extractItems(data)
+        if (items.length === 0) return
+        const processed = items.map((acc) => {
+          let boundApiKeysCount = 0
+          if (boundKeyField) {
+            if (platform === 'openai-responses') {
+              boundApiKeysCount = apiKeys.value.filter(
+                (key) => key.openaiAccountId === `responses:${acc.id}`
+              ).length
+            } else {
+              boundApiKeysCount = apiKeys.value.filter((key) => key[boundKeyField] === acc.id)
             }
-            return { ...acc, platform, boundApiKeysCount }
-          })
-          allAccounts.push(...processed)
-        }
+          }
+          return { ...acc, platform, boundApiKeysCount }
+        })
+        allAccounts.push(...processed)
       }
 
       processAccounts(claudeData, 'claude', 'claudeAccountId')
@@ -529,23 +538,8 @@ export function useAccountsData() {
       processAccounts(azureOpenaiData, 'azure_openai', 'azureOpenaiAccountId')
       processAccounts(openaiResponsesData, 'openai-responses', 'openaiAccountId')
 
-      if (ccrData && ccrData.success) {
-        const ccrAccounts = (ccrData.data || []).map((acc) => ({
-          ...acc,
-          platform: 'ccr',
-          boundApiKeysCount: 0
-        }))
-        allAccounts.push(...ccrAccounts)
-      }
-
-      if (droidData && droidData.success) {
-        const droidAccounts = (droidData.data || []).map((acc) => ({
-          ...acc,
-          platform: 'droid',
-          boundApiKeysCount: acc.boundApiKeysCount ?? 0
-        }))
-        allAccounts.push(...droidAccounts)
-      }
+      processAccounts(ccrData, 'ccr', null)
+      processAccounts(droidData, 'droid', null)
 
       // Filter by group
       let filteredAccounts = allAccounts
