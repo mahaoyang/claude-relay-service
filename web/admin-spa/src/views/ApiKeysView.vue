@@ -2363,11 +2363,9 @@ const loadApiKeys = async () => {
   try {
     const normalizeApiKeysResponse = (resp) => {
       const payload = resp?.data
+      // 兼容数组或 { items, availableTags } 格式
       const items = Array.isArray(payload) ? payload : payload?.items || []
-      const tags =
-        Array.isArray(payload?.availableTags) && payload?.availableTags.length > 0
-          ? payload.availableTags
-          : []
+      const tags = Array.isArray(payload?.availableTags) ? payload.availableTags : []
       return { items, tags }
     }
 
