@@ -1,7 +1,7 @@
 const axios = require('axios')
 const ProxyHelper = require('../utils/proxyHelper')
 const logger = require('../utils/logger')
-const config = require('../../config/config')
+const config = require('../../config')
 
 // 转换模型名称（去掉 azure/ 前缀）
 function normalizeModelName(model) {

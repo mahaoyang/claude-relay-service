@@ -1,6 +1,6 @@
 const ldap = require('ldapjs')
 const logger = require('../utils/logger')
-const config = require('../../config/config')
+const config = require('../../config')
 const userService = require('./userService')
 
 class LdapService {

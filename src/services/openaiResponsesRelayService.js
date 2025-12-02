@@ -4,7 +4,7 @@ const logger = require('../utils/logger')
 const openaiResponsesAccountService = require('./openaiResponsesAccountService')
 const apiKeyService = require('./apiKeyService')
 const unifiedOpenAIScheduler = require('./unifiedOpenAIScheduler')
-const config = require('../../config/config')
+const config = require('../../config')
 const crypto = require('crypto')
 
 // 抽取缓存写入 token，兼容多种字段命名

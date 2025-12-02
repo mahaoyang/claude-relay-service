@@ -1,4 +1,4 @@
-const config = require('../../config/config')
+const config = require('../../config')
 
 /**
  * 格式化日期时间为指定时区的本地时间字符串

@@ -2,7 +2,7 @@ const { v4: uuidv4 } = require('uuid')
 const crypto = require('crypto')
 const redis = require('../models/redis')
 const logger = require('../utils/logger')
-const config = require('../../config/config')
+const config = require('../../config')
 const bedrockRelayService = require('./bedrockRelayService')
 const LRUCache = require('../utils/lruCache')
 

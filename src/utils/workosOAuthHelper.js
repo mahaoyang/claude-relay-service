@@ -1,5 +1,5 @@
 const axios = require('axios')
-const config = require('../../config/config')
+const config = require('../../config')
 const logger = require('./logger')
 const ProxyHelper = require('./proxyHelper')
 

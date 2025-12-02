@@ -3,7 +3,7 @@ const crypto = require('crypto')
 const ProxyHelper = require('../utils/proxyHelper')
 const redis = require('../models/redis')
 const logger = require('../utils/logger')
-const config = require('../../config/config')
+const config = require('../../config')
 const LRUCache = require('../utils/lruCache')
 
 class ClaudeConsoleAccountService {

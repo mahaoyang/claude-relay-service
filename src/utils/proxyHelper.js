@@ -1,7 +1,7 @@
 const { SocksProxyAgent } = require('socks-proxy-agent')
 const { HttpsProxyAgent } = require('https-proxy-agent')
 const logger = require('./logger')
-const config = require('../../config/config')
+const config = require('../../config')
 
 /**
  * 统一的代理创建工具
