@@ -467,13 +467,23 @@ class Application {
     try {
       const initFilePath = path.join(__dirname, '..', 'data', 'init.json')
 
-      if (!fs.existsSync(initFilePath)) {
-        logger.warn('⚠️ No admin credentials found. Please run npm run setup first.')
+      const envUsername = process.env.ADMIN_USERNAME
+      const envPassword = process.env.ADMIN_PASSWORD
+
+      if (!fs.existsSync(initFilePath) && (!envUsername || !envPassword)) {
+        logger.warn('⚠️ No admin credentials found. Please set ADMIN_USERNAME/ADMIN_PASSWORD or run npm run setup.')
         return
       }
 
-      // 从 init.json 读取管理员凭据（作为唯一真实数据源）
-      const initData = JSON.parse(fs.readFileSync(initFilePath, 'utf8'))
+      // 从 init.json 读取管理员凭据（作为唯一真实数据源），若不存在则使用环境变量
+      const initData = fs.existsSync(initFilePath)
+        ? JSON.parse(fs.readFileSync(initFilePath, 'utf8'))
+        : {
+            adminUsername: envUsername,
+            adminPassword: envPassword,
+            initializedAt: new Date().toISOString(),
+            updatedAt: null
+          }
 
       // 将明文密码哈希化
       const saltRounds = 10
