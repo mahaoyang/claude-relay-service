@@ -60,7 +60,9 @@ class RedisClient {
     try {
       // 如果配置了 URL（生产环境的 CRS_REDIS_URL），优先使用 URL 连接
       if (config.redis.url) {
-        logger.info(`🔗 Connecting to Redis using URL: ${config.redis.url.replace(/:[^:@]+@/, ':****@')}`)
+        logger.info(
+          `🔗 Connecting to Redis using URL: ${config.redis.url.replace(/:[^:@]+@/, ':****@')}`
+        )
         this.client = new Redis(config.redis.url, {
           retryDelayOnFailover: config.redis.retryDelayOnFailover,
           maxRetriesPerRequest: config.redis.maxRetriesPerRequest,
