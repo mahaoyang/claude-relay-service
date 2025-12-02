@@ -10,7 +10,7 @@ export const ThemeMode = {
 
 export const useThemeStore = defineStore('theme', () => {
   // 状态 - 支持三种模式：light, dark, auto
-  const themeMode = ref(ThemeMode.AUTO)
+  const themeMode = ref(ThemeMode.LIGHT)
   const systemPrefersDark = ref(false)
 
   // 计算属性 - 实际的暗黑模式状态
@@ -42,8 +42,8 @@ export const useThemeStore = defineStore('theme', () => {
     if (savedMode && Object.values(ThemeMode).includes(savedMode)) {
       themeMode.value = savedMode
     } else {
-      // 默认使用 auto 模式
-      themeMode.value = ThemeMode.AUTO
+      // 默认使用浅色
+      themeMode.value = ThemeMode.LIGHT
     }
 
     // 应用主题
