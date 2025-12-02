@@ -606,6 +606,17 @@ export function useApiKeysData() {
   const loadApiKeys = async () => {
     apiKeysLoading.value = true
     try {
+      const normalizeApiKeysResponse = (resp) => {
+        const payload = resp?.data
+        // 支持数组格式或 { items, availableTags } 格式
+        const items = Array.isArray(payload) ? payload : payload?.items || []
+        const tags =
+          Array.isArray(payload?.availableTags) && payload?.availableTags.length > 0
+            ? payload.availableTags
+            : []
+        return { items, tags }
+      }
+
       let params = {}
       if (
         globalDateFilter.type === 'custom' &&
@@ -624,13 +635,20 @@ export function useApiKeysData() {
       const queryString = new URLSearchParams(params).toString()
       const data = await apiClient.get(`/admin/api-keys?${queryString}`)
       if (data.success) {
-        apiKeys.value = data.data || []
+        const { items, tags } = normalizeApiKeysResponse(data)
+        apiKeys.value = items
         const tagsSet = new Set()
-        apiKeys.value.forEach((key) => {
-          if (key.tags && Array.isArray(key.tags)) {
-            key.tags.forEach((tag) => tagsSet.add(tag))
-          }
-        })
+        if (items.length > 0) {
+          items.forEach((key) => {
+            if (key.tags && Array.isArray(key.tags)) {
+              key.tags.forEach((tag) => tagsSet.add(tag))
+            }
+          })
+        }
+        // 后端返回的 availableTags 优先，其次从列表计算
+        if (tags.length > 0) {
+          tags.forEach((t) => tagsSet.add(t))
+        }
         availableTags.value = Array.from(tagsSet).sort()
       }
     } catch (error) {

@@ -2361,6 +2361,16 @@ const loadAccounts = async () => {
 const loadApiKeys = async () => {
   apiKeysLoading.value = true
   try {
+    const normalizeApiKeysResponse = (resp) => {
+      const payload = resp?.data
+      const items = Array.isArray(payload) ? payload : payload?.items || []
+      const tags =
+        Array.isArray(payload?.availableTags) && payload?.availableTags.length > 0
+          ? payload.availableTags
+          : []
+      return { items, tags }
+    }
+
     // 构建请求参数
     let params = {}
     if (
@@ -2380,14 +2390,20 @@ const loadApiKeys = async () => {
     const queryString = new URLSearchParams(params).toString()
     const data = await apiClient.get(`/admin/api-keys?${queryString}`)
     if (data.success) {
-      apiKeys.value = data.data || []
+      const { items, tags } = normalizeApiKeysResponse(data)
+      apiKeys.value = items
       // 更新可用标签列表
       const tagsSet = new Set()
-      apiKeys.value.forEach((key) => {
-        if (key.tags && Array.isArray(key.tags)) {
-          key.tags.forEach((tag) => tagsSet.add(tag))
-        }
-      })
+      if (items.length > 0) {
+        items.forEach((key) => {
+          if (key.tags && Array.isArray(key.tags)) {
+            key.tags.forEach((tag) => tagsSet.add(tag))
+          }
+        })
+      }
+      if (tags.length > 0) {
+        tags.forEach((t) => tagsSet.add(t))
+      }
       availableTags.value = Array.from(tagsSet).sort()
     }
   } catch (error) {
