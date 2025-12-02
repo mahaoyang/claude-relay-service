@@ -2201,6 +2201,37 @@ const cleanupSelectedAccounts = () => {
 const loadAccounts = async (forceReload = false) => {
   accountsLoading.value = true
   try {
+    const safeGet = (url, options) =>
+      apiClient.get(url, options).catch((error) => {
+        console.debug(`Load accounts request failed: ${url}`, error)
+        return { success: false, data: [] }
+      })
+
+    const extractItems = (resp) => {
+      if (!resp || !resp.success) return []
+      const payload = resp.data
+      if (Array.isArray(payload)) return payload
+      if (payload?.items) return payload.items
+      if (payload?.data) return payload.data
+      return []
+    }
+
+    const sanitizeAccount = (acc, platform) => {
+      if (!acc || typeof acc !== 'object') return null
+      const id = acc.id || acc.accountId || acc.account_id
+      if (!id) return null
+      const name =
+        acc.name ||
+        acc.accountName ||
+        acc.email ||
+        acc.username ||
+        acc.displayName ||
+        acc.owner ||
+        `account-${platform}-${id}`
+      const groupInfos = Array.isArray(acc.groupInfos) ? acc.groupInfos : []
+      return { ...acc, id, name, platform, groupInfos }
+    }
+
     // 构建查询参数（用于其他筛选情况）
     const params = {}
     if (platformFilter.value !== 'all') {
@@ -2216,23 +2247,23 @@ const loadAccounts = async (forceReload = false) => {
     if (platformFilter.value === 'all') {
       // 请求所有平台
       requests.push(
-        apiClient.get('/admin/claude-accounts', { params }),
-        apiClient.get('/admin/claude-console-accounts', { params }),
-        apiClient.get('/admin/bedrock-accounts', { params }),
-        apiClient.get('/admin/gemini-accounts', { params }),
-        apiClient.get('/admin/gemini-api-accounts', { params }),
-        apiClient.get('/admin/openai-accounts', { params }),
-        apiClient.get('/admin/azure-openai-accounts', { params }),
-        apiClient.get('/admin/openai-responses-accounts', { params }),
-        apiClient.get('/admin/ccr-accounts', { params }),
-        apiClient.get('/admin/droid-accounts', { params })
+        safeGet('/admin/claude-accounts', { params }),
+        safeGet('/admin/claude-console-accounts', { params }),
+        safeGet('/admin/bedrock-accounts', { params }),
+        safeGet('/admin/gemini-accounts', { params }),
+        safeGet('/admin/gemini-api-accounts', { params }),
+        safeGet('/admin/openai-accounts', { params }),
+        safeGet('/admin/azure-openai-accounts', { params }),
+        safeGet('/admin/openai-responses-accounts', { params }),
+        safeGet('/admin/ccr-accounts', { params }),
+        safeGet('/admin/droid-accounts', { params })
       )
     } else {
       // 只请求指定平台，其他平台设为null占位
       switch (platformFilter.value) {
         case 'claude':
           requests.push(
-            apiClient.get('/admin/claude-accounts', { params }),
+            safeGet('/admin/claude-accounts', { params }),
             Promise.resolve({ success: true, data: [] }), // claude-console 占位
             Promise.resolve({ success: true, data: [] }), // bedrock 占位
             Promise.resolve({ success: true, data: [] }), // gemini 占位
@@ -2247,7 +2278,7 @@ const loadAccounts = async (forceReload = false) => {
         case 'claude-console':
           requests.push(
             Promise.resolve({ success: true, data: [] }), // claude 占位
-            apiClient.get('/admin/claude-console-accounts', { params }),
+            safeGet('/admin/claude-console-accounts', { params }),
             Promise.resolve({ success: true, data: [] }), // bedrock 占位
             Promise.resolve({ success: true, data: [] }), // gemini 占位
             Promise.resolve({ success: true, data: [] }), // gemini-api 占位
@@ -2262,7 +2293,7 @@ const loadAccounts = async (forceReload = false) => {
           requests.push(
             Promise.resolve({ success: true, data: [] }), // claude 占位
             Promise.resolve({ success: true, data: [] }), // claude-console 占位
-            apiClient.get('/admin/bedrock-accounts', { params }),
+            safeGet('/admin/bedrock-accounts', { params }),
             Promise.resolve({ success: true, data: [] }), // gemini 占位
             Promise.resolve({ success: true, data: [] }), // gemini-api 占位
             Promise.resolve({ success: true, data: [] }), // openai 占位
@@ -2277,7 +2308,7 @@ const loadAccounts = async (forceReload = false) => {
             Promise.resolve({ success: true, data: [] }), // claude 占位
             Promise.resolve({ success: true, data: [] }), // claude-console 占位
             Promise.resolve({ success: true, data: [] }), // bedrock 占位
-            apiClient.get('/admin/gemini-accounts', { params }),
+            safeGet('/admin/gemini-accounts', { params }),
             Promise.resolve({ success: true, data: [] }), // gemini-api 占位
             Promise.resolve({ success: true, data: [] }), // openai 占位
             Promise.resolve({ success: true, data: [] }), // azure-openai 占位
@@ -2292,7 +2323,7 @@ const loadAccounts = async (forceReload = false) => {
             Promise.resolve({ success: true, data: [] }), // claude-console 占位
             Promise.resolve({ success: true, data: [] }), // bedrock 占位
             Promise.resolve({ success: true, data: [] }), // gemini 占位
-            apiClient.get('/admin/gemini-api-accounts', { params }),
+            safeGet('/admin/gemini-api-accounts', { params }),
             Promise.resolve({ success: true, data: [] }), // openai 占位
             Promise.resolve({ success: true, data: [] }), // azure-openai 占位
             Promise.resolve({ success: true, data: [] }), // openai-responses 占位
@@ -2307,7 +2338,7 @@ const loadAccounts = async (forceReload = false) => {
             Promise.resolve({ success: true, data: [] }), // bedrock 占位
             Promise.resolve({ success: true, data: [] }), // gemini 占位
             Promise.resolve({ success: true, data: [] }), // gemini-api 占位
-            apiClient.get('/admin/openai-accounts', { params }),
+            safeGet('/admin/openai-accounts', { params }),
             Promise.resolve({ success: true, data: [] }), // azure-openai 占位
             Promise.resolve({ success: true, data: [] }), // openai-responses 占位
             Promise.resolve({ success: true, data: [] }), // ccr 占位
@@ -2322,7 +2353,7 @@ const loadAccounts = async (forceReload = false) => {
             Promise.resolve({ success: true, data: [] }), // gemini 占位
             Promise.resolve({ success: true, data: [] }), // gemini-api 占位
             Promise.resolve({ success: true, data: [] }), // openai 占位
-            apiClient.get('/admin/azure-openai-accounts', { params }),
+            safeGet('/admin/azure-openai-accounts', { params }),
             Promise.resolve({ success: true, data: [] }), // openai-responses 占位
             Promise.resolve({ success: true, data: [] }), // ccr 占位
             Promise.resolve({ success: true, data: [] }) // droid 占位
@@ -2337,7 +2368,7 @@ const loadAccounts = async (forceReload = false) => {
             Promise.resolve({ success: true, data: [] }), // gemini-api 占位
             Promise.resolve({ success: true, data: [] }), // openai 占位
             Promise.resolve({ success: true, data: [] }), // azure-openai 占位
-            apiClient.get('/admin/openai-responses-accounts', { params }),
+            safeGet('/admin/openai-responses-accounts', { params }),
             Promise.resolve({ success: true, data: [] }), // ccr 占位
             Promise.resolve({ success: true, data: [] }) // droid 占位
           )
@@ -2352,7 +2383,7 @@ const loadAccounts = async (forceReload = false) => {
             Promise.resolve({ success: true, data: [] }), // openai 占位
             Promise.resolve({ success: true, data: [] }), // azure 占位
             Promise.resolve({ success: true, data: [] }), // openai-responses 占位
-            apiClient.get('/admin/ccr-accounts', { params }),
+            safeGet('/admin/ccr-accounts', { params }),
             Promise.resolve({ success: true, data: [] }) // droid 占位
           )
           break
@@ -2367,7 +2398,7 @@ const loadAccounts = async (forceReload = false) => {
             Promise.resolve({ success: true, data: [] }), // azure 占位
             Promise.resolve({ success: true, data: [] }), // openai-responses 占位
             Promise.resolve({ success: true, data: [] }), // ccr 占位
-            apiClient.get('/admin/droid-accounts', { params })
+            safeGet('/admin/droid-accounts', { params })
           )
           break
         default:
@@ -2409,118 +2440,36 @@ const loadAccounts = async (forceReload = false) => {
 
     const allAccounts = []
 
-    if (claudeData.success) {
-      const claudeAccounts = (claudeData.data || []).map((acc) => {
-        // 计算每个Claude账户绑定的API Key数量
-        const boundApiKeysCount = apiKeys.value.filter(
-          (key) => key.claudeAccountId === acc.id
-        ).length
-        // 后端已经包含了groupInfos，直接使用
-        return { ...acc, platform: 'claude', boundApiKeysCount }
-      })
-      allAccounts.push(...claudeAccounts)
-    }
-
-    if (claudeConsoleData.success) {
-      const claudeConsoleAccounts = (claudeConsoleData.data || []).map((acc) => {
-        // 计算每个Claude Console账户绑定的API Key数量
-        const boundApiKeysCount = apiKeys.value.filter(
-          (key) => key.claudeConsoleAccountId === acc.id
-        ).length
-        // 后端已经包含了groupInfos，直接使用
-        return { ...acc, platform: 'claude-console', boundApiKeysCount }
-      })
-      allAccounts.push(...claudeConsoleAccounts)
-    }
-
-    if (bedrockData.success) {
-      const bedrockAccounts = (bedrockData.data || []).map((acc) => {
-        // Bedrock账户暂时不支持直接绑定
-        // 后端已经包含了groupInfos，直接使用
-        return { ...acc, platform: 'bedrock', boundApiKeysCount: 0 }
-      })
-      allAccounts.push(...bedrockAccounts)
-    }
-
-    if (geminiData.success) {
-      const geminiAccounts = (geminiData.data || []).map((acc) => {
-        // 计算每个Gemini账户绑定的API Key数量
-        const boundApiKeysCount = apiKeys.value.filter(
-          (key) => key.geminiAccountId === acc.id
-        ).length
-        // 后端已经包含了groupInfos，直接使用
-        return { ...acc, platform: 'gemini', boundApiKeysCount }
-      })
-      allAccounts.push(...geminiAccounts)
-    }
-
-    if (geminiApiData.success) {
-      const geminiApiAccounts = (geminiApiData.data || []).map((acc) => {
-        // 计算每个Gemini-API账户绑定的API Key数量
-        const boundApiKeysCount = apiKeys.value.filter(
-          (key) => key.geminiApiAccountId === acc.id
-        ).length
-        // 后端已经包含了groupInfos，直接使用
-        return { ...acc, platform: 'gemini-api', boundApiKeysCount }
-      })
-      allAccounts.push(...geminiApiAccounts)
-    }
-    if (openaiData.success) {
-      const openaiAccounts = (openaiData.data || []).map((acc) => {
-        // 计算每个OpenAI账户绑定的API Key数量
-        const boundApiKeysCount = apiKeys.value.filter(
-          (key) => key.openaiAccountId === acc.id
-        ).length
-        // 后端已经包含了groupInfos，直接使用
-        return { ...acc, platform: 'openai', boundApiKeysCount }
-      })
-      allAccounts.push(...openaiAccounts)
-    }
-    if (azureOpenaiData && azureOpenaiData.success) {
-      const azureOpenaiAccounts = (azureOpenaiData.data || []).map((acc) => {
-        // 计算每个Azure OpenAI账户绑定的API Key数量
-        const boundApiKeysCount = apiKeys.value.filter(
-          (key) => key.azureOpenaiAccountId === acc.id
-        ).length
-        // 后端已经包含了groupInfos，直接使用
-        return { ...acc, platform: 'azure_openai', boundApiKeysCount }
-      })
-      allAccounts.push(...azureOpenaiAccounts)
-    }
-
-    if (openaiResponsesData && openaiResponsesData.success) {
-      const openaiResponsesAccounts = (openaiResponsesData.data || []).map((acc) => {
-        // 计算每个OpenAI-Responses账户绑定的API Key数量
-        // OpenAI-Responses账户使用 responses: 前缀
-        const boundApiKeysCount = apiKeys.value.filter(
-          (key) => key.openaiAccountId === `responses:${acc.id}`
-        ).length
-        // 后端已经包含了groupInfos，直接使用
-        return { ...acc, platform: 'openai-responses', boundApiKeysCount }
-      })
-      allAccounts.push(...openaiResponsesAccounts)
-    }
-
-    // CCR 账户
-    if (ccrData && ccrData.success) {
-      const ccrAccounts = (ccrData.data || []).map((acc) => {
-        // CCR 不支持 API Key 绑定，固定为 0
-        return { ...acc, platform: 'ccr', boundApiKeysCount: 0 }
-      })
-      allAccounts.push(...ccrAccounts)
-    }
-
-    // Droid 账户
-    if (droidData && droidData.success) {
-      const droidAccounts = (droidData.data || []).map((acc) => {
-        return {
-          ...acc,
-          platform: 'droid',
-          boundApiKeysCount: acc.boundApiKeysCount ?? 0
+    const addAccounts = (resp, platform, boundKeyField = null) => {
+      const items = extractItems(resp)
+      if (!items.length) return
+      items.forEach((acc) => {
+        const base = sanitizeAccount(acc, platform)
+        if (!base) return
+        let boundApiKeysCount = 0
+        if (boundKeyField) {
+          if (platform === 'openai-responses') {
+            boundApiKeysCount = apiKeys.value.filter(
+              (key) => key.openaiAccountId === `responses:${base.id}`
+            ).length
+          } else {
+            boundApiKeysCount = apiKeys.value.filter((key) => key[boundKeyField] === base.id).length
+          }
         }
+        allAccounts.push({ ...base, boundApiKeysCount })
       })
-      allAccounts.push(...droidAccounts)
     }
+
+    addAccounts(claudeData, 'claude', 'claudeAccountId')
+    addAccounts(claudeConsoleData, 'claude-console', 'claudeConsoleAccountId')
+    addAccounts(bedrockData, 'bedrock', null)
+    addAccounts(geminiData, 'gemini', 'geminiAccountId')
+    addAccounts(geminiApiData, 'gemini-api', 'geminiApiAccountId')
+    addAccounts(openaiData, 'openai', 'openaiAccountId')
+    addAccounts(azureOpenaiData, 'azure_openai', 'azureOpenaiAccountId')
+    addAccounts(openaiResponsesData, 'openai-responses', 'openaiAccountId')
+    addAccounts(ccrData, 'ccr', null)
+    addAccounts(droidData, 'droid', null)
 
     // 根据分组筛选器过滤账户
     let filteredAccounts = allAccounts
