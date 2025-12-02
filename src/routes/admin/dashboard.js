@@ -13,7 +13,7 @@ const { authenticateAdmin } = require('../../middleware/auth')
 const logger = require('../../utils/logger')
 const CostCalculator = require('../../utils/costCalculator')
 const pricingService = require('../../services/pricingService')
-const config = require('../../../config/config')
+const config = require('../../../config')
 
 const router = express.Router()
 

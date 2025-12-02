@@ -6,7 +6,7 @@ const { SocksProxyAgent } = require('socks-proxy-agent')
 const logger = require('../utils/logger')
 const webhookConfigService = require('./webhookConfigService')
 const { getISOStringWithTimezone } = require('../utils/dateHelper')
-const appConfig = require('../../config/config')
+const appConfig = require('../../config')
 
 class WebhookService {
   constructor() {

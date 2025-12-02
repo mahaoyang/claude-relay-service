@@ -1,5 +1,5 @@
 const { v4: uuidv4 } = require('uuid')
-const config = require('../../config/config')
+const config = require('../../config')
 const apiKeyService = require('../services/apiKeyService')
 const userService = require('../services/userService')
 const logger = require('../utils/logger')

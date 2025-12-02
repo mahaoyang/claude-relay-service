@@ -10,7 +10,7 @@ const crypto = require('crypto')
 const redis = require('../src/models/redis')
 const logger = require('../src/utils/logger')
 const readline = require('readline')
-const config = require('../config/config')
+const config = require('../config')
 
 // 解析命令行参数
 const args = process.argv.slice(2)

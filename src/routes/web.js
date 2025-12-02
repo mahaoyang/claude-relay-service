@@ -5,7 +5,7 @@ const path = require('path')
 const fs = require('fs')
 const redis = require('../models/redis')
 const logger = require('../utils/logger')
-const config = require('../../config/config')
+const config = require('../../config')
 
 const router = express.Router()
 

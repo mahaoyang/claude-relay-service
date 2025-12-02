@@ -1,6 +1,6 @@
 const crypto = require('crypto')
 const { v4: uuidv4 } = require('uuid')
-const config = require('../../config/config')
+const config = require('../../config')
 const redis = require('../models/redis')
 const logger = require('../utils/logger')
 

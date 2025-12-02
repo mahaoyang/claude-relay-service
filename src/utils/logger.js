@@ -1,6 +1,6 @@
 const winston = require('winston')
 const DailyRotateFile = require('winston-daily-rotate-file')
-const config = require('../../config/config')
+const config = require('../../config')
 const { formatDateWithTimezone } = require('../utils/dateHelper')
 const path = require('path')
 const fs = require('fs')
