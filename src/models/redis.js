@@ -1,5 +1,5 @@
 const Redis = require('ioredis')
-const config = require('../../config/config')
+const config = require('../../config')
 const logger = require('../utils/logger')
 
 // 时区辅助函数
@@ -637,7 +637,7 @@ class RedisClient {
     pipeline.expire(keyModelHourly, 86400 * 7) // API Key模型小时统计7天过期
 
     // 系统级分钟统计的过期时间（窗口时间的2倍）
-    const configLocal = require('../../config/config')
+    const configLocal = require('../../config')
     const { metricsWindow } = configLocal.system
     pipeline.expire(systemMinuteKey, metricsWindow * 60 * 2)
 
@@ -1615,7 +1615,7 @@ class RedisClient {
   // 📊 获取实时系统指标（基于滑动窗口）
   async getRealtimeSystemMetrics() {
     try {
-      const configLocal = require('../../config/config')
+      const configLocal = require('../../config')
       const windowMinutes = configLocal.system.metricsWindow || 5
 
       const now = new Date()
@@ -1710,7 +1710,7 @@ class RedisClient {
 
   // 🔗 会话sticky映射管理
   async setSessionAccountMapping(sessionHash, accountId, ttl = null) {
-    const appConfig = require('../../config/config')
+    const appConfig = require('../../config')
     // 从配置读取TTL（小时），转换为秒，默认1小时
     const defaultTTL = ttl !== null ? ttl : (appConfig.session?.stickyTtlHours || 1) * 60 * 60
     const key = `sticky_session:${sessionHash}`
@@ -1724,7 +1724,7 @@ class RedisClient {
 
   // 🚀 智能会话TTL续期：剩余时间少于阈值时自动续期
   async extendSessionAccountMappingTTL(sessionHash) {
-    const appConfig = require('../../config/config')
+    const appConfig = require('../../config')
     const key = `sticky_session:${sessionHash}`
 
     // 📊 从配置获取参数
