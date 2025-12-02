@@ -1,0 +1,49 @@
+# Dependencies
+node_modules
+web/admin-spa/node_modules
+
+# Development files
+.env.local
+.env.development
+*.log
+logs
+
+# Test files
+test
+tests
+*.test.js
+*.spec.js
+
+# Documentation
+docs
+*.md
+!README.md
+
+# Git
+.git
+.gitignore
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Build artifacts (will be built on Vercel)
+web/admin-spa/dist
+
+# Backup files
+*.backup
+*.bak
+*:Zone.Identifier
+
+# Scripts (not needed in production)
+scripts/backup-*.sh
+scripts/test-*.js
+scripts/compare-*.js
+scripts/analyze-*.js
+dev.sh
