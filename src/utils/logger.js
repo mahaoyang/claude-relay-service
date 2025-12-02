@@ -138,20 +138,41 @@ const createLogFormat = (colorize = false) => {
 const logFormat = createLogFormat(false)
 const consoleFormat = createLogFormat(true)
 
-// 📁 确保日志目录存在并设置权限
-if (!fs.existsSync(config.logging.dirname)) {
-  fs.mkdirSync(config.logging.dirname, { recursive: true, mode: 0o755 })
+// 📁 确定日志目录（在不可写环境如 Vercel 上回落到 /tmp 并允许仅控制台日志）
+const isVercel = !!process.env.VERCEL
+const fallbackLogDir = path.join(os.tmpdir(), 'crs-logs')
+let logDirectory = process.env.LOG_DIR || config.logging.dirname
+let fileLoggingEnabled = true
+
+const ensureDir = (dir) => {
+  fs.mkdirSync(dir, { recursive: true, mode: 0o755 })
+}
+
+try {
+  ensureDir(logDirectory)
+} catch (error) {
+  try {
+    logDirectory = fallbackLogDir
+    ensureDir(logDirectory)
+  } catch (fallbackError) {
+    console.warn(
+      `File logging disabled (target: ${logDirectory}): ${fallbackError.message}; falling back to console only`
+    )
+    fileLoggingEnabled = false
+  }
 }
 
 // 🔄 增强的日志轮转配置
 const createRotateTransport = (filename, level = null) => {
+  if (!fileLoggingEnabled) return null
+
   const transport = new DailyRotateFile({
-    filename: path.join(config.logging.dirname, filename),
+    filename: path.join(logDirectory, filename),
     datePattern: 'YYYY-MM-DD',
     zippedArchive: true,
     maxSize: config.logging.maxSize,
     maxFiles: config.logging.maxFiles,
-    auditFile: path.join(config.logging.dirname, `.${filename.replace('%DATE%', 'audit')}.json`),
+    auditFile: path.join(logDirectory, `.${filename.replace('%DATE%', 'audit')}.json`),
     format: logFormat
   })
 
@@ -177,12 +198,20 @@ const createRotateTransport = (filename, level = null) => {
 
 const dailyRotateFileTransport = createRotateTransport('claude-relay-%DATE%.log')
 const errorFileTransport = createRotateTransport('claude-relay-error-%DATE%.log', 'error')
+const baseConsoleTransport = new winston.transports.Console({
+  format: consoleFormat,
+  handleExceptions: false,
+  handleRejections: false
+})
 
 // 🔒 创建专门的安全日志记录器
 const securityLogger = winston.createLogger({
   level: 'warn',
   format: logFormat,
-  transports: [createRotateTransport('claude-relay-security-%DATE%.log', 'warn')],
+  transports: [
+    createRotateTransport('claude-relay-security-%DATE%.log', 'warn'),
+    new winston.transports.Console({ format: consoleFormat })
+  ].filter(Boolean),
   silent: false
 })
 
@@ -197,7 +226,10 @@ const authDetailLogger = winston.createLogger({
       return `[${timestamp}] ${level.toUpperCase()}: ${message}\n${jsonData}\n${'='.repeat(80)}`
     })
   ),
-  transports: [createRotateTransport('claude-relay-auth-detail-%DATE%.log', 'info')],
+  transports: [
+    createRotateTransport('claude-relay-auth-detail-%DATE%.log', 'info'),
+    new winston.transports.Console({ format: consoleFormat })
+  ].filter(Boolean),
   silent: false
 })
 
@@ -211,38 +243,36 @@ const logger = winston.createLogger({
     errorFileTransport,
 
     // 🖥️ 控制台输出
-    new winston.transports.Console({
-      format: consoleFormat,
-      handleExceptions: false,
-      handleRejections: false
-    })
-  ],
+    baseConsoleTransport
+  ].filter(Boolean),
 
   // 🚨 异常处理
-  exceptionHandlers: [
-    new winston.transports.File({
-      filename: path.join(config.logging.dirname, 'exceptions.log'),
-      format: logFormat,
-      maxsize: 10485760, // 10MB
-      maxFiles: 5
-    }),
-    new winston.transports.Console({
-      format: consoleFormat
-    })
-  ],
+  exceptionHandlers: (
+    fileLoggingEnabled
+      ? [
+          new winston.transports.File({
+            filename: path.join(logDirectory, 'exceptions.log'),
+            format: logFormat,
+            maxsize: 10485760, // 10MB
+            maxFiles: 5
+          })
+        ]
+      : []
+  ).concat([new winston.transports.Console({ format: consoleFormat })]),
 
   // 🔄 未捕获异常处理
-  rejectionHandlers: [
-    new winston.transports.File({
-      filename: path.join(config.logging.dirname, 'rejections.log'),
-      format: logFormat,
-      maxsize: 10485760, // 10MB
-      maxFiles: 5
-    }),
-    new winston.transports.Console({
-      format: consoleFormat
-    })
-  ],
+  rejectionHandlers: (
+    fileLoggingEnabled
+      ? [
+          new winston.transports.File({
+            filename: path.join(logDirectory, 'rejections.log'),
+            format: logFormat,
+            maxsize: 10485760, // 10MB
+            maxFiles: 5
+          })
+        ]
+      : []
+  ).concat([new winston.transports.Console({ format: consoleFormat })]),
 
   // 防止进程退出
   exitOnError: false
@@ -401,10 +431,12 @@ logger.authDetail = (message, data = {}) => {
 // 🎬 启动日志记录系统
 logger.start('Logger initialized', {
   level: process.env.LOG_LEVEL || config.logging.level,
-  directory: config.logging.dirname,
+  directory: logDirectory,
   maxSize: config.logging.maxSize,
   maxFiles: config.logging.maxFiles,
-  envOverride: process.env.LOG_LEVEL ? true : false
+  envOverride: process.env.LOG_LEVEL ? true : false,
+  fileLoggingEnabled,
+  isVercel
 })
 
 module.exports = logger
