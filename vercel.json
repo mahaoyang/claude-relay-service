@@ -21,11 +21,5 @@
       "src": "/(.*)",
       "dest": "/api/serverless.js"
     }
-  ],
-  "functions": {
-    "api/serverless.js": {
-      "memory": 1024,
-      "maxDuration": 60
-    }
-  }
+  ]
 }
