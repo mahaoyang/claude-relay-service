@@ -14,8 +14,16 @@
   ],
   "routes": [
     {
+      "src": "/admin-next/assets/(.*)",
+      "dest": "/web/admin-spa/dist/assets/$1"
+    },
+    {
       "src": "/admin-next/(.*)",
-      "dest": "/web/admin-spa/dist/$1"
+      "dest": "/web/admin-spa/dist/index.html"
+    },
+    {
+      "src": "/admin-next",
+      "dest": "/web/admin-spa/dist/index.html"
     },
     {
       "src": "/(.*)",
