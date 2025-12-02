@@ -7,7 +7,7 @@
     "start": "npm run lint && node src/app.js",
     "dev": "nodemon",
     "dev:full": "concurrently \"npm run dev\" \"cd web/admin-spa && npm run dev\"",
-    "build": "npm run install:web && npm run build:web",
+    "build": "cd web/admin-spa && npm install && npm run build",
     "build:web": "cd web/admin-spa && npm run build",
     "install:web": "cd web/admin-spa && npm install",
     "vercel-build": "npm run build",
