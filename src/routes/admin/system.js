@@ -7,7 +7,7 @@ const claudeAccountService = require('../../services/claudeAccountService')
 const redis = require('../../models/redis')
 const { authenticateAdmin } = require('../../middleware/auth')
 const logger = require('../../utils/logger')
-const config = require('../../../config/config')
+const config = require('../../../config')
 
 const router = express.Router()
 

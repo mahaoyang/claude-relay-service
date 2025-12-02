@@ -3,7 +3,7 @@ const crypto = require('crypto')
 const ProxyHelper = require('../utils/proxyHelper')
 const axios = require('axios')
 const redis = require('../models/redis')
-const config = require('../../config/config')
+const config = require('../../config')
 const logger = require('../utils/logger')
 const { maskToken } = require('../utils/tokenMask')
 const {

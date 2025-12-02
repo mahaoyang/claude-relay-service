@@ -592,7 +592,7 @@ class UnifiedOpenAIScheduler {
     const client = redis.getClientSafe()
     const mappingData = JSON.stringify({ accountId, accountType })
     // 依据配置设置TTL（小时）
-    const appConfig = require('../../config/config')
+    const appConfig = require('../../config')
     const ttlHours = appConfig.session?.stickyTtlHours || 1
     const ttlSeconds = Math.max(1, Math.floor(ttlHours * 60 * 60))
     await client.setex(`${this.SESSION_MAPPING_PREFIX}${sessionHash}`, ttlSeconds, mappingData)
@@ -618,7 +618,7 @@ class UnifiedOpenAIScheduler {
         return true
       }
 
-      const appConfig = require('../../config/config')
+      const appConfig = require('../../config')
       const ttlHours = appConfig.session?.stickyTtlHours || 1
       const renewalThresholdMinutes = appConfig.session?.renewalThresholdMinutes || 0
       if (!renewalThresholdMinutes) {

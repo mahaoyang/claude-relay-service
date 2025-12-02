@@ -1,7 +1,7 @@
 const redis = require('../models/redis')
 const crypto = require('crypto')
 const logger = require('../utils/logger')
-const config = require('../../config/config')
+const config = require('../../config')
 
 class UserService {
   constructor() {

@@ -13,7 +13,7 @@ dotenv.config({ path: path.join(__dirname, '..', '.env') })
 const redis = require('../src/models/redis')
 const geminiAccountService = require('../src/services/geminiAccountService')
 const crypto = require('crypto')
-const config = require('../config/config')
+const config = require('../config')
 
 // 加密相关常量（与 geminiAccountService 保持一致）
 const ALGORITHM = 'aes-256-cbc'

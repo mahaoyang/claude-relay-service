@@ -1,7 +1,7 @@
 const redisClient = require('../models/redis')
 const { v4: uuidv4 } = require('uuid')
 const crypto = require('crypto')
-const config = require('../../config/config')
+const config = require('../../config')
 const logger = require('../utils/logger')
 
 // 加密相关常量

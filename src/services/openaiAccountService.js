@@ -3,7 +3,7 @@ const { v4: uuidv4 } = require('uuid')
 const crypto = require('crypto')
 const axios = require('axios')
 const ProxyHelper = require('../utils/proxyHelper')
-const config = require('../../config/config')
+const config = require('../../config')
 const logger = require('../utils/logger')
 // const { maskToken } = require('../utils/tokenMask')
 const {

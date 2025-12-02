@@ -3,7 +3,7 @@
  */
 
 const axios = require('axios')
-const config = require('../config/config')
+const config = require('../config')
 
 // 从 init.json 读取管理员凭据
 const fs = require('fs')

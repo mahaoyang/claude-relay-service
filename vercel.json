@@ -1,0 +1,33 @@
+{
+  "version": 2,
+  "name": "claude-relay-service",
+  "buildCommand": "npm run build",
+  "builds": [
+    {
+      "src": "api/serverless.js",
+      "use": "@vercel/node"
+    },
+    {
+      "src": "web/admin-spa/dist/**",
+      "use": "@vercel/static"
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/admin-next/assets/:path*",
+      "destination": "/web/admin-spa/dist/assets/:path*"
+    },
+    {
+      "source": "/admin-next/:path*",
+      "destination": "/web/admin-spa/dist/index.html"
+    },
+    {
+      "source": "/admin-next",
+      "destination": "/web/admin-spa/dist/index.html"
+    },
+    {
+      "source": "/:path*",
+      "destination": "/api/serverless.js"
+    }
+  ]
+}

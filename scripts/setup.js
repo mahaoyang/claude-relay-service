@@ -4,7 +4,7 @@ const crypto = require('crypto')
 const chalk = require('chalk')
 const ora = require('ora')
 
-const config = require('../config/config')
+const config = require('../config')
 
 async function setup() {
   console.log(chalk.blue.bold('\n🚀 Claude Relay Service 初始化设置\n'))
