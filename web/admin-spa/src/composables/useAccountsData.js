@@ -517,23 +517,44 @@ export function useAccountsData() {
         return []
       }
 
+      const sanitizeAccount = (acc, platform) => {
+        if (!acc || typeof acc !== 'object') return null
+        const id = acc.id || acc.accountId || acc.account_id
+        if (!id) return null
+        const name =
+          acc.name ||
+          acc.accountName ||
+          acc.email ||
+          acc.username ||
+          acc.displayName ||
+          acc.owner ||
+          `account-${platform}-${id}`
+        const groupInfos = Array.isArray(acc.groupInfos) ? acc.groupInfos : []
+        return { ...acc, id, name, platform, groupInfos }
+      }
+
       const processAccounts = (data, platform, boundKeyField) => {
         const items = extractItems(data)
         if (items.length === 0) return
-        const processed = items.map((acc) => {
-          let boundApiKeysCount = 0
-          if (boundKeyField) {
-            if (platform === 'openai-responses') {
-              boundApiKeysCount = apiKeys.value.filter(
-                (key) => key.openaiAccountId === `responses:${acc.id}`
-              ).length
-            } else {
-              boundApiKeysCount = apiKeys.value.filter((key) => key[boundKeyField] === acc.id)
+        items.forEach((acc) => {
+          try {
+            const base = sanitizeAccount(acc, platform)
+            if (!base) return
+            let boundApiKeysCount = 0
+            if (boundKeyField) {
+              if (platform === 'openai-responses') {
+                boundApiKeysCount = apiKeys.value.filter(
+                  (key) => key.openaiAccountId === `responses:${base.id}`
+                ).length
+              } else {
+                boundApiKeysCount = apiKeys.value.filter((key) => key[boundKeyField] === base.id)
+              }
             }
+            allAccounts.push({ ...base, boundApiKeysCount })
+          } catch (err) {
+            console.debug('Skip bad account entry', err)
           }
-          return { ...acc, platform, boundApiKeysCount }
         })
-        allAccounts.push(...processed)
       }
 
       processAccounts(claudeData, 'claude', 'claudeAccountId')
