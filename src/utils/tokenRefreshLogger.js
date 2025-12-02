@@ -1,52 +1,80 @@
 const winston = require('winston')
 const path = require('path')
 const fs = require('fs')
+const os = require('os')
 const { maskToken } = require('./tokenMask')
 
-// 确保日志目录存在
-const logDir = path.join(process.cwd(), 'logs')
-if (!fs.existsSync(logDir)) {
-  fs.mkdirSync(logDir, { recursive: true })
+// 确定日志目录，Vercel 等只读环境回落到 /tmp，并在不可写时仅输出控制台
+const isVercel = !!process.env.VERCEL
+const fallbackLogDir = path.join(os.tmpdir(), 'crs-logs')
+let logDir = process.env.LOG_DIR || path.join(process.cwd(), 'logs')
+let fileLoggingEnabled = true
+
+const ensureDir = (dir) => {
+  fs.mkdirSync(dir, { recursive: true, mode: 0o755 })
 }
+
+try {
+  ensureDir(logDir)
+} catch (error) {
+  try {
+    logDir = fallbackLogDir
+    ensureDir(logDir)
+  } catch (fallbackError) {
+    console.warn(
+      `Token refresh file logging disabled (target: ${logDir}): ${fallbackError.message}; console only`
+    )
+    fileLoggingEnabled = false
+  }
+}
+
+const baseFormat = winston.format.combine(
+  winston.format.timestamp({
+    format: 'YYYY-MM-DD HH:mm:ss.SSS'
+  }),
+  winston.format.json(),
+  winston.format.printf((info) => JSON.stringify(info, null, 2))
+)
+
+const consoleTransport = new winston.transports.Console({
+  format: winston.format.combine(winston.format.colorize(), winston.format.simple())
+})
 
 // 创建专用的 token 刷新日志记录器
 const tokenRefreshLogger = winston.createLogger({
   level: 'info',
-  format: winston.format.combine(
-    winston.format.timestamp({
-      format: 'YYYY-MM-DD HH:mm:ss.SSS'
-    }),
-    winston.format.json(),
-    winston.format.printf((info) => JSON.stringify(info, null, 2))
-  ),
+  format: baseFormat,
   transports: [
     // 文件传输 - 每日轮转
-    new winston.transports.File({
-      filename: path.join(logDir, 'token-refresh.log'),
-      maxsize: 10 * 1024 * 1024, // 10MB
-      maxFiles: 30, // 保留30天
-      tailable: true
-    }),
+    fileLoggingEnabled
+      ? new winston.transports.File({
+          filename: path.join(logDir, 'token-refresh.log'),
+          maxsize: 10 * 1024 * 1024, // 10MB
+          maxFiles: 30, // 保留30天
+          tailable: true
+        })
+      : null,
     // 错误单独记录
-    new winston.transports.File({
-      filename: path.join(logDir, 'token-refresh-error.log'),
-      level: 'error',
-      maxsize: 10 * 1024 * 1024,
-      maxFiles: 30
-    })
-  ],
+    fileLoggingEnabled
+      ? new winston.transports.File({
+          filename: path.join(logDir, 'token-refresh-error.log'),
+          level: 'error',
+          maxsize: 10 * 1024 * 1024,
+          maxFiles: 30
+        })
+      : null,
+    // 控制台输出（生产环境也保留，以免无文件写权限时无日志）
+    consoleTransport
+  ].filter(Boolean),
   // 错误处理
   exitOnError: false
 })
 
-// 在开发环境添加控制台输出
-if (process.env.NODE_ENV !== 'production') {
-  tokenRefreshLogger.add(
-    new winston.transports.Console({
-      format: winston.format.combine(winston.format.colorize(), winston.format.simple())
-    })
-  )
-}
+tokenRefreshLogger.info('TokenRefresh logger initialized', {
+  directory: logDir,
+  fileLoggingEnabled,
+  isVercel
+})
 
 /**
  * 记录 token 刷新开始
