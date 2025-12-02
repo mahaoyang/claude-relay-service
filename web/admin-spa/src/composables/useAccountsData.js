@@ -357,6 +357,12 @@ export function useAccountsData() {
   const loadAccounts = async (forceReload = false) => {
     accountsLoading.value = true
     try {
+      const safeGet = (url, options) =>
+        apiClient.get(url, options).catch((error) => {
+          console.debug(`Load accounts request failed: ${url}`, error)
+          return { success: false, data: [] }
+        })
+
       const params = {}
       if (platformFilter.value !== 'all') {
         params.platform = platformFilter.value
@@ -369,21 +375,21 @@ export function useAccountsData() {
 
       if (platformFilter.value === 'all') {
         requests.push(
-          apiClient.get('/admin/claude-accounts', { params }),
-          apiClient.get('/admin/claude-console-accounts', { params }),
-          apiClient.get('/admin/bedrock-accounts', { params }),
-          apiClient.get('/admin/gemini-accounts', { params }),
-          apiClient.get('/admin/openai-accounts', { params }),
-          apiClient.get('/admin/azure-openai-accounts', { params }),
-          apiClient.get('/admin/openai-responses-accounts', { params }),
-          apiClient.get('/admin/ccr-accounts', { params }),
-          apiClient.get('/admin/droid-accounts', { params })
+          safeGet('/admin/claude-accounts', { params }),
+          safeGet('/admin/claude-console-accounts', { params }),
+          safeGet('/admin/bedrock-accounts', { params }),
+          safeGet('/admin/gemini-accounts', { params }),
+          safeGet('/admin/openai-accounts', { params }),
+          safeGet('/admin/azure-openai-accounts', { params }),
+          safeGet('/admin/openai-responses-accounts', { params }),
+          safeGet('/admin/ccr-accounts', { params }),
+          safeGet('/admin/droid-accounts', { params })
         )
       } else {
         const emptyResponse = Promise.resolve({ success: true, data: [] })
         const platformRequests = {
           claude: [
-            apiClient.get('/admin/claude-accounts', { params }),
+            safeGet('/admin/claude-accounts', { params }),
             emptyResponse,
             emptyResponse,
             emptyResponse,
@@ -395,7 +401,7 @@ export function useAccountsData() {
           ],
           'claude-console': [
             emptyResponse,
-            apiClient.get('/admin/claude-console-accounts', { params }),
+            safeGet('/admin/claude-console-accounts', { params }),
             emptyResponse,
             emptyResponse,
             emptyResponse,
@@ -407,7 +413,7 @@ export function useAccountsData() {
           bedrock: [
             emptyResponse,
             emptyResponse,
-            apiClient.get('/admin/bedrock-accounts', { params }),
+            safeGet('/admin/bedrock-accounts', { params }),
             emptyResponse,
             emptyResponse,
             emptyResponse,
@@ -419,7 +425,7 @@ export function useAccountsData() {
             emptyResponse,
             emptyResponse,
             emptyResponse,
-            apiClient.get('/admin/gemini-accounts', { params }),
+            safeGet('/admin/gemini-accounts', { params }),
             emptyResponse,
             emptyResponse,
             emptyResponse,
@@ -431,7 +437,7 @@ export function useAccountsData() {
             emptyResponse,
             emptyResponse,
             emptyResponse,
-            apiClient.get('/admin/openai-accounts', { params }),
+            safeGet('/admin/openai-accounts', { params }),
             emptyResponse,
             emptyResponse,
             emptyResponse,
@@ -443,7 +449,7 @@ export function useAccountsData() {
             emptyResponse,
             emptyResponse,
             emptyResponse,
-            apiClient.get('/admin/azure-openai-accounts', { params }),
+            safeGet('/admin/azure-openai-accounts', { params }),
             emptyResponse,
             emptyResponse,
             emptyResponse
@@ -455,7 +461,7 @@ export function useAccountsData() {
             emptyResponse,
             emptyResponse,
             emptyResponse,
-            apiClient.get('/admin/openai-responses-accounts', { params }),
+            safeGet('/admin/openai-responses-accounts', { params }),
             emptyResponse,
             emptyResponse
           ],
@@ -467,7 +473,7 @@ export function useAccountsData() {
             emptyResponse,
             emptyResponse,
             emptyResponse,
-            apiClient.get('/admin/ccr-accounts', { params }),
+            safeGet('/admin/ccr-accounts', { params }),
             emptyResponse
           ],
           droid: [
@@ -479,7 +485,7 @@ export function useAccountsData() {
             emptyResponse,
             emptyResponse,
             emptyResponse,
-            apiClient.get('/admin/droid-accounts', { params })
+            safeGet('/admin/droid-accounts', { params })
           ]
         }
 
