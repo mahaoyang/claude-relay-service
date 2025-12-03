@@ -1,0 +1,135 @@
+{
+  "timestamp": "2025-11-16T20:23:42.802Z",
+  "upstreamUrl": "https://www.88code.org/api",
+  "results": {
+    "singleKeyConcurrency": [
+      {
+        "concurrent": 1,
+        "success": 1,
+        "rateLimited": 0,
+        "failed": 0,
+        "concurrencyLimit": null
+      },
+      {
+        "concurrent": 2,
+        "success": 2,
+        "rateLimited": 0,
+        "failed": 0,
+        "concurrencyLimit": null
+      },
+      {
+        "concurrent": 3,
+        "success": 3,
+        "rateLimited": 0,
+        "failed": 0,
+        "concurrencyLimit": null
+      },
+      {
+        "concurrent": 4,
+        "success": 4,
+        "rateLimited": 0,
+        "failed": 0,
+        "concurrencyLimit": null
+      },
+      {
+        "concurrent": 5,
+        "success": 4,
+        "rateLimited": 0,
+        "failed": 1,
+        "concurrencyLimit": null
+      },
+      {
+        "concurrent": 6,
+        "success": 6,
+        "rateLimited": 0,
+        "failed": 0,
+        "concurrencyLimit": null
+      },
+      {
+        "concurrent": 7,
+        "success": 7,
+        "rateLimited": 0,
+        "failed": 0,
+        "concurrencyLimit": null
+      },
+      {
+        "concurrent": 8,
+        "success": 8,
+        "rateLimited": 0,
+        "failed": 0,
+        "concurrencyLimit": null
+      },
+      {
+        "concurrent": 9,
+        "success": 9,
+        "rateLimited": 0,
+        "failed": 0,
+        "concurrencyLimit": null
+      },
+      {
+        "concurrent": 10,
+        "success": 10,
+        "rateLimited": 0,
+        "failed": 0,
+        "concurrencyLimit": null
+      }
+    ],
+    "multiKeyIndependence": {
+      "result": "independent",
+      "key1Test": {
+        "statusCode": 200,
+        "headers": {
+          "date": "Sun, 16 Nov 2025 20:19:59 GMT",
+          "content-type": "text/event-stream",
+          "transfer-encoding": "chunked",
+          "connection": "keep-alive",
+          "server": "nginx/1.28.0",
+          "cache-control": "no-cache",
+          "access-control-allow-origin": "*, *",
+          "access-control-allow-credentials": "true",
+          "access-control-allow-methods": "GET, POST, OPTIONS",
+          "access-control-allow-headers": "*"
+        },
+        "data": {
+          "raw": "event:message_start\ndata:{\"type\":\"message_start\",\"message\":{\"id\":\"msg_01PZCJdhCjZzkVFrpY2EJ4Jz\",\"type\":\"message\",\"role\":\"assistant\",\"content\":[],\"model\":\"claude-haiku-4-5-20251001\",\"usage\":{\"cache_creation\":{\"ephemeral_1h_input_tokens\":0,\"ephemeral_5m_input_tokens\":0},\"cache_creation_input_tokens\":0,\"cache_read_input_tokens\":0,\"input_tokens\":28,\"output_tokens\":3,\"service_tier\":\"standard\"}}}\n\nevent:content_block_start\ndata:{\"type\":\"content_block_start\",\"index\":0,\"content_block\":{\"type\":\"text\",\"text\":\"\"}         }\n\nevent:content_block_delta\ndata:{\"type\":\"content_block_delta\",\"index\":0,\"delta\":{\"type\":\"text_delta\",\"text\":\"Hello, I\"}     }\n\nevent:content_block_delta\ndata:{\"type\":\"content_block_delta\",\"index\":0,\"delta\":{\"type\":\"text_delta\",\"text\":\"'m Claude Code here\"}        }\n\nevent:ping\ndata:{\"type\": \"ping\"}\n\nevent:content_block_delta\ndata:{\"type\":\"content_block_delta\",\"index\":0,\"delta\":{\"type\":\"text_delta\",\"text\":\"!\"}    }\n\nevent:ping\ndata:{\"type\": \"ping\"}\n\nevent:content_block_stop\ndata:{\"type\":\"content_block_stop\",\"index\":0    }\n\nevent:ping\ndata:{\"type\": \"ping\"}\n\nevent:ping\ndata:{\"type\": \"ping\"}\n\nevent:message_delta\ndata:{\"type\":\"message_delta\",\"delta\":{\"stop_reason\":\"end_turn\"},\"usage\":{\"cache_creation_input_tokens\":0,\"cache_read_input_tokens\":0,\"input_tokens\":28,\"output_tokens\":11},\"server_tool_use\":null}\n\nevent:message_stop\ndata:{\"type\":\"message_stop\"         }\n\n"
+        },
+        "duration": 1634,
+        "success": true
+      },
+      "key2Test": {
+        "statusCode": 200,
+        "headers": {
+          "date": "Sun, 16 Nov 2025 20:20:01 GMT",
+          "content-type": "text/event-stream",
+          "transfer-encoding": "chunked",
+          "connection": "keep-alive",
+          "server": "nginx/1.28.0",
+          "cache-control": "no-cache",
+          "access-control-allow-origin": "*, *",
+          "access-control-allow-credentials": "true",
+          "access-control-allow-methods": "GET, POST, OPTIONS",
+          "access-control-allow-headers": "*"
+        },
+        "data": {
+          "raw": "event:message_start\ndata:{\"type\":\"message_start\",\"message\":{\"id\":\"msg_018uZZw6VMruKwVpa7jRfpt4\",\"type\":\"message\",\"role\":\"assistant\",\"content\":[],\"model\":\"claude-haiku-4-5-20251001\",\"usage\":{\"cache_creation\":{\"ephemeral_1h_input_tokens\":0,\"ephemeral_5m_input_tokens\":0},\"cache_creation_input_tokens\":0,\"cache_read_input_tokens\":0,\"input_tokens\":28,\"output_tokens\":6,\"service_tier\":\"standard\"}}}\n\nevent:content_block_start\ndata:{\"type\":\"content_block_start\",\"index\":0,\"content_block\":{\"type\":\"text\",\"text\":\"\"}            }\n\nevent:content_block_delta\ndata:{\"type\":\"content_block_delta\",\"index\":0,\"delta\":{\"type\":\"text_delta\",\"text\":\"Hello, I'm Claude,\"}               }\n\nevent:content_block_delta\ndata:{\"type\":\"content_block_delta\",\"index\":0,\"delta\":{\"type\":\"text_delta\",\"text\":\" nice\"}      }\n\nevent:ping\ndata:{\"type\": \"ping\"}\n\nevent:content_block_delta\ndata:{\"type\":\"content_block_delta\",\"index\":0,\"delta\":{\"type\":\"text_delta\",\"text\":\" meeting\"}        }\n\nevent:content_block_delta\ndata:{\"type\":\"content_block_delta\",\"index\":0,\"delta\":{\"type\":\"text_delta\",\"text\":\".\"}             }\n\nevent:content_block_stop\ndata:{\"type\":\"content_block_stop\",\"index\":0    }\n\nevent:message_delta\ndata:{\"type\":\"message_delta\",\"delta\":{\"stop_reason\":\"end_turn\"},\"usage\":{\"cache_creation_input_tokens\":0,\"cache_read_input_tokens\":0,\"input_tokens\":28,\"output_tokens\":12},\"server_tool_use\":null}\n\nevent:message_stop\ndata:{\"type\":\"message_stop\"        }\n\n"
+        },
+        "duration": 1044,
+        "success": true
+      }
+    },
+    "allKeysConcurrency": [
+      {
+        "key": 1,
+        "limit": ">10"
+      },
+      {
+        "key": 2,
+        "limit": ">10"
+      },
+      {
+        "key": 3,
+        "limit": ">10"
+      }
+    ]
+  }
+}

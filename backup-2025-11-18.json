@@ -1,0 +1,1392 @@
+{
+  "metadata": {
+    "version": "2.0",
+    "exportDate": "2025-11-18T13:52:47.682Z",
+    "sanitized": false,
+    "decrypted": true,
+    "types": [
+      "all"
+    ]
+  },
+  "data": {
+    "apiKeys": [
+      {
+        "id": "967c48af-3f25-4ae2-ae21-8db68391f8fb",
+        "name": "temp",
+        "description": "",
+        "apiKey": "2eef2804691be17a047cd3a413b32013effea054de3a87b2c54ac31f359b371e",
+        "tokenLimit": "0",
+        "concurrencyLimit": "0",
+        "rateLimitWindow": "0",
+        "rateLimitRequests": "0",
+        "rateLimitCost": "0",
+        "isActive": "true",
+        "claudeAccountId": "",
+        "claudeConsoleAccountId": "",
+        "geminiAccountId": "",
+        "openaiAccountId": "",
+        "azureOpenaiAccountId": "",
+        "bedrockAccountId": "",
+        "droidAccountId": "",
+        "permissions": "all",
+        "enableModelRestriction": "false",
+        "restrictedModels": "[]",
+        "enableClientRestriction": "false",
+        "allowedClients": "[]",
+        "dailyCostLimit": "0",
+        "totalCostLimit": "0",
+        "weeklyOpusCostLimit": "0",
+        "tags": "[]",
+        "activationDays": "0",
+        "activationUnit": "days",
+        "expirationMode": "fixed",
+        "isActivated": "true",
+        "activatedAt": "2025-11-18T06:38:06.600Z",
+        "createdAt": "2025-11-18T06:38:06.600Z",
+        "lastUsedAt": "2025-11-18T07:04:45.895Z",
+        "expiresAt": "",
+        "createdBy": "admin",
+        "userId": "",
+        "userUsername": "",
+        "icon": "",
+        "usageStats": {
+          "total": {
+            "totalTokens": "14476",
+            "totalInputTokens": "13948",
+            "totalOutputTokens": "528",
+            "totalCacheCreateTokens": "0",
+            "totalCacheReadTokens": "56320",
+            "totalAllTokens": "70796",
+            "totalEphemeral5mTokens": "0",
+            "totalEphemeral1hTokens": "0",
+            "totalRequests": "14"
+          },
+          "daily": {
+            "2025-11-18": {
+              "tokens": "14476",
+              "inputTokens": "13948",
+              "outputTokens": "528",
+              "cacheCreateTokens": "0",
+              "cacheReadTokens": "56320",
+              "allTokens": "70796",
+              "requests": "14",
+              "ephemeral5mTokens": "0",
+              "ephemeral1hTokens": "0"
+            }
+          },
+          "monthly": {
+            "2025-11": {
+              "tokens": "14476",
+              "inputTokens": "13948",
+              "outputTokens": "528",
+              "cacheCreateTokens": "0",
+              "cacheReadTokens": "56320",
+              "allTokens": "70796",
+              "requests": "14",
+              "ephemeral5mTokens": "0",
+              "ephemeral1hTokens": "0"
+            }
+          },
+          "hourly": {
+            "2025-11-18:15": {
+              "tokens": "13973",
+              "inputTokens": "13786",
+              "outputTokens": "187",
+              "cacheCreateTokens": "0",
+              "cacheReadTokens": "26368",
+              "allTokens": "40341",
+              "requests": "8"
+            },
+            "2025-11-18:14": {
+              "tokens": "503",
+              "inputTokens": "162",
+              "outputTokens": "341",
+              "cacheCreateTokens": "0",
+              "cacheReadTokens": "29952",
+              "allTokens": "30455",
+              "requests": "6"
+            }
+          },
+          "models": {
+            "gpt-5.1-codex": {
+              "daily": {
+                "2025-11-18": {
+                  "inputTokens": "13948",
+                  "outputTokens": "528",
+                  "cacheCreateTokens": "0",
+                  "cacheReadTokens": "56320",
+                  "allTokens": "70796",
+                  "requests": "14",
+                  "ephemeral5mTokens": "0",
+                  "ephemeral1hTokens": "0"
+                }
+              },
+              "monthly": {
+                "2025-11": {
+                  "inputTokens": "13948",
+                  "outputTokens": "528",
+                  "cacheCreateTokens": "0",
+                  "cacheReadTokens": "56320",
+                  "allTokens": "70796",
+                  "requests": "14",
+                  "ephemeral5mTokens": "0",
+                  "ephemeral1hTokens": "0"
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        "id": "ccf5ca7c-d855-4e4d-8b42-c94866af58a6",
+        "name": "replay-test-temp-2",
+        "description": "",
+        "apiKey": "130bf032c5db53b98a45831e7adaa5971d2d69a10595f044e3e3ebc4a15ffdd2",
+        "tokenLimit": "1000000",
+        "concurrencyLimit": "0",
+        "rateLimitWindow": "60",
+        "rateLimitRequests": "100",
+        "rateLimitCost": "0",
+        "isActive": "false",
+        "claudeAccountId": "",
+        "claudeConsoleAccountId": "",
+        "geminiAccountId": "",
+        "openaiAccountId": "",
+        "azureOpenaiAccountId": "",
+        "bedrockAccountId": "",
+        "droidAccountId": "",
+        "permissions": "all",
+        "enableModelRestriction": "false",
+        "restrictedModels": "[]",
+        "enableClientRestriction": "false",
+        "allowedClients": "[]",
+        "dailyCostLimit": "0",
+        "totalCostLimit": "0",
+        "weeklyOpusCostLimit": "0",
+        "tags": "[]",
+        "activationDays": "0",
+        "activationUnit": "days",
+        "expirationMode": "fixed",
+        "isActivated": "true",
+        "activatedAt": "2025-11-18T05:27:17.189Z",
+        "createdAt": "2025-11-18T05:27:17.189Z",
+        "lastUsedAt": "",
+        "expiresAt": "",
+        "createdBy": "admin",
+        "userId": "",
+        "userUsername": "",
+        "icon": "",
+        "isDeleted": "true",
+        "deletedAt": "2025-11-18T06:37:53.450Z",
+        "deletedBy": "admin8281Ahdsu",
+        "deletedByType": "admin",
+        "usageStats": {
+          "total": {},
+          "daily": {},
+          "monthly": {},
+          "hourly": {},
+          "models": {}
+        }
+      },
+      {
+        "id": "14647f61-c675-4376-af0b-9dc4460e2aa5",
+        "name": "api-1",
+        "description": "",
+        "apiKey": "354a9543ed6c783a2123c9887e55366dca9108de547ff44735e5ed4fb95ed3cb",
+        "tokenLimit": "0",
+        "concurrencyLimit": "0",
+        "rateLimitWindow": "0",
+        "rateLimitRequests": "0",
+        "rateLimitCost": "0",
+        "isActive": "true",
+        "claudeAccountId": "",
+        "claudeConsoleAccountId": "",
+        "geminiAccountId": "",
+        "openaiAccountId": "",
+        "azureOpenaiAccountId": "",
+        "bedrockAccountId": "",
+        "droidAccountId": "",
+        "permissions": "all",
+        "enableModelRestriction": "false",
+        "restrictedModels": "[]",
+        "enableClientRestriction": "false",
+        "allowedClients": "[]",
+        "dailyCostLimit": "0",
+        "totalCostLimit": "0",
+        "weeklyOpusCostLimit": "0",
+        "tags": "[]",
+        "activationDays": "0",
+        "activationUnit": "days",
+        "expirationMode": "fixed",
+        "isActivated": "true",
+        "activatedAt": "2025-11-11T07:19:26.103Z",
+        "createdAt": "2025-11-11T07:19:26.103Z",
+        "lastUsedAt": "2025-11-18T07:20:35.414Z",
+        "expiresAt": "",
+        "createdBy": "admin",
+        "userId": "",
+        "userUsername": "",
+        "icon": "",
+        "usageStats": {
+          "total": {
+            "totalTokens": "2991150",
+            "totalInputTokens": "2256984",
+            "totalOutputTokens": "734166",
+            "totalCacheCreateTokens": "7814128",
+            "totalCacheReadTokens": "81745044",
+            "totalAllTokens": "92550322",
+            "totalEphemeral5mTokens": "7497923",
+            "totalEphemeral1hTokens": "0",
+            "totalRequests": "3334"
+          },
+          "daily": {
+            "2025-11-18": {
+              "tokens": "2042",
+              "inputTokens": "1975",
+              "outputTokens": "67",
+              "cacheCreateTokens": "0",
+              "cacheReadTokens": "17920",
+              "allTokens": "19962",
+              "requests": "6",
+              "ephemeral5mTokens": "0",
+              "ephemeral1hTokens": "0"
+            },
+            "2025-11-17": {
+              "tokens": "37149",
+              "inputTokens": "30422",
+              "outputTokens": "6727",
+              "cacheCreateTokens": "44195",
+              "cacheReadTokens": "326967",
+              "allTokens": "408311",
+              "requests": "77",
+              "ephemeral5mTokens": "40357",
+              "ephemeral1hTokens": "0"
+            },
+            "2025-11-15": {
+              "tokens": "59301",
+              "inputTokens": "45021",
+              "outputTokens": "14280",
+              "cacheCreateTokens": "57649",
+              "cacheReadTokens": "1736240",
+              "allTokens": "1853190",
+              "requests": "96",
+              "ephemeral5mTokens": "57649",
+              "ephemeral1hTokens": "0"
+            },
+            "2025-11-14": {
+              "tokens": "925752",
+              "inputTokens": "695011",
+              "outputTokens": "230741",
+              "cacheCreateTokens": "2910357",
+              "cacheReadTokens": "29328348",
+              "allTokens": "33164457",
+              "requests": "1154",
+              "ephemeral5mTokens": "2674630",
+              "ephemeral1hTokens": "0"
+            },
+            "2025-11-13": {
+              "tokens": "1375340",
+              "inputTokens": "1038904",
+              "outputTokens": "336436",
+              "cacheCreateTokens": "3345366",
+              "cacheReadTokens": "34262951",
+              "allTokens": "38983657",
+              "requests": "1618",
+              "ephemeral5mTokens": "3268726",
+              "ephemeral1hTokens": "0"
+            },
+            "2025-11-12": {
+              "tokens": "203299",
+              "inputTokens": "137863",
+              "outputTokens": "65436",
+              "cacheCreateTokens": "1328432",
+              "cacheReadTokens": "8916868",
+              "allTokens": "10448599",
+              "requests": "261",
+              "ephemeral5mTokens": "1328432",
+              "ephemeral1hTokens": "0"
+            },
+            "2025-11-11": {
+              "tokens": "388267",
+              "inputTokens": "307788",
+              "outputTokens": "80479",
+              "cacheCreateTokens": "128129",
+              "cacheReadTokens": "7155750",
+              "allTokens": "7672146",
+              "requests": "122",
+              "ephemeral5mTokens": "128129",
+              "ephemeral1hTokens": "0"
+            }
+          },
+          "monthly": {
+            "2025-11": {
+              "tokens": "2991150",
+              "inputTokens": "2256984",
+              "outputTokens": "734166",
+              "cacheCreateTokens": "7814128",
+              "cacheReadTokens": "81745044",
+              "allTokens": "92550322",
+              "requests": "3334",
+              "ephemeral5mTokens": "7497923",
+              "ephemeral1hTokens": "0"
+            }
+          },
+          "hourly": {
+            "2025-11-18:15": {
+              "tokens": "667",
+              "inputTokens": "641",
+              "outputTokens": "26",
+              "cacheCreateTokens": "0",
+              "cacheReadTokens": "6016",
+              "allTokens": "6683",
+              "requests": "2"
+            },
+            "2025-11-18:14": {
+              "tokens": "386",
+              "inputTokens": "377",
+              "outputTokens": "9",
+              "cacheCreateTokens": "0",
+              "cacheReadTokens": "2944",
+              "allTokens": "3330",
+              "requests": "1"
+            },
+            "2025-11-18:12": {
+              "tokens": "989",
+              "inputTokens": "957",
+              "outputTokens": "32",
+              "cacheCreateTokens": "0",
+              "cacheReadTokens": "8960",
+              "allTokens": "9949",
+              "requests": "3"
+            },
+            "2025-11-17:04": {
+              "tokens": "17710",
+              "inputTokens": "17348",
+              "outputTokens": "362",
+              "cacheCreateTokens": "3838",
+              "cacheReadTokens": "12249",
+              "allTokens": "33797",
+              "requests": "9"
+            }
+          },
+          "models": {
+            "gpt-5-codex": {
+              "daily": {
+                "2025-11-11": {
+                  "inputTokens": "307678",
+                  "outputTokens": "62086",
+                  "cacheCreateTokens": "0",
+                  "cacheReadTokens": "6843520",
+                  "allTokens": "7213284",
+                  "requests": "111",
+                  "ephemeral5mTokens": "0",
+                  "ephemeral1hTokens": "0"
+                }
+              },
+              "monthly": {
+                "2025-11": {
+                  "inputTokens": "307678",
+                  "outputTokens": "62086",
+                  "cacheCreateTokens": "0",
+                  "cacheReadTokens": "6843520",
+                  "allTokens": "7213284",
+                  "requests": "111",
+                  "ephemeral5mTokens": "0",
+                  "ephemeral1hTokens": "0"
+                }
+              }
+            },
+            "claude-haiku-4-5-20251001": {
+              "daily": {
+                "2025-11-17": {
+                  "inputTokens": "25505",
+                  "outputTokens": "1871",
+                  "cacheCreateTokens": "0",
+                  "cacheReadTokens": "0",
+                  "allTokens": "27376",
+                  "requests": "46",
+                  "ephemeral5mTokens": "0",
+                  "ephemeral1hTokens": "0"
+                },
+                "2025-11-12": {
+                  "inputTokens": "132276",
+                  "outputTokens": "4744",
+                  "cacheCreateTokens": "11307",
+                  "cacheReadTokens": "0",
+                  "allTokens": "148327",
+                  "requests": "153",
+                  "ephemeral5mTokens": "11307",
+                  "ephemeral1hTokens": "0"
+                },
+                "2025-11-14": {
+                  "inputTokens": "671502",
+                  "outputTokens": "44274",
+                  "cacheCreateTokens": "77059",
+                  "cacheReadTokens": "645360",
+                  "allTokens": "1438195",
+                  "requests": "762",
+                  "ephemeral5mTokens": "77059",
+                  "ephemeral1hTokens": "0"
+                },
+                "2025-11-13": {
+                  "inputTokens": "961038",
+                  "outputTokens": "64373",
+                  "cacheCreateTokens": "121964",
+                  "cacheReadTokens": "754782",
+                  "allTokens": "1902157",
+                  "requests": "1027",
+                  "ephemeral5mTokens": "121964",
+                  "ephemeral1hTokens": "0"
+                },
+                "2025-11-15": {
+                  "inputTokens": "43797",
+                  "outputTokens": "1410",
+                  "cacheCreateTokens": "0",
+                  "cacheReadTokens": "0",
+                  "allTokens": "45207",
+                  "requests": "57",
+                  "ephemeral5mTokens": "0",
+                  "ephemeral1hTokens": "0"
+                }
+              },
+              "monthly": {
+                "2025-11": {
+                  "inputTokens": "1834118",
+                  "outputTokens": "116672",
+                  "cacheCreateTokens": "210330",
+                  "cacheReadTokens": "1400142",
+                  "allTokens": "3561262",
+                  "requests": "2045",
+                  "ephemeral5mTokens": "210330",
+                  "ephemeral1hTokens": "0"
+                }
+              }
+            },
+            "claude-sonnet-4-5-20250929": {
+              "daily": {
+                "2025-11-14": {
+                  "inputTokens": "23509",
+                  "outputTokens": "186467",
+                  "cacheCreateTokens": "2833298",
+                  "cacheReadTokens": "28682988",
+                  "allTokens": "31726262",
+                  "requests": "392",
+                  "ephemeral5mTokens": "2597571",
+                  "ephemeral1hTokens": "0"
+                },
+                "2025-11-15": {
+                  "inputTokens": "1224",
+                  "outputTokens": "12870",
+                  "cacheCreateTokens": "57649",
+                  "cacheReadTokens": "1736240",
+                  "allTokens": "1807983",
+                  "requests": "39",
+                  "ephemeral5mTokens": "57649",
+                  "ephemeral1hTokens": "0"
+                },
+                "2025-11-11": {
+                  "inputTokens": "110",
+                  "outputTokens": "18393",
+                  "cacheCreateTokens": "128129",
+                  "cacheReadTokens": "312230",
+                  "allTokens": "458862",
+                  "requests": "11",
+                  "ephemeral5mTokens": "128129",
+                  "ephemeral1hTokens": "0"
+                },
+                "2025-11-13": {
+                  "inputTokens": "77866",
+                  "outputTokens": "272063",
+                  "cacheCreateTokens": "3223402",
+                  "cacheReadTokens": "33508169",
+                  "allTokens": "37081500",
+                  "requests": "591",
+                  "ephemeral5mTokens": "3146762",
+                  "ephemeral1hTokens": "0"
+                },
+                "2025-11-17": {
+                  "inputTokens": "4917",
+                  "outputTokens": "4856",
+                  "cacheCreateTokens": "44195",
+                  "cacheReadTokens": "326967",
+                  "allTokens": "380935",
+                  "requests": "31",
+                  "ephemeral5mTokens": "40357",
+                  "ephemeral1hTokens": "0"
+                },
+                "2025-11-12": {
+                  "inputTokens": "5587",
+                  "outputTokens": "60692",
+                  "cacheCreateTokens": "1317125",
+                  "cacheReadTokens": "8916868",
+                  "allTokens": "10300272",
+                  "requests": "108",
+                  "ephemeral5mTokens": "1317125",
+                  "ephemeral1hTokens": "0"
+                }
+              },
+              "monthly": {
+                "2025-11": {
+                  "inputTokens": "113213",
+                  "outputTokens": "555341",
+                  "cacheCreateTokens": "7603798",
+                  "cacheReadTokens": "73483462",
+                  "allTokens": "81755814",
+                  "requests": "1172",
+                  "ephemeral5mTokens": "7287593",
+                  "ephemeral1hTokens": "0"
+                }
+              }
+            },
+            "gpt-5.1-codex": {
+              "daily": {
+                "2025-11-18": {
+                  "inputTokens": "1975",
+                  "outputTokens": "67",
+                  "cacheCreateTokens": "0",
+                  "cacheReadTokens": "17920",
+                  "allTokens": "19962",
+                  "requests": "6",
+                  "ephemeral5mTokens": "0",
+                  "ephemeral1hTokens": "0"
+                }
+              },
+              "monthly": {
+                "2025-11": {
+                  "inputTokens": "1975",
+                  "outputTokens": "67",
+                  "cacheCreateTokens": "0",
+                  "cacheReadTokens": "17920",
+                  "allTokens": "19962",
+                  "requests": "6",
+                  "ephemeral5mTokens": "0",
+                  "ephemeral1hTokens": "0"
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        "id": "d5777d3b-813e-4565-b1e1-f0b4891613f2",
+        "name": "replay-test-temp",
+        "description": "",
+        "apiKey": "ef2d5f9282a546066493164ecd4cb78c7321527739f737c7602d1ede34ec11ed",
+        "tokenLimit": "1000000",
+        "concurrencyLimit": "0",
+        "rateLimitWindow": "60",
+        "rateLimitRequests": "100",
+        "rateLimitCost": "0",
+        "isActive": "false",
+        "claudeAccountId": "",
+        "claudeConsoleAccountId": "",
+        "geminiAccountId": "",
+        "openaiAccountId": "",
+        "azureOpenaiAccountId": "",
+        "bedrockAccountId": "",
+        "droidAccountId": "",
+        "permissions": "all",
+        "enableModelRestriction": "false",
+        "restrictedModels": "[]",
+        "enableClientRestriction": "false",
+        "allowedClients": "[]",
+        "dailyCostLimit": "0",
+        "totalCostLimit": "0",
+        "weeklyOpusCostLimit": "0",
+        "tags": "[]",
+        "activationDays": "0",
+        "activationUnit": "days",
+        "expirationMode": "fixed",
+        "isActivated": "true",
+        "activatedAt": "2025-11-18T05:27:07.595Z",
+        "createdAt": "2025-11-18T05:27:07.595Z",
+        "lastUsedAt": "",
+        "expiresAt": "",
+        "createdBy": "admin",
+        "userId": "",
+        "userUsername": "",
+        "icon": "",
+        "isDeleted": "true",
+        "deletedAt": "2025-11-18T06:37:51.425Z",
+        "deletedBy": "admin8281Ahdsu",
+        "deletedByType": "admin",
+        "usageStats": {
+          "total": {},
+          "daily": {},
+          "monthly": {},
+          "hourly": {},
+          "models": {}
+        }
+      }
+    ],
+    "claudeAccounts": [],
+    "geminiAccounts": [],
+    "admins": [],
+    "globalModelStats": {
+      "daily": {
+        "2025-11-17": {
+          "claude-sonnet-4-5-20250929": {
+            "inputTokens": "4917",
+            "outputTokens": "4856",
+            "cacheCreateTokens": "44195",
+            "cacheReadTokens": "326967",
+            "allTokens": "380935",
+            "requests": "31"
+          },
+          "claude-haiku-4-5-20251001": {
+            "inputTokens": "25505",
+            "outputTokens": "1871",
+            "cacheCreateTokens": "0",
+            "cacheReadTokens": "0",
+            "allTokens": "27376",
+            "requests": "46"
+          }
+        },
+        "2025-11-13": {
+          "claude-haiku-4-5-20251001": {
+            "inputTokens": "961038",
+            "outputTokens": "64373",
+            "cacheCreateTokens": "121964",
+            "cacheReadTokens": "754782",
+            "allTokens": "1902157",
+            "requests": "1027"
+          },
+          "claude-sonnet-4-5-20250929": {
+            "inputTokens": "77866",
+            "outputTokens": "272063",
+            "cacheCreateTokens": "3223402",
+            "cacheReadTokens": "33508169",
+            "allTokens": "37081500",
+            "requests": "591"
+          }
+        },
+        "2025-11-12": {
+          "claude-haiku-4-5-20251001": {
+            "inputTokens": "132276",
+            "outputTokens": "4744",
+            "cacheCreateTokens": "11307",
+            "cacheReadTokens": "0",
+            "allTokens": "148327",
+            "requests": "153"
+          },
+          "claude-sonnet-4-5-20250929": {
+            "inputTokens": "5587",
+            "outputTokens": "60692",
+            "cacheCreateTokens": "1317125",
+            "cacheReadTokens": "8916868",
+            "allTokens": "10300272",
+            "requests": "108"
+          }
+        },
+        "2025-11-14": {
+          "claude-sonnet-4-5-20250929": {
+            "inputTokens": "23509",
+            "outputTokens": "186467",
+            "cacheCreateTokens": "2833298",
+            "cacheReadTokens": "28682988",
+            "allTokens": "31726262",
+            "requests": "392"
+          },
+          "claude-haiku-4-5-20251001": {
+            "inputTokens": "671502",
+            "outputTokens": "44274",
+            "cacheCreateTokens": "77059",
+            "cacheReadTokens": "645360",
+            "allTokens": "1438195",
+            "requests": "762"
+          }
+        },
+        "2025-11-15": {
+          "claude-sonnet-4-5-20250929": {
+            "inputTokens": "1224",
+            "outputTokens": "12870",
+            "cacheCreateTokens": "57649",
+            "cacheReadTokens": "1736240",
+            "allTokens": "1807983",
+            "requests": "39"
+          },
+          "claude-haiku-4-5-20251001": {
+            "inputTokens": "43797",
+            "outputTokens": "1410",
+            "cacheCreateTokens": "0",
+            "cacheReadTokens": "0",
+            "allTokens": "45207",
+            "requests": "57"
+          }
+        },
+        "2025-11-11": {
+          "gpt-5-codex": {
+            "inputTokens": "307678",
+            "outputTokens": "62086",
+            "cacheCreateTokens": "0",
+            "cacheReadTokens": "6843520",
+            "allTokens": "7213284",
+            "requests": "111"
+          },
+          "claude-sonnet-4-5-20250929": {
+            "inputTokens": "110",
+            "outputTokens": "18393",
+            "cacheCreateTokens": "128129",
+            "cacheReadTokens": "312230",
+            "allTokens": "458862",
+            "requests": "11"
+          }
+        },
+        "2025-11-18": {
+          "gpt-5.1-codex": {
+            "inputTokens": "15923",
+            "outputTokens": "595",
+            "cacheCreateTokens": "0",
+            "cacheReadTokens": "74240",
+            "allTokens": "90758",
+            "requests": "20"
+          }
+        }
+      },
+      "monthly": {
+        "2025-11": {
+          "gpt-5.1-codex": {
+            "inputTokens": "15923",
+            "outputTokens": "595",
+            "cacheCreateTokens": "0",
+            "cacheReadTokens": "74240",
+            "allTokens": "90758",
+            "requests": "20"
+          },
+          "gpt-5-codex": {
+            "inputTokens": "307678",
+            "outputTokens": "62086",
+            "cacheCreateTokens": "0",
+            "cacheReadTokens": "6843520",
+            "allTokens": "7213284",
+            "requests": "111"
+          },
+          "claude-sonnet-4-5-20250929": {
+            "inputTokens": "113213",
+            "outputTokens": "555341",
+            "cacheCreateTokens": "7603798",
+            "cacheReadTokens": "73483462",
+            "allTokens": "81755814",
+            "requests": "1172"
+          },
+          "claude-haiku-4-5-20251001": {
+            "inputTokens": "1834118",
+            "outputTokens": "116672",
+            "cacheCreateTokens": "210330",
+            "cacheReadTokens": "1400142",
+            "allTokens": "3561262",
+            "requests": "2045"
+          }
+        }
+      },
+      "hourly": {
+        "2025-11-12:19": {
+          "claude-sonnet-4-5-20250929": {
+            "inputTokens": "3131",
+            "outputTokens": "18683",
+            "cacheCreateTokens": "196458",
+            "cacheReadTokens": "3522420",
+            "allTokens": "3740692",
+            "requests": "43"
+          },
+          "claude-haiku-4-5-20251001": {
+            "inputTokens": "19548",
+            "outputTokens": "1193",
+            "cacheCreateTokens": "0",
+            "cacheReadTokens": "0",
+            "allTokens": "20741",
+            "requests": "31"
+          }
+        },
+        "2025-11-13:17": {
+          "claude-haiku-4-5-20251001": {
+            "inputTokens": "36250",
+            "outputTokens": "1176",
+            "cacheCreateTokens": "0",
+            "cacheReadTokens": "0",
+            "allTokens": "37426",
+            "requests": "54"
+          },
+          "claude-sonnet-4-5-20250929": {
+            "inputTokens": "2382",
+            "outputTokens": "5761",
+            "cacheCreateTokens": "235870",
+            "cacheReadTokens": "1385613",
+            "allTokens": "1629626",
+            "requests": "19"
+          }
+        },
+        "2025-11-13:18": {
+          "claude-haiku-4-5-20251001": {
+            "inputTokens": "98554",
+            "outputTokens": "3256",
+            "cacheCreateTokens": "0",
+            "cacheReadTokens": "0",
+            "allTokens": "101810",
+            "requests": "126"
+          },
+          "claude-sonnet-4-5-20250929": {
+            "inputTokens": "23191",
+            "outputTokens": "50185",
+            "cacheCreateTokens": "331004",
+            "cacheReadTokens": "3823914",
+            "allTokens": "4228294",
+            "requests": "74"
+          }
+        },
+        "2025-11-12:18": {
+          "claude-sonnet-4-5-20250929": {
+            "inputTokens": "505",
+            "outputTokens": "403",
+            "cacheCreateTokens": "12151",
+            "cacheReadTokens": "52308",
+            "allTokens": "65367",
+            "requests": "5"
+          },
+          "claude-haiku-4-5-20251001": {
+            "inputTokens": "1917",
+            "outputTokens": "371",
+            "cacheCreateTokens": "0",
+            "cacheReadTokens": "0",
+            "allTokens": "2288",
+            "requests": "10"
+          }
+        },
+        "2025-11-18:14": {
+          "gpt-5.1-codex": {
+            "inputTokens": "539",
+            "outputTokens": "350",
+            "cacheCreateTokens": "0",
+            "cacheReadTokens": "32896",
+            "allTokens": "33785",
+            "requests": "7"
+          }
+        },
+        "2025-11-13:15": {
+          "claude-haiku-4-5-20251001": {
+            "inputTokens": "77543",
+            "outputTokens": "2163",
+            "cacheCreateTokens": "0",
+            "cacheReadTokens": "0",
+            "allTokens": "79706",
+            "requests": "96"
+          },
+          "claude-sonnet-4-5-20250929": {
+            "inputTokens": "2570",
+            "outputTokens": "30087",
+            "cacheCreateTokens": "262469",
+            "cacheReadTokens": "3241186",
+            "allTokens": "3536312",
+            "requests": "53"
+          }
+        },
+        "2025-11-13:16": {
+          "claude-haiku-4-5-20251001": {
+            "inputTokens": "24895",
+            "outputTokens": "708",
+            "cacheCreateTokens": "0",
+            "cacheReadTokens": "0",
+            "allTokens": "25603",
+            "requests": "34"
+          },
+          "claude-sonnet-4-5-20250929": {
+            "inputTokens": "195",
+            "outputTokens": "6013",
+            "cacheCreateTokens": "103400",
+            "cacheReadTokens": "1583001",
+            "allTokens": "1692609",
+            "requests": "16"
+          }
+        },
+        "2025-11-14:04": {
+          "claude-haiku-4-5-20251001": {
+            "inputTokens": "69239",
+            "outputTokens": "2590",
+            "cacheCreateTokens": "0",
+            "cacheReadTokens": "0",
+            "allTokens": "71829",
+            "requests": "106"
+          },
+          "claude-sonnet-4-5-20250929": {
+            "inputTokens": "2657",
+            "outputTokens": "18822",
+            "cacheCreateTokens": "408809",
+            "cacheReadTokens": "4366599",
+            "allTokens": "4796887",
+            "requests": "60"
+          }
+        },
+        "2025-11-15:18": {
+          "claude-haiku-4-5-20251001": {
+            "inputTokens": "10347",
+            "outputTokens": "261",
+            "cacheCreateTokens": "0",
+            "cacheReadTokens": "0",
+            "allTokens": "10608",
+            "requests": "7"
+          },
+          "claude-sonnet-4-5-20250929": {
+            "inputTokens": "832",
+            "outputTokens": "780",
+            "cacheCreateTokens": "4614",
+            "cacheReadTokens": "28494",
+            "allTokens": "34720",
+            "requests": "3"
+          }
+        },
+        "2025-11-13:23": {
+          "claude-haiku-4-5-20251001": {
+            "inputTokens": "29531",
+            "outputTokens": "804",
+            "cacheCreateTokens": "0",
+            "cacheReadTokens": "0",
+            "allTokens": "30335",
+            "requests": "44"
+          },
+          "claude-sonnet-4-5-20250929": {
+            "inputTokens": "315",
+            "outputTokens": "6962",
+            "cacheCreateTokens": "207353",
+            "cacheReadTokens": "1874935",
+            "allTokens": "2089565",
+            "requests": "18"
+          }
+        },
+        "2025-11-15:16": {
+          "claude-haiku-4-5-20251001": {
+            "inputTokens": "33450",
+            "outputTokens": "1149",
+            "cacheCreateTokens": "0",
+            "cacheReadTokens": "0",
+            "allTokens": "34599",
+            "requests": "50"
+          },
+          "claude-sonnet-4-5-20250929": {
+            "inputTokens": "392",
+            "outputTokens": "12090",
+            "cacheCreateTokens": "53035",
+            "cacheReadTokens": "1707746",
+            "allTokens": "1773263",
+            "requests": "36"
+          }
+        },
+        "2025-11-14:05": {
+          "claude-haiku-4-5-20251001": {
+            "inputTokens": "173985",
+            "outputTokens": "5535",
+            "cacheCreateTokens": "0",
+            "cacheReadTokens": "0",
+            "allTokens": "179520",
+            "requests": "211"
+          },
+          "claude-sonnet-4-5-20250929": {
+            "inputTokens": "13891",
+            "outputTokens": "41789",
+            "cacheCreateTokens": "785582",
+            "cacheReadTokens": "7292378",
+            "allTokens": "8133640",
+            "requests": "114"
+          }
+        },
+        "2025-11-17:16": {
+          "claude-sonnet-4-5-20250929": {
+            "inputTokens": "629",
+            "outputTokens": "726",
+            "cacheCreateTokens": "1179",
+            "cacheReadTokens": "31012",
+            "allTokens": "33546",
+            "requests": "3"
+          },
+          "claude-haiku-4-5-20251001": {
+            "inputTokens": "1871",
+            "outputTokens": "310",
+            "cacheCreateTokens": "0",
+            "cacheReadTokens": "0",
+            "allTokens": "2181",
+            "requests": "6"
+          }
+        },
+        "2025-11-17:18": {
+          "claude-sonnet-4-5-20250929": {
+            "inputTokens": "36",
+            "outputTokens": "517",
+            "cacheCreateTokens": "3312",
+            "cacheReadTokens": "61931",
+            "allTokens": "65796",
+            "requests": "4"
+          },
+          "claude-haiku-4-5-20251001": {
+            "inputTokens": "513",
+            "outputTokens": "102",
+            "cacheCreateTokens": "0",
+            "cacheReadTokens": "0",
+            "allTokens": "615",
+            "requests": "4"
+          }
+        },
+        "2025-11-12:17": {
+          "claude-haiku-4-5-20251001": {
+            "inputTokens": "8675",
+            "outputTokens": "853",
+            "cacheCreateTokens": "11307",
+            "cacheReadTokens": "0",
+            "allTokens": "20835",
+            "requests": "19"
+          },
+          "claude-sonnet-4-5-20250929": {
+            "inputTokens": "558",
+            "outputTokens": "1980",
+            "cacheCreateTokens": "29981",
+            "cacheReadTokens": "180583",
+            "allTokens": "213102",
+            "requests": "10"
+          }
+        },
+        "2025-11-13:01": {
+          "claude-haiku-4-5-20251001": {
+            "inputTokens": "67430",
+            "outputTokens": "3870",
+            "cacheCreateTokens": "0",
+            "cacheReadTokens": "0",
+            "allTokens": "71300",
+            "requests": "139"
+          },
+          "claude-sonnet-4-5-20250929": {
+            "inputTokens": "5123",
+            "outputTokens": "11967",
+            "cacheCreateTokens": "51161",
+            "cacheReadTokens": "823589",
+            "allTokens": "891840",
+            "requests": "55"
+          }
+        },
+        "2025-11-13:19": {
+          "claude-haiku-4-5-20251001": {
+            "inputTokens": "119569",
+            "outputTokens": "4465",
+            "cacheCreateTokens": "0",
+            "cacheReadTokens": "0",
+            "allTokens": "124034",
+            "requests": "157"
+          },
+          "claude-sonnet-4-5-20250929": {
+            "inputTokens": "4991",
+            "outputTokens": "44187",
+            "cacheCreateTokens": "862854",
+            "cacheReadTokens": "9253487",
+            "allTokens": "10165519",
+            "requests": "103"
+          }
+        },
+        "2025-11-14:02": {
+          "claude-haiku-4-5-20251001": {
+            "inputTokens": "203905",
+            "outputTokens": "29683",
+            "cacheCreateTokens": "77059",
+            "cacheReadTokens": "645360",
+            "allTokens": "956007",
+            "requests": "229"
+          },
+          "claude-sonnet-4-5-20250929": {
+            "inputTokens": "1800",
+            "outputTokens": "43951",
+            "cacheCreateTokens": "419257",
+            "cacheReadTokens": "7275131",
+            "allTokens": "7740139",
+            "requests": "98"
+          }
+        },
+        "2025-11-13:00": {
+          "claude-haiku-4-5-20251001": {
+            "inputTokens": "24378",
+            "outputTokens": "1764",
+            "cacheCreateTokens": "0",
+            "cacheReadTokens": "0",
+            "allTokens": "26142",
+            "requests": "43"
+          },
+          "claude-sonnet-4-5-20250929": {
+            "inputTokens": "6607",
+            "outputTokens": "15443",
+            "cacheCreateTokens": "90131",
+            "cacheReadTokens": "1357057",
+            "allTokens": "1469238",
+            "requests": "46"
+          }
+        },
+        "2025-11-14:06": {
+          "claude-haiku-4-5-20251001": {
+            "inputTokens": "130395",
+            "outputTokens": "3109",
+            "cacheCreateTokens": "0",
+            "cacheReadTokens": "0",
+            "allTokens": "133504",
+            "requests": "85"
+          },
+          "claude-sonnet-4-5-20250929": {
+            "inputTokens": "687",
+            "outputTokens": "27030",
+            "cacheCreateTokens": "585227",
+            "cacheReadTokens": "3315582",
+            "allTokens": "3928526",
+            "requests": "39"
+          }
+        },
+        "2025-11-17:15": {
+          "claude-haiku-4-5-20251001": {
+            "inputTokens": "2102",
+            "outputTokens": "384",
+            "cacheCreateTokens": "0",
+            "cacheReadTokens": "0",
+            "allTokens": "2486",
+            "requests": "11"
+          },
+          "claude-sonnet-4-5-20250929": {
+            "inputTokens": "1285",
+            "outputTokens": "2242",
+            "cacheCreateTokens": "14111",
+            "cacheReadTokens": "99008",
+            "allTokens": "116646",
+            "requests": "9"
+          }
+        },
+        "2025-11-13:03": {
+          "claude-sonnet-4-5-20250929": {
+            "inputTokens": "2446",
+            "outputTokens": "2897",
+            "cacheCreateTokens": "20716",
+            "cacheReadTokens": "126989",
+            "allTokens": "153048",
+            "requests": "14"
+          },
+          "claude-haiku-4-5-20251001": {
+            "inputTokens": "7154",
+            "outputTokens": "1173",
+            "cacheCreateTokens": "0",
+            "cacheReadTokens": "0",
+            "allTokens": "8327",
+            "requests": "21"
+          }
+        },
+        "2025-11-12:23": {
+          "claude-sonnet-4-5-20250929": {
+            "inputTokens": "831",
+            "outputTokens": "155",
+            "cacheCreateTokens": "0",
+            "cacheReadTokens": "0",
+            "allTokens": "986",
+            "requests": "1"
+          },
+          "claude-haiku-4-5-20251001": {
+            "inputTokens": "37049",
+            "outputTokens": "236",
+            "cacheCreateTokens": "0",
+            "cacheReadTokens": "0",
+            "allTokens": "37285",
+            "requests": "5"
+          }
+        },
+        "2025-11-14:01": {
+          "claude-haiku-4-5-20251001": {
+            "inputTokens": "88718",
+            "outputTokens": "3238",
+            "cacheCreateTokens": "0",
+            "cacheReadTokens": "0",
+            "allTokens": "91956",
+            "requests": "123"
+          },
+          "claude-sonnet-4-5-20250929": {
+            "inputTokens": "4450",
+            "outputTokens": "54513",
+            "cacheCreateTokens": "629870",
+            "cacheReadTokens": "6403454",
+            "allTokens": "7092287",
+            "requests": "79"
+          }
+        },
+        "2025-11-13:02": {
+          "claude-haiku-4-5-20251001": {
+            "inputTokens": "28094",
+            "outputTokens": "1682",
+            "cacheCreateTokens": "0",
+            "cacheReadTokens": "0",
+            "allTokens": "29776",
+            "requests": "54"
+          },
+          "claude-sonnet-4-5-20250929": {
+            "inputTokens": "12469",
+            "outputTokens": "6055",
+            "cacheCreateTokens": "43881",
+            "cacheReadTokens": "494533",
+            "allTokens": "556938",
+            "requests": "28"
+          }
+        },
+        "2025-11-13:21": {
+          "claude-haiku-4-5-20251001": {
+            "inputTokens": "23208",
+            "outputTokens": "1368",
+            "cacheCreateTokens": "0",
+            "cacheReadTokens": "0",
+            "allTokens": "24576",
+            "requests": "42"
+          },
+          "claude-sonnet-4-5-20250929": {
+            "inputTokens": "3468",
+            "outputTokens": "19940",
+            "cacheCreateTokens": "131446",
+            "cacheReadTokens": "1892879",
+            "allTokens": "2047733",
+            "requests": "42"
+          }
+        },
+        "2025-11-14:00": {
+          "claude-sonnet-4-5-20250929": {
+            "inputTokens": "24",
+            "outputTokens": "362",
+            "cacheCreateTokens": "4553",
+            "cacheReadTokens": "29844",
+            "allTokens": "34783",
+            "requests": "2"
+          },
+          "claude-haiku-4-5-20251001": {
+            "inputTokens": "5260",
+            "outputTokens": "119",
+            "cacheCreateTokens": "0",
+            "cacheReadTokens": "0",
+            "allTokens": "5379",
+            "requests": "8"
+          }
+        },
+        "2025-11-17:04": {
+          "claude-haiku-4-5-20251001": {
+            "inputTokens": "16728",
+            "outputTokens": "194",
+            "cacheCreateTokens": "0",
+            "cacheReadTokens": "0",
+            "allTokens": "16922",
+            "requests": "7"
+          },
+          "claude-sonnet-4-5-20250929": {
+            "inputTokens": "620",
+            "outputTokens": "168",
+            "cacheCreateTokens": "3838",
+            "cacheReadTokens": "12249",
+            "allTokens": "16875",
+            "requests": "2"
+          }
+        },
+        "2025-11-12:20": {
+          "claude-haiku-4-5-20251001": {
+            "inputTokens": "55220",
+            "outputTokens": "1752",
+            "cacheCreateTokens": "0",
+            "cacheReadTokens": "0",
+            "allTokens": "56972",
+            "requests": "75"
+          },
+          "claude-sonnet-4-5-20250929": {
+            "inputTokens": "427",
+            "outputTokens": "28148",
+            "cacheCreateTokens": "659501",
+            "cacheReadTokens": "3568089",
+            "allTokens": "4256165",
+            "requests": "35"
+          }
+        },
+        "2025-11-17:14": {
+          "claude-sonnet-4-5-20250929": {
+            "inputTokens": "2347",
+            "outputTokens": "1203",
+            "cacheCreateTokens": "21755",
+            "cacheReadTokens": "122767",
+            "allTokens": "148072",
+            "requests": "13"
+          },
+          "claude-haiku-4-5-20251001": {
+            "inputTokens": "4291",
+            "outputTokens": "881",
+            "cacheCreateTokens": "0",
+            "cacheReadTokens": "0",
+            "allTokens": "5172",
+            "requests": "18"
+          }
+        },
+        "2025-11-13:20": {
+          "claude-haiku-4-5-20251001": {
+            "inputTokens": "52496",
+            "outputTokens": "2394",
+            "cacheCreateTokens": "0",
+            "cacheReadTokens": "0",
+            "allTokens": "54890",
+            "requests": "84"
+          },
+          "claude-sonnet-4-5-20250929": {
+            "inputTokens": "7904",
+            "outputTokens": "23037",
+            "cacheCreateTokens": "383442",
+            "cacheReadTokens": "2696470",
+            "allTokens": "3110853",
+            "requests": "56"
+          }
+        },
+        "2025-11-12:21": {
+          "claude-haiku-4-5-20251001": {
+            "inputTokens": "9867",
+            "outputTokens": "339",
+            "cacheCreateTokens": "0",
+            "cacheReadTokens": "0",
+            "allTokens": "10206",
+            "requests": "13"
+          },
+          "claude-sonnet-4-5-20250929": {
+            "inputTokens": "135",
+            "outputTokens": "11323",
+            "cacheCreateTokens": "419034",
+            "cacheReadTokens": "1593468",
+            "allTokens": "2023960",
+            "requests": "14"
+          }
+        },
+        "2025-11-13:22": {
+          "claude-haiku-4-5-20251001": {
+            "inputTokens": "371936",
+            "outputTokens": "39550",
+            "cacheCreateTokens": "121964",
+            "cacheReadTokens": "754782",
+            "allTokens": "1288232",
+            "requests": "133"
+          },
+          "claude-sonnet-4-5-20250929": {
+            "inputTokens": "6205",
+            "outputTokens": "49529",
+            "cacheCreateTokens": "499675",
+            "cacheReadTokens": "4954516",
+            "allTokens": "5509925",
+            "requests": "67"
+          }
+        },
+        "2025-11-18:12": {
+          "gpt-5.1-codex": {
+            "inputTokens": "957",
+            "outputTokens": "32",
+            "cacheCreateTokens": "0",
+            "cacheReadTokens": "8960",
+            "allTokens": "9949",
+            "requests": "3"
+          }
+        },
+        "2025-11-18:15": {
+          "gpt-5.1-codex": {
+            "inputTokens": "14427",
+            "outputTokens": "213",
+            "cacheCreateTokens": "0",
+            "cacheReadTokens": "32384",
+            "allTokens": "47024",
+            "requests": "10"
+          }
+        }
+      }
+    }
+  }
+}

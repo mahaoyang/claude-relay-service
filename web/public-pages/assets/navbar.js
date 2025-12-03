@@ -4,11 +4,48 @@
     const style = document.createElement('style');
     style.id = styleId;
     style.textContent = `
-      /* Use Lily palette tokens */
-      .navbar-muted-icon { color: var(--accent-11); }
-      .dark .navbar-muted-icon { color: var(--accent-11); }
-      .navbar-toggle-btn { color: var(--accent-11); }
-      .dark .navbar-toggle-btn { color: var(--accent-11); }
+      /* Use Lily palette tokens with !important to override inline styles */
+      .navbar-muted-icon,
+      .navbar-muted-icon svg {
+        color: var(--sand-7) !important;
+        stroke: var(--sand-7) !important;
+      }
+      .dark .navbar-muted-icon,
+      .dark .navbar-muted-icon svg {
+        color: var(--sand-7) !important;
+        stroke: var(--sand-7) !important;
+      }
+      .navbar-toggle-btn,
+      .navbar-toggle-btn svg {
+        color: var(--sand-7) !important;
+        stroke: var(--sand-7) !important;
+      }
+      .dark .navbar-toggle-btn,
+      .dark .navbar-toggle-btn svg {
+        color: var(--sand-7) !important;
+        stroke: var(--sand-7) !important;
+      }
+      .navbar-toggle-btn:hover,
+      .navbar-toggle-btn:hover svg {
+        color: var(--sand-11) !important;
+        stroke: var(--sand-11) !important;
+      }
+      .dark .navbar-toggle-btn:hover,
+      .dark .navbar-toggle-btn:hover svg {
+        color: var(--sand-11) !important;
+        stroke: var(--sand-11) !important;
+      }
+      .nav-search button,
+      .nav-search button svg {
+        color: var(--sand-7) !important;
+        stroke: var(--sand-7) !important;
+      }
+      .nav-search button:hover,
+      .nav-search button:hover svg {
+        color: var(--sand-11) !important;
+        stroke: var(--sand-11) !important;
+        border-color: var(--sand-8);
+      }
     `;
     document.head.appendChild(style);
   }
@@ -53,10 +90,10 @@
 
         <!-- 主题切换 -->
         <button type="button"
-          class="navbar-toggle-btn flex h-9 w-9 items-center justify-center rounded-full transition-all hover:bg-sand-4 hover:text-sand-12 active:scale-95"
+          class="navbar-toggle-btn flex h-9 w-9 items-center justify-center rounded-full transition-all active:scale-95"
           @click="document.startViewTransition ? document.startViewTransition(() => theme = theme === 'light' ? 'dark' : 'light') : theme = theme === 'light' ? 'dark' : 'light'">
-          <i x-show="theme === 'light'" data-lucide="sun" class="h-5 w-5 navbar-muted-icon"></i>
-          <i x-show="theme === 'dark'" x-cloak data-lucide="moon" class="h-5 w-5 navbar-muted-icon"></i>
+          <i x-show="theme === 'light'" data-lucide="sun" class="h-5 w-5"></i>
+          <i x-show="theme === 'dark'" x-cloak data-lucide="moon" class="h-5 w-5"></i>
         </button>
       </div>
     </div>
@@ -67,5 +104,10 @@
     document.querySelectorAll('[data-navbar]').forEach((el) => {
       el.innerHTML = template;
     });
+
+    // Re-initialize Lucide icons after navbar is injected
+    if (typeof lucide !== 'undefined' && lucide.createIcons) {
+      lucide.createIcons();
+    }
   });
 })();
