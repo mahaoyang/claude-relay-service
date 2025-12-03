@@ -4,11 +4,11 @@
     const style = document.createElement('style');
     style.id = styleId;
     style.textContent = `
-      /* Use explicit Lily palette values to avoid missing utility classes */
-      .navbar-muted-icon { color: #bcbbb5; }
-      .dark .navbar-muted-icon { color: #62605b; }
-      .navbar-toggle-btn { color: #bcbbb5; }
-      .dark .navbar-toggle-btn { color: #62605b; }
+      /* Use Lily palette tokens */
+      .navbar-muted-icon { color: var(--accent-11); }
+      .dark .navbar-muted-icon { color: var(--accent-11); }
+      .navbar-toggle-btn { color: var(--accent-11); }
+      .dark .navbar-toggle-btn { color: var(--accent-11); }
     `;
     document.head.appendChild(style);
   }
