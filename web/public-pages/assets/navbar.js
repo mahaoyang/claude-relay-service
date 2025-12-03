@@ -33,7 +33,7 @@
           @submit.prevent="if (key.trim()) { window.location.href = '/stats?id=' + encodeURIComponent(key.trim()); }">
           <input type="text" x-model="key" placeholder="输入 API Key 查询" aria-label="输入 API Key 查询">
           <button type="submit">
-            <i data-lucide="search"></i>
+            <i data-lucide="search" class="text-sand-9"></i>
           </button>
         </form>
 
