@@ -39,10 +39,10 @@
 
         <!-- 主题切换 -->
         <button type="button"
-          class="flex h-9 w-9 items-center justify-center rounded-full transition-all hover:bg-sand-4 text-sand-10 hover:text-sand-12 active:scale-95"
+          class="flex h-9 w-9 items-center justify-center rounded-full transition-all hover:bg-sand-4 text-sand-12 hover:text-sand-12 active:scale-95"
           @click="document.startViewTransition ? document.startViewTransition(() => theme = theme === 'light' ? 'dark' : 'light') : theme = theme === 'light' ? 'dark' : 'light'">
-          <i x-show="theme === 'light'" data-lucide="sun" class="h-5 w-5 text-sand-9"></i>
-          <i x-show="theme === 'dark'" x-cloak data-lucide="moon" class="h-5 w-5 text-sand-9"></i>
+          <i x-show="theme === 'light'" data-lucide="sun" class="h-5 w-5 text-sand-8"></i>
+          <i x-show="theme === 'dark'" x-cloak data-lucide="moon" class="h-5 w-5 text-sand-8"></i>
         </button>
       </div>
     </div>
