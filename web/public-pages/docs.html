@@ -162,7 +162,7 @@
 <body data-scaling="100%" data-radius="medium"
       class="rt-Theme radix-themes min-h-screen text-sand-12 antialiased overflow-x-hidden"
       data-is-root-theme="true"
-      x-data="{ theme: localStorage.getItem('theme') || 'light', accent: localStorage.getItem('accent') || 'iris', system: 'windows', baseUrl: window.location.origin }"
+      x-data="{ theme: localStorage.getItem('theme') || 'light', accent: localStorage.getItem('accent') || 'iris', system: 'windows', baseUrl: 'https://www.jojocode.org' }"
       x-init="$watch('theme', val => localStorage.setItem('theme', val)); $watch('accent', val => localStorage.setItem('accent', val))"
       :class="[theme === 'dark' ? 'dark' : '', 'accent-' + accent]"
       :data-accent-color="accent">
