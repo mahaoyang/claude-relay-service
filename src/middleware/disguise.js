@@ -25,7 +25,8 @@ function generateSentryTrace() {
 }
 
 function generateBaggage(traceId) {
-  const version = FIXED_CLAUDE_UA.match(/claude-cli\\/([0-9.]+)/)?.[1] || '2.0.42'
+  const match = FIXED_CLAUDE_UA.match(/claude-cli\/([0-9.]+)/)
+  const version = (match && match[1]) || '2.0.42'
   const release = encodeURIComponent(`claude-cli@${version}`)
   return [
     `sentry-environment=production`,

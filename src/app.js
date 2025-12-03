@@ -281,10 +281,9 @@ class Application {
       this.app.use('/azure', azureOpenaiRoutes)
       this.app.use('/admin/webhook', webhookRoutes)
 
-      // 🏠 根路径重定向到新版管理界面
-      this.app.get('/', (req, res) => {
-        res.redirect('/admin-next/api-stats')
-      })
+      // 🌐 公开页面路由（Hero页面和统计页面）- 必须在根路径重定向之前注册
+      const publicPagesRoutes = require('./routes/publicPages')
+      this.app.use('/', publicPagesRoutes)
 
       // 🏥 增强的健康检查端点
       this.app.get('/health', async (req, res) => {
