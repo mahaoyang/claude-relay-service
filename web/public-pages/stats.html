@@ -8,6 +8,7 @@
   <meta name="description" content="查询您的 API Key 使用统计、费用消耗和配额状态">
   <link rel="stylesheet" href="/public-pages/assets/lily-ui.css">
   <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
   <style>
     [x-cloak] {
       display: none !important;
@@ -183,6 +184,65 @@
     .dark .badge-green {
       color: #34d399;
     }
+
+    .nav-search {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.25rem 0.45rem;
+      border-radius: 9999px;
+      border: 1px solid var(--sand-6);
+      background: rgba(255, 255, 255, 0.75);
+      backdrop-filter: blur(8px);
+      height: 2rem;
+    }
+
+    .nav-search input {
+      border: none;
+      outline: none;
+      background: transparent;
+      color: var(--sand-12);
+      font-size: 0.75rem;
+      width: 150px;
+    }
+
+    .nav-search button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 1.55rem;
+      height: 1.55rem;
+      border-radius: 9999px;
+      border: 1px solid var(--sand-6);
+      background: var(--sand-1);
+      color: var(--sand-11);
+      transition: all 0.2s ease;
+    }
+
+    .nav-search button i {
+      width: 0.65rem;
+      height: 0.65rem;
+    }
+
+    .nav-search button:hover {
+      border-color: var(--accent-7);
+      color: var(--accent-11);
+    }
+
+    .dark .nav-search {
+      background: rgba(15, 15, 15, 0.7);
+      border-color: var(--sand-7);
+    }
+
+    .dark .nav-search button {
+      background: var(--sand-2);
+      border-color: var(--sand-7);
+    }
+
+    .dark .nav-search button:hover {
+      border-color: var(--accent-7);
+      color: var(--accent-11);
+    }
   </style>
 </head>
 
@@ -190,49 +250,52 @@
   class="rt-Theme radix-themes min-h-screen text-sand-12 antialiased bg-gradient-to-br from-iris-2 to-violet-2"
   data-is-root-theme="true" x-data="statsApp()" x-init="init()"
   :class="[theme === 'dark' ? 'dark' : '', 'accent-' + accent]" :data-accent-color="accent">
-  <nav class="fixed top-6 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-5xl rounded-4 backdrop-blur-xl shadow-lg"
-    :class="theme === 'dark' ? 'bg-sand-1/60' : 'bg-sand-2/60'">
-    <div class="px-4 sm:px-6 flex h-14 items-center justify-between">
-      <a href="/" class="flex items-center gap-2 text-sm font-bold text-sand-12 hover:opacity-80">
-        <svg class="w-5 h-5 text-accent-9" fill="currentColor" viewBox="0 0 24 24">
-          <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z" />
-        </svg>
-        API Key 统计
-      </a>
-      <div class="flex items-center gap-3">
-        <a href="/" class="text-xs text-sand-11 hover:text-accent-9">返回首页</a>
-        <button @click="theme = theme === 'light' ? 'dark' : 'light'"
-          class="flex h-7 w-7 items-center justify-center rounded-full hover:bg-sand-4/50">
-          <svg x-show="theme === 'light'" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <circle cx="12" cy="12" r="5" />
-            <path
-              d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" />
-          </svg>
-          <svg x-show="theme === 'dark'" x-cloak class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24"
-            stroke="currentColor">
-            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
-          </svg>
-        </button>
+  <nav
+    class="fixed top-6 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-[1200px] rounded-full backdrop-blur-md border border-white/10 shadow-xl shadow-black/5 transition-all duration-500 hover:shadow-2xl hover:shadow-accent-9/10 hover:-translate-y-0.5"
+    :class="theme === 'dark' ? 'bg-sand-1/70 supports-[backdrop-filter]:bg-sand-1/40' : 'bg-white/70 supports-[backdrop-filter]:bg-white/40'">
+    <div class="px-6">
+      <div class="flex h-14 items-center justify-between">
+        <div class="flex items-center gap-12">
+          <!-- Logo -->
+          <a href="/" class="flex items-center gap-3 hover:opacity-80 transition-opacity group">
+            <div
+              class="flex h-8 w-8 items-center justify-center rounded-lg bg-accent-3 text-accent-11 group-hover:bg-accent-4 transition-colors">
+              <i data-lucide="code-2" class="w-5 h-5"></i>
+            </div>
+            <span class="text-base font-bold text-sand-12 tracking-tight">JojoCode</span>
+          </a>
+
+          <!-- 导航链接 -->
+          <div class="hidden md:flex items-center gap-8 text-sm font-medium">
+            <a href="/docs" class="text-sand-11 hover:text-accent-11 transition-colors relative group">
+              文档
+              <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-accent-9 transition-all group-hover:w-full"></span>
+            </a>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-4">
+          <form class="inline-flex nav-search" x-data="{ key: '' }"
+            @submit.prevent="if (key.trim()) { window.location.href = '/stats?id=' + encodeURIComponent(key.trim()); }">
+            <input type="text" x-model="key" placeholder="输入 API Key 查询" aria-label="输入 API Key 查询">
+            <button type="submit">
+              <i data-lucide="search"></i>
+            </button>
+          </form>
+
+          <!-- 主题切换 -->
+          <button type="button"
+            class="flex h-9 w-9 items-center justify-center rounded-full transition-all hover:bg-sand-4 text-sand-11 hover:text-sand-12 active:scale-95"
+            @click="document.startViewTransition ? document.startViewTransition(() => theme = theme === 'light' ? 'dark' : 'light') : theme = theme === 'light' ? 'dark' : 'light'">
+            <i x-show="theme === 'light'" data-lucide="sun" class="h-5 w-5"></i>
+            <i x-show="theme === 'dark'" x-cloak data-lucide="moon" class="h-5 w-5"></i>
+          </button>
+        </div>
       </div>
     </div>
   </nav>
   <main class="pt-28 pb-16 px-4">
     <div class="max-w-5xl mx-auto">
-      <div class="stat-card p-6 mb-6">
-        <h2 class="text-lg font-bold text-sand-12 mb-4">输入您的 API Key</h2>
-        <div class="flex gap-3">
-          <input type="text" x-model="apiKeyId" @keyup.enter="queryStats()"
-            placeholder="输入 API Key（如 cr_xxx）或 ID（UUID 格式）"
-            class="input-glass flex-1 px-4 py-2.5 rounded-xl text-sm text-sand-12 placeholder-sand-9" />
-          <button @click="queryStats()" :disabled="loading"
-            class="px-6 py-2.5 rounded-xl bg-accent-9 text-white font-semibold text-sm hover:bg-accent-10 disabled:opacity-50 disabled:cursor-not-allowed transition-all">
-            <span x-show="!loading">查询</span>
-            <span x-show="loading" x-cloak>查询中...</span>
-          </button>
-        </div>
-        <div x-show="error" x-cloak class="mt-4 p-3 rounded-xl bg-red-3 border border-red-7 text-red-11 text-sm"><span
-            x-text="error"></span></div>
-      </div>
       <div x-show="statsData" x-cloak class="space-y-6">
         <div class="flex items-center justify-between">
           <h2 class="text-xl font-bold text-sand-12" x-text="statsData?.name || 'API Key 统计'"></h2>
@@ -375,6 +438,9 @@
         </div>
         <div class="stat-card p-6 text-center text-sand-11" x-show="modelStats.length === 0">暂无模型使用统计数据</div>
       </div>
+      <div x-show="!statsData" x-cloak class="stat-card p-6 text-center text-sand-11">
+        通过导航栏搜索框输入 API Key 可查看用量和配额。
+      </div>
     </div>
   </main>
   <script>
@@ -418,6 +484,9 @@
         }
       }
     }
+
+    // Initialize Lucide icons
+    lucide.createIcons();
   </script>
 </body>
 
