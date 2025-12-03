@@ -1,13 +1,16 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <!-- SEO Meta 标签 -->
   <title>JojoCode - Jojo的奇妙Code - 高性价比 AI API 中转服务</title>
-  <meta name="description" content="JojoCode - 高性价比 AI API 中转服务，无需繁琐注册，一 Key 通用多模型，底价让利，模型绝对保真，拒绝掺水，价格透明。支持 Claude、Gemini、OpenAI 等多平台。">
-  <meta name="keywords" content="JojoCode, Jojo的奇妙Code, Claude API, Gemini API, OpenAI API, AI中转, API代理, 高性价比, 底价让利, 保真模型">
+  <meta name="description"
+    content="JojoCode - 高性价比 AI API 中转服务，无需繁琐注册，一 Key 通用多模型，底价让利，模型绝对保真，拒绝掺水，价格透明。支持 Claude、Gemini、OpenAI 等多平台。">
+  <meta name="keywords"
+    content="JojoCode, Jojo的奇妙Code, Claude API, Gemini API, OpenAI API, AI中转, API代理, 高性价比, 底价让利, 保真模型">
 
   <!-- Lily UI 样式 -->
   <link rel="stylesheet" href="/public-pages/assets/lily-ui.css">
@@ -19,7 +22,9 @@
   <script src="https://unpkg.com/lucide@latest"></script>
 
   <style>
-    [x-cloak] { display: none !important; }
+    [x-cloak] {
+      display: none !important;
+    }
 
     /* View Transitions API for smooth theme switching */
     ::view-transition-old(root),
@@ -62,85 +67,228 @@
     .dark .stat-badge {
       background: var(--sand-4);
     }
+
+    .bg-grid-pattern {
+      background-size: 40px 40px;
+      background-image: linear-gradient(to right, rgba(128, 128, 128, 0.05) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(128, 128, 128, 0.05) 1px, transparent 1px);
+    }
+
+    .text-gradient-primary {
+      background: linear-gradient(135deg, var(--sand-12) 0%, var(--accent-11) 100%);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .card-hover {
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .card-hover:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 24px -10px rgba(0, 0, 0, 0.1);
+      border-color: var(--accent-8);
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 3rem;
+      align-items: start;
+    }
+
+    @media (min-width: 1024px) {
+      .hero-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 4rem;
+      }
+    }
+
+    .hero-title {
+      font-size: clamp(2.5rem, 4vw + 0.75rem, 3.75rem);
+      line-height: 1.05;
+    }
+
+    .traffic-dot {
+      width: 0.75rem;
+      height: 0.75rem;
+      border-radius: 9999px;
+      box-shadow: 0 0 0 1px var(--sand-7);
+    }
+
+    .traffic-red {
+      background: var(--red-9);
+      box-shadow: 0 0 0 1px var(--red-7);
+    }
+
+    .traffic-amber {
+      background: var(--amber-9);
+      box-shadow: 0 0 0 1px var(--amber-8);
+    }
+
+    .traffic-green {
+      background: var(--teal-9);
+      box-shadow: 0 0 0 1px var(--teal-8);
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.35rem 0.6rem;
+      border-radius: 9999px;
+      border: 1px solid var(--sand-5);
+      background: transparent;
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: var(--sand-11);
+    }
+
+    .hero-badge .dot {
+      width: 0.5rem;
+      height: 0.5rem;
+      border-radius: 9999px;
+      border: 1px solid var(--sand-6);
+      box-shadow: 0 0 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .dot-red {
+      background: var(--red-9);
+      box-shadow: 0 0 6px color-mix(in oklab, var(--red-9) 70%, transparent);
+    }
+
+    .dot-amber {
+      background: var(--amber-9);
+      box-shadow: 0 0 6px color-mix(in oklab, var(--amber-9) 70%, transparent);
+    }
+
+    .dot-green {
+      background: var(--teal-9);
+      box-shadow: 0 0 6px color-mix(in oklab, var(--teal-9) 70%, transparent);
+    }
+
+    /* Custom spacing for supported platforms block */
+    .supported-section {
+      padding-top: 2.5rem;
+      padding-bottom: 2rem;
+    }
+
+    @media (min-width: 1024px) {
+      .supported-section {
+        padding-top: 3.5rem;
+        padding-bottom: 3rem;
+      }
+    }
+
+    .supported-container {
+      padding-top: 1rem;
+    }
+
+    @media (min-width: 1024px) {
+      .supported-container {
+        padding-top: 1.5rem;
+      }
+    }
   </style>
 </head>
 
 <body data-scaling="100%" data-radius="medium"
-      class="rt-Theme radix-themes min-h-screen text-sand-12 antialiased overflow-x-hidden"
-      data-is-root-theme="true"
-      x-data="{ theme: localStorage.getItem('theme') || 'light', accent: localStorage.getItem('accent') || 'iris' }"
-      x-init="$watch('theme', val => localStorage.setItem('theme', val)); $watch('accent', val => localStorage.setItem('accent', val))"
-      :class="[theme === 'dark' ? 'dark' : '', 'accent-' + accent]"
-      :data-accent-color="accent">
+  class="rt-Theme radix-themes min-h-screen text-sand-12 antialiased overflow-x-hidden" data-is-root-theme="true"
+  x-data="{ theme: localStorage.getItem('theme') || 'light', accent: localStorage.getItem('accent') || 'iris' }"
+  x-init="$watch('theme', val => localStorage.setItem('theme', val)); $watch('accent', val => localStorage.setItem('accent', val))"
+  :class="[theme === 'dark' ? 'dark' : '', 'accent-' + accent]" :data-accent-color="accent">
 
-  <!-- Navbar (仿 Lily UI 风格) -->
-  <nav class="fixed top-6 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-[1200px] rounded-4 backdrop-blur-xl shadow-lg shadow-black/5 transition-all duration-500 hover:shadow-xl hover:shadow-black/10 hover:-translate-y-0.5"
-       :class="theme === 'dark' ? 'bg-sand-1/60 hover:bg-sand-1/80' : 'bg-sand-2/60 hover:bg-sand-2/80'">
-    <div class="px-4 sm:px-6">
+  <!-- Navbar (Enhanced Glassmorphism) -->
+  <nav
+    class="fixed top-6 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-[1200px] rounded-full backdrop-blur-md border border-white/10 shadow-xl shadow-black/5 transition-all duration-500 hover:shadow-2xl hover:shadow-accent-9/10 hover:-translate-y-0.5"
+    :class="theme === 'dark' ? 'bg-sand-1/70 supports-[backdrop-filter]:bg-sand-1/40' : 'bg-white/70 supports-[backdrop-filter]:bg-white/40'">
+    <div class="px-6">
       <div class="flex h-14 items-center justify-between">
-        <!-- Logo -->
-        <a href="/" class="flex items-center gap-3 hover:opacity-80 transition-opacity">
-          <div class="flex h-6 w-6 items-center justify-center text-accent-9">
-            <i data-lucide="code-2" class="w-5 h-5"></i>
-          </div>
-          <span class="text-sm font-bold text-sand-12 leading-tight">JojoCode</span>
-        </a>
+        <div class="flex items-center gap-12">
+          <!-- Logo -->
+          <a href="/" class="flex items-center gap-3 hover:opacity-80 transition-opacity group">
+            <div
+              class="flex h-8 w-8 items-center justify-center rounded-lg bg-accent-3 text-accent-11 group-hover:bg-accent-4 transition-colors">
+              <i data-lucide="code-2" class="w-5 h-5"></i>
+            </div>
+            <span class="text-base font-bold text-sand-12 tracking-tight">JojoCode</span>
+          </a>
 
-        <!-- 导航链接 -->
-        <div class="hidden md:flex items-center gap-6 text-xs font-medium">
-          <a href="/docs" class="text-sand-11 hover:text-accent-11 transition-colors">文档</a>
-          <a href="/stats" class="text-sand-11 hover:text-accent-11 transition-colors">统计</a>
+          <!-- 导航链接 -->
+          <div class="hidden md:flex items-center gap-8 text-sm font-medium">
+            <a href="/docs" class="text-sand-11 hover:text-accent-11 transition-colors relative group">
+              文档
+              <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-accent-9 transition-all group-hover:w-full"></span>
+            </a>
+            <a href="/stats" class="text-sand-11 hover:text-accent-11 transition-colors relative group">
+              统计
+              <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-accent-9 transition-all group-hover:w-full"></span>
+            </a>
+          </div>
         </div>
 
         <!-- 主题切换 -->
         <button type="button"
-                class="flex h-8 w-8 items-center justify-center rounded-full transition-colors hover:bg-sand-4/50 text-sand-11 hover:text-sand-12"
-                @click="document.startViewTransition ? document.startViewTransition(() => theme = theme === 'light' ? 'dark' : 'light') : theme = theme === 'light' ? 'dark' : 'light'">
-          <i x-show="theme === 'light'" data-lucide="sun" class="h-4 w-4"></i>
-          <i x-show="theme === 'dark'" x-cloak data-lucide="moon" class="h-4 w-4"></i>
+          class="flex h-9 w-9 items-center justify-center rounded-full transition-all hover:bg-sand-4 text-sand-11 hover:text-sand-12 active:scale-95"
+          @click="document.startViewTransition ? document.startViewTransition(() => theme = theme === 'light' ? 'dark' : 'light') : theme = theme === 'light' ? 'dark' : 'light'">
+          <i x-show="theme === 'light'" data-lucide="sun" class="h-5 w-5"></i>
+          <i x-show="theme === 'dark'" x-cloak data-lucide="moon" class="h-5 w-5"></i>
         </button>
       </div>
     </div>
   </nav>
 
   <!-- Hero Section -->
-  <section class="relative overflow-hidden min-h-screen bg-sand-1 dark:bg-sand-2">
+  <section class="relative overflow-hidden min-h-screen bg-sand-1 dark:bg-[#0a0a0a] bg-grid-pattern">
     <!-- 装饰性背景形状 -->
-    <div class="absolute top-1/2 right-0 -translate-y-1/2 translate-x-1/3 w-[600px] h-[600px] opacity-20 pointer-events-none z-0">
-      <svg viewBox="0 0 200 200" class="w-full h-full">
-        <path :fill="'var(--' + accent + '-9)'"
-              d="M150,20 Q180,50 170,100 Q160,150 120,180 Q80,200 60,170 Q20,130 40,80 Q60,30 110,20 Q140,10 150,20 Z" />
-      </svg>
+    <div
+      class="absolute top-0 right-0 w-[800px] h-[800px] bg-accent-9/10 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/3 pointer-events-none z-0 mix-blend-screen">
+    </div>
+    <div
+      class="absolute bottom-0 left-0 w-[600px] h-[600px] bg-purple-500/10 rounded-full blur-[100px] translate-y-1/3 -translate-x-1/4 pointer-events-none z-0 mix-blend-screen">
     </div>
 
-    <div class="relative z-10 mx-auto max-w-[1400px] px-6 sm:px-8 lg:px-12 pt-32 pb-16">
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+    <div class="rt-Section relative z-10" data-size="4" style="padding-top: 10rem; background: transparent;">
+      <div class="rt-Container" data-size="4">
+        <div class="hero-grid">
         <!-- Left Column -->
         <div class="max-w-xl">
           <!-- Badge -->
-          <div class="inline-flex items-center gap-2 w-fit rounded-full border border-sand-6 bg-sand-2 dark:bg-sand-3 px-4 py-1.5 text-sm text-sand-11 mb-6">
-            <i data-lucide="zap" class="w-4 h-4"></i>
+          <div
+            class="inline-flex items-center gap-2 w-fit rounded-full border border-accent-6 bg-accent-2/50 backdrop-blur-sm px-4 py-1.5 text-sm font-medium text-accent-11 mb-8 shadow-sm">
+            <span class="relative flex h-2 w-2">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent-9 opacity-75"></span>
+              <span class="relative inline-flex rounded-full h-2 w-2 bg-accent-9"></span>
+            </span>
             <span>高性价比 AI API 中转服务</span>
           </div>
 
           <!-- Heading -->
-          <h1 class="text-4xl sm:text-5xl md:text-6xl font-extrabold text-sand-12 leading-[1.1] tracking-tight mb-3">
-            Jojo的奇妙Code
+          <h1 class="hero-title font-extrabold text-sand-12 tracking-tight mb-6">
+            Jojo的<span class="text-gradient-primary">奇妙Code</span>
           </h1>
 
           <!-- Subtitle -->
-          <p class="text-lg md:text-xl font-semibold text-accent-11 leading-tight mb-6">
-            底价让利 · 保真不掺水
-          </p>
-
-          <!-- Description -->
-          <p class="text-base md:text-lg text-sand-11 leading-relaxed mb-6">
-            无需繁琐注册，One Key 通用 Claude、Gemini、OpenAI 等多平台模型。底价让利，模型绝对保真，拒绝掺水，价格透明可查。
+          <p class="text-sm md:text-base font-medium text-sand-11 leading-snug mb-8 max-w-lg">
+            底价让利 · 保真不掺水 <br />
+            <span class="text-xs md:text-sm text-sand-10 font-normal mt-2 block">
+              无需繁琐注册，One Key 通用 Claude、Gemini、OpenAI 等多平台模型。
+            </span>
           </p>
 
           <!-- Code Example Card -->
-          <div class="hero-code mb-6 shadow-lg overflow-hidden">
-            <pre><code># 使用你的自建 API Key 调用任何平台
+          <div
+            class="hero-code mb-8 shadow-2xl shadow-black/5 overflow-hidden border border-sand-6 dark:border-sand-4 rounded-xl bg-sand-2/50 backdrop-blur-sm">
+            <div class="flex items-center gap-2 px-4 py-2 border-b border-sand-6 dark:border-sand-4 bg-sand-3/50">
+              <div class="flex gap-1.5">
+                <div class="traffic-dot traffic-red"></div>
+                <div class="traffic-dot traffic-amber"></div>
+                <div class="traffic-dot traffic-green"></div>
+              </div>
+              <div class="text-xs text-sand-10 font-mono ml-2">bash</div>
+            </div>
+            <pre class="!bg-transparent !border-none !p-4 !m-0"><code class="text-sm"># 使用你的自建 API Key 调用任何平台
 curl https://your-relay.com/api/v1/messages \
   -H "x-api-key: cr_your_api_key" \
   -H "anthropic-version: 2023-06-01" \
@@ -151,119 +299,216 @@ curl https://your-relay.com/api/v1/messages \
           </div>
 
           <!-- CTA Buttons -->
-          <div class="flex flex-wrap items-center gap-3 mb-8">
+          <div class="flex flex-wrap items-center gap-4 mb-10">
             <a href="/stats"
-               class="inline-flex items-center gap-2 rounded-full bg-sand-12 px-5 py-2.5 text-sm font-semibold text-sand-1 hover:bg-sand-11 transition-colors shadow-lg">
-              查看统计
-              <i data-lucide="arrow-right" class="h-4 w-4"></i>
+              class="group relative inline-flex items-center gap-2 rounded-full bg-sand-12 px-8 py-3.5 text-base font-bold text-sand-1 transition-all hover:-translate-y-0.5 hover:shadow-[0_0_20px_rgba(0,0,0,0.2)] overflow-hidden">
+              <div
+                class="absolute inset-0 bg-gradient-to-r from-accent-9 to-purple-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              </div>
+              <span class="relative z-10 flex items-center gap-2">
+                查看统计
+                <i data-lucide="arrow-right" class="h-4 w-4 transition-transform group-hover:translate-x-1"></i>
+              </span>
             </a>
             <a href="/docs"
-               class="inline-flex items-center gap-2 rounded-full border border-sand-6 px-5 py-2.5 text-sm font-semibold text-sand-12 hover:bg-sand-2 dark:hover:bg-sand-4 transition-colors bg-white dark:bg-sand-3">
-              <i data-lucide="book-open" class="h-4 w-4"></i>
+              class="group inline-flex items-center gap-2 rounded-full border border-sand-7 px-8 py-3.5 text-base font-bold text-sand-12 hover:border-accent-8 hover:text-accent-11 transition-all bg-white/50 dark:bg-black/20 backdrop-blur-sm hover:bg-white/80 dark:hover:bg-black/40">
+              <i data-lucide="book-open" class="h-4 w-4 group-hover:scale-110 transition-transform"></i>
               使用文档
             </a>
           </div>
 
           <!-- Stats Badges -->
           <div class="flex flex-wrap items-center gap-3">
-            <div class="stat-badge">One Key 通用</div>
-            <div class="stat-badge">底价让利</div>
-            <div class="stat-badge">保真不掺水</div>
-            <div class="stat-badge">价格透明</div>
+            <div class="hero-badge">
+              <div class="dot dot-green"></div>
+              One Key 通用
+            </div>
+            <div class="hero-badge">
+              <div class="dot dot-amber"></div>
+              底价让利
+            </div>
+            <div class="hero-badge">
+              <div class="dot dot-red"></div>
+              保真不掺水
+            </div>
           </div>
         </div>
 
-        <!-- Right Column: Features -->
-        <div class="space-y-4">
-          <!-- Feature Card 1 -->
-          <div class="group p-6 rounded-3 bg-sand-2 dark:bg-sand-3 border border-sand-6 hover:border-accent-7 transition-all duration-300 hover:shadow-lg">
-            <div class="flex items-start gap-4">
-              <div class="flex-shrink-0 w-10 h-10 rounded-2 bg-accent-3 text-accent-9 flex items-center justify-center">
-                <i data-lucide="key" class="w-5 h-5"></i>
-              </div>
-              <div>
-                <h3 class="text-base font-bold text-sand-12 mb-1">无需繁琐注册</h3>
-                <p class="text-sm text-sand-11 leading-relaxed">一个 API Key 通用所有平台和模型，无需在多个平台注册账号，即买即用，简单高效</p>
-              </div>
+        <!-- Right Column: Retro Typewriter Effect -->
+        <div class="relative h-full min-h-[400px] flex items-center justify-center" x-data="{
+               text: '',
+               fullText: [
+                 '> INITIALIZING SYSTEM...',
+                 '> LOADING MODULES...',
+                 '> STATUS: ONLINE',
+                 '',
+                 '----------------------------------------',
+                 '  JojoCode TERMINAL v1.0',
+                 '----------------------------------------',
+                 '',
+                 '* 无需繁琐注册',
+                 '  一个 API Key 通用所有平台和模型',
+                 '  即买即用，简单高效',
+                 '',
+                 '* 底价让利',
+                 '  直连官方 API，无中间商赚差价',
+                 '  享受最优质的服务',
+                 '',
+                 '* 模型保真不掺水',
+                 '  官方原版，绝不掺假降级',
+                 '  价格透明可查，实时统计',
+                 '',
+                 '> READY_ '
+               ],
+               lineIndex: 0,
+               charIndex: 0,
+               isTyping: true,
+               cursorVisible: true,
+               init() {
+                 this.typeNextChar();
+                 setInterval(() => {
+                   this.cursorVisible = !this.cursorVisible;
+                 }, 500);
+               },
+               typeNextChar() {
+                 if (this.lineIndex < this.fullText.length) {
+                   const currentLine = this.fullText[this.lineIndex];
+                   if (this.charIndex < currentLine.length) {
+                     this.text += currentLine.charAt(this.charIndex);
+                     this.charIndex++;
+                     setTimeout(() => this.typeNextChar(), 30 + Math.random() * 50);
+                   } else {
+                     if (this.lineIndex < this.fullText.length - 1) {
+                       this.text += '<br>';
+                     }
+                     this.lineIndex++;
+                     this.charIndex = 0;
+                     setTimeout(() => this.typeNextChar(), 300);
+                   }
+                 } else {
+                   this.isTyping = false;
+                 }
+               }
+             }">
+
+          <!-- Retro Monitor Container -->
+          <div
+            class="relative w-full max-w-md aspect-[4/5] bg-[#1a1a1a] rounded-lg p-4 shadow-2xl border-4 border-[#2a2a2a] overflow-hidden">
+            <!-- Screen Glitch/Scanline Effects -->
+            <div
+              class="absolute inset-0 pointer-events-none z-20 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] bg-[length:100%_4px,3px_100%]">
+            </div>
+            <div
+              class="absolute inset-0 pointer-events-none z-10 bg-[radial-gradient(circle_at_center,transparent_50%,rgba(0,0,0,0.4)_100%)]">
+            </div>
+
+            <!-- Screen Content -->
+            <div
+              class="relative z-0 h-full font-mono text-sm md:text-base leading-relaxed p-4 overflow-hidden text-[#33ff00] shadow-[0_0_20px_rgba(51,255,0,0.2)]"
+              style="text-shadow: 0 0 2px #33ff00;">
+              <div class="break-words" x-html="text + (cursorVisible ? '█' : '')"></div>
+            </div>
+
+            <!-- Monitor Brand -->
+            <div class="absolute bottom-2 right-4 text-[10px] font-bold text-[#444] tracking-widest uppercase">Jojo-Term
             </div>
           </div>
 
-          <!-- Feature Card 2 -->
-          <div class="group p-6 rounded-3 bg-sand-2 dark:bg-sand-3 border border-sand-6 hover:border-accent-7 transition-all duration-300 hover:shadow-lg">
-            <div class="flex items-start gap-4">
-              <div class="flex-shrink-0 w-10 h-10 rounded-2 bg-accent-3 text-accent-9 flex items-center justify-center">
-                <i data-lucide="tag" class="w-5 h-5"></i>
-              </div>
-              <div>
-                <h3 class="text-base font-bold text-sand-12 mb-1">底价让利</h3>
-                <p class="text-sm text-sand-11 leading-relaxed">直连官方 API，无中间商赚差价，底价让利给用户，让你用最低的价格享受最优质的服务</p>
-              </div>
-            </div>
+          <!-- Decorative Elements -->
+          <div
+            class="absolute -z-10 -top-4 -right-4 w-full h-full border-2 border-dashed border-sand-6 rounded-lg opacity-50">
           </div>
-
-          <!-- Feature Card 3 -->
-          <div class="group p-6 rounded-3 bg-sand-2 dark:bg-sand-3 border border-sand-6 hover:border-accent-7 transition-all duration-300 hover:shadow-lg">
-            <div class="flex items-start gap-4">
-              <div class="flex-shrink-0 w-10 h-10 rounded-2 bg-accent-3 text-accent-9 flex items-center justify-center">
-                <i data-lucide="shield-check" class="w-5 h-5"></i>
-              </div>
-              <div>
-                <h3 class="text-base font-bold text-sand-12 mb-1">模型保真不掺水</h3>
-                <p class="text-sm text-sand-11 leading-relaxed">所有模型均为官方原版，绝不掺假降级，价格透明可查，实时用量统计，让你用得放心</p>
-              </div>
-            </div>
-          </div>
+        </div>
         </div>
       </div>
     </div>
   </section>
 
   <!-- Supported Platforms Section -->
-  <section class="py-16 px-6 bg-sand-2 dark:bg-sand-1">
-    <div class="mx-auto max-w-[1200px]">
-      <h2 class="text-center text-3xl font-bold text-sand-12 mb-8">支持的平台</h2>
+  <section class="supported-section px-6 bg-white dark:bg-[#0f0f0f] border-t border-sand-4">
+    <div class="supported-container mx-auto max-w-[1200px]">
+      <div class="text-center mb-16">
+        <h2 class="text-3xl md:text-4xl font-bold text-sand-12 mb-4">支持的平台</h2>
+        <p class="text-sand-11 text-lg">无缝对接主流 AI 模型，一键切换</p>
+      </div>
+
       <div class="feature-grid">
-        <div class="p-4 rounded-3 bg-white dark:bg-sand-3 border border-sand-6 text-center">
-          <div class="flex justify-center mb-2">
-            <i data-lucide="message-square" class="w-6 h-6 text-accent-9"></i>
+        <div
+          class="card-hover p-6 rounded-2xl bg-sand-2/30 dark:bg-sand-2/10 border border-sand-5 hover:bg-white dark:hover:bg-sand-3 transition-all group">
+          <div class="flex items-center justify-between mb-4">
+            <div class="p-3 rounded-xl bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400">
+              <i data-lucide="message-square" class="w-6 h-6"></i>
+            </div>
+            <i data-lucide="arrow-up-right"
+              class="w-4 h-4 text-sand-8 opacity-0 group-hover:opacity-100 transition-opacity"></i>
           </div>
-          <div class="text-sm font-semibold text-sand-12">Claude (Official)</div>
-          <div class="text-xs text-sand-11 mt-1">OAuth 认证</div>
+          <div class="text-lg font-bold text-sand-12 mb-1">Claude (Official)</div>
+          <div class="text-sm text-sand-10">OAuth 认证 · 官方直连</div>
         </div>
-        <div class="p-4 rounded-3 bg-white dark:bg-sand-3 border border-sand-6 text-center">
-          <div class="flex justify-center mb-2">
-            <i data-lucide="sparkles" class="w-6 h-6 text-accent-9"></i>
+
+        <div
+          class="card-hover p-6 rounded-2xl bg-sand-2/30 dark:bg-sand-2/10 border border-sand-5 hover:bg-white dark:hover:bg-sand-3 transition-all group">
+          <div class="flex items-center justify-between mb-4">
+            <div class="p-3 rounded-xl bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400">
+              <i data-lucide="sparkles" class="w-6 h-6"></i>
+            </div>
+            <i data-lucide="arrow-up-right"
+              class="w-4 h-4 text-sand-8 opacity-0 group-hover:opacity-100 transition-opacity"></i>
           </div>
-          <div class="text-sm font-semibold text-sand-12">Gemini</div>
-          <div class="text-xs text-sand-11 mt-1">Google OAuth</div>
+          <div class="text-lg font-bold text-sand-12 mb-1">Gemini</div>
+          <div class="text-sm text-sand-10">Google OAuth · 高并发</div>
         </div>
-        <div class="p-4 rounded-3 bg-white dark:bg-sand-3 border border-sand-6 text-center">
-          <div class="flex justify-center mb-2">
-            <i data-lucide="code-2" class="w-6 h-6 text-accent-9"></i>
+
+        <div
+          class="card-hover p-6 rounded-2xl bg-sand-2/30 dark:bg-sand-2/10 border border-sand-5 hover:bg-white dark:hover:bg-sand-3 transition-all group">
+          <div class="flex items-center justify-between mb-4">
+            <div class="p-3 rounded-xl bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400">
+              <i data-lucide="code-2" class="w-6 h-6"></i>
+            </div>
+            <i data-lucide="arrow-up-right"
+              class="w-4 h-4 text-sand-8 opacity-0 group-hover:opacity-100 transition-opacity"></i>
           </div>
-          <div class="text-sm font-semibold text-sand-12">OpenAI Responses</div>
-          <div class="text-xs text-sand-11 mt-1">Codex API</div>
+          <div class="text-lg font-bold text-sand-12 mb-1">OpenAI Responses</div>
+          <div class="text-sm text-sand-10">Codex API · 兼容性强</div>
         </div>
-        <div class="p-4 rounded-3 bg-white dark:bg-sand-3 border border-sand-6 text-center">
-          <div class="flex justify-center mb-2">
-            <i data-lucide="cloud" class="w-6 h-6 text-accent-9"></i>
+
+        <div
+          class="card-hover p-6 rounded-2xl bg-sand-2/30 dark:bg-sand-2/10 border border-sand-5 hover:bg-white dark:hover:bg-sand-3 transition-all group">
+          <div class="flex items-center justify-between mb-4">
+            <div class="p-3 rounded-xl bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400">
+              <i data-lucide="cloud" class="w-6 h-6"></i>
+            </div>
+            <i data-lucide="arrow-up-right"
+              class="w-4 h-4 text-sand-8 opacity-0 group-hover:opacity-100 transition-opacity"></i>
           </div>
-          <div class="text-sm font-semibold text-sand-12">AWS Bedrock</div>
-          <div class="text-xs text-sand-11 mt-1">AWS 凭据</div>
+          <div class="text-lg font-bold text-sand-12 mb-1">AWS Bedrock</div>
+          <div class="text-sm text-sand-10">AWS 凭据 · 企业级</div>
         </div>
-        <div class="p-4 rounded-3 bg-white dark:bg-sand-3 border border-sand-6 text-center">
-          <div class="flex justify-center mb-2">
-            <i data-lucide="hexagon" class="w-6 h-6 text-accent-9"></i>
+
+        <div
+          class="card-hover p-6 rounded-2xl bg-sand-2/30 dark:bg-sand-2/10 border border-sand-5 hover:bg-white dark:hover:bg-sand-3 transition-all group">
+          <div class="flex items-center justify-between mb-4">
+            <div class="p-3 rounded-xl bg-cyan-100 dark:bg-cyan-900/30 text-cyan-600 dark:text-cyan-400">
+              <i data-lucide="hexagon" class="w-6 h-6"></i>
+            </div>
+            <i data-lucide="arrow-up-right"
+              class="w-4 h-4 text-sand-8 opacity-0 group-hover:opacity-100 transition-opacity"></i>
           </div>
-          <div class="text-sm font-semibold text-sand-12">Azure OpenAI</div>
-          <div class="text-xs text-sand-11 mt-1">Azure 端点</div>
+          <div class="text-lg font-bold text-sand-12 mb-1">Azure OpenAI</div>
+          <div class="text-sm text-sand-10">Azure 端点 · 稳定可靠</div>
         </div>
-        <div class="p-4 rounded-3 bg-white dark:bg-sand-3 border border-sand-6 text-center">
-          <div class="flex justify-center mb-2">
-            <i data-lucide="bot" class="w-6 h-6 text-accent-9"></i>
+
+        <div
+          class="card-hover p-6 rounded-2xl bg-sand-2/30 dark:bg-sand-2/10 border border-sand-5 hover:bg-white dark:hover:bg-sand-3 transition-all group">
+          <div class="flex items-center justify-between mb-4">
+            <div class="p-3 rounded-xl bg-pink-100 dark:bg-pink-900/30 text-pink-600 dark:text-pink-400">
+              <i data-lucide="bot" class="w-6 h-6"></i>
+            </div>
+            <i data-lucide="arrow-up-right"
+              class="w-4 h-4 text-sand-8 opacity-0 group-hover:opacity-100 transition-opacity"></i>
           </div>
-          <div class="text-sm font-semibold text-sand-12">Droid (Factory.ai)</div>
-          <div class="text-xs text-sand-11 mt-1">API Key</div>
+          <div class="text-lg font-bold text-sand-12 mb-1">Droid (Factory.ai)</div>
+          <div class="text-sm text-sand-10">API Key · 快速接入</div>
         </div>
       </div>
     </div>
@@ -285,4 +530,5 @@ curl https://your-relay.com/api/v1/messages \
   </script>
 
 </body>
+
 </html>
