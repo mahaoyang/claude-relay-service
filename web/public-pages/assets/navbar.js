@@ -1,4 +1,17 @@
 (() => {
+  const styleId = 'shared-navbar-styles';
+  if (!document.getElementById(styleId)) {
+    const style = document.createElement('style');
+    style.id = styleId;
+    style.textContent = `
+      .navbar-muted-icon { color: var(--sand-8); }
+      .dark .navbar-muted-icon { color: var(--sand-7); }
+      .navbar-toggle-btn { color: var(--sand-8); }
+      .dark .navbar-toggle-btn { color: var(--sand-7); }
+    `;
+    document.head.appendChild(style);
+  }
+
   const template = `
 <nav
   class="fixed top-6 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-[1200px] rounded-full backdrop-blur-md shadow-xl shadow-black/5 transition-all duration-500 hover:shadow-2xl hover:shadow-accent-9/10 hover:-translate-y-0.5"
@@ -33,16 +46,16 @@
           @submit.prevent="if (key.trim()) { window.location.href = '/stats?id=' + encodeURIComponent(key.trim()); }">
           <input type="text" x-model="key" placeholder="输入 API Key 查询" aria-label="输入 API Key 查询">
           <button type="submit">
-            <i data-lucide="search" class="text-sand-9"></i>
+            <i data-lucide="search" class="navbar-muted-icon"></i>
           </button>
         </form>
 
         <!-- 主题切换 -->
         <button type="button"
-          class="flex h-9 w-9 items-center justify-center rounded-full transition-all hover:bg-sand-4 text-sand-11 hover:text-sand-12 active:scale-95"
+          class="navbar-toggle-btn flex h-9 w-9 items-center justify-center rounded-full transition-all hover:bg-sand-4 hover:text-sand-12 active:scale-95"
           @click="document.startViewTransition ? document.startViewTransition(() => theme = theme === 'light' ? 'dark' : 'light') : theme = theme === 'light' ? 'dark' : 'light'">
-          <i x-show="theme === 'light'" data-lucide="sun" class="h-5 w-5 text-sand-11"></i>
-          <i x-show="theme === 'dark'" x-cloak data-lucide="moon" class="h-5 w-5 text-sand-11"></i>
+          <i x-show="theme === 'light'" data-lucide="sun" class="h-5 w-5 navbar-muted-icon"></i>
+          <i x-show="theme === 'dark'" x-cloak data-lucide="moon" class="h-5 w-5 navbar-muted-icon"></i>
         </button>
       </div>
     </div>
