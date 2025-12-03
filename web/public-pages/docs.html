@@ -11,6 +11,7 @@
 
   <!-- Lily UI 样式 -->
   <link rel="stylesheet" href="/public-pages/assets/lily-ui.css">
+  <script defer src="/public-pages/assets/navbar.js"></script>
 
   <!-- Alpine.js -->
   <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
@@ -168,31 +169,7 @@
       :data-accent-color="accent">
 
   <!-- Navbar -->
-  <nav class="fixed top-6 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-[1200px] rounded-4 backdrop-blur-xl shadow-lg shadow-black/5 transition-all duration-500 hover:shadow-xl hover:shadow-black/10 hover:-translate-y-0.5"
-       :class="theme === 'dark' ? 'bg-sand-1/60 hover:bg-sand-1/80' : 'bg-sand-2/60 hover:bg-sand-2/80'">
-    <div class="px-4 sm:px-6">
-      <div class="flex h-14 items-center justify-between">
-        <a href="/" class="flex items-center gap-3 hover:opacity-80 transition-opacity">
-          <div class="flex h-6 w-6 items-center justify-center text-accent-9">
-            <i data-lucide="workflow" class="w-5 h-5"></i>
-          </div>
-          <span class="text-sm font-bold text-sand-12 leading-tight">JojoCode</span>
-        </a>
-
-        <div class="hidden md:flex items-center gap-6 text-xs font-medium">
-          <a href="/docs" class="text-sand-11 hover:text-accent-11 transition-colors">文档</a>
-          <a href="/stats" class="text-sand-11 hover:text-accent-11 transition-colors">统计</a>
-        </div>
-
-        <button type="button"
-                class="flex h-8 w-8 items-center justify-center rounded-full transition-colors hover:bg-sand-4/50 text-sand-11 hover:text-sand-12"
-                @click="document.startViewTransition ? document.startViewTransition(() => theme = theme === 'light' ? 'dark' : 'light') : theme = theme === 'light' ? 'dark' : 'light'">
-          <i x-show="theme === 'light'" data-lucide="sun" class="h-4 w-4"></i>
-          <i x-show="theme === 'dark'" x-cloak data-lucide="moon" class="h-4 w-4"></i>
-        </button>
-      </div>
-    </div>
-  </nav>
+  <div data-navbar></div>
 
   <!-- Main Content -->
   <main class="relative overflow-hidden min-h-screen bg-sand-1 dark:bg-sand-2 pt-28 pb-16">
