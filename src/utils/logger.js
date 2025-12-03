@@ -164,7 +164,9 @@ try {
 
 // 🔄 增强的日志轮转配置
 const createRotateTransport = (filename, level = null) => {
-  if (!fileLoggingEnabled) return null
+  if (!fileLoggingEnabled) {
+    return null
+  }
 
   const transport = new DailyRotateFile({
     filename: path.join(logDirectory, filename),
@@ -247,31 +249,29 @@ const logger = winston.createLogger({
   ].filter(Boolean),
 
   // 🚨 异常处理
-  exceptionHandlers: (
-    fileLoggingEnabled
-      ? [
-          new winston.transports.File({
-            filename: path.join(logDirectory, 'exceptions.log'),
-            format: logFormat,
-            maxsize: 10485760, // 10MB
-            maxFiles: 5
-          })
-        ]
-      : []
+  exceptionHandlers: (fileLoggingEnabled
+    ? [
+        new winston.transports.File({
+          filename: path.join(logDirectory, 'exceptions.log'),
+          format: logFormat,
+          maxsize: 10485760, // 10MB
+          maxFiles: 5
+        })
+      ]
+    : []
   ).concat([new winston.transports.Console({ format: consoleFormat })]),
 
   // 🔄 未捕获异常处理
-  rejectionHandlers: (
-    fileLoggingEnabled
-      ? [
-          new winston.transports.File({
-            filename: path.join(logDirectory, 'rejections.log'),
-            format: logFormat,
-            maxsize: 10485760, // 10MB
-            maxFiles: 5
-          })
-        ]
-      : []
+  rejectionHandlers: (fileLoggingEnabled
+    ? [
+        new winston.transports.File({
+          filename: path.join(logDirectory, 'rejections.log'),
+          format: logFormat,
+          maxsize: 10485760, // 10MB
+          maxFiles: 5
+        })
+      ]
+    : []
   ).concat([new winston.transports.Console({ format: consoleFormat })]),
 
   // 防止进程退出
