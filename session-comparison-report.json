@@ -1,0 +1,220 @@
+{
+  "timestamp": "2025-11-17T06:32:43.307Z",
+  "totalRequests": 24,
+  "totalSessions": 5,
+  "sessions": [
+    {
+      "sessionId": "9f10edbb-1407-47e1-9b85-fa634be33732",
+      "requestCount": 4,
+      "firstRequest": "2025-11-17T06:27:10.254Z",
+      "lastRequest": "2025-11-17T06:27:53.483Z",
+      "clientId": "1afa2e8165ce838aac57ba26c30a0b8468f0b287fcfce2d8b6e2f6169ebf76cf",
+      "requests": [
+        {
+          "captureNumber": 1,
+          "timestamp": "2025-11-17T06:27:10.254Z",
+          "sessionRequestNumber": 1,
+          "model": "claude-haiku-4-5-20251001",
+          "userId": "user_1afa2e8165ce838aac57ba26c30a0b8468f0b287fcfce2d8b6e2f6169ebf76cf_account__session_9f10edbb-1407-47e1-9b85-fa634be33732"
+        },
+        {
+          "captureNumber": 2,
+          "timestamp": "2025-11-17T06:27:10.284Z",
+          "sessionRequestNumber": 2,
+          "model": "claude-sonnet-4-5-20250929",
+          "userId": "user_1afa2e8165ce838aac57ba26c30a0b8468f0b287fcfce2d8b6e2f6169ebf76cf_account__session_9f10edbb-1407-47e1-9b85-fa634be33732"
+        },
+        {
+          "captureNumber": 8,
+          "timestamp": "2025-11-17T06:27:53.425Z",
+          "sessionRequestNumber": 3,
+          "model": "claude-haiku-4-5-20251001",
+          "userId": "user_1afa2e8165ce838aac57ba26c30a0b8468f0b287fcfce2d8b6e2f6169ebf76cf_account__session_9f10edbb-1407-47e1-9b85-fa634be33732"
+        },
+        {
+          "captureNumber": 9,
+          "timestamp": "2025-11-17T06:27:53.483Z",
+          "sessionRequestNumber": 4,
+          "model": "claude-sonnet-4-5-20250929",
+          "userId": "user_1afa2e8165ce838aac57ba26c30a0b8468f0b287fcfce2d8b6e2f6169ebf76cf_account__session_9f10edbb-1407-47e1-9b85-fa634be33732"
+        }
+      ]
+    },
+    {
+      "sessionId": "50475d3e-7ba5-417d-a71d-bc3711f26693",
+      "requestCount": 7,
+      "firstRequest": "2025-11-17T06:27:59.325Z",
+      "lastRequest": "2025-11-17T06:27:38.747Z",
+      "clientId": "313bbf9be948e0023a3404cd142e1f5e2a596c577d98f0e10c8f1336b450160d",
+      "requests": [
+        {
+          "captureNumber": 10,
+          "timestamp": "2025-11-17T06:27:59.325Z",
+          "sessionRequestNumber": 4,
+          "model": "claude-haiku-4-5-20251001",
+          "userId": "user_313bbf9be948e0023a3404cd142e1f5e2a596c577d98f0e10c8f1336b450160d_account__session_50475d3e-7ba5-417d-a71d-bc3711f26693"
+        },
+        {
+          "captureNumber": 11,
+          "timestamp": "2025-11-17T06:27:59.327Z",
+          "sessionRequestNumber": 5,
+          "model": "claude-haiku-4-5-20251001",
+          "userId": "user_313bbf9be948e0023a3404cd142e1f5e2a596c577d98f0e10c8f1336b450160d_account__session_50475d3e-7ba5-417d-a71d-bc3711f26693"
+        },
+        {
+          "captureNumber": 12,
+          "timestamp": "2025-11-17T06:27:59.367Z",
+          "sessionRequestNumber": 6,
+          "model": "claude-sonnet-4-5-20250929",
+          "userId": "user_313bbf9be948e0023a3404cd142e1f5e2a596c577d98f0e10c8f1336b450160d_account__session_50475d3e-7ba5-417d-a71d-bc3711f26693"
+        },
+        {
+          "captureNumber": 13,
+          "timestamp": "2025-11-17T06:30:07.909Z",
+          "sessionRequestNumber": 7,
+          "model": "claude-haiku-4-5-20251001",
+          "userId": "user_313bbf9be948e0023a3404cd142e1f5e2a596c577d98f0e10c8f1336b450160d_account__session_50475d3e-7ba5-417d-a71d-bc3711f26693"
+        },
+        {
+          "captureNumber": 3,
+          "timestamp": "2025-11-17T06:27:38.744Z",
+          "sessionRequestNumber": 1,
+          "model": "claude-haiku-4-5-20251001",
+          "userId": "user_313bbf9be948e0023a3404cd142e1f5e2a596c577d98f0e10c8f1336b450160d_account__session_50475d3e-7ba5-417d-a71d-bc3711f26693"
+        },
+        {
+          "captureNumber": 4,
+          "timestamp": "2025-11-17T06:27:38.745Z",
+          "sessionRequestNumber": 2,
+          "model": "claude-haiku-4-5-20251001",
+          "userId": "user_313bbf9be948e0023a3404cd142e1f5e2a596c577d98f0e10c8f1336b450160d_account__session_50475d3e-7ba5-417d-a71d-bc3711f26693"
+        },
+        {
+          "captureNumber": 5,
+          "timestamp": "2025-11-17T06:27:38.747Z",
+          "sessionRequestNumber": 3,
+          "model": "claude-sonnet-4-5-20250929",
+          "userId": "user_313bbf9be948e0023a3404cd142e1f5e2a596c577d98f0e10c8f1336b450160d_account__session_50475d3e-7ba5-417d-a71d-bc3711f26693"
+        }
+      ]
+    },
+    {
+      "sessionId": "4fe5b286-192b-4929-a25e-8bc1789b5de4",
+      "requestCount": 5,
+      "firstRequest": "2025-11-17T06:31:18.005Z",
+      "lastRequest": "2025-11-17T06:31:19.569Z",
+      "clientId": "313bbf9be948e0023a3404cd142e1f5e2a596c577d98f0e10c8f1336b450160d",
+      "requests": [
+        {
+          "captureNumber": 14,
+          "timestamp": "2025-11-17T06:31:18.005Z",
+          "sessionRequestNumber": 1,
+          "model": "claude-haiku-4-5-20251001",
+          "userId": "user_313bbf9be948e0023a3404cd142e1f5e2a596c577d98f0e10c8f1336b450160d_account__session_4fe5b286-192b-4929-a25e-8bc1789b5de4"
+        },
+        {
+          "captureNumber": 15,
+          "timestamp": "2025-11-17T06:31:18.007Z",
+          "sessionRequestNumber": 2,
+          "model": "claude-haiku-4-5-20251001",
+          "userId": "user_313bbf9be948e0023a3404cd142e1f5e2a596c577d98f0e10c8f1336b450160d_account__session_4fe5b286-192b-4929-a25e-8bc1789b5de4"
+        },
+        {
+          "captureNumber": 16,
+          "timestamp": "2025-11-17T06:31:18.009Z",
+          "sessionRequestNumber": 3,
+          "model": "claude-sonnet-4-5-20250929",
+          "userId": "user_313bbf9be948e0023a3404cd142e1f5e2a596c577d98f0e10c8f1336b450160d_account__session_4fe5b286-192b-4929-a25e-8bc1789b5de4"
+        },
+        {
+          "captureNumber": 17,
+          "timestamp": "2025-11-17T06:31:19.310Z",
+          "sessionRequestNumber": 4,
+          "model": "claude-haiku-4-5-20251001",
+          "userId": "user_313bbf9be948e0023a3404cd142e1f5e2a596c577d98f0e10c8f1336b450160d_account__session_4fe5b286-192b-4929-a25e-8bc1789b5de4"
+        },
+        {
+          "captureNumber": 18,
+          "timestamp": "2025-11-17T06:31:19.569Z",
+          "sessionRequestNumber": 5,
+          "model": "claude-sonnet-4-5-20250929",
+          "userId": "user_313bbf9be948e0023a3404cd142e1f5e2a596c577d98f0e10c8f1336b450160d_account__session_4fe5b286-192b-4929-a25e-8bc1789b5de4"
+        }
+      ]
+    },
+    {
+      "sessionId": "5473516c-207c-41e0-9d25-726d4ad628a2",
+      "requestCount": 6,
+      "firstRequest": "2025-11-17T06:31:53.921Z",
+      "lastRequest": "2025-11-17T06:31:56.077Z",
+      "clientId": "313bbf9be948e0023a3404cd142e1f5e2a596c577d98f0e10c8f1336b450160d",
+      "requests": [
+        {
+          "captureNumber": 19,
+          "timestamp": "2025-11-17T06:31:53.921Z",
+          "sessionRequestNumber": 1,
+          "model": "claude-haiku-4-5-20251001",
+          "userId": "user_313bbf9be948e0023a3404cd142e1f5e2a596c577d98f0e10c8f1336b450160d_account__session_5473516c-207c-41e0-9d25-726d4ad628a2"
+        },
+        {
+          "captureNumber": 20,
+          "timestamp": "2025-11-17T06:31:53.922Z",
+          "sessionRequestNumber": 2,
+          "model": "claude-haiku-4-5-20251001",
+          "userId": "user_313bbf9be948e0023a3404cd142e1f5e2a596c577d98f0e10c8f1336b450160d_account__session_5473516c-207c-41e0-9d25-726d4ad628a2"
+        },
+        {
+          "captureNumber": 21,
+          "timestamp": "2025-11-17T06:31:53.923Z",
+          "sessionRequestNumber": 3,
+          "model": "claude-sonnet-4-5-20250929",
+          "userId": "user_313bbf9be948e0023a3404cd142e1f5e2a596c577d98f0e10c8f1336b450160d_account__session_5473516c-207c-41e0-9d25-726d4ad628a2"
+        },
+        {
+          "captureNumber": 22,
+          "timestamp": "2025-11-17T06:31:54.591Z",
+          "sessionRequestNumber": 4,
+          "model": "claude-haiku-4-5-20251001",
+          "userId": "user_313bbf9be948e0023a3404cd142e1f5e2a596c577d98f0e10c8f1336b450160d_account__session_5473516c-207c-41e0-9d25-726d4ad628a2"
+        },
+        {
+          "captureNumber": 23,
+          "timestamp": "2025-11-17T06:31:54.606Z",
+          "sessionRequestNumber": 5,
+          "model": "claude-sonnet-4-5-20250929",
+          "userId": "user_313bbf9be948e0023a3404cd142e1f5e2a596c577d98f0e10c8f1336b450160d_account__session_5473516c-207c-41e0-9d25-726d4ad628a2"
+        },
+        {
+          "captureNumber": 24,
+          "timestamp": "2025-11-17T06:31:56.077Z",
+          "sessionRequestNumber": 6,
+          "model": "claude-haiku-4-5-20251001",
+          "userId": "user_313bbf9be948e0023a3404cd142e1f5e2a596c577d98f0e10c8f1336b450160d_account__session_5473516c-207c-41e0-9d25-726d4ad628a2"
+        }
+      ]
+    },
+    {
+      "sessionId": "a6be45ab-4c74-408a-be13-7af599bb2edb",
+      "requestCount": 2,
+      "firstRequest": "2025-11-17T06:27:45.421Z",
+      "lastRequest": "2025-11-17T06:27:45.478Z",
+      "clientId": "1afa2e8165ce838aac57ba26c30a0b8468f0b287fcfce2d8b6e2f6169ebf76cf",
+      "requests": [
+        {
+          "captureNumber": 6,
+          "timestamp": "2025-11-17T06:27:45.421Z",
+          "sessionRequestNumber": 1,
+          "model": "claude-haiku-4-5-20251001",
+          "userId": "user_1afa2e8165ce838aac57ba26c30a0b8468f0b287fcfce2d8b6e2f6169ebf76cf_account__session_a6be45ab-4c74-408a-be13-7af599bb2edb"
+        },
+        {
+          "captureNumber": 7,
+          "timestamp": "2025-11-17T06:27:45.478Z",
+          "sessionRequestNumber": 2,
+          "model": "claude-sonnet-4-5-20250929",
+          "userId": "user_1afa2e8165ce838aac57ba26c30a0b8468f0b287fcfce2d8b6e2f6169ebf76cf_account__session_a6be45ab-4c74-408a-be13-7af599bb2edb"
+        }
+      ]
+    }
+  ]
+}
