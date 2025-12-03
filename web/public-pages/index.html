@@ -170,6 +170,8 @@
 
     /* Custom spacing for supported platforms block */
     .supported-section {
+      background: var(--sand-1);
+      border-top: 1px solid var(--sand-4);
       padding-top: 2.5rem;
       padding-bottom: 2rem;
     }
@@ -179,6 +181,11 @@
         padding-top: 3.5rem;
         padding-bottom: 3rem;
       }
+    }
+
+    .dark .supported-section {
+      background: #0f0f0f;
+      border-color: var(--sand-6);
     }
 
     .supported-container {
@@ -429,7 +436,7 @@ curl https://your-relay.com/api/v1/messages \
     <div class="supported-container mx-auto max-w-[1200px]">
       <div class="text-center mb-16">
         <h2 class="text-3xl md:text-4xl font-bold text-sand-12 mb-4">支持的平台</h2>
-        <p class="text-sand-11 text-lg">无缝对接主流 AI 模型，一键切换</p>
+        <p class="text-sand-11 text-sm md:text-base leading-relaxed mb-6">无缝对接主流 AI 模型，一键切换</p>
       </div>
 
       <div class="feature-grid">
