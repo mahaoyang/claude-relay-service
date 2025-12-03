@@ -375,7 +375,23 @@ class ApiKeyService {
       const hashedKey = this._hashApiKey(apiKey)
 
       // 通过哈希值直接查找API Key（性能优化）
-      const keyData = await redis.findApiKeyByHash(hashedKey)
+      let keyData = await redis.findApiKeyByHash(hashedKey)
+
+      // 如果哈希映射找不到，回退到遍历查找（兼容旧数据）
+      if (!keyData) {
+        logger.debug('Hash map lookup failed, falling back to scan...')
+        const allKeys = await redis.getAllApiKeys()
+        for (const key of allKeys) {
+          // 比较哈希值
+          if (key.apiKey === hashedKey) {
+            keyData = key
+            // 修复：重建哈希映射
+            await redis.rebuildApiKeyHashMap(key.id, hashedKey)
+            logger.info(`Rebuilt hash map for API key: ${key.name} (${key.id})`)
+            break
+          }
+        }
+      }
 
       if (!keyData) {
         return { valid: false, error: 'API key not found' }

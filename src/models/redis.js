@@ -1401,6 +1401,12 @@ class RedisClient {
     return await this.client.del(key)
   }
 
+  // 重建单个 API Key 的哈希映射
+  async rebuildApiKeyHashMap(keyId, hashedKey) {
+    const client = this.getClientSafe()
+    await client.hset('apikey:hash_map', hashedKey, keyId)
+  }
+
   // 🔗 OAuth会话管理
   async setOAuthSession(sessionId, sessionData, ttl = 600) {
     // 10分钟过期
