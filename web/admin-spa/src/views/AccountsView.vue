@@ -2941,12 +2941,11 @@ const loadAccounts = async (forceReload = false) => {
     let openaiResponsesRaw = []
 
     const appendAccounts = (platform, data) => {
-      const list = Array.isArray(data) ? data : []
-      if (list.length === 0) return
+      if (!data || data.length === 0) return
 
       switch (platform) {
         case 'claude': {
-          const items = list.map((acc) => {
+          const items = data.map((acc) => {
             const boundApiKeysCount = counts.claudeAccountId?.[acc.id] || 0
             return { ...acc, platform: 'claude', boundApiKeysCount }
           })
@@ -2954,7 +2953,7 @@ const loadAccounts = async (forceReload = false) => {
           break
         }
         case 'claude-console': {
-          const items = list.map((acc) => {
+          const items = data.map((acc) => {
             const boundApiKeysCount = counts.claudeConsoleAccountId?.[acc.id] || 0
             return { ...acc, platform: 'claude-console', boundApiKeysCount }
           })
@@ -2962,12 +2961,12 @@ const loadAccounts = async (forceReload = false) => {
           break
         }
         case 'bedrock': {
-          const items = list.map((acc) => ({ ...acc, platform: 'bedrock', boundApiKeysCount: 0 }))
+          const items = data.map((acc) => ({ ...acc, platform: 'bedrock', boundApiKeysCount: 0 }))
           allAccounts.push(...items)
           break
         }
         case 'gemini': {
-          const items = list.map((acc) => {
+          const items = data.map((acc) => {
             const boundApiKeysCount = counts.geminiAccountId?.[acc.id] || 0
             return { ...acc, platform: 'gemini', boundApiKeysCount }
           })
@@ -2975,7 +2974,7 @@ const loadAccounts = async (forceReload = false) => {
           break
         }
         case 'openai': {
-          const items = list.map((acc) => {
+          const items = data.map((acc) => {
             const boundApiKeysCount = counts.openaiAccountId?.[acc.id] || 0
             return { ...acc, platform: 'openai', boundApiKeysCount }
           })
@@ -2983,7 +2982,7 @@ const loadAccounts = async (forceReload = false) => {
           break
         }
         case 'azure_openai': {
-          const items = list.map((acc) => {
+          const items = data.map((acc) => {
             const boundApiKeysCount = counts.azureOpenaiAccountId?.[acc.id] || 0
             return { ...acc, platform: 'azure_openai', boundApiKeysCount }
           })
@@ -2991,16 +2990,16 @@ const loadAccounts = async (forceReload = false) => {
           break
         }
         case 'openai-responses': {
-          openaiResponsesRaw = list
+          openaiResponsesRaw = data
           break
         }
         case 'ccr': {
-          const items = list.map((acc) => ({ ...acc, platform: 'ccr', boundApiKeysCount: 0 }))
+          const items = data.map((acc) => ({ ...acc, platform: 'ccr', boundApiKeysCount: 0 }))
           allAccounts.push(...items)
           break
         }
         case 'droid': {
-          const items = list.map((acc) => {
+          const items = data.map((acc) => {
             const boundApiKeysCount = counts.droidAccountId?.[acc.id] || acc.boundApiKeysCount || 0
             return { ...acc, platform: 'droid', boundApiKeysCount }
           })
@@ -3008,7 +3007,7 @@ const loadAccounts = async (forceReload = false) => {
           break
         }
         case 'gemini-api': {
-          const items = list.map((acc) => {
+          const items = data.map((acc) => {
             const boundApiKeysCount = counts.geminiAccountId?.[`api:${acc.id}`] || 0
             return { ...acc, platform: 'gemini-api', boundApiKeysCount }
           })
