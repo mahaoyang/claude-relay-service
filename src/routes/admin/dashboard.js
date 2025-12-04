@@ -724,6 +724,144 @@ router.get('/session-pool/stats', authenticateAdmin, async (req, res) => {
   }
 })
 
+// 📊 获取最近的使用记录
+router.get('/dashboard/usage-records', authenticateAdmin, async (req, res) => {
+  try {
+    const { limit = 100, offset = 0 } = req.query
+    const limitNum = Math.min(parseInt(limit) || 100, 500) // 最多500条
+    const offsetNum = Math.max(parseInt(offset) || 0, 0)
+
+    // 获取所有API Keys
+    const apiKeys = await apiKeyService.getAllApiKeys()
+    if (!apiKeys || apiKeys.length === 0) {
+      return res.json({ success: true, data: { records: [], total: 0 } })
+    }
+
+    // 收集所有API Key的使用记录
+    const allRecords = []
+    for (const key of apiKeys) {
+      try {
+        const records = await redis.getUsageRecords(key.id, 100) // 每个key最多取100条
+        if (records && records.length > 0) {
+          // 为每条记录添加API Key信息
+          const enrichedRecords = records.map((record) => ({
+            ...record,
+            apiKeyId: key.id,
+            apiKeyName: key.name || 'Unnamed Key'
+          }))
+          allRecords.push(...enrichedRecords)
+        }
+      } catch (error) {
+        logger.error(`Failed to get usage records for key ${key.id}:`, error)
+        continue
+      }
+    }
+
+    // 按时间戳倒序排序（最新的在前）
+    allRecords.sort((a, b) => {
+      const timeA = new Date(a.timestamp).getTime()
+      const timeB = new Date(b.timestamp).getTime()
+      return timeB - timeA
+    })
+
+    // 分页
+    const paginatedRecords = allRecords.slice(offsetNum, offsetNum + limitNum)
+
+    // 获取账户名称映射
+    const accountIds = [...new Set(paginatedRecords.map((r) => r.accountId).filter(Boolean))]
+    const accountNameMap = {}
+
+    // 并发获取所有账户名称
+    await Promise.all(
+      accountIds.map(async (accountId) => {
+        try {
+          // 尝试从不同类型的账户中获取
+          const claudeAcc = await redis.getAccount(accountId)
+          if (claudeAcc && claudeAcc.name) {
+            accountNameMap[accountId] = claudeAcc.name
+            return
+          }
+
+          const consoleAcc = await redis.getClaudeConsoleAccount(accountId)
+          if (consoleAcc && consoleAcc.name) {
+            accountNameMap[accountId] = consoleAcc.name
+            return
+          }
+
+          const geminiAcc = await redis.getGeminiAccount(accountId)
+          if (geminiAcc && geminiAcc.name) {
+            accountNameMap[accountId] = geminiAcc.name
+            return
+          }
+
+          const bedrockAcc = await redis.getBedrockAccount(accountId)
+          if (bedrockAcc && bedrockAcc.name) {
+            accountNameMap[accountId] = bedrockAcc.name
+            return
+          }
+
+          const azureAcc = await redis.getAzureOpenaiAccount(accountId)
+          if (azureAcc && azureAcc.name) {
+            accountNameMap[accountId] = azureAcc.name
+            return
+          }
+
+          const openaiResponsesAcc = await redis.getOpenaiResponsesAccount(accountId)
+          if (openaiResponsesAcc && openaiResponsesAcc.name) {
+            accountNameMap[accountId] = openaiResponsesAcc.name
+            return
+          }
+
+          const droidAcc = await redis.getDroidAccount(accountId)
+          if (droidAcc && droidAcc.name) {
+            accountNameMap[accountId] = droidAcc.name
+            return
+          }
+
+          const ccrAcc = await redis.getCcrAccount(accountId)
+          if (ccrAcc && ccrAcc.name) {
+            accountNameMap[accountId] = ccrAcc.name
+            return
+          }
+
+          const openaiAcc = await redis.getOpenaiAccount(accountId)
+          if (openaiAcc && openaiAcc.name) {
+            accountNameMap[accountId] = openaiAcc.name
+            return
+          }
+
+          // 降级显示ID
+          accountNameMap[accountId] = accountId
+        } catch (error) {
+          accountNameMap[accountId] = accountId
+        }
+      })
+    )
+
+    // 为记录添加账户名称
+    const enrichedRecords = paginatedRecords.map((record) => ({
+      ...record,
+      accountName: record.accountId ? accountNameMap[record.accountId] || record.accountId : '-'
+    }))
+
+    return res.json({
+      success: true,
+      data: {
+        records: enrichedRecords,
+        total: allRecords.length,
+        limit: limitNum,
+        offset: offsetNum
+      }
+    })
+  } catch (error) {
+    logger.error('❌ Failed to get usage records:', error)
+    return res.status(500).json({
+      error: 'Failed to get usage records',
+      message: error.message
+    })
+  }
+})
+
 // 🔧 Session Pool 管理
 router.post('/session-pool/switch', authenticateAdmin, async (req, res) => {
   try {
