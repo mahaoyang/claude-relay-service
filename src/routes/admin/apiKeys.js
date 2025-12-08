@@ -1125,6 +1125,50 @@ async function calculateKeyStats(keyId, timeRange, startDate, endDate) {
     }
   }
 
+  // 获取实时限制数据
+  let dailyCost = 0
+  let currentWindowCost = 0
+  let windowRemainingSeconds = null
+  let windowStartTime = null
+  let windowEndTime = null
+
+  try {
+    // 获取当日费用
+    dailyCost = await redis.getDailyCost(keyId)
+
+    // 获取 API Key 配置信息以判断是否需要窗口数据
+    const apiKey = await redis.getApiKey(keyId)
+    // 显式转换为整数，与 apiStats.js 保持一致，避免字符串比较问题
+    const rateLimitWindow = parseInt(apiKey?.rateLimitWindow) || 0
+
+    if (rateLimitWindow > 0) {
+      const costCountKey = `rate_limit:cost:${keyId}`
+      const windowStartKey = `rate_limit:window_start:${keyId}`
+
+      currentWindowCost = parseFloat((await client.get(costCountKey)) || '0')
+
+      // 获取窗口开始时间和计算剩余时间
+      const windowStart = await client.get(windowStartKey)
+      if (windowStart) {
+        const now = Date.now()
+        windowStartTime = parseInt(windowStart)
+        const windowDuration = rateLimitWindow * 60 * 1000 // 转换为毫秒
+        windowEndTime = windowStartTime + windowDuration
+
+        // 如果窗口还有效
+        if (now < windowEndTime) {
+          windowRemainingSeconds = Math.max(0, Math.floor((windowEndTime - now) / 1000))
+        } else {
+          // 窗口已过期
+          windowRemainingSeconds = 0
+          currentWindowCost = 0
+        }
+      }
+    }
+  } catch (error) {
+    logger.warn(`⚠️ 获取实时限制数据失败 (key: ${keyId}):`, error.message)
+  }
+
   return {
     requests: totalRequests,
     tokens,
