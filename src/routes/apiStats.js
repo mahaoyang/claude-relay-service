@@ -875,12 +875,6 @@ router.post('/api/user-model-stats', async (req, res) => {
       `📊 User model stats query from key: ${keyData.name} (${keyId}) for period: ${period}`
     )
 
-    // 重用管理后台的模型统计逻辑，但只返回该API Key的数据
-    // 确保 pricingService 已初始化
-    if (!pricingService.pricingData) {
-      await pricingService.initialize()
-    }
-
     const client = redis.getClientSafe()
     // 使用与管理页面相同的时区处理逻辑
     const tzDate = redis.getDateInTimezone()
@@ -910,42 +904,14 @@ router.post('/api/user-model-stats', async (req, res) => {
       const data = await client.hgetall(key)
 
       if (data && Object.keys(data).length > 0) {
-        const inputTokens = parseInt(data.inputTokens) || 0
-        const outputTokens = parseInt(data.outputTokens) || 0
-        const cacheCreateTokens = parseInt(data.cacheCreateTokens) || 0
-        const cacheReadTokens = parseInt(data.cacheReadTokens) || 0
-
-        const costData = pricingService.calculateCost({
-          input_tokens: inputTokens,
-          output_tokens: outputTokens,
-          cache_creation_input_tokens: cacheCreateTokens,
-          cache_read_input_tokens: cacheReadTokens
-        }, model)
-
         modelStats.push({
           model,
           requests: parseInt(data.requests) || 0,
-          inputTokens,
-          outputTokens,
-          cacheCreateTokens,
-          cacheReadTokens,
-          allTokens: parseInt(data.allTokens) || 0,
-          costs: {
-            input: costData.inputCost,
-            output: costData.outputCost,
-            cacheCreate: costData.cacheCreateCost,
-            cacheRead: costData.cacheReadCost,
-            total: costData.totalCost
-          },
-          formatted: {
-            input: pricingService.formatCost(costData.inputCost),
-            output: pricingService.formatCost(costData.outputCost),
-            cacheCreate: pricingService.formatCost(costData.cacheCreateCost),
-            cacheRead: pricingService.formatCost(costData.cacheReadCost),
-            total: pricingService.formatCost(costData.totalCost)
-          },
-          pricing: costData.pricing,
-          costMultiplier: costData.costMultiplier
+          inputTokens: parseInt(data.inputTokens) || 0,
+          outputTokens: parseInt(data.outputTokens) || 0,
+          cacheCreateTokens: parseInt(data.cacheCreateTokens) || 0,
+          cacheReadTokens: parseInt(data.cacheReadTokens) || 0,
+          allTokens: parseInt(data.allTokens) || 0
         })
       }
     }
