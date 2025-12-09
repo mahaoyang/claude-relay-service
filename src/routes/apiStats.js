@@ -206,89 +206,17 @@ router.post('/api/user-stats', async (req, res) => {
     // 获取验证结果中的完整keyData（包含isActive状态和cost信息）
     const fullKeyData = keyData
 
-    // 计算总费用 - 使用与模型统计相同的逻辑（按模型分别计算）
+    // 直接从 Redis 读取累计费用（与 /admin-next/api-keys 保持一致）
     let totalCost = 0
     let formattedCost = '$0.000000'
 
     try {
-      // 确保 pricingService 已初始化（Vercel 无服务器环境可能未初始化）
-      if (!pricingService.pricingData) {
-        await pricingService.initialize()
-      }
-
       const client = redis.getClientSafe()
-
-      // 获取所有月度模型统计（与model-stats接口相同的逻辑）
-      const allModelKeys = await client.keys(`usage:${keyId}:model:monthly:*:*`)
-      const modelUsageMap = new Map()
-
-      for (const key of allModelKeys) {
-        const modelMatch = key.match(/usage:.+:model:monthly:(.+):(\d{4}-\d{2})$/)
-        if (!modelMatch) {
-          continue
-        }
-
-        const model = modelMatch[1]
-        const data = await client.hgetall(key)
-
-        if (data && Object.keys(data).length > 0) {
-          if (!modelUsageMap.has(model)) {
-            modelUsageMap.set(model, {
-              inputTokens: 0,
-              outputTokens: 0,
-              cacheCreateTokens: 0,
-              cacheReadTokens: 0
-            })
-          }
-
-          const modelUsage = modelUsageMap.get(model)
-          modelUsage.inputTokens += parseInt(data.inputTokens) || 0
-          modelUsage.outputTokens += parseInt(data.outputTokens) || 0
-          modelUsage.cacheCreateTokens += parseInt(data.cacheCreateTokens) || 0
-          modelUsage.cacheReadTokens += parseInt(data.cacheReadTokens) || 0
-        }
-      }
-
-      // 按模型计算费用并汇总
-      for (const [model, usage] of modelUsageMap) {
-        const costResult = pricingService.calculateCost({
-          input_tokens: usage.inputTokens,
-          output_tokens: usage.outputTokens,
-          cache_creation_input_tokens: usage.cacheCreateTokens,
-          cache_read_input_tokens: usage.cacheReadTokens
-        }, model)
-        totalCost += costResult.totalCost
-      }
-
-      // 如果没有模型级别的详细数据，回退到总体数据计算
-      if (modelUsageMap.size === 0 && fullKeyData.usage?.total?.allTokens > 0) {
-        const usage = fullKeyData.usage.total
-
-        const costResult = pricingService.calculateCost({
-          input_tokens: usage.inputTokens || 0,
-          output_tokens: usage.outputTokens || 0,
-          cache_creation_input_tokens: usage.cacheCreateTokens || 0,
-          cache_read_input_tokens: usage.cacheReadTokens || 0
-        }, 'claude-3-5-sonnet-20241022')
-        totalCost = costResult.totalCost
-      }
-
-      formattedCost = pricingService.formatCost(totalCost)
+      const totalCostKey = `usage:cost:total:${keyId}`
+      totalCost = parseFloat((await client.get(totalCostKey)) || '0')
+      formattedCost = `$${totalCost.toFixed(6)}`
     } catch (error) {
-      logger.warn(`Failed to calculate detailed cost for key ${keyId}:`, error)
-      // 回退到简单计算
-      if (fullKeyData.usage?.total?.allTokens > 0) {
-        const usage = fullKeyData.usage.total
-
-        const costResult = pricingService.calculateCost({
-          input_tokens: usage.inputTokens || 0,
-          output_tokens: usage.outputTokens || 0,
-          cache_creation_input_tokens: usage.cacheCreateTokens || 0,
-          cache_read_input_tokens: usage.cacheReadTokens || 0
-        }, 'claude-3-5-sonnet-20241022')
-        totalCost = costResult.totalCost
-        formattedCost = pricingService.formatCost(totalCost)
-      }
+      logger.warn(`Failed to get total cost for key ${keyId}:`, error)
     }
 
     // 获取当前使用量
