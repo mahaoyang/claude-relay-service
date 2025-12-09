@@ -387,51 +387,6 @@
             </p>
           </div>
 
-          <!-- 已用费用编辑 -->
-          <div
-            class="rounded-lg border border-amber-200 bg-amber-50 p-3 dark:border-amber-700 dark:bg-amber-900/20"
-          >
-            <div class="mb-2 flex items-center gap-2">
-              <div
-                class="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded bg-amber-500"
-              >
-                <i class="fas fa-dollar-sign text-xs text-white" />
-              </div>
-              <h4 class="text-sm font-semibold text-gray-800 dark:text-gray-200">
-                已用费用修改 (谨慎操作)
-              </h4>
-            </div>
-            <div class="space-y-3">
-              <div>
-                <label class="mb-1 block text-xs font-medium text-gray-700 dark:text-gray-300"
-                  >累计已用费用 (美元)</label
-                >
-                <div class="flex gap-2">
-                  <input
-                    v-model="form.usedCost"
-                    class="form-input flex-1 border-gray-300 text-sm dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 dark:placeholder-gray-400"
-                    min="0"
-                    placeholder="输入新的已用费用"
-                    step="0.01"
-                    type="number"
-                    @input="usedCostDirty = true"
-                  />
-                  <button
-                    class="rounded-lg bg-gray-200 px-3 py-2 text-sm text-gray-600 transition-colors hover:bg-gray-300 dark:bg-gray-600 dark:text-gray-300 dark:hover:bg-gray-500"
-                    type="button"
-                    @click="resetUsedCost"
-                  >
-                    重置
-                  </button>
-                </div>
-                <p class="mt-1 text-xs text-amber-600 dark:text-amber-400">
-                  <i class="fas fa-exclamation-triangle mr-1" />
-                  此值用于"总费用限制"检查。修改会影响限额判断，请谨慎操作。
-                </p>
-              </div>
-            </div>
-          </div>
-
           <!-- 过期时间 -->
           <div>
             <label class="mb-3 block text-sm font-semibold text-gray-700 dark:text-gray-300"
@@ -1013,7 +968,6 @@ const form = reactive({
   dailyCostLimit: '',
   totalCostLimit: '',
   weeklyOpusCostLimit: '',
-  usedCost: '', // 已用费用（累计总费用）
   permissions: 'all',
   claudeAccountId: '',
   geminiAccountId: '',
@@ -1029,17 +983,6 @@ const form = reactive({
   isActive: true,
   ownerId: '' // 新增：所有者ID
 })
-
-// 原始已用费用，用于重置
-const originalUsedCost = ref('')
-// 用户是否主动修改过已用费用（用于判断是否提交）
-const usedCostDirty = ref(false)
-
-// 重置已用费用到原始值
-const resetUsedCost = () => {
-  form.usedCost = originalUsedCost.value
-  usedCostDirty.value = false
-}
 
 // 添加限制的模型
 const addRestrictedModel = () => {
@@ -1148,14 +1091,6 @@ const updateApiKey = async () => {
           : 0,
       permissions: form.permissions,
       tags: form.tags
-    }
-
-    // 处理已用费用 - 只有用户主动修改过才提交（通过 dirty 标记判断）
-    if (usedCostDirty.value && form.usedCost !== '') {
-      const usedCostValue = parseFloat(form.usedCost)
-      if (!isNaN(usedCostValue) && usedCostValue >= 0) {
-        data.usedCost = usedCostValue
-      }
     }
 
     // 处理Claude账户绑定（区分OAuth和Console）
@@ -1391,26 +1326,6 @@ const loadUsers = async () => {
   }
 }
 
-// 加载已用费用
-const loadUsedCost = async (keyId) => {
-  try {
-    const response = await apiClient.post('/admin/api-keys/batch-stats', {
-      keyIds: [keyId],
-      timeRange: 'all'
-    })
-    if (response.success && response.data && response.data[keyId]) {
-      const stats = response.data[keyId]
-      const cost = stats.allTimeCost || 0
-      form.usedCost = cost > 0 ? String(cost.toFixed(2)) : '0'
-      originalUsedCost.value = form.usedCost
-    }
-  } catch (error) {
-    // 加载失败时设为 0
-    form.usedCost = '0'
-    originalUsedCost.value = '0'
-  }
-}
-
 // 初始化表单数据
 onMounted(async () => {
   try {
@@ -1524,18 +1439,6 @@ onMounted(async () => {
 
   // 初始化所有者
   form.ownerId = props.apiKey.userId || 'admin'
-
-  // 初始化已用费用（从 props 中获取，如果有的话）
-  // 已用费用存储在 usage:cost:total:{keyId}，需要通过 batch-stats API 获取
-  // 但这里我们先从 props.apiKey.totalCost 或 allTimeCost 获取（如果父组件传递了）
-  const initialUsedCost = props.apiKey.totalCost || props.apiKey.allTimeCost || ''
-  form.usedCost = initialUsedCost !== '' ? String(initialUsedCost) : ''
-  originalUsedCost.value = form.usedCost
-
-  // 如果没有初始值，异步加载
-  if (form.usedCost === '' && props.apiKey.id) {
-    loadUsedCost(props.apiKey.id)
-  }
 
   // 初始化过期时间相关状态
   localExpiresAt.value = props.apiKey.expiresAt || null
