@@ -374,7 +374,7 @@
                 <div class="flex justify-between items-center mb-3"><span class="font-semibold text-sm text-sand-12"
                     x-text="model.model"></span><span class="badge badge-accent" x-text="model.formatted.total"></span>
                 </div>
-                <div class="stats-grid stats-grid-4 text-xs">
+                <div class="stats-grid stats-grid-3 text-xs">
                   <div><span class="text-sand-10">请求</span>
                     <div class="font-semibold text-sand-12" x-text="model.requests"></div>
                   </div>
@@ -383,6 +383,12 @@
                   </div>
                   <div><span class="text-sand-10">输出</span>
                     <div class="font-semibold text-sand-12" x-text="model.outputTokens.toLocaleString()"></div>
+                  </div>
+                  <div><span class="text-sand-10">缓存写入</span>
+                    <div class="font-semibold text-sand-12" x-text="(model.cacheCreateTokens || 0).toLocaleString()"></div>
+                  </div>
+                  <div><span class="text-sand-10">缓存读取</span>
+                    <div class="font-semibold text-sand-12" x-text="(model.cacheReadTokens || 0).toLocaleString()"></div>
                   </div>
                   <div><span class="text-sand-10">总计</span>
                     <div class="font-semibold text-sand-12" x-text="model.allTokens.toLocaleString()"></div>
