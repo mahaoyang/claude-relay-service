@@ -288,9 +288,9 @@
                 stroke-width="2">
                 <path d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
               </svg></div>
-            <div class="stat-label">剩余额度 / 总额度</div>
+            <div class="stat-label">总费用限制</div>
             <div class="stat-value text-lg">
-              <span :class="getRemainingBudgetClass()">$<span x-text="getRemainingBudget().toFixed(2)"></span></span>
+              <span :class="getUsedBudgetClass()">$<span x-text="getUsedBudget().toFixed(2)"></span></span>
               <span class="text-sand-10 text-base"> / $<span x-text="statsData?.limits.totalCostLimit.toFixed(2)"></span></span>
             </div>
           </div>
@@ -482,6 +482,20 @@
           const ratio = remaining / totalLimit;
           if (ratio <= 0.1) return 'text-red-500';
           if (ratio <= 0.3) return 'text-orange-500';
+          return 'text-green-600 dark:text-green-400';
+        },
+        getUsedBudget() {
+          if (!this.statsData) return 0;
+          return this.statsData.usage?.total?.cost || 0;
+        },
+        getUsedBudgetClass() {
+          if (!this.statsData) return 'text-sand-12';
+          const totalLimit = this.statsData.limits?.totalCostLimit || 0;
+          if (totalLimit <= 0) return 'text-sand-12';
+          const used = this.getUsedBudget();
+          const ratio = used / totalLimit;
+          if (ratio >= 0.9) return 'text-red-500';
+          if (ratio >= 0.7) return 'text-orange-500';
           return 'text-green-600 dark:text-green-400';
         },
         async queryStats() {
