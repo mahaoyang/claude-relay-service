@@ -186,6 +186,42 @@
     .dark .badge-green {
       color: #34d399;
     }
+
+    .badge-blue {
+      background: rgba(59, 130, 246, 0.15);
+      color: #2563eb;
+    }
+
+    .dark .badge-blue {
+      color: #60a5fa;
+    }
+
+    .badge-red {
+      background: rgba(239, 68, 68, 0.15);
+      color: #dc2626;
+    }
+
+    .dark .badge-red {
+      color: #f87171;
+    }
+
+    .badge-orange {
+      background: rgba(249, 115, 22, 0.15);
+      color: #ea580c;
+    }
+
+    .dark .badge-orange {
+      color: #fb923c;
+    }
+
+    .badge-yellow {
+      background: rgba(234, 179, 8, 0.15);
+      color: #ca8a04;
+    }
+
+    .dark .badge-yellow {
+      color: #facc15;
+    }
   </style>
 </head>
 
@@ -197,11 +233,20 @@
   <main class="pt-28 pb-16 px-4">
     <div class="max-w-5xl mx-auto">
       <div x-show="statsData" x-cloak class="space-y-6">
-        <div class="flex items-center justify-between">
+        <div class="flex items-center justify-between flex-wrap gap-3">
           <h2 class="text-xl font-bold text-sand-12" x-text="statsData?.name || 'API Key 统计'"></h2>
-          <span class="badge badge-green"><svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 8 8">
-              <circle cx="4" cy="4" r="3" />
-            </svg>活跃</span>
+          <div class="flex items-center gap-3">
+            <!-- 过期时间显示 -->
+            <span class="badge" :class="getExpiryBadgeClass()" x-show="statsData">
+              <svg class="w-3 h-3 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <span x-text="getExpiryText()"></span>
+            </span>
+            <span class="badge badge-green"><svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 8 8">
+                <circle cx="4" cy="4" r="3" />
+              </svg>活跃</span>
+          </div>
         </div>
         <div class="stats-grid stats-grid-4">
           <div class="stat-card stat-card-main">
@@ -359,6 +404,58 @@
           const urlParams = new URLSearchParams(window.location.search);
           const keyId = urlParams.get('id');
           if (keyId) { this.apiKeyId = keyId; this.queryStats(); }
+        },
+        getExpiryText() {
+          if (!this.statsData) return '';
+          const expiresAt = this.statsData.expiresAt;
+          const expirationMode = this.statsData.expirationMode;
+          const isActivated = this.statsData.isActivated;
+          const activationDays = this.statsData.activationDays;
+          const activationUnit = this.statsData.activationUnit;
+
+          // 未激活状态
+          if (expirationMode === 'activation' && !isActivated) {
+            const unit = activationUnit === 'hours' ? '小时' : '天';
+            const days = activationDays || (activationUnit === 'hours' ? 24 : 30);
+            return `未激活 (激活后 ${days} ${unit}过期)`;
+          }
+
+          // 永不过期
+          if (!expiresAt) return '永不过期';
+
+          const expiryDate = new Date(expiresAt);
+          const now = new Date();
+          const diffMs = expiryDate - now;
+          const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+
+          const formatted = expiryDate.toLocaleDateString('zh-CN', { year: 'numeric', month: '2-digit', day: '2-digit' });
+
+          if (diffMs < 0) return `已过期 (${formatted})`;
+          if (diffDays <= 7) return `${diffDays} 天后过期`;
+          if (diffDays <= 30) return `${diffDays} 天后过期`;
+          return `${formatted} 过期`;
+        },
+        getExpiryBadgeClass() {
+          if (!this.statsData) return 'badge-accent';
+          const expiresAt = this.statsData.expiresAt;
+          const expirationMode = this.statsData.expirationMode;
+          const isActivated = this.statsData.isActivated;
+
+          // 未激活状态 - 蓝色
+          if (expirationMode === 'activation' && !isActivated) return 'badge-blue';
+
+          // 永不过期 - 默认色
+          if (!expiresAt) return 'badge-accent';
+
+          const expiryDate = new Date(expiresAt);
+          const now = new Date();
+          const diffMs = expiryDate - now;
+          const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+
+          if (diffMs < 0) return 'badge-red';
+          if (diffDays <= 7) return 'badge-orange';
+          if (diffDays <= 30) return 'badge-yellow';
+          return 'badge-green';
         },
         async queryStats() {
           const input = this.apiKeyId.trim();
