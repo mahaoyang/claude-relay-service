@@ -8,7 +8,7 @@
 
 const { v4: uuidv4 } = require('uuid')
 const redis = require('../models/redis')
-const config = require('../../config/config')
+const config = require('../../config')
 const logger = require('../utils/logger')
 
 // 清理任务间隔
