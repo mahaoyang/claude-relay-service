@@ -2,7 +2,7 @@ const express = require('express')
 const redis = require('../models/redis')
 const logger = require('../utils/logger')
 const apiKeyService = require('../services/apiKeyService')
-const CostCalculator = require('../utils/costCalculator')
+const pricingService = require('../services/pricingService')
 const claudeAccountService = require('../services/claudeAccountService')
 const openaiAccountService = require('../services/openaiAccountService')
 const { createClaudeTestPayload } = require('../utils/testPayloadHelper')
@@ -246,47 +246,43 @@ router.post('/api/user-stats', async (req, res) => {
 
       // 按模型计算费用并汇总
       for (const [model, usage] of modelUsageMap) {
-        const usageData = {
-          input_tokens: usage.inputTokens,
-          output_tokens: usage.outputTokens,
-          cache_creation_input_tokens: usage.cacheCreateTokens,
-          cache_read_input_tokens: usage.cacheReadTokens
-        }
-
-        const costResult = CostCalculator.calculateCost(usageData, model)
-        totalCost += costResult.costs.total
+        const costResult = pricingService.calculateCost({
+          inputTokens: usage.inputTokens,
+          outputTokens: usage.outputTokens,
+          cacheCreationInputTokens: usage.cacheCreateTokens,
+          cacheReadInputTokens: usage.cacheReadTokens
+        }, model)
+        totalCost += costResult.totalCost
       }
 
       // 如果没有模型级别的详细数据，回退到总体数据计算
       if (modelUsageMap.size === 0 && fullKeyData.usage?.total?.allTokens > 0) {
         const usage = fullKeyData.usage.total
-        const costUsage = {
-          input_tokens: usage.inputTokens || 0,
-          output_tokens: usage.outputTokens || 0,
-          cache_creation_input_tokens: usage.cacheCreateTokens || 0,
-          cache_read_input_tokens: usage.cacheReadTokens || 0
-        }
 
-        const costResult = CostCalculator.calculateCost(costUsage, 'claude-3-5-sonnet-20241022')
-        totalCost = costResult.costs.total
+        const costResult = pricingService.calculateCost({
+          inputTokens: usage.inputTokens || 0,
+          outputTokens: usage.outputTokens || 0,
+          cacheCreationInputTokens: usage.cacheCreateTokens || 0,
+          cacheReadInputTokens: usage.cacheReadTokens || 0
+        }, 'claude-3-5-sonnet-20241022')
+        totalCost = costResult.totalCost
       }
 
-      formattedCost = CostCalculator.formatCost(totalCost)
+      formattedCost = pricingService.formatCost(totalCost)
     } catch (error) {
       logger.warn(`Failed to calculate detailed cost for key ${keyId}:`, error)
       // 回退到简单计算
       if (fullKeyData.usage?.total?.allTokens > 0) {
         const usage = fullKeyData.usage.total
-        const costUsage = {
-          input_tokens: usage.inputTokens || 0,
-          output_tokens: usage.outputTokens || 0,
-          cache_creation_input_tokens: usage.cacheCreateTokens || 0,
-          cache_read_input_tokens: usage.cacheReadTokens || 0
-        }
 
-        const costResult = CostCalculator.calculateCost(costUsage, 'claude-3-5-sonnet-20241022')
-        totalCost = costResult.costs.total
-        formattedCost = costResult.formatted.total
+        const costResult = pricingService.calculateCost({
+          inputTokens: usage.inputTokens || 0,
+          outputTokens: usage.outputTokens || 0,
+          cacheCreationInputTokens: usage.cacheCreateTokens || 0,
+          cacheReadInputTokens: usage.cacheReadTokens || 0
+        }, 'claude-3-5-sonnet-20241022')
+        totalCost = costResult.totalCost
+        formattedCost = pricingService.formatCost(totalCost)
       }
     }
 
@@ -637,20 +633,20 @@ router.post('/api/batch-stats', async (req, res) => {
           usage: stats.usage,
           dailyUsage: {
             ...stats.dailyStats,
-            formattedCost: CostCalculator.formatCost(stats.dailyStats.cost || 0)
+            formattedCost: pricingService.formatCost(stats.dailyStats.cost || 0)
           },
           monthlyUsage: {
             ...stats.monthlyStats,
-            formattedCost: CostCalculator.formatCost(stats.monthlyStats.cost || 0)
+            formattedCost: pricingService.formatCost(stats.monthlyStats.cost || 0)
           }
         })
       }
     })
 
     // 格式化费用显示
-    aggregated.usage.formattedCost = CostCalculator.formatCost(aggregated.usage.cost)
-    aggregated.dailyUsage.formattedCost = CostCalculator.formatCost(aggregated.dailyUsage.cost)
-    aggregated.monthlyUsage.formattedCost = CostCalculator.formatCost(aggregated.monthlyUsage.cost)
+    aggregated.usage.formattedCost = pricingService.formatCost(aggregated.usage.cost)
+    aggregated.dailyUsage.formattedCost = pricingService.formatCost(aggregated.dailyUsage.cost)
+    aggregated.monthlyUsage.formattedCost = pricingService.formatCost(aggregated.monthlyUsage.cost)
 
     logger.api(`📊 Batch stats query for ${apiIds.length} keys from ${req.ip || 'unknown'}`)
 
@@ -749,14 +745,12 @@ router.post('/api/batch-model-stats', async (req, res) => {
     // 转换为数组并计算费用
     const modelStats = []
     for (const [model, usage] of modelUsageMap) {
-      const usageData = {
-        input_tokens: usage.inputTokens,
-        output_tokens: usage.outputTokens,
-        cache_creation_input_tokens: usage.cacheCreateTokens,
-        cache_read_input_tokens: usage.cacheReadTokens
-      }
-
-      const costData = CostCalculator.calculateCost(usageData, model)
+      const costData = pricingService.calculateCost({
+        inputTokens: usage.inputTokens,
+        outputTokens: usage.outputTokens,
+        cacheCreationInputTokens: usage.cacheCreateTokens,
+        cacheReadInputTokens: usage.cacheReadTokens
+      }, model)
 
       modelStats.push({
         model,
@@ -766,9 +760,22 @@ router.post('/api/batch-model-stats', async (req, res) => {
         cacheCreateTokens: usage.cacheCreateTokens,
         cacheReadTokens: usage.cacheReadTokens,
         allTokens: usage.allTokens,
-        costs: costData.costs,
-        formatted: costData.formatted,
-        pricing: costData.pricing
+        costs: {
+          input: costData.inputCost,
+          output: costData.outputCost,
+          cacheCreate: costData.cacheCreateCost,
+          cacheRead: costData.cacheReadCost,
+          total: costData.totalCost
+        },
+        formatted: {
+          input: pricingService.formatCost(costData.inputCost),
+          output: pricingService.formatCost(costData.outputCost),
+          cacheCreate: pricingService.formatCost(costData.cacheCreateCost),
+          cacheRead: pricingService.formatCost(costData.cacheReadCost),
+          total: pricingService.formatCost(costData.totalCost)
+        },
+        pricing: costData.pricing,
+        costMultiplier: costData.costMultiplier
       })
     }
 
@@ -960,26 +967,42 @@ router.post('/api/user-model-stats', async (req, res) => {
       const data = await client.hgetall(key)
 
       if (data && Object.keys(data).length > 0) {
-        const usage = {
-          input_tokens: parseInt(data.inputTokens) || 0,
-          output_tokens: parseInt(data.outputTokens) || 0,
-          cache_creation_input_tokens: parseInt(data.cacheCreateTokens) || 0,
-          cache_read_input_tokens: parseInt(data.cacheReadTokens) || 0
-        }
+        const inputTokens = parseInt(data.inputTokens) || 0
+        const outputTokens = parseInt(data.outputTokens) || 0
+        const cacheCreateTokens = parseInt(data.cacheCreateTokens) || 0
+        const cacheReadTokens = parseInt(data.cacheReadTokens) || 0
 
-        const costData = CostCalculator.calculateCost(usage, model)
+        const costData = pricingService.calculateCost({
+          inputTokens,
+          outputTokens,
+          cacheCreationInputTokens: cacheCreateTokens,
+          cacheReadInputTokens: cacheReadTokens
+        }, model)
 
         modelStats.push({
           model,
           requests: parseInt(data.requests) || 0,
-          inputTokens: usage.input_tokens,
-          outputTokens: usage.output_tokens,
-          cacheCreateTokens: usage.cache_creation_input_tokens,
-          cacheReadTokens: usage.cache_read_input_tokens,
+          inputTokens,
+          outputTokens,
+          cacheCreateTokens,
+          cacheReadTokens,
           allTokens: parseInt(data.allTokens) || 0,
-          costs: costData.costs,
-          formatted: costData.formatted,
-          pricing: costData.pricing
+          costs: {
+            input: costData.inputCost,
+            output: costData.outputCost,
+            cacheCreate: costData.cacheCreateCost,
+            cacheRead: costData.cacheReadCost,
+            total: costData.totalCost
+          },
+          formatted: {
+            input: pricingService.formatCost(costData.inputCost),
+            output: pricingService.formatCost(costData.outputCost),
+            cacheCreate: pricingService.formatCost(costData.cacheCreateCost),
+            cacheRead: pricingService.formatCost(costData.cacheReadCost),
+            total: pricingService.formatCost(costData.totalCost)
+          },
+          pricing: costData.pricing,
+          costMultiplier: costData.costMultiplier
         })
       }
     }
