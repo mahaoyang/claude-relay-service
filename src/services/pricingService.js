@@ -74,6 +74,66 @@ class PricingService {
       }
       // 未来可以添加更多 1M 模型的价格
     }
+
+    // 价格倍率配置（从环境变量加载）
+    this.globalMultiplier = parseFloat(process.env.COST_MULTIPLIER) || 1.0
+    this.modelMultipliers = this._loadModelMultipliers()
+  }
+
+  /**
+   * 从环境变量加载模型特定倍率
+   * 格式: COST_MULTIPLIER_<MODEL_KEY>=<倍率>
+   * MODEL_KEY: 模型名中的 - 和 . 替换为 _，全部大写
+   * 特殊: 模型倍率会与全局倍率相乘
+   * @private
+   */
+  _loadModelMultipliers() {
+    const multipliers = {}
+    const prefix = 'COST_MULTIPLIER_'
+
+    for (const [key, value] of Object.entries(process.env)) {
+      if (key.startsWith(prefix) && key !== 'COST_MULTIPLIER') {
+        // COST_MULTIPLIER_CLAUDE_OPUS_4_5 -> claude-opus-4-5
+        const modelKey = key.slice(prefix.length).toLowerCase().replace(/_/g, '-')
+        multipliers[modelKey] = parseFloat(value) || 1.0
+      }
+    }
+
+    if (Object.keys(multipliers).length > 0) {
+      logger.info(`💰 Loaded ${Object.keys(multipliers).length} model-specific cost multipliers`)
+      for (const [model, mult] of Object.entries(multipliers)) {
+        const effectiveMult = this.globalMultiplier * mult
+        logger.info(`   ${model}: ${mult}x (effective: ${effectiveMult}x)`)
+      }
+    }
+
+    return multipliers
+  }
+
+  /**
+   * 获取模型的费用倍率
+   * 模型特定倍率会与全局倍率相乘
+   * @param {string} modelName - 模型名称
+   * @returns {number} 最终倍率
+   */
+  getCostMultiplier(modelName) {
+    if (!modelName) return this.globalMultiplier
+
+    const normalizedName = modelName.toLowerCase()
+
+    // 精确匹配
+    if (this.modelMultipliers[normalizedName]) {
+      return this.globalMultiplier * this.modelMultipliers[normalizedName]
+    }
+
+    // 前缀匹配（如 claude-opus-4-5 匹配 claude-opus-4-5-20251101）
+    for (const [pattern, multiplier] of Object.entries(this.modelMultipliers)) {
+      if (normalizedName.startsWith(pattern)) {
+        return this.globalMultiplier * multiplier
+      }
+    }
+
+    return this.globalMultiplier
   }
 
   // 初始化价格服务
@@ -598,14 +658,22 @@ class PricingService {
       ephemeral5mCost = cacheCreateCost
     }
 
+    // 计算基础总费用
+    const baseTotalCost = inputCost + outputCost + cacheCreateCost + cacheReadCost
+
+    // 应用费用倍率
+    const multiplier = this.getCostMultiplier(modelName)
+
     return {
-      inputCost,
-      outputCost,
-      cacheCreateCost,
-      cacheReadCost,
-      ephemeral5mCost,
-      ephemeral1hCost,
-      totalCost: inputCost + outputCost + cacheCreateCost + cacheReadCost,
+      inputCost: inputCost * multiplier,
+      outputCost: outputCost * multiplier,
+      cacheCreateCost: cacheCreateCost * multiplier,
+      cacheReadCost: cacheReadCost * multiplier,
+      ephemeral5mCost: ephemeral5mCost * multiplier,
+      ephemeral1hCost: ephemeral1hCost * multiplier,
+      totalCost: baseTotalCost * multiplier,
+      baseTotalCost, // 原始费用（未乘倍率）
+      costMultiplier: multiplier,
       hasPricing: true,
       isLongContextRequest,
       pricing: {
