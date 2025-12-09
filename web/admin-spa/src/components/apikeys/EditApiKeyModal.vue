@@ -387,6 +387,39 @@
             </p>
           </div>
 
+          <!-- 过期时间 -->
+          <div>
+            <label class="mb-3 block text-sm font-semibold text-gray-700 dark:text-gray-300"
+              >过期时间</label
+            >
+            <div
+              class="flex items-center justify-between rounded-lg border border-gray-200 bg-gray-50 p-3 dark:border-gray-600 dark:bg-gray-700"
+            >
+              <div class="flex items-center gap-2">
+                <i :class="['fas', expiryDisplay.icon, expiryDisplay.iconClass]" />
+                <span class="text-sm text-gray-700 dark:text-gray-300">
+                  {{ expiryDisplay.text }}
+                </span>
+                <span
+                  v-if="expiryDisplay.status"
+                  class="text-xs"
+                  :class="expiryDisplay.statusClass"
+                >
+                  ({{ expiryDisplay.status }})
+                </span>
+              </div>
+              <button
+                class="rounded-lg bg-amber-500 px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-amber-600"
+                type="button"
+                @click="showExpiryModal = true"
+              >
+                <i class="fas fa-clock mr-1" />
+                修改
+              </button>
+            </div>
+            <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">设置此 API Key 的有效期限</p>
+          </div>
+
           <!-- 激活账号 -->
           <div>
             <div class="mb-3 flex items-center">
@@ -722,6 +755,15 @@
         </form>
       </div>
     </div>
+
+    <!-- 过期时间编辑弹窗 -->
+    <ExpiryEditModal
+      ref="expiryEditModalRef"
+      :api-key="expiryApiKeyData"
+      :show="showExpiryModal"
+      @close="showExpiryModal = false"
+      @save="handleSaveExpiry"
+    />
   </Teleport>
 </template>
 
@@ -732,6 +774,7 @@ import { useClientsStore } from '@/stores/clients'
 import { useApiKeysStore } from '@/stores/apiKeys'
 import { apiClient } from '@/config/api'
 import AccountSelector from '@/components/common/AccountSelector.vue'
+import ExpiryEditModal from '@/components/apikeys/ExpiryEditModal.vue'
 
 const props = defineProps({
   apiKey: {
@@ -783,6 +826,131 @@ const availableUsers = ref([])
 // 标签相关
 const newTag = ref('')
 const availableTags = ref([])
+
+// 过期时间相关
+const showExpiryModal = ref(false)
+const expiryEditModalRef = ref(null)
+const localExpiresAt = ref(null)
+const localExpirationMode = ref(null)
+const localIsActivated = ref(null)
+const localActivationDays = ref(null)
+const localActivationUnit = ref(null)
+
+// 过期时间数据（传给ExpiryEditModal）
+const expiryApiKeyData = computed(() => ({
+  id: props.apiKey.id,
+  name: props.apiKey.name,
+  expiresAt: localExpiresAt.value,
+  expirationMode: localExpirationMode.value,
+  isActivated: localIsActivated.value,
+  activationDays: localActivationDays.value,
+  activationUnit: localActivationUnit.value
+}))
+
+// 过期时间显示
+const expiryDisplay = computed(() => {
+  // 未激活状态
+  if (localExpirationMode.value === 'activation' && !localIsActivated.value) {
+    return {
+      icon: 'fa-pause-circle',
+      iconClass: 'text-blue-500',
+      text: '未激活',
+      status: `激活后 ${localActivationDays.value || (localActivationUnit.value === 'hours' ? 24 : 30)} ${localActivationUnit.value === 'hours' ? '小时' : '天'}过期`,
+      statusClass: 'text-blue-600 dark:text-blue-400'
+    }
+  }
+
+  // 已设置过期时间
+  if (localExpiresAt.value) {
+    const expiryDate = new Date(localExpiresAt.value)
+    const now = new Date()
+    const diffMs = expiryDate - now
+    const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24))
+
+    const formattedDate = expiryDate.toLocaleString('zh-CN', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit'
+    })
+
+    if (diffMs < 0) {
+      return {
+        icon: 'fa-exclamation-circle',
+        iconClass: 'text-red-500',
+        text: formattedDate,
+        status: '已过期',
+        statusClass: 'text-red-600'
+      }
+    } else if (diffDays <= 7) {
+      return {
+        icon: 'fa-hourglass-half',
+        iconClass: 'text-orange-500',
+        text: formattedDate,
+        status: `${diffDays} 天后过期`,
+        statusClass: 'text-orange-600'
+      }
+    } else if (diffDays <= 30) {
+      return {
+        icon: 'fa-hourglass-half',
+        iconClass: 'text-yellow-500',
+        text: formattedDate,
+        status: `${diffDays} 天后过期`,
+        statusClass: 'text-yellow-600'
+      }
+    } else {
+      return {
+        icon: 'fa-calendar-check',
+        iconClass: 'text-green-500',
+        text: formattedDate,
+        status: `${Math.ceil(diffDays / 30)} 个月后过期`,
+        statusClass: 'text-green-600'
+      }
+    }
+  }
+
+  // 永不过期
+  return {
+    icon: 'fa-infinity',
+    iconClass: 'text-gray-500',
+    text: '永不过期',
+    status: null,
+    statusClass: ''
+  }
+})
+
+// 处理过期时间保存
+const handleSaveExpiry = async ({ keyId, expiresAt, activateNow }) => {
+  try {
+    const data = await apiClient.patch(`/admin/api-keys/${keyId}/expiration`, {
+      expiresAt,
+      activateNow
+    })
+
+    if (data.success) {
+      showToast('过期时间已更新', 'success')
+      // 更新本地状态
+      if (activateNow) {
+        localIsActivated.value = true
+        localExpiresAt.value = data.data?.expiresAt || expiresAt
+      } else {
+        localExpiresAt.value = expiresAt
+      }
+      showExpiryModal.value = false
+    } else {
+      showToast(data.message || '更新失败', 'error')
+      if (expiryEditModalRef.value) {
+        expiryEditModalRef.value.resetSaving()
+      }
+    }
+  } catch (error) {
+    showToast('更新失败', 'error')
+    if (expiryEditModalRef.value) {
+      expiryEditModalRef.value.resetSaving()
+    }
+  }
+}
 
 // 计算未选择的标签
 const unselectedTags = computed(() => {
@@ -1271,6 +1439,13 @@ onMounted(async () => {
 
   // 初始化所有者
   form.ownerId = props.apiKey.userId || 'admin'
+
+  // 初始化过期时间相关状态
+  localExpiresAt.value = props.apiKey.expiresAt || null
+  localExpirationMode.value = props.apiKey.expirationMode || null
+  localIsActivated.value = props.apiKey.isActivated || false
+  localActivationDays.value = props.apiKey.activationDays || null
+  localActivationUnit.value = props.apiKey.activationUnit || null
 })
 </script>
 
