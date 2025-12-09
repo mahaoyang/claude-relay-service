@@ -4,6 +4,7 @@ const redis = require('../../models/redis')
 const { authenticateAdmin } = require('../../middleware/auth')
 const logger = require('../../utils/logger')
 const CostCalculator = require('../../utils/costCalculator')
+const pricingService = require('../../services/pricingService')
 const config = require('../../../config')
 
 const router = express.Router()
@@ -1078,16 +1079,15 @@ async function calculateKeyStats(keyId, timeRange, startDate, endDate) {
     cacheCreateTokens += stats.cacheCreateTokens
     cacheReadTokens += stats.cacheReadTokens
 
-    const costResult = CostCalculator.calculateCost(
-      {
-        input_tokens: stats.inputTokens,
-        output_tokens: stats.outputTokens,
-        cache_creation_input_tokens: stats.cacheCreateTokens,
-        cache_read_input_tokens: stats.cacheReadTokens
-      },
-      model
-    )
-    totalCost += costResult.costs.total
+    // 使用 pricingService 计算费用，保持与请求处理时的计算一致
+    const usageObject = {
+      input_tokens: stats.inputTokens,
+      output_tokens: stats.outputTokens,
+      cache_creation_input_tokens: stats.cacheCreateTokens,
+      cache_read_input_tokens: stats.cacheReadTokens
+    }
+    const costResult = pricingService.calculateCost(usageObject, model)
+    totalCost += costResult.totalCost || 0
   }
 
   const tokens = inputTokens + outputTokens + cacheCreateTokens + cacheReadTokens
