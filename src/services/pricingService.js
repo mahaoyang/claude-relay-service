@@ -139,14 +139,27 @@ class PricingService {
   // 初始化价格服务
   async initialize() {
     try {
-      // 确保data目录存在
-      if (!fs.existsSync(this.dataDir)) {
-        fs.mkdirSync(this.dataDir, { recursive: true })
-        logger.info('📁 Created data directory')
+      // 尝试确保data目录存在（只读文件系统会失败，但不影响功能）
+      try {
+        if (!fs.existsSync(this.dataDir)) {
+          fs.mkdirSync(this.dataDir, { recursive: true })
+          logger.info('📁 Created data directory')
+        }
+        this.isReadOnlyFS = false
+      } catch (mkdirError) {
+        logger.warn(`⚠️  Cannot create data directory (read-only filesystem): ${mkdirError.message}`)
+        this.isReadOnlyFS = true
       }
 
       // 检查是否需要下载或更新价格数据
       await this.checkAndUpdatePricing()
+
+      // 如果是只读文件系统，跳过定时更新和文件监听
+      if (this.isReadOnlyFS) {
+        logger.info('📋 Read-only filesystem detected, skipping file watchers and timers')
+        logger.success('💰 Pricing service initialized successfully (memory-only mode)')
+        return
+      }
 
       // 初次启动时执行一次哈希校验，确保与远端保持一致
       await this.syncWithRemoteHash()
@@ -174,6 +187,12 @@ class PricingService {
   // 检查并更新价格数据
   async checkAndUpdatePricing() {
     try {
+      // 如果是只读文件系统，直接尝试从 fallback 或远程加载到内存
+      if (this.isReadOnlyFS) {
+        await this.useFallbackPricing()
+        return
+      }
+
       const needsUpdate = this.needsUpdate()
 
       if (needsUpdate) {
@@ -408,24 +427,27 @@ class PricingService {
   async useFallbackPricing() {
     try {
       if (fs.existsSync(this.fallbackFile)) {
-        logger.info('📋 Copying fallback pricing data to data directory...')
+        logger.info('📋 Loading fallback pricing data...')
 
         // 读取fallback文件
         const fallbackData = fs.readFileSync(this.fallbackFile, 'utf8')
         const jsonData = JSON.parse(fallbackData)
 
-        const formattedJson = JSON.stringify(jsonData, null, 2)
-
-        // 保存到data目录
-        fs.writeFileSync(this.pricingFile, formattedJson)
-        this.persistLocalHash(formattedJson)
-
-        // 更新内存中的数据
+        // 更新内存中的数据（即使无法写入文件也要保证内存数据可用）
         this.pricingData = jsonData
         this.lastUpdated = new Date()
 
-        // 设置或重新设置文件监听器
-        this.setupFileWatcher()
+        // 尝试保存到data目录（Vercel等只读环境会失败，但不影响功能）
+        try {
+          const formattedJson = JSON.stringify(jsonData, null, 2)
+          fs.writeFileSync(this.pricingFile, formattedJson)
+          this.persistLocalHash(formattedJson)
+          // 设置或重新设置文件监听器
+          this.setupFileWatcher()
+        } catch (writeError) {
+          logger.warn(`⚠️  Cannot write pricing file (read-only filesystem): ${writeError.message}`)
+          logger.info('📋 Using in-memory pricing data only')
+        }
 
         logger.warn(`⚠️  Using fallback pricing data for ${Object.keys(jsonData).length} models`)
         logger.info(
@@ -436,12 +458,64 @@ class PricingService {
         logger.error(
           '❌ Please ensure the resources/model-pricing directory exists with the pricing file'
         )
-        this.pricingData = {}
+        // 尝试从远程下载到内存
+        await this._loadFromRemoteToMemory()
       }
     } catch (error) {
       logger.error('❌ Failed to use fallback pricing data:', error)
+      // 最后尝试从远程下载到内存
+      await this._loadFromRemoteToMemory()
+    }
+  }
+
+  // 从远程直接加载到内存（不写文件，用于只读文件系统如 Vercel）
+  async _loadFromRemoteToMemory() {
+    try {
+      logger.info('📡 Attempting to load pricing data from remote to memory...')
+      const data = await this._fetchRemoteData()
+      if (data && Object.keys(data).length > 0) {
+        this.pricingData = data
+        this.lastUpdated = new Date()
+        logger.info(`💰 Loaded pricing data for ${Object.keys(data).length} models from remote (memory-only)`)
+      } else {
+        logger.error('❌ Failed to load pricing data from remote')
+        this.pricingData = {}
+      }
+    } catch (error) {
+      logger.error('❌ Failed to load pricing from remote:', error.message)
       this.pricingData = {}
     }
+  }
+
+  // 从远程获取数据（返回 JSON 对象）
+  _fetchRemoteData() {
+    return new Promise((resolve, reject) => {
+      const request = https.get(this.pricingUrl, (response) => {
+        if (response.statusCode !== 200) {
+          reject(new Error(`HTTP ${response.statusCode}`))
+          return
+        }
+
+        let data = ''
+        response.on('data', (chunk) => {
+          data += chunk
+        })
+        response.on('end', () => {
+          try {
+            const jsonData = JSON.parse(data)
+            resolve(jsonData)
+          } catch (e) {
+            reject(new Error('Invalid JSON'))
+          }
+        })
+      })
+
+      request.on('error', reject)
+      request.setTimeout(30000, () => {
+        request.destroy()
+        reject(new Error('Request timeout'))
+      })
+    })
   }
 
   // 获取模型价格信息
