@@ -211,6 +211,11 @@ router.post('/api/user-stats', async (req, res) => {
     let formattedCost = '$0.000000'
 
     try {
+      // 确保 pricingService 已初始化（Vercel 无服务器环境可能未初始化）
+      if (!pricingService.pricingData) {
+        await pricingService.initialize()
+      }
+
       const client = redis.getClientSafe()
 
       // 获取所有月度模型统计（与model-stats接口相同的逻辑）
@@ -742,6 +747,11 @@ router.post('/api/batch-model-stats', async (req, res) => {
       })
     )
 
+    // 确保 pricingService 已初始化
+    if (!pricingService.pricingData) {
+      await pricingService.initialize()
+    }
+
     // 转换为数组并计算费用
     const modelStats = []
     for (const [model, usage] of modelUsageMap) {
@@ -938,6 +948,11 @@ router.post('/api/user-model-stats', async (req, res) => {
     )
 
     // 重用管理后台的模型统计逻辑，但只返回该API Key的数据
+    // 确保 pricingService 已初始化
+    if (!pricingService.pricingData) {
+      await pricingService.initialize()
+    }
+
     const client = redis.getClientSafe()
     // 使用与管理页面相同的时区处理逻辑
     const tzDate = redis.getDateInTimezone()
