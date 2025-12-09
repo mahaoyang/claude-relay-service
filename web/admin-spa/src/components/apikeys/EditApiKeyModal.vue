@@ -419,10 +419,7 @@
                   <button
                     class="rounded-lg bg-gray-200 px-3 py-2 text-sm text-gray-600 transition-colors hover:bg-gray-300 dark:bg-gray-600 dark:text-gray-300 dark:hover:bg-gray-500"
                     type="button"
-                    @click="
-                      form.usedCost = originalUsedCost
-                      usedCostDirty = false
-                    "
+                    @click="form.usedCost = originalUsedCost; usedCostDirty = false"
                   >
                     重置
                   </button>
