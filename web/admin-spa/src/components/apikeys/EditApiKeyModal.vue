@@ -419,7 +419,7 @@
                   <button
                     class="rounded-lg bg-gray-200 px-3 py-2 text-sm text-gray-600 transition-colors hover:bg-gray-300 dark:bg-gray-600 dark:text-gray-300 dark:hover:bg-gray-500"
                     type="button"
-                    @click="form.usedCost = originalUsedCost; usedCostDirty = false"
+                    @click="resetUsedCost"
                   >
                     重置
                   </button>
@@ -1034,6 +1034,12 @@ const form = reactive({
 const originalUsedCost = ref('')
 // 用户是否主动修改过已用费用（用于判断是否提交）
 const usedCostDirty = ref(false)
+
+// 重置已用费用到原始值
+const resetUsedCost = () => {
+  form.usedCost = originalUsedCost.value
+  usedCostDirty.value = false
+}
 
 // 添加限制的模型
 const addRestrictedModel = () => {
