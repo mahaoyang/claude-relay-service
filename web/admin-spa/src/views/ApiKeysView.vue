@@ -2114,6 +2114,14 @@
       @close="showUsageDetailModal = false"
       @open-timeline="openTimeline"
     />
+
+    <EditUsedCostModal
+      :api-key-id="editUsedCostKeyId"
+      :api-key-name="editUsedCostKeyName"
+      :show="showEditUsedCostModal"
+      @close="showEditUsedCostModal = false"
+      @saved="handleUsedCostSaved"
+    />
   </div>
 </template>
 
@@ -2133,6 +2141,7 @@ import BatchApiKeyModal from '@/components/apikeys/BatchApiKeyModal.vue'
 import BatchEditApiKeyModal from '@/components/apikeys/BatchEditApiKeyModal.vue'
 import ExpiryEditModal from '@/components/apikeys/ExpiryEditModal.vue'
 import UsageDetailModal from '@/components/apikeys/UsageDetailModal.vue'
+import EditUsedCostModal from '@/components/apikeys/EditUsedCostModal.vue'
 import LimitProgressBar from '@/components/apikeys/LimitProgressBar.vue'
 import CustomDropdown from '@/components/common/CustomDropdown.vue'
 import ActionDropdown from '@/components/common/ActionDropdown.vue'
@@ -2238,6 +2247,25 @@ const editingExpiryKey = ref(null)
 const expiryEditModalRef = ref(null)
 const showUsageDetailModal = ref(false)
 const selectedApiKeyForDetail = ref(null)
+
+// 编辑已用费用弹窗状态
+const showEditUsedCostModal = ref(false)
+const editUsedCostKeyId = ref('')
+const editUsedCostKeyName = ref('')
+
+// 打开编辑已用费用弹窗
+const openEditUsedCostModal = (apiKey) => {
+  editUsedCostKeyId.value = apiKey.id
+  editUsedCostKeyName.value = apiKey.name
+  showEditUsedCostModal.value = true
+}
+
+// 已用费用保存后的处理
+const handleUsedCostSaved = () => {
+  // 刷新数据
+  loadApiKeys()
+  loadPageStats()
+}
 
 // 标签相关
 const selectedTagFilter = ref('')
@@ -3806,6 +3834,13 @@ const getApiKeyActions = (key) => {
       icon: 'fa-edit',
       color: 'blue',
       handler: () => openEditApiKeyModal(key)
+    },
+    {
+      key: 'editCost',
+      label: '修改费用',
+      icon: 'fa-dollar-sign',
+      color: 'amber',
+      handler: () => openEditUsedCostModal(key)
     }
   ]
 
