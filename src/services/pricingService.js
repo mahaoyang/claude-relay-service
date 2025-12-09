@@ -189,9 +189,13 @@ class PricingService {
   // 检查并更新价格数据
   async checkAndUpdatePricing() {
     try {
-      // 如果是只读文件系统，直接尝试从 fallback 或远程加载到内存
+      // 如果是只读文件系统，优先从远程加载最新数据到内存
       if (this.isReadOnlyFS) {
-        await this.useFallbackPricing()
+        await this._loadFromRemoteToMemory()
+        // 如果远程加载失败，回退到 fallback 文件
+        if (!this.pricingData || Object.keys(this.pricingData).length === 0) {
+          await this.useFallbackPricing()
+        }
         return
       }
 
