@@ -1972,6 +1972,19 @@ router.put('/api-keys/:keyId', authenticateAdmin, async (req, res) => {
       updates.isActive = isActive
     }
 
+    // 处理已用费用（直接更新 Redis，不存储在 apiKey 对象中）
+    if (req.body.usedCost !== undefined) {
+      const usedCostValue = Number(req.body.usedCost)
+      if (!isNaN(usedCostValue) && usedCostValue >= 0) {
+        const client = redis.getClientSafe()
+        const totalCostKey = `usage:cost:total:${keyId}`
+        await client.set(totalCostKey, usedCostValue.toString())
+        logger.info(`💰 Admin updated used cost for API key ${keyId}: $${usedCostValue}`)
+      } else if (usedCostValue < 0) {
+        return res.status(400).json({ error: 'Used cost must be a non-negative number' })
+      }
+    }
+
     // 处理所有者变更
     if (ownerId !== undefined) {
       const userService = require('../../services/userService')
