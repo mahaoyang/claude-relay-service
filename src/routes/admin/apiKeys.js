@@ -1092,6 +1092,23 @@ async function calculateKeyStats(keyId, timeRange, startDate, endDate) {
 
   const tokens = inputTokens + outputTokens + cacheCreateTokens + cacheReadTokens
 
+  // 确保 allTimeCost 数据一致性
+  // 1. 当 timeRange 是 'all' 时，使用 allTimeCost 和 totalCost 的较大值
+  // 2. 当 timeRange 不是 'all' 时，allTimeCost 也不应该小于当前范围的费用
+  //    因为历史总费用 >= 任何时间段的费用
+  // 这解决了 usage:cost:total 键可能未正确累加或数据不一致的问题
+  let effectiveAllTimeCost = allTimeCost
+  if (!timeRange || timeRange === 'all') {
+    // 全部时间范围：使用较大值
+    effectiveAllTimeCost = Math.max(allTimeCost, totalCost)
+  } else {
+    // 其他时间范围：allTimeCost 至少应该等于当前范围费用
+    // 如果 allTimeCost < totalCost，说明 allTimeCost 数据不完整
+    if (allTimeCost < totalCost) {
+      effectiveAllTimeCost = totalCost
+    }
+  }
+
   return {
     requests: totalRequests,
     tokens,
@@ -1107,7 +1124,7 @@ async function calculateKeyStats(keyId, timeRange, startDate, endDate) {
     windowRemainingSeconds,
     windowStartTime,
     windowEndTime,
-    allTimeCost // 历史总费用（用于总费用限制）
+    allTimeCost: effectiveAllTimeCost // 历史总费用（用于总费用限制）
   }
 }
 
