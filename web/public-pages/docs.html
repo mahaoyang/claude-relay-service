@@ -313,15 +313,15 @@ npm install -g @anthropic-ai/claude-code</code>
             <h3 class="text-lg font-semibold text-sand-12 mb-3">方法二：PowerShell 永久设置（用户级）</h3>
             <p class="text-sm text-sand-11 mb-3">在 PowerShell 中运行以下命令设置用户级环境变量：</p>
             <div class="code-block mb-3">
-              <code># 设置用户级环境变量（永久生效）
-<span x-text="`[System.Environment]::SetEnvironmentVariable('ANTHROPIC_BASE_URL', '${baseUrl}/api', [System.EnvironmentVariableTarget]::User)`"></span>
-[System.Environment]::SetEnvironmentVariable('ANTHROPIC_AUTH_TOKEN', '你的API密钥', [System.EnvironmentVariableTarget]::User)</code>
+              <code># 设置用户级环境变量（永久生效）</code><br>
+              <code x-text="`[System.Environment]::SetEnvironmentVariable('ANTHROPIC_BASE_URL', '${baseUrl}/api', [System.EnvironmentVariableTarget]::User)`"></code><br>
+              <code>[System.Environment]::SetEnvironmentVariable('ANTHROPIC_AUTH_TOKEN', '你的API密钥', [System.EnvironmentVariableTarget]::User)</code>
             </div>
             <p class="text-xs text-sand-11 mb-3">查看已设置的环境变量：</p>
             <div class="code-block mb-3">
-              <code># 查看用户级环境变量
-[System.Environment]::GetEnvironmentVariable('ANTHROPIC_BASE_URL', [System.EnvironmentVariableTarget]::User)
-[System.Environment]::GetEnvironmentVariable('ANTHROPIC_AUTH_TOKEN', [System.EnvironmentVariableTarget]::User)</code>
+              <code># 查看用户级环境变量</code><br>
+              <code>[System.Environment]::GetEnvironmentVariable('ANTHROPIC_BASE_URL', [System.EnvironmentVariableTarget]::User)</code><br>
+              <code>[System.Environment]::GetEnvironmentVariable('ANTHROPIC_AUTH_TOKEN', [System.EnvironmentVariableTarget]::User)</code>
             </div>
             <p class="text-xs text-sand-11">💡 设置后需要重新打开 PowerShell 窗口才能生效。</p>
           </div>
@@ -345,13 +345,13 @@ npm install -g @anthropic-ai/claude-code</code>
             </h4>
             <p class="text-sm text-sand-11 mb-3">设置完环境变量后，可以通过以下命令验证是否设置成功：</p>
             <div class="code-block mb-3">
-              <code># PowerShell 验证
-echo $env:ANTHROPIC_BASE_URL
-echo $env:ANTHROPIC_AUTH_TOKEN
-
-# CMD 验证
-echo %ANTHROPIC_BASE_URL%
-echo %ANTHROPIC_AUTH_TOKEN%</code>
+              <code># PowerShell 验证</code><br>
+              <code>echo $env:ANTHROPIC_BASE_URL</code><br>
+              <code>echo $env:ANTHROPIC_AUTH_TOKEN</code><br>
+              <br>
+              <code># CMD 验证</code><br>
+              <code>echo %ANTHROPIC_BASE_URL%</code><br>
+              <code>echo %ANTHROPIC_AUTH_TOKEN%</code>
             </div>
             <p class="text-xs text-sand-11">💡 如果输出为空或显示变量名本身，说明环境变量设置失败，请重新设置。</p>
           </div>
@@ -372,11 +372,11 @@ echo %ANTHROPIC_AUTH_TOKEN%</code>
 
           <h3 class="text-lg font-semibold text-sand-12 mb-3">在特定项目中使用</h3>
           <div class="code-block">
-            <code># 进入你的项目目录
-cd C:\path\to\your\project
-
-# 启动 Claude Code
-claude</code>
+            <code># 进入你的项目目录</code><br>
+            <code>cd C:\path\to\your\project</code><br>
+            <br>
+            <code># 启动 Claude Code</code><br>
+            <code>claude</code>
           </div>
         </div>
 
@@ -458,11 +458,11 @@ claude</code>
           <div class="mb-4">
             <p class="text-sm text-sand-11 mb-2 font-medium">方法一：使用 Homebrew（推荐）</p>
             <div class="code-block mb-3">
-              <code># 如果还没安装 Homebrew，先安装它
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-
-# 使用 Homebrew 安装 Node.js
-brew install node</code>
+              <code># 如果还没安装 Homebrew，先安装它</code><br>
+              <code>/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"</code><br>
+              <br>
+              <code># 使用 Homebrew 安装 Node.js</code><br>
+              <code>brew install node</code>
             </div>
           </div>
 
@@ -482,8 +482,8 @@ brew install node</code>
             </h4>
             <p class="text-sm text-sand-11 mb-3">打开终端，输入以下命令：</p>
             <div class="code-block">
-              <code>node --version
-npm --version</code>
+              <code>node --version</code><br>
+              <code>npm --version</code>
             </div>
           </div>
         </div>
@@ -495,8 +495,8 @@ npm --version</code>
             安装 Claude Code
           </h2>
           <div class="code-block mb-4">
-            <code># 全局安装 Claude Code
-npm install -g @anthropic-ai/claude-code</code>
+            <code># 全局安装 Claude Code</code><br>
+            <code>npm install -g @anthropic-ai/claude-code</code>
           </div>
 
           <div class="info-box border-green-500/40 bg-green-50 dark:bg-green-950/30">
@@ -526,11 +526,11 @@ npm install -g @anthropic-ai/claude-code</code>
             <h3 class="text-lg font-semibold text-sand-12 mb-3">方法二：永久设置</h3>
             <p class="text-sm text-sand-11 mb-3">编辑 shell 配置文件（根据你使用的 shell）：</p>
             <div class="code-block mb-3">
-              <code># 对于 zsh（macOS 默认）
-nano ~/.zshrc
-
-# 对于 bash
-nano ~/.bash_profile</code>
+              <code># 对于 zsh（macOS 默认）</code><br>
+              <code>nano ~/.zshrc</code><br>
+              <br>
+              <code># 对于 bash</code><br>
+              <code>nano ~/.bash_profile</code>
             </div>
             <p class="text-sm text-sand-11 mb-3">在文件末尾添加：</p>
             <div class="code-block mb-3">
@@ -539,19 +539,19 @@ nano ~/.bash_profile</code>
             </div>
             <p class="text-sm text-sand-11 mb-3">保存后重新加载配置：</p>
             <div class="code-block">
-              <code># 对于 zsh
-source ~/.zshrc
-
-# 对于 bash
-source ~/.bash_profile</code>
+              <code># 对于 zsh</code><br>
+              <code>source ~/.zshrc</code><br>
+              <br>
+              <code># 对于 bash</code><br>
+              <code>source ~/.bash_profile</code>
             </div>
           </div>
 
           <div class="info-box border-blue-500/40 bg-blue-50 dark:bg-blue-950/30">
             <h4 class="text-sm font-semibold text-sand-12 mb-2">验证环境变量</h4>
             <div class="code-block">
-              <code>echo $ANTHROPIC_BASE_URL
-echo $ANTHROPIC_AUTH_TOKEN</code>
+              <code>echo $ANTHROPIC_BASE_URL</code><br>
+              <code>echo $ANTHROPIC_AUTH_TOKEN</code>
             </div>
           </div>
         </div>
@@ -624,18 +624,18 @@ echo $ANTHROPIC_AUTH_TOKEN</code>
           <div class="mb-4">
             <p class="text-sm text-sand-11 mb-2 font-medium">Ubuntu/Debian:</p>
             <div class="code-block mb-3">
-              <code># 使用 NodeSource 仓库安装最新版本
-curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
-sudo apt-get install -y nodejs</code>
+              <code># 使用 NodeSource 仓库安装最新版本</code><br>
+              <code>curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -</code><br>
+              <code>sudo apt-get install -y nodejs</code>
             </div>
           </div>
 
           <div class="mb-4">
             <p class="text-sm text-sand-11 mb-2 font-medium">Fedora/RHEL/CentOS:</p>
             <div class="code-block mb-3">
-              <code># 使用 NodeSource 仓库
-curl -fsSL https://rpm.nodesource.com/setup_lts.x | sudo bash -
-sudo dnf install -y nodejs</code>
+              <code># 使用 NodeSource 仓库</code><br>
+              <code>curl -fsSL https://rpm.nodesource.com/setup_lts.x | sudo bash -</code><br>
+              <code>sudo dnf install -y nodejs</code>
             </div>
           </div>
 
@@ -649,8 +649,8 @@ sudo dnf install -y nodejs</code>
           <div class="info-box border-green-500/40 bg-green-50 dark:bg-green-950/30">
             <h4 class="text-sm font-semibold text-sand-12 mb-2">验证安装</h4>
             <div class="code-block">
-              <code>node --version
-npm --version</code>
+              <code>node --version</code><br>
+              <code>npm --version</code>
             </div>
           </div>
         </div>
@@ -662,8 +662,8 @@ npm --version</code>
             安装 Claude Code
           </h2>
           <div class="code-block mb-4">
-            <code># 全局安装 Claude Code
-npm install -g @anthropic-ai/claude-code</code>
+            <code># 全局安装 Claude Code</code><br>
+            <code>npm install -g @anthropic-ai/claude-code</code>
           </div>
 
           <div class="info-box border-green-500/40 bg-green-50 dark:bg-green-950/30">
@@ -709,8 +709,8 @@ npm install -g @anthropic-ai/claude-code</code>
           <div class="info-box border-blue-500/40 bg-blue-50 dark:bg-blue-950/30">
             <h4 class="text-sm font-semibold text-sand-12 mb-2">验证环境变量</h4>
             <div class="code-block">
-              <code>echo $ANTHROPIC_BASE_URL
-echo $ANTHROPIC_AUTH_TOKEN</code>
+              <code>echo $ANTHROPIC_BASE_URL</code><br>
+              <code>echo $ANTHROPIC_AUTH_TOKEN</code>
             </div>
           </div>
         </div>
