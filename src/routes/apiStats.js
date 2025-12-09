@@ -247,10 +247,10 @@ router.post('/api/user-stats', async (req, res) => {
       // 按模型计算费用并汇总
       for (const [model, usage] of modelUsageMap) {
         const costResult = pricingService.calculateCost({
-          inputTokens: usage.inputTokens,
-          outputTokens: usage.outputTokens,
-          cacheCreationInputTokens: usage.cacheCreateTokens,
-          cacheReadInputTokens: usage.cacheReadTokens
+          input_tokens: usage.inputTokens,
+          output_tokens: usage.outputTokens,
+          cache_creation_input_tokens: usage.cacheCreateTokens,
+          cache_read_input_tokens: usage.cacheReadTokens
         }, model)
         totalCost += costResult.totalCost
       }
@@ -260,10 +260,10 @@ router.post('/api/user-stats', async (req, res) => {
         const usage = fullKeyData.usage.total
 
         const costResult = pricingService.calculateCost({
-          inputTokens: usage.inputTokens || 0,
-          outputTokens: usage.outputTokens || 0,
-          cacheCreationInputTokens: usage.cacheCreateTokens || 0,
-          cacheReadInputTokens: usage.cacheReadTokens || 0
+          input_tokens: usage.inputTokens || 0,
+          output_tokens: usage.outputTokens || 0,
+          cache_creation_input_tokens: usage.cacheCreateTokens || 0,
+          cache_read_input_tokens: usage.cacheReadTokens || 0
         }, 'claude-3-5-sonnet-20241022')
         totalCost = costResult.totalCost
       }
@@ -276,10 +276,10 @@ router.post('/api/user-stats', async (req, res) => {
         const usage = fullKeyData.usage.total
 
         const costResult = pricingService.calculateCost({
-          inputTokens: usage.inputTokens || 0,
-          outputTokens: usage.outputTokens || 0,
-          cacheCreationInputTokens: usage.cacheCreateTokens || 0,
-          cacheReadInputTokens: usage.cacheReadTokens || 0
+          input_tokens: usage.inputTokens || 0,
+          output_tokens: usage.outputTokens || 0,
+          cache_creation_input_tokens: usage.cacheCreateTokens || 0,
+          cache_read_input_tokens: usage.cacheReadTokens || 0
         }, 'claude-3-5-sonnet-20241022')
         totalCost = costResult.totalCost
         formattedCost = pricingService.formatCost(totalCost)
@@ -746,10 +746,10 @@ router.post('/api/batch-model-stats', async (req, res) => {
     const modelStats = []
     for (const [model, usage] of modelUsageMap) {
       const costData = pricingService.calculateCost({
-        inputTokens: usage.inputTokens,
-        outputTokens: usage.outputTokens,
-        cacheCreationInputTokens: usage.cacheCreateTokens,
-        cacheReadInputTokens: usage.cacheReadTokens
+        input_tokens: usage.inputTokens,
+        output_tokens: usage.outputTokens,
+        cache_creation_input_tokens: usage.cacheCreateTokens,
+        cache_read_input_tokens: usage.cacheReadTokens
       }, model)
 
       modelStats.push({
@@ -973,10 +973,10 @@ router.post('/api/user-model-stats', async (req, res) => {
         const cacheReadTokens = parseInt(data.cacheReadTokens) || 0
 
         const costData = pricingService.calculateCost({
-          inputTokens,
-          outputTokens,
-          cacheCreationInputTokens: cacheCreateTokens,
-          cacheReadInputTokens: cacheReadTokens
+          input_tokens: inputTokens,
+          output_tokens: outputTokens,
+          cache_creation_input_tokens: cacheCreateTokens,
+          cache_read_input_tokens: cacheReadTokens
         }, model)
 
         modelStats.push({
