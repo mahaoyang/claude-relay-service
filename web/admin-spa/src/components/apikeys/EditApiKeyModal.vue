@@ -414,11 +414,15 @@
                     placeholder="输入新的已用费用"
                     step="0.01"
                     type="number"
+                    @input="usedCostDirty = true"
                   />
                   <button
                     class="rounded-lg bg-gray-200 px-3 py-2 text-sm text-gray-600 transition-colors hover:bg-gray-300 dark:bg-gray-600 dark:text-gray-300 dark:hover:bg-gray-500"
                     type="button"
-                    @click="form.usedCost = originalUsedCost"
+                    @click="
+                      form.usedCost = originalUsedCost
+                      usedCostDirty = false
+                    "
                   >
                     重置
                   </button>
@@ -1031,6 +1035,8 @@ const form = reactive({
 
 // 原始已用费用，用于重置
 const originalUsedCost = ref('')
+// 用户是否主动修改过已用费用（用于判断是否提交）
+const usedCostDirty = ref(false)
 
 // 添加限制的模型
 const addRestrictedModel = () => {
@@ -1141,8 +1147,8 @@ const updateApiKey = async () => {
       tags: form.tags
     }
 
-    // 处理已用费用 - 只有当值发生变化时才提交
-    if (form.usedCost !== '' && form.usedCost !== originalUsedCost.value) {
+    // 处理已用费用 - 只有用户主动修改过才提交（通过 dirty 标记判断）
+    if (usedCostDirty.value && form.usedCost !== '') {
       const usedCostValue = parseFloat(form.usedCost)
       if (!isNaN(usedCostValue) && usedCostValue >= 0) {
         data.usedCost = usedCostValue
