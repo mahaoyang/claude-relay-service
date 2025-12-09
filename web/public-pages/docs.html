@@ -303,7 +303,7 @@ npm install -g @anthropic-ai/claude-code</code>
             <h3 class="text-lg font-semibold text-sand-12 mb-3">方法一：PowerShell 临时设置（当前会话）</h3>
             <p class="text-sm text-sand-11 mb-3">在 PowerShell 中运行以下命令：</p>
             <div class="code-block mb-3">
-              <code x-text="`$env:ANTHROPIC_BASE_URL = '${baseUrl}'`"></code><br>
+              <code x-text="`$env:ANTHROPIC_BASE_URL = '${baseUrl}/api'`"></code><br>
               <code>$env:ANTHROPIC_AUTH_TOKEN = '你的API密钥'</code>
             </div>
             <p class="text-xs text-sand-11">💡 记得将 "你的API密钥" 替换为在 "API Keys" 标签页中创建的实际密钥。</p>
@@ -314,7 +314,7 @@ npm install -g @anthropic-ai/claude-code</code>
             <p class="text-sm text-sand-11 mb-3">在 PowerShell 中运行以下命令设置用户级环境变量：</p>
             <div class="code-block mb-3">
               <code># 设置用户级环境变量（永久生效）
-<span x-text="`[System.Environment]::SetEnvironmentVariable('ANTHROPIC_BASE_URL', '${baseUrl}', [System.EnvironmentVariableTarget]::User)`"></span>
+<span x-text="`[System.Environment]::SetEnvironmentVariable('ANTHROPIC_BASE_URL', '${baseUrl}/api', [System.EnvironmentVariableTarget]::User)`"></span>
 [System.Environment]::SetEnvironmentVariable('ANTHROPIC_AUTH_TOKEN', '你的API密钥', [System.EnvironmentVariableTarget]::User)</code>
             </div>
             <p class="text-xs text-sand-11 mb-3">查看已设置的环境变量：</p>
@@ -517,7 +517,7 @@ npm install -g @anthropic-ai/claude-code</code>
           <div class="mb-6">
             <h3 class="text-lg font-semibold text-sand-12 mb-3">方法一：临时设置（当前终端会话）</h3>
             <div class="code-block mb-3">
-              <code x-text="`export ANTHROPIC_BASE_URL='${baseUrl}'`"></code><br>
+              <code x-text="`export ANTHROPIC_BASE_URL='${baseUrl}/api'`"></code><br>
               <code>export ANTHROPIC_AUTH_TOKEN='你的API密钥'</code>
             </div>
           </div>
@@ -534,7 +534,7 @@ nano ~/.bash_profile</code>
             </div>
             <p class="text-sm text-sand-11 mb-3">在文件末尾添加：</p>
             <div class="code-block mb-3">
-              <code x-text="`export ANTHROPIC_BASE_URL='${baseUrl}'`"></code><br>
+              <code x-text="`export ANTHROPIC_BASE_URL='${baseUrl}/api'`"></code><br>
               <code>export ANTHROPIC_AUTH_TOKEN='你的API密钥'</code>
             </div>
             <p class="text-sm text-sand-11 mb-3">保存后重新加载配置：</p>
@@ -684,7 +684,7 @@ npm install -g @anthropic-ai/claude-code</code>
           <div class="mb-6">
             <h3 class="text-lg font-semibold text-sand-12 mb-3">方法一：临时设置</h3>
             <div class="code-block mb-3">
-              <code x-text="`export ANTHROPIC_BASE_URL='${baseUrl}'`"></code><br>
+              <code x-text="`export ANTHROPIC_BASE_URL='${baseUrl}/api'`"></code><br>
               <code>export ANTHROPIC_AUTH_TOKEN='你的API密钥'</code>
             </div>
           </div>
@@ -697,7 +697,7 @@ npm install -g @anthropic-ai/claude-code</code>
             </div>
             <p class="text-sm text-sand-11 mb-3">在文件末尾添加：</p>
             <div class="code-block mb-3">
-              <code x-text="`export ANTHROPIC_BASE_URL='${baseUrl}'`"></code><br>
+              <code x-text="`export ANTHROPIC_BASE_URL='${baseUrl}/api'`"></code><br>
               <code>export ANTHROPIC_AUTH_TOKEN='你的API密钥'</code>
             </div>
             <p class="text-sm text-sand-11 mb-3">重新加载配置：</p>
