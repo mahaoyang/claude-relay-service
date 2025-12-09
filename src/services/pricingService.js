@@ -7,12 +7,14 @@ const logger = require('../utils/logger')
 
 class PricingService {
   constructor() {
-    this.dataDir = path.join(process.cwd(), 'data')
+    // 使用 __dirname 计算项目根目录，更可靠（Vercel 环境下 process.cwd() 可能不正确）
+    const projectRoot = path.resolve(__dirname, '../..')
+    this.dataDir = path.join(projectRoot, 'data')
     this.pricingFile = path.join(this.dataDir, 'model_pricing.json')
     this.pricingUrl = pricingSource.pricingUrl
     this.hashUrl = pricingSource.hashUrl
     this.fallbackFile = path.join(
-      process.cwd(),
+      projectRoot,
       'resources',
       'model-pricing',
       'model_prices_and_context_window.json'
