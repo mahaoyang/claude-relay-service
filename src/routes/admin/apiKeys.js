@@ -932,19 +932,11 @@ async function calculateKeyStats(keyId, timeRange, startDate, endDate) {
     // 先获取 API Key 配置，判断是否需要查询限制相关数据
     const apiKey = await redis.getApiKey(keyId)
     const rateLimitWindow = parseInt(apiKey?.rateLimitWindow) || 0
-    const dailyCostLimit = parseFloat(apiKey?.dailyCostLimit) || 0
-    const totalCostLimit = parseFloat(apiKey?.totalCostLimit) || 0
 
-    // 只在启用了每日费用限制时查询
-    if (dailyCostLimit > 0) {
-      dailyCost = await redis.getDailyCost(keyId)
-    }
-
-    // 只在启用了总费用限制时查询
-    if (totalCostLimit > 0) {
-      const totalCostKey = `usage:cost:total:${keyId}`
-      allTimeCost = parseFloat((await client.get(totalCostKey)) || '0')
-    }
+    // 无条件获取当日费用和总费用（与 Stats API 保持一致）
+    dailyCost = (await redis.getDailyCost(keyId)) || 0
+    const totalCostKey = `usage:cost:total:${keyId}`
+    allTimeCost = parseFloat((await client.get(totalCostKey)) || '0')
 
     // 只在启用了窗口限制时查询窗口数据
     if (rateLimitWindow > 0) {
