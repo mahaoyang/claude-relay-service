@@ -108,9 +108,9 @@
         <a href="/" class="flex items-center gap-3 hover:opacity-80 transition-opacity group">
           <div
             class="flex h-8 w-8 items-center justify-center rounded-lg bg-accent-3 text-accent-11 group-hover:bg-accent-4 transition-colors overflow-hidden">
-            <img :src="theme === 'dark' ? '/public-pages/assets/logo-dark.png' : '/public-pages/assets/logo-light.png'" alt="JojoCode Logo" class="w-6 h-6">
+            <img :src="theme === 'dark' ? '/public-pages/assets/logo-dark.png' : '/public-pages/assets/logo-light.png'" alt="JoJoCode Logo" class="w-6 h-6">
           </div>
-          <span class="text-base font-bold text-sand-12 tracking-tight">JojoCode</span>
+          <span class="text-base font-bold text-sand-12 tracking-tight">JoJoCode</span>
         </a>
 
         <!-- 导航链接 -->

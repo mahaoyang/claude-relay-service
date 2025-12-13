@@ -683,12 +683,15 @@ router.post('/api/batch-model-stats', async (req, res) => {
     // 转换为数组并计算费用
     const modelStats = []
     for (const [model, usage] of modelUsageMap) {
-      const costData = pricingService.calculateCost({
-        input_tokens: usage.inputTokens,
-        output_tokens: usage.outputTokens,
-        cache_creation_input_tokens: usage.cacheCreateTokens,
-        cache_read_input_tokens: usage.cacheReadTokens
-      }, model)
+      const costData = pricingService.calculateCost(
+        {
+          input_tokens: usage.inputTokens,
+          output_tokens: usage.outputTokens,
+          cache_creation_input_tokens: usage.cacheCreateTokens,
+          cache_read_input_tokens: usage.cacheReadTokens
+        },
+        model
+      )
 
       modelStats.push({
         model,

@@ -32,11 +32,55 @@
     </script>
 
     <!-- SEO Meta 标签 -->
-    <title>使用文档 - JojoCode</title>
+    <title>使用文档 - JoJoCode | Claude Code、Gemini、OpenAI 配置教程</title>
     <meta
       name="description"
-      content="Claude Code、Gemini CLI、Codex、Droid CLI 等 AI 工具的安装和配置教程"
+      content="JoJoCode API 使用文档：Claude Code、Gemini CLI、OpenAI Codex、AWS Bedrock 等 AI 工具的详细安装、配置和使用教程。支持 Windows、macOS、Linux 多平台。"
     />
+    <meta
+      name="keywords"
+      content="Claude Code教程,Gemini CLI配置,OpenAI Codex文档,API配置,环境变量设置,JoJoCode文档,AI工具教程,API使用指南"
+    />
+    <meta name="author" content="JoJoCode" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://www.jojocode.org/docs" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://www.jojocode.org/docs" />
+    <meta property="og:title" content="使用文档 - JoJoCode" />
+    <meta
+      property="og:description"
+      content="Claude Code、Gemini、OpenAI 等 AI 工具的详细配置教程"
+    />
+    <meta property="og:locale" content="zh_CN" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:url" content="https://www.jojocode.org/docs" />
+    <meta name="twitter:title" content="使用文档 - JoJoCode" />
+    <meta
+      name="twitter:description"
+      content="Claude Code、Gemini、OpenAI 等 AI 工具的详细配置教程"
+    />
+
+    <!-- 结构化数据 (JSON-LD) -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "TechArticle",
+        "headline": "JoJoCode AI API 使用文档",
+        "description": "Claude Code、Gemini CLI、OpenAI Codex 等 AI 工具的详细安装和配置教程",
+        "author": {
+          "@type": "Organization",
+          "name": "JoJoCode"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "JoJoCode"
+        }
+      }
+    </script>
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -87,6 +131,10 @@
     </script>
 
     <style>
+      html {
+        scrollbar-gutter: stable;
+      }
+
       body {
         background-color: #f2f0e9;
         color: #1f2f22;
@@ -354,19 +402,21 @@
         <div class="flex items-center justify-between gap-4">
           <!-- Logo -->
           <div class="flex items-center gap-3">
-            <div class="inline-logo-wrapper">
-              <div class="inline-logo-main">
-                <div class="symbols">
-                  <span>&gt;</span>
-                  <span>_</span>
+            <a href="/" aria-label="JoJoCode 首页" class="inline-flex">
+              <div class="inline-logo-wrapper">
+                <div class="inline-logo-main">
+                  <div class="symbols">
+                    <span>&gt;</span>
+                    <span>_</span>
+                  </div>
+                  <div class="letters">
+                    <span>J</span>
+                    <span>O</span>
+                  </div>
                 </div>
-                <div class="letters">
-                  <span>J</span>
-                  <span>O</span>
-                </div>
+                <div class="inline-logo-subtitle">JO</div>
               </div>
-              <div class="inline-logo-subtitle">JO</div>
-            </div>
+            </a>
           </div>
 
           <!-- Nav Links (Desktop) -->
@@ -1164,19 +1214,21 @@
               class="inline-logo-wrapper"
               style="transform: scale(0.8); transform-origin: left center"
             >
-              <div class="inline-logo-main">
-                <div class="symbols">
-                  <span>&gt;</span>
-                  <span>_</span>
+              <a href="/" aria-label="JoJoCode 首页" class="block">
+                <div class="inline-logo-main">
+                  <div class="symbols">
+                    <span>&gt;</span>
+                    <span>_</span>
+                  </div>
+                  <div class="letters">
+                    <span>J</span>
+                    <span>O</span>
+                  </div>
                 </div>
-                <div class="letters">
-                  <span>J</span>
-                  <span>O</span>
-                </div>
-              </div>
-              <div class="inline-logo-subtitle">JO</div>
+                <div class="inline-logo-subtitle">JO</div>
+              </a>
             </div>
-            <span class="text-sm text-gray-500">© 2024 JojoCode. 高性价比 AI API 中转服务.</span>
+            <span class="text-sm text-gray-500">© 2024 JoJoCode. 高性价比 AI API 中转服务.</span>
           </div>
           <div class="flex items-center gap-6 text-sm">
             <a href="/" class="text-gray-500 hover:text-brand-dark transition">首页</a>
