@@ -557,10 +557,9 @@
                 </div>
               </div>
             </div>
-            <div class="mt-5 w-full bg-gray-200 rounded-full h-2 overflow-hidden">
+            <div class="mt-5 w-full bg-brand-dark/10 rounded-full h-2 overflow-hidden">
               <div
-                class="h-full rounded-full transition-all duration-500"
-                :class="(() => { const total = statsData?.limits?.totalCostLimit || 0; const current = statsData?.usage?.total?.cost || 0; if (!total) return 'bg-green-500'; const ratio = current / total * 100; return ratio > 90 ? 'bg-red-500' : ratio > 75 ? 'bg-amber-500' : 'bg-green-500'; })()"
+                class="h-full rounded-full transition-all duration-500 bg-brand-dark"
                 :style="(() => { const total = statsData?.limits?.totalCostLimit || 0; const current = statsData?.usage?.total?.cost || 0; if (!total) return 'width: 0%'; return 'width: ' + Math.min(100, current / total * 100).toFixed(2) + '%'; })()"
               ></div>
             </div>
@@ -577,7 +576,7 @@
               >
                 <div class="text-sm text-gray-500 mb-2">输入 Token</div>
                 <div
-                  class="text-2xl font-semibold tracking-tight text-blue-700"
+                  class="text-2xl font-semibold tracking-tight text-brand-dark tabular-nums"
                   x-text="statsData?.usage.total.inputTokens.toLocaleString()"
                 ></div>
               </div>
@@ -586,7 +585,7 @@
               >
                 <div class="text-sm text-gray-500 mb-2">输出 Token</div>
                 <div
-                  class="text-2xl font-semibold tracking-tight text-green-700"
+                  class="text-2xl font-semibold tracking-tight text-brand-dark tabular-nums"
                   x-text="statsData?.usage.total.outputTokens.toLocaleString()"
                 ></div>
               </div>
@@ -595,7 +594,7 @@
               >
                 <div class="text-sm text-gray-500 mb-2">缓存创建</div>
                 <div
-                  class="text-2xl font-semibold tracking-tight text-purple-700"
+                  class="text-2xl font-semibold tracking-tight text-brand-dark/80 tabular-nums"
                   x-text="statsData?.usage.total.cacheCreationTokens?.toLocaleString() || '0'"
                 ></div>
               </div>
@@ -604,7 +603,7 @@
               >
                 <div class="text-sm text-gray-500 mb-2">缓存读取</div>
                 <div
-                  class="text-2xl font-semibold tracking-tight text-amber-700"
+                  class="text-2xl font-semibold tracking-tight text-brand-dark/80 tabular-nums"
                   x-text="statsData?.usage.total.cacheReadTokens?.toLocaleString() || '0'"
                 ></div>
               </div>
@@ -983,28 +982,14 @@
             return Math.max(0, totalLimit - currentCost)
           },
           getRemainingBudgetClass() {
-            if (!this.statsData) return 'text-brand-dark'
-            const totalLimit = this.statsData.limits?.totalCostLimit || 0
-            if (totalLimit <= 0) return 'text-brand-dark'
-            const remaining = this.getRemainingBudget()
-            const ratio = remaining / totalLimit
-            if (ratio <= 0.1) return 'text-red-500'
-            if (ratio <= 0.3) return 'text-orange-500'
-            return 'text-green-600'
+            return 'text-brand-dark'
           },
           getUsedBudget() {
             if (!this.statsData) return 0
             return this.statsData.usage?.total?.cost || 0
           },
           getUsedBudgetClass() {
-            if (!this.statsData) return 'text-brand-dark'
-            const totalLimit = this.statsData.limits?.totalCostLimit || 0
-            if (totalLimit <= 0) return 'text-brand-dark'
-            const used = this.getUsedBudget()
-            const ratio = used / totalLimit
-            if (ratio >= 0.9) return 'text-red-500'
-            if (ratio >= 0.7) return 'text-orange-500'
-            return 'text-green-600'
+            return 'text-brand-dark'
           },
           async queryStats() {
             const input = this.apiKeyId.trim()
