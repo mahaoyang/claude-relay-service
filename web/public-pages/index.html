@@ -115,6 +115,33 @@
       transform: translateX(4px) translateY(-4px);
       transition: transform 0.2s ease;
     }
+
+    /* Inline Logo Styles */
+    .inline-logo {
+      display: flex;
+      align-items: baseline;
+      font-weight: 700;
+      color: #1F2F22;
+      line-height: 1;
+      gap: 2px;
+    }
+
+    .inline-logo .symbols {
+      font-size: 16px;
+      letter-spacing: -1px;
+      font-weight: 600;
+      display: flex;
+      align-items: baseline;
+      margin-right: 2px;
+    }
+
+    .inline-logo .letters {
+      font-size: 20px;
+      letter-spacing: -2px;
+      display: flex;
+      align-items: baseline;
+      font-weight: 700;
+    }
   </style>
 </head>
 
@@ -127,7 +154,16 @@
     <nav class="flex flex-wrap items-center justify-between mb-16 gap-4">
       <!-- Logo -->
       <div class="flex items-center gap-3">
-        <img src="/public-pages/assets/logo-light.png" alt="JojoCode Logo" class="w-8 h-8">
+        <div class="inline-logo">
+          <div class="symbols">
+            <span>&gt;</span>
+            <span>_</span>
+          </div>
+          <div class="letters">
+            <span>J</span>
+            <span>O</span>
+          </div>
+        </div>
         <span class="text-lg font-bold text-brand-dark">JojoCode</span>
       </div>
 
@@ -386,7 +422,16 @@
     <div class="border-t border-gray-300/50 pt-8 pb-12">
       <div class="flex flex-col md:flex-row justify-between items-center gap-6">
         <div class="flex items-center gap-3">
-          <img src="/public-pages/assets/logo-light.png" alt="JojoCode Logo" class="w-6 h-6">
+          <div class="inline-logo" style="font-size: 0.8em;">
+            <div class="symbols">
+              <span>&gt;</span>
+              <span>_</span>
+            </div>
+            <div class="letters">
+              <span>J</span>
+              <span>O</span>
+            </div>
+          </div>
           <span class="text-sm text-gray-500">© 2024 JojoCode. 高性价比 AI API 中转服务.</span>
         </div>
         <div class="flex items-center gap-6 text-sm">
