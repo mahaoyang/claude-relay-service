@@ -116,31 +116,49 @@
       transition: transform 0.2s ease;
     }
 
-    /* Inline Logo Styles */
-    .inline-logo {
+    /* Inline Logo Styles - Match logo.html proportions */
+    .inline-logo-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      line-height: 1;
+    }
+
+    .inline-logo-main {
       display: flex;
       align-items: baseline;
       font-weight: 700;
       color: #1F2F22;
       line-height: 1;
-      gap: 2px;
+      filter: drop-shadow(1px 2px 2px rgba(0,0,0,0.15));
     }
 
-    .inline-logo .symbols {
-      font-size: 16px;
+    .inline-logo-main .symbols {
+      font-size: 14px;
       letter-spacing: -1px;
       font-weight: 600;
       display: flex;
       align-items: baseline;
-      margin-right: 2px;
+      margin-right: 4px;
     }
 
-    .inline-logo .letters {
-      font-size: 20px;
+    .inline-logo-main .letters {
+      font-size: 36px;
       letter-spacing: -2px;
       display: flex;
       align-items: baseline;
       font-weight: 700;
+    }
+
+    .inline-logo-subtitle {
+      font-size: 9px;
+      font-weight: 500;
+      color: #1F2F22;
+      letter-spacing: 1px;
+      opacity: 0.8;
+      margin-top: 2px;
+      margin-left: 1px;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
     }
   </style>
 </head>
@@ -154,15 +172,18 @@
     <nav class="flex flex-wrap items-center justify-between mb-16 gap-4">
       <!-- Logo -->
       <div class="flex items-center gap-3">
-        <div class="inline-logo">
-          <div class="symbols">
-            <span>&gt;</span>
-            <span>_</span>
+        <div class="inline-logo-wrapper">
+          <div class="inline-logo-main">
+            <div class="symbols">
+              <span>&gt;</span>
+              <span>_</span>
+            </div>
+            <div class="letters">
+              <span>J</span>
+              <span>O</span>
+            </div>
           </div>
-          <div class="letters">
-            <span>J</span>
-            <span>O</span>
-          </div>
+          <div class="inline-logo-subtitle">JO</div>
         </div>
         <span class="text-lg font-bold text-brand-dark">JojoCode</span>
       </div>
@@ -422,15 +443,18 @@
     <div class="border-t border-gray-300/50 pt-8 pb-12">
       <div class="flex flex-col md:flex-row justify-between items-center gap-6">
         <div class="flex items-center gap-3">
-          <div class="inline-logo" style="font-size: 0.8em;">
-            <div class="symbols">
-              <span>&gt;</span>
-              <span>_</span>
+          <div class="inline-logo-wrapper" style="transform: scale(0.7); transform-origin: left center;">
+            <div class="inline-logo-main">
+              <div class="symbols">
+                <span>&gt;</span>
+                <span>_</span>
+              </div>
+              <div class="letters">
+                <span>J</span>
+                <span>O</span>
+              </div>
             </div>
-            <div class="letters">
-              <span>J</span>
-              <span>O</span>
-            </div>
+            <div class="inline-logo-subtitle">JO</div>
           </div>
           <span class="text-sm text-gray-500">© 2024 JojoCode. 高性价比 AI API 中转服务.</span>
         </div>
