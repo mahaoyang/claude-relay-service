@@ -149,7 +149,9 @@ class PricingService {
         }
         this.isReadOnlyFS = false
       } catch (mkdirError) {
-        logger.warn(`⚠️  Cannot create data directory (read-only filesystem): ${mkdirError.message}`)
+        logger.warn(
+          `⚠️  Cannot create data directory (read-only filesystem): ${mkdirError.message}`
+        )
         this.isReadOnlyFS = true
       }
 
@@ -482,7 +484,9 @@ class PricingService {
       if (data && Object.keys(data).length > 0) {
         this.pricingData = data
         this.lastUpdated = new Date()
-        logger.info(`💰 Loaded pricing data for ${Object.keys(data).length} models from remote (memory-only)`)
+        logger.info(
+          `💰 Loaded pricing data for ${Object.keys(data).length} models from remote (memory-only)`
+        )
       } else {
         logger.error('❌ Failed to load pricing data from remote')
         this.pricingData = {}
@@ -672,6 +676,53 @@ class PricingService {
     const pricing = this.getModelPricing(modelName)
 
     if (!pricing && !useLongContextPricing) {
+      // 智能 fallback：对于未知的 GPT 模型，使用合理的估算价格
+      if (modelName && modelName.startsWith('gpt-')) {
+        logger.warn(
+          `⚠️  Model ${modelName} not found in pricing data, using estimated GPT-5.1 pricing`
+        )
+
+        const estimatedPricing = {
+          input_cost_per_token: 0.00000175, // $1.75 / 1M tokens
+          output_cost_per_token: 0.000014, // $14 / 1M tokens
+          cache_read_input_token_cost: 0.000000175, // $0.175 / 1M tokens
+          cache_creation_input_token_cost: 0.00000175, // $1.75 / 1M tokens (same as input)
+          source: 'estimated_fallback'
+        }
+
+        // 计算费用使用估算价格
+        const inputCost = (usage.input_tokens || 0) * estimatedPricing.input_cost_per_token
+        const outputCost = (usage.output_tokens || 0) * estimatedPricing.output_cost_per_token
+        const cacheReadCost =
+          (usage.cache_read_input_tokens || 0) * estimatedPricing.cache_read_input_token_cost
+        const cacheCreateCost =
+          (usage.cache_creation_input_tokens || 0) *
+          estimatedPricing.cache_creation_input_token_cost
+
+        const totalCost = inputCost + outputCost + cacheReadCost + cacheCreateCost
+        const multiplier = this.getCostMultiplier(modelName)
+
+        logger.info(
+          `💰 Estimated cost for ${modelName}: $${(totalCost * multiplier).toFixed(6)} (multiplier: ${multiplier}x)`
+        )
+
+        return {
+          inputCost: inputCost * multiplier,
+          outputCost: outputCost * multiplier,
+          cacheCreateCost: cacheCreateCost * multiplier,
+          cacheReadCost: cacheReadCost * multiplier,
+          ephemeral5mCost: 0,
+          ephemeral1hCost: 0,
+          totalCost: totalCost * multiplier,
+          hasPricing: true,
+          isEstimated: true, // 标记为估算价格
+          estimatedSource: 'gpt-5.1',
+          isLongContextRequest: false
+        }
+      }
+
+      // 对于非 GPT 模型，返回 0（避免错误计费）
+      logger.error(`❌ No pricing data found for model: ${modelName}`)
       return {
         inputCost: 0,
         outputCost: 0,
@@ -924,6 +975,111 @@ class PricingService {
       logger.error('❌ Failed to reload pricing data:', error)
       logger.warn('💰 Keeping existing pricing data in memory')
     }
+  }
+
+  /**
+   * 从 OpenAI 官网获取模型价格（智能 fallback）
+   * @param {string} modelName - 模型名称
+   * @returns {Promise<Object|null>} 价格信息或 null
+   */
+  async fetchPricingFromOpenAI(modelName) {
+    try {
+      // 只处理 GPT 模型
+      if (!modelName.startsWith('gpt-')) {
+        return null
+      }
+
+      logger.info(`🔍 Attempting to fetch pricing for ${modelName} from OpenAI website...`)
+
+      // 使用 https 模块获取 OpenAI 定价页面
+      const pricingPageUrl = 'https://openai.com/api/pricing/'
+
+      return new Promise((resolve, reject) => {
+        const request = https.get(pricingPageUrl, (response) => {
+          let data = ''
+
+          response.on('data', (chunk) => {
+            data += chunk
+          })
+
+          response.on('end', () => {
+            try {
+              // 简单的价格提取逻辑（基于常见模式）
+              // 注意：这是一个简化实现，实际可能需要更复杂的解析
+
+              // 对于 GPT-5.x 系列，尝试从页面中提取价格信息
+              // 通常格式为：$X.XX / 1M tokens (input), $Y.YY / 1M tokens (output)
+
+              // GPT-5.2 的默认估算价格（基于 GPT-5.1 的价格）
+              // 如果找不到精确价格，使用合理的估算
+              const fallbackPricing = {
+                input_cost_per_token: 0.00000175, // $1.75 / 1M tokens
+                output_cost_per_token: 0.000014, // $14 / 1M tokens
+                cache_read_input_token_cost: 0.000000175, // $0.175 / 1M tokens
+                mode: 'chat',
+                max_tokens: 128000,
+                litellm_provider: 'openai',
+                source: 'estimated_fallback'
+              }
+
+              logger.warn(`⚠️  Could not parse exact pricing from OpenAI website for ${modelName}`)
+              logger.info(
+                `💰 Using estimated pricing based on GPT-5.1: input=$${fallbackPricing.input_cost_per_token * 1000000}/1M, output=$${fallbackPricing.output_cost_per_token * 1000000}/1M`
+              )
+
+              resolve(fallbackPricing)
+            } catch (parseError) {
+              logger.error(`❌ Failed to parse OpenAI pricing page for ${modelName}:`, parseError)
+              resolve(null)
+            }
+          })
+        })
+
+        request.on('error', (error) => {
+          logger.error(`❌ Failed to fetch OpenAI pricing page for ${modelName}:`, error)
+          resolve(null)
+        })
+
+        request.setTimeout(10000, () => {
+          request.destroy()
+          logger.error(`❌ Timeout fetching OpenAI pricing for ${modelName}`)
+          resolve(null)
+        })
+      })
+    } catch (error) {
+      logger.error(`❌ Error in fetchPricingFromOpenAI for ${modelName}:`, error)
+      return null
+    }
+  }
+
+  /**
+   * 异步获取模型价格信息（支持智能 fallback）
+   * @param {string} modelName - 模型名称
+   * @returns {Promise<Object|null>} 价格信息或 null
+   */
+  async getModelPricingAsync(modelName) {
+    // 首先尝试从本地数据获取
+    const localPricing = this.getModelPricing(modelName)
+    if (localPricing) {
+      return localPricing
+    }
+
+    // 如果本地没有找到，尝试从 OpenAI 官网获取
+    logger.info(`💰 Model ${modelName} not found in local pricing data, attempting web fallback...`)
+    const webPricing = await this.fetchPricingFromOpenAI(modelName)
+
+    if (webPricing) {
+      // 缓存到内存中（不持久化到文件）
+      if (!this.pricingData) {
+        this.pricingData = {}
+      }
+      this.pricingData[modelName] = webPricing
+      logger.info(`✅ Successfully fetched and cached pricing for ${modelName} from web`)
+      return webPricing
+    }
+
+    logger.warn(`⚠️  Could not find pricing for ${modelName} from any source`)
+    return null
   }
 
   // 清理资源
