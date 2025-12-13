@@ -1,498 +1,735 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="/public-pages/assets/favicon-light.svg"
+      id="favicon"
+    />
+    <script>
+      // 动态设置 favicon 根据主题
+      ;(function () {
+        const theme = localStorage.getItem('theme') || 'light'
+        const favicon = document.getElementById('favicon')
+        favicon.href =
+          theme === 'dark'
+            ? '/public-pages/assets/favicon-dark.svg'
+            : '/public-pages/assets/favicon-light.svg'
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="icon" type="image/png" href="/public-pages/assets/logo-light.png" id="favicon">
-  <script>
-    // 动态设置 favicon 根据主题
-    (function() {
-      const theme = localStorage.getItem('theme') || 'light';
-      const favicon = document.getElementById('favicon');
-      favicon.href = theme === 'dark'
-        ? '/public-pages/assets/logo-dark.png'
-        : '/public-pages/assets/logo-light.png';
+        // 监听主题变化
+        window.addEventListener('storage', function (e) {
+          if (e.key === 'theme') {
+            favicon.href =
+              e.newValue === 'dark'
+                ? '/public-pages/assets/favicon-dark.svg'
+                : '/public-pages/assets/favicon-light.svg'
+          }
+        })
+      })()
+    </script>
 
-      // 监听主题变化
-      window.addEventListener('storage', function(e) {
-        if (e.key === 'theme') {
-          favicon.href = e.newValue === 'dark'
-            ? '/public-pages/assets/logo-dark.png'
-            : '/public-pages/assets/logo-light.png';
-        }
-      });
-    })();
-  </script>
+    <!-- SEO Meta 标签 -->
+    <title>JojoCode - 高性价比 AI API 中转服务</title>
+    <meta
+      name="description"
+      content="JojoCode - 高性价比 AI API 中转服务，无需繁琐注册，一 Key 通用多模型，底价让利，模型绝对保真，拒绝掺水，价格透明。支持 Claude、Gemini、OpenAI 等多平台。"
+    />
+    <meta
+      name="keywords"
+      content="JojoCode, Claude API, Gemini API, OpenAI API, AI中转, API代理, 高性价比, 底价让利, 保真模型"
+    />
 
-  <!-- SEO Meta 标签 -->
-  <title>JojoCode - 高性价比 AI API 中转服务</title>
-  <meta name="description"
-    content="JojoCode - 高性价比 AI API 中转服务，无需繁琐注册，一 Key 通用多模型，底价让利，模型绝对保真，拒绝掺水，价格透明。支持 Claude、Gemini、OpenAI 等多平台。">
-  <meta name="keywords"
-    content="JojoCode, Claude API, Gemini API, OpenAI API, AI中转, API代理, 高性价比, 底价让利, 保真模型">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
 
-  <!-- Tailwind CSS -->
-  <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Manrope -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
 
-  <!-- Google Fonts: Manrope -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
 
-  <!-- FontAwesome for Icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Alpine.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
-  <!-- Custom Config -->
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            'brand-bg': '#F2F0E9',
-            'brand-dark': '#1F2F22',
-            'brand-gray': '#8A8A8A',
-            'brand-card': '#EAE8E1'
-          },
-          fontFamily: {
-            sans: ['Manrope', 'sans-serif'],
-          },
-          spacing: {
-            '128': '32rem',
+    <!-- Custom Config -->
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              'brand-bg': '#F2F0E9',
+              'brand-dark': '#1F2F22',
+              'brand-gray': '#8A8A8A',
+              'brand-card': '#EAE8E1'
+            },
+            fontFamily: {
+              sans: ['Manrope', 'sans-serif']
+            },
+            spacing: {
+              128: '32rem'
+            }
           }
         }
       }
-    }
-  </script>
+    </script>
 
-  <style>
-    body {
-      background-color: #F2F0E9;
-      color: #1F2F22;
-    }
+    <style>
+      body {
+        background-color: #f2f0e9;
+        color: #1f2f22;
+      }
 
-    /* Custom scrollbar */
-    ::-webkit-scrollbar {
-      width: 8px;
-    }
+      /* Custom scrollbar */
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
 
-    ::-webkit-scrollbar-track {
-      background: #F2F0E9;
-    }
+      ::-webkit-scrollbar-track {
+        background: #f2f0e9;
+      }
 
-    ::-webkit-scrollbar-thumb {
-      background: #D1D1D1;
-      border-radius: 4px;
-    }
+      ::-webkit-scrollbar-thumb {
+        background: #d1d1d1;
+        border-radius: 4px;
+      }
 
-    ::-webkit-scrollbar-thumb:hover {
-      background: #1F2F22;
-    }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #1f2f22;
+      }
 
-    /* Smooth fade for tabs */
-    .tab-content {
-      display: none;
-      animation: fadeIn 0.4s ease-in-out;
-    }
+      [x-cloak] {
+        display: none !important;
+      }
 
-    .tab-content.active {
-      display: block;
-    }
+      /* Smooth fade for tabs */
+      .tab-content {
+        display: none;
+        animation: fadeIn 0.4s ease-in-out;
+      }
 
-    @keyframes fadeIn {
-      from {
+      .tab-content.active {
+        display: block;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .hover-arrow-move:hover i {
+        transform: translateX(4px) translateY(-4px);
+        transition: transform 0.2s ease;
+      }
+
+      /* Inline Logo Styles - Match logo.html proportions */
+      .inline-logo-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        line-height: 1;
+      }
+
+      .inline-logo-main {
+        display: flex;
+        align-items: baseline;
+        font-weight: 700;
+        color: #1f2f22;
+        line-height: 1;
+        filter: drop-shadow(1px 2px 2px rgba(0, 0, 0, 0.15));
+      }
+
+      .inline-logo-main .symbols {
+        font-size: 8px;
+        letter-spacing: -0.5px;
+        font-weight: 600;
+        display: flex;
+        align-items: baseline;
+        margin-right: 3px;
+      }
+
+      .inline-logo-main .letters {
+        font-size: 20px;
+        letter-spacing: -1.2px;
+        display: flex;
+        align-items: baseline;
+        font-weight: 700;
+      }
+
+      .inline-logo-subtitle {
+        font-size: 5px;
+        font-weight: 500;
+        color: #1f2f22;
+        letter-spacing: 0.4px;
+        opacity: 0.8;
+        margin-top: 1px;
+        text-shadow: 0.5px 0.5px 1px rgba(0, 0, 0, 0.1);
+        text-align: center;
+      }
+
+      /* Nav mini search (expand on click) */
+      #nav-key-search {
+        position: relative;
+        border: 0;
+        background: transparent;
+        box-shadow: none;
+        padding: 0;
+        backdrop-filter: none;
+      }
+
+      #nav-key-search .nav-search-field {
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        position: absolute;
+        top: 50%;
+        right: calc(100% + 0.5rem);
+        transform: translateY(-50%) scale(0.98);
+        z-index: 20;
+        padding: 0.25rem 0.375rem 0.25rem 0.75rem;
+        border-radius: 9999px;
+        border: 1px solid rgba(31, 47, 34, 0.12);
+        background: rgba(255, 255, 255, 0.6);
+        backdrop-filter: blur(12px);
+        box-shadow: 0 8px 24px rgba(31, 47, 34, 0.07);
+        flex: 0 0 auto;
+        max-width: 0;
+        width: 0;
         opacity: 0;
-        transform: translateY(10px);
+        overflow: hidden;
+        pointer-events: none;
+        transition:
+          width 320ms cubic-bezier(0.16, 1, 0.3, 1),
+          max-width 320ms cubic-bezier(0.16, 1, 0.3, 1),
+          opacity 220ms ease,
+          transform 320ms cubic-bezier(0.16, 1, 0.3, 1),
+          border-color 220ms ease,
+          box-shadow 220ms ease;
       }
 
-      to {
+      #nav-key-search.is-expanded .nav-search-field {
+        max-width: min(16rem, 65vw);
+        width: min(16rem, 65vw);
         opacity: 1;
-        transform: translateY(0);
+        transform: translateY(-50%) scale(1);
+        pointer-events: auto;
       }
-    }
 
-    .hover-arrow-move:hover i {
-      transform: translateX(4px) translateY(-4px);
-      transition: transform 0.2s ease;
-    }
+      #nav-key-search.is-expanded .nav-search-field:hover {
+        border-color: rgba(31, 47, 34, 0.18);
+      }
 
-    /* Inline Logo Styles - Match logo.html proportions */
-    .inline-logo-wrapper {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      line-height: 1;
-    }
+      #nav-key-search.is-expanded .nav-search-field:focus-within {
+        border-color: rgba(31, 47, 34, 0.22);
+        box-shadow: 0 6px 18px rgba(31, 47, 34, 0.05);
+      }
+    </style>
+  </head>
 
-    .inline-logo-main {
-      display: flex;
-      align-items: baseline;
-      font-weight: 700;
-      color: #1F2F22;
-      line-height: 1;
-      filter: drop-shadow(1px 2px 2px rgba(0,0,0,0.15));
-    }
-
-    .inline-logo-main .symbols {
-      font-size: 10px;
-      letter-spacing: -0.5px;
-      font-weight: 600;
-      display: flex;
-      align-items: baseline;
-      margin-right: 3px;
-    }
-
-    .inline-logo-main .letters {
-      font-size: 20px;
-      letter-spacing: -1.2px;
-      display: flex;
-      align-items: baseline;
-      font-weight: 700;
-    }
-
-    .inline-logo-subtitle {
-      font-size: 5px;
-      font-weight: 500;
-      color: #1F2F22;
-      letter-spacing: 0.4px;
-      opacity: 0.8;
-      margin-top: 1px;
-      text-shadow: 0.5px 0.5px 1px rgba(0,0,0,0.1);
-      text-align: center;
-    }
-  </style>
-</head>
-
-<body class="font-sans antialiased selection:bg-brand-dark selection:text-white">
-
-  <!-- Main Container -->
-  <div class="max-w-[1440px] mx-auto px-6 md:px-12 py-6">
-
-    <!-- Navigation Header -->
-    <nav class="flex flex-wrap items-center justify-between mb-16 gap-4">
-      <!-- Logo -->
-      <div class="flex items-center gap-3">
-        <div class="inline-logo-wrapper">
-          <div class="inline-logo-main">
-            <div class="symbols">
-              <span>&gt;</span>
-              <span>_</span>
-            </div>
-            <div class="letters">
-              <span>J</span>
-              <span>O</span>
+  <body class="font-sans antialiased selection:bg-brand-dark selection:text-white">
+    <!-- Main Container -->
+    <div class="max-w-[1440px] mx-auto px-6 md:px-12 py-6">
+      <!-- Navigation Header -->
+      <nav class="mb-16" x-data="{ mobileMenuOpen: false }">
+        <div class="flex items-center justify-between gap-4">
+          <!-- Logo -->
+          <div class="flex items-center gap-3">
+            <div class="inline-logo-wrapper">
+              <div class="inline-logo-main">
+                <div class="symbols">
+                  <span>&gt;</span>
+                  <span>_</span>
+                </div>
+                <div class="letters">
+                  <span>J</span>
+                  <span>O</span>
+                </div>
+              </div>
+              <div class="inline-logo-subtitle">JO</div>
             </div>
           </div>
-          <div class="inline-logo-subtitle">JO</div>
+
+          <!-- Nav Links (Desktop) -->
+          <div class="hidden md:flex items-center space-x-8 text-sm font-medium">
+            <a href="/" class="hover:text-brand-dark transition">首页</a>
+            <a href="/stats" class="hover:text-brand-dark transition">查询统计</a>
+            <a href="/docs" class="hover:text-brand-dark transition">使用文档</a>
+          </div>
+
+          <div class="flex items-center gap-4">
+            <!-- Key Search -->
+            <form
+              id="nav-key-search"
+              class="flex items-center flex-none rounded-full"
+              autocomplete="off"
+            >
+              <button
+                id="nav-key-toggle"
+                type="button"
+                class="h-7 w-7 shrink-0 rounded-full bg-white/60 border border-brand-dark/10 flex items-center justify-center hover:border-brand-dark/20 transition"
+                aria-label="搜索 API Key"
+                aria-expanded="false"
+              >
+                <i class="fa-solid fa-magnifying-glass text-brand-gray text-xs"></i>
+              </button>
+
+              <div class="nav-search-field">
+                <input
+                  id="nav-key-input"
+                  type="text"
+                  inputmode="text"
+                  autocapitalize="off"
+                  spellcheck="false"
+                  placeholder="输入 API Key 查询"
+                  class="bg-transparent outline-none placeholder:text-brand-gray/70 text-xs w-full min-w-0"
+                />
+                <button
+                  type="submit"
+                  class="h-7 w-7 shrink-0 rounded-full bg-brand-dark text-white flex items-center justify-center hover:bg-opacity-90 transition shadow-md shadow-brand-dark/10"
+                  aria-label="查询统计"
+                >
+                  <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                </button>
+              </div>
+            </form>
+
+            <!-- CTA Button -->
+            <a
+              href="/stats"
+              class="bg-brand-dark text-white px-3 py-1.5 md:px-5 md:py-2 rounded-full text-xs md:text-sm font-medium hover:bg-opacity-90 transition shadow-lg shadow-brand-dark/10 whitespace-nowrap"
+            >
+              立即开始
+            </a>
+
+            <!-- Mobile Menu Button -->
+            <button
+              @click="mobileMenuOpen = !mobileMenuOpen"
+              class="md:hidden h-7 w-7 rounded-full bg-white/60 border border-brand-dark/10 flex items-center justify-center hover:border-brand-dark/20 transition"
+              aria-label="菜单"
+            >
+              <i
+                class="fa-solid text-brand-gray text-xs"
+                :class="mobileMenuOpen ? 'fa-xmark' : 'fa-bars'"
+              ></i>
+            </button>
+          </div>
         </div>
-        <span class="text-lg font-bold text-brand-dark">JojoCode</span>
-      </div>
 
-      <!-- Nav Links (Desktop) -->
-      <div class="hidden md:flex items-center space-x-8 text-sm font-medium">
-        <a href="/" class="hover:text-brand-dark transition">首页</a>
-        <a href="/stats" class="hover:text-brand-dark transition">查询统计</a>
-        <a href="/docs" class="hover:text-brand-dark transition">使用文档</a>
-        <a href="/admin-next/" class="hover:text-brand-dark transition">管理后台</a>
-      </div>
-
-      <!-- CTA Button -->
-      <a href="/stats"
-        class="bg-brand-dark text-white px-6 py-2.5 rounded-full text-sm font-medium hover:bg-opacity-90 transition shadow-lg shadow-brand-dark/10">
-        立即开始
-      </a>
-    </nav>
-
-    <!-- Hero Section -->
-    <header class="mb-20">
-      <div class="flex flex-col md:flex-row justify-between items-end mb-8">
-        <div>
-          <p class="text-sm md:text-base text-gray-500 mb-2">/ AI API Gateway Service</p>
-          <h1 class="text-5xl md:text-7xl font-semibold tracking-tight leading-tight uppercase text-brand-dark">
-            JojoCode <br> API Gateway
-          </h1>
+        <!-- Mobile Menu -->
+        <div
+          x-show="mobileMenuOpen"
+          x-cloak
+          @click.away="mobileMenuOpen = false"
+          x-transition:enter="transition ease-out duration-200"
+          x-transition:enter-start="opacity-0 -translate-y-2"
+          x-transition:enter-end="opacity-100 translate-y-0"
+          x-transition:leave="transition ease-in duration-150"
+          x-transition:leave-start="opacity-100 translate-y-0"
+          x-transition:leave-end="opacity-0 -translate-y-2"
+          class="md:hidden mt-4 bg-white/80 backdrop-blur-sm border border-gray-200 rounded-2xl overflow-hidden"
+        >
+          <div class="flex flex-col">
+            <a
+              href="/"
+              class="px-6 py-3 text-sm font-medium hover:bg-brand-bg/50 transition border-b border-gray-200"
+            >
+              首页
+            </a>
+            <a
+              href="/stats"
+              class="px-6 py-3 text-sm font-medium hover:bg-brand-bg/50 transition border-b border-gray-200"
+            >
+              查询统计
+            </a>
+            <a href="/docs" class="px-6 py-3 text-sm font-medium hover:bg-brand-bg/50 transition">
+              使用文档
+            </a>
+          </div>
         </div>
-        <div class="flex flex-col items-end mt-6 md:mt-0 gap-4 md:gap-8">
-          <p class="text-gray-600 text-sm md:text-base max-w-xs text-right">
-            高性价比 AI API 中转服务<br>底价让利 · 保真不掺水
+      </nav>
+
+      <!-- Hero Section -->
+      <header class="mb-20">
+        <div class="flex flex-col md:flex-row justify-between items-end mb-8">
+          <div>
+            <p class="text-sm md:text-base text-gray-500 mb-2">/ AI API Gateway Service</p>
+            <h1
+              class="text-5xl md:text-7xl font-semibold tracking-tight leading-tight uppercase text-brand-dark"
+            >
+              JojoCode <br />
+              API Gateway
+            </h1>
+          </div>
+          <div class="flex flex-col items-end mt-6 md:mt-0 gap-4 md:gap-8">
+            <p class="text-gray-600 text-sm md:text-base max-w-xs text-right">
+              高性价比 AI API 中转服务<br />底价让利 · 保真不掺水
+            </p>
+            <a
+              href="/stats"
+              class="group flex items-center gap-2 text-xs font-bold uppercase tracking-wide border-b border-brand-dark/30 pb-1 hover-arrow-move"
+            >
+              查询用量
+              <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
+            </a>
+          </div>
+        </div>
+
+        <!-- Hero Image -->
+        <div class="w-full h-[300px] md:h-[500px] overflow-hidden rounded-[2rem] shadow-sm">
+          <img
+            src="/public-pages/assets/hero-code-1.jpg"
+            alt="Code Development"
+            class="w-full h-full object-cover hover:scale-105 transition duration-700 ease-in-out"
+          />
+        </div>
+      </header>
+
+      <!-- About Section Grid -->
+      <section class="grid grid-cols-1 md:grid-cols-12 gap-6 mb-24">
+        <!-- Left Image -->
+        <div class="md:col-span-3 h-[300px] md:h-[400px]">
+          <img
+            src="/public-pages/assets/about-code-1.jpg"
+            alt="Code Development"
+            class="w-full h-full object-cover rounded-[1.5rem]"
+          />
+        </div>
+
+        <!-- Center Content -->
+        <div class="md:col-span-5 flex flex-col justify-center px-4 md:px-8">
+          <div
+            class="flex items-center gap-2 text-xs font-bold text-gray-400 uppercase tracking-widest mb-4"
+          >
+            <i class="fa-solid fa-star text-[10px]"></i> 关于我们
+          </div>
+          <h2 class="text-3xl font-medium leading-tight mb-6 text-brand-dark">
+            一个 Key 通用所有平台<br />价格透明，按量计费
+          </h2>
+          <p class="text-gray-600 text-sm leading-relaxed mb-8">
+            JojoCode 提供稳定可靠的 AI API 中转服务，支持 Claude、Gemini、OpenAI 等多个主流平台。
+            无需繁琐注册，一个 API Key
+            即可访问所有模型。底价让利，模型绝对保真，拒绝掺水，价格透明可查。
           </p>
-          <a href="/stats"
-            class="group flex items-center gap-2 text-xs font-bold uppercase tracking-wide border-b border-brand-dark/30 pb-1 hover-arrow-move">
-            查询用量
+          <a
+            href="/docs"
+            class="group inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wide underline underline-offset-4 decoration-gray-400 hover:decoration-brand-dark transition hover-arrow-move w-max"
+          >
+            查看文档
             <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
           </a>
         </div>
-      </div>
 
-      <!-- Hero Image -->
-      <div class="w-full h-[300px] md:h-[500px] overflow-hidden rounded-[2rem] shadow-sm">
-        <img src="/public-pages/assets/hero-code-1.jpg"
-          alt="Code Development"
-          class="w-full h-full object-cover hover:scale-105 transition duration-700 ease-in-out">
-      </div>
-    </header>
-
-    <!-- About Section Grid -->
-    <section class="grid grid-cols-1 md:grid-cols-12 gap-6 mb-24">
-      <!-- Left Image -->
-      <div class="md:col-span-3 h-[300px] md:h-[400px]">
-        <img src="/public-pages/assets/about-code-1.jpg"
-          alt="Code Development" class="w-full h-full object-cover rounded-[1.5rem]">
-      </div>
-
-      <!-- Center Content -->
-      <div class="md:col-span-5 flex flex-col justify-center px-4 md:px-8">
-        <div class="flex items-center gap-2 text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">
-          <i class="fa-solid fa-star text-[10px]"></i> 关于我们
+        <!-- Right Image -->
+        <div class="md:col-span-4 h-[300px] md:h-[400px]">
+          <img
+            src="/public-pages/assets/about-code-2.jpg"
+            alt="Programming"
+            class="w-full h-full object-cover rounded-[1.5rem]"
+          />
         </div>
-        <h2 class="text-3xl font-medium leading-tight mb-6 text-brand-dark">
-          一个 Key 通用所有平台<br>价格透明，按量计费
-        </h2>
-        <p class="text-gray-600 text-sm leading-relaxed mb-8">
-          JojoCode 提供稳定可靠的 AI API 中转服务，支持 Claude、Gemini、OpenAI 等多个主流平台。
-          无需繁琐注册，一个 API Key 即可访问所有模型。底价让利，模型绝对保真，拒绝掺水，价格透明可查。
-        </p>
-        <a href="/docs"
-          class="group inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wide underline underline-offset-4 decoration-gray-400 hover:decoration-brand-dark transition hover-arrow-move w-max">
-          查看文档
-          <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
-        </a>
-      </div>
+      </section>
 
-      <!-- Right Image -->
-      <div class="md:col-span-4 h-[300px] md:h-[400px]">
-        <img src="/public-pages/assets/about-code-2.jpg"
-          alt="Programming" class="w-full h-full object-cover rounded-[1.5rem]">
-      </div>
-    </section>
+      <!-- Why Choose Us -->
+      <section class="mb-24">
+        <h3 class="text-2xl font-medium mb-8 text-brand-dark">为什么选择我们？</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 border-t border-gray-300/50 pt-8">
+          <!-- Card 1 -->
+          <div class="flex justify-between items-start group">
+            <div>
+              <h4 class="font-semibold text-lg mb-2">价格透明</h4>
+              <p class="text-gray-500 text-sm max-w-xs">
+                所有费用公开透明，按实际使用量计费，无隐藏收费，随时查询用量统计。
+              </p>
+            </div>
+            <div class="text-gray-400 group-hover:text-brand-dark transition-colors duration-300">
+              <i class="fa-solid fa-dollar-sign text-xl"></i>
+            </div>
+          </div>
 
-    <!-- Why Choose Us -->
-    <section class="mb-24">
-      <h3 class="text-2xl font-medium mb-8 text-brand-dark">为什么选择我们？</h3>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 border-t border-gray-300/50 pt-8">
-        <!-- Card 1 -->
-        <div class="flex justify-between items-start group">
-          <div>
-            <h4 class="font-semibold text-lg mb-2">价格透明</h4>
-            <p class="text-gray-500 text-sm max-w-xs">
-              所有费用公开透明，按实际使用量计费，无隐藏收费，随时查询用量统计。
-            </p>
+          <!-- Card 2 -->
+          <div class="flex justify-between items-start group">
+            <div>
+              <h4 class="font-semibold text-lg mb-2">模型保真</h4>
+              <p class="text-gray-500 text-sm max-w-xs">
+                直连官方 API，保证模型原汁原味，绝不掺水降级，确保最佳使用体验。
+              </p>
+            </div>
+            <div class="text-gray-400 group-hover:text-brand-dark transition-colors duration-300">
+              <i class="fa-solid fa-shield-halved text-xl"></i>
+            </div>
           </div>
-          <div class="text-gray-400 group-hover:text-brand-dark transition-colors duration-300">
-            <i class="fa-solid fa-dollar-sign text-xl"></i>
-          </div>
-        </div>
 
-        <!-- Card 2 -->
-        <div class="flex justify-between items-start group">
-          <div>
-            <h4 class="font-semibold text-lg mb-2">模型保真</h4>
-            <p class="text-gray-500 text-sm max-w-xs">
-              直连官方 API，保证模型原汁原味，绝不掺水降级，确保最佳使用体验。
-            </p>
+          <!-- Card 3 -->
+          <div class="flex justify-between items-start group">
+            <div>
+              <h4 class="font-semibold text-lg mb-2">即买即用</h4>
+              <p class="text-gray-500 text-sm max-w-xs">
+                无需繁琐注册流程，一个 API Key 通用所有平台和模型，简单高效。
+              </p>
+            </div>
+            <div class="text-gray-400 group-hover:text-brand-dark transition-colors duration-300">
+              <i class="fa-solid fa-bolt text-xl"></i>
+            </div>
           </div>
-          <div class="text-gray-400 group-hover:text-brand-dark transition-colors duration-300">
-            <i class="fa-solid fa-shield-halved text-xl"></i>
+
+          <!-- Card 4 -->
+          <div class="flex justify-between items-start group">
+            <div>
+              <h4 class="font-semibold text-lg mb-2">稳定可靠</h4>
+              <p class="text-gray-500 text-sm max-w-xs">
+                7x24 小时稳定运行，智能负载均衡，多账户冗余，确保服务持续可用。
+              </p>
+            </div>
+            <div class="text-gray-400 group-hover:text-brand-dark transition-colors duration-300">
+              <i class="fa-solid fa-server text-xl"></i>
+            </div>
           </div>
         </div>
+      </section>
 
-        <!-- Card 3 -->
-        <div class="flex justify-between items-start group">
-          <div>
-            <h4 class="font-semibold text-lg mb-2">即买即用</h4>
-            <p class="text-gray-500 text-sm max-w-xs">
-              无需繁琐注册流程，一个 API Key 通用所有平台和模型，简单高效。
-            </p>
+      <!-- Services Section (Tabs) -->
+      <section class="mb-24">
+        <!-- Header -->
+        <div class="text-center mb-12">
+          <div
+            class="flex items-center justify-center gap-2 text-xs font-bold text-gray-400 uppercase tracking-widest mb-2"
+          >
+            <i class="fa-solid fa-heart text-[10px]"></i> 支持平台
           </div>
-          <div class="text-gray-400 group-hover:text-brand-dark transition-colors duration-300">
-            <i class="fa-solid fa-bolt text-xl"></i>
-          </div>
+          <h2 class="text-3xl font-medium text-brand-dark mb-3">我们支持哪些平台？</h2>
+          <p class="text-gray-500 text-sm max-w-md mx-auto">
+            从 Claude 到 Gemini，从 OpenAI 到 AWS Bedrock - 我们为您提供一站式 AI API 接入服务。
+          </p>
         </div>
 
-        <!-- Card 4 -->
-        <div class="flex justify-between items-start group">
-          <div>
-            <h4 class="font-semibold text-lg mb-2">稳定可靠</h4>
-            <p class="text-gray-500 text-sm max-w-xs">
-              7x24 小时稳定运行，智能负载均衡，多账户冗余，确保服务持续可用。
-            </p>
+        <!-- Tab Layout -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+          <!-- Sidebar Navigation -->
+          <div class="lg:col-span-3 flex flex-col space-y-2">
+            <button
+              onclick="openTab(event, 'claude')"
+              class="tab-btn active text-left px-6 py-4 rounded-xl text-sm font-medium transition-all duration-300 bg-brand-dark text-white shadow-lg"
+            >
+              <i class="fa-solid fa-message-dots mr-2"></i> Claude
+            </button>
+            <button
+              onclick="openTab(event, 'gemini')"
+              class="tab-btn text-left px-6 py-4 rounded-xl text-sm font-medium transition-all duration-300 hover:bg-brand-card text-brand-dark bg-[#EAE8E1]"
+            >
+              <i class="fa-solid fa-sparkles mr-2"></i> Gemini
+            </button>
+            <button
+              onclick="openTab(event, 'openai')"
+              class="tab-btn text-left px-6 py-4 rounded-xl text-sm font-medium transition-all duration-300 hover:bg-brand-card text-brand-dark bg-[#EAE8E1]"
+            >
+              <i class="fa-solid fa-code mr-2"></i> OpenAI Responses
+            </button>
+            <button
+              onclick="openTab(event, 'bedrock')"
+              class="tab-btn text-left px-6 py-4 rounded-xl text-sm font-medium transition-all duration-300 hover:bg-brand-card text-brand-dark bg-[#EAE8E1]"
+            >
+              <i class="fa-solid fa-cloud mr-2"></i> AWS Bedrock
+            </button>
           </div>
-          <div class="text-gray-400 group-hover:text-brand-dark transition-colors duration-300">
-            <i class="fa-solid fa-server text-xl"></i>
-          </div>
-        </div>
-      </div>
-    </section>
 
-    <!-- Services Section (Tabs) -->
-    <section class="mb-24">
-      <!-- Header -->
-      <div class="text-center mb-12">
-        <div
-          class="flex items-center justify-center gap-2 text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">
-          <i class="fa-solid fa-heart text-[10px]"></i> 支持平台
-        </div>
-        <h2 class="text-3xl font-medium text-brand-dark mb-3">我们支持哪些平台？</h2>
-        <p class="text-gray-500 text-sm max-w-md mx-auto">
-          从 Claude 到 Gemini，从 OpenAI 到 AWS Bedrock - 我们为您提供一站式 AI API 接入服务。
-        </p>
-      </div>
-
-      <!-- Tab Layout -->
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-
-        <!-- Sidebar Navigation -->
-        <div class="lg:col-span-3 flex flex-col space-y-2">
-          <button onclick="openTab(event, 'claude')"
-            class="tab-btn active text-left px-6 py-4 rounded-xl text-sm font-medium transition-all duration-300 bg-brand-dark text-white shadow-lg">
-            <i class="fa-solid fa-message-dots mr-2"></i> Claude
-          </button>
-          <button onclick="openTab(event, 'gemini')"
-            class="tab-btn text-left px-6 py-4 rounded-xl text-sm font-medium transition-all duration-300 hover:bg-brand-card text-brand-dark bg-[#EAE8E1]">
-            <i class="fa-solid fa-sparkles mr-2"></i> Gemini
-          </button>
-          <button onclick="openTab(event, 'openai')"
-            class="tab-btn text-left px-6 py-4 rounded-xl text-sm font-medium transition-all duration-300 hover:bg-brand-card text-brand-dark bg-[#EAE8E1]">
-            <i class="fa-solid fa-code mr-2"></i> OpenAI Responses
-          </button>
-          <button onclick="openTab(event, 'bedrock')"
-            class="tab-btn text-left px-6 py-4 rounded-xl text-sm font-medium transition-all duration-300 hover:bg-brand-card text-brand-dark bg-[#EAE8E1]">
-            <i class="fa-solid fa-cloud mr-2"></i> AWS Bedrock
-          </button>
-        </div>
-
-        <!-- Content Area -->
-        <div class="lg:col-span-9 bg-[#EAE8E1] rounded-[2rem] p-4 lg:p-6 min-h-[400px]">
-
-          <!-- Tab 1: Claude (Active by default) -->
-          <div id="claude" class="tab-content active h-full">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 h-full items-center">
-              <!-- Image -->
-              <div class="h-[300px] md:h-[400px] overflow-hidden rounded-xl">
-                <img src="/public-pages/assets/claude-api.jpg"
-                  alt="Claude API Development"
-                  class="w-full h-full object-cover hover:scale-105 transition duration-500">
-              </div>
-              <!-- Text -->
-              <div class="flex flex-col justify-center pr-4">
-                <div class="flex items-center gap-2 text-xs font-bold text-gray-500 uppercase tracking-wide mb-4">
-                  <i class="fa-solid fa-crown text-[10px]"></i> 旗舰模型
+          <!-- Content Area -->
+          <div class="lg:col-span-9 bg-[#EAE8E1] rounded-[2rem] p-4 lg:p-6 min-h-[400px]">
+            <!-- Tab 1: Claude (Active by default) -->
+            <div id="claude" class="tab-content active h-full">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6 h-full items-center">
+                <!-- Image -->
+                <div class="h-[300px] md:h-[400px] overflow-hidden rounded-xl">
+                  <img
+                    src="/public-pages/assets/claude-api.jpg"
+                    alt="Claude API Development"
+                    class="w-full h-full object-cover hover:scale-105 transition duration-500"
+                  />
                 </div>
-                <h3 class="text-2xl md:text-3xl font-medium mb-4 text-brand-dark">
-                  Claude <span class="italic font-serif">Official API</span>
-                </h3>
-                <p class="text-gray-600 text-sm leading-relaxed mb-6">
-                  支持 Claude 3.5 Sonnet、Claude 3 Opus 等全系列模型。通过 OAuth 认证直连官方 API，
-                  提供最稳定可靠的服务体验。支持流式响应和上下文缓存。
-                </p>
-
-                <div class="bg-brand-bg/60 p-3 rounded-lg flex items-start gap-3 mb-8">
-                  <i class="fa-solid fa-check-circle text-brand-dark mt-1"></i>
-                  <div>
-                    <p class="text-xs font-bold text-brand-dark">官方认证 · 完整功能 · 最新模型</p>
+                <!-- Text -->
+                <div class="flex flex-col justify-center pr-4">
+                  <div
+                    class="flex items-center gap-2 text-xs font-bold text-gray-500 uppercase tracking-wide mb-4"
+                  >
+                    <i class="fa-solid fa-crown text-[10px]"></i> 旗舰模型
                   </div>
+                  <h3 class="text-2xl md:text-3xl font-medium mb-4 text-brand-dark">
+                    Claude <span class="italic font-serif">Official API</span>
+                  </h3>
+                  <p class="text-gray-600 text-sm leading-relaxed mb-6">
+                    支持 Claude 3.5 Sonnet、Claude 3 Opus 等全系列模型。通过 OAuth 认证直连官方
+                    API， 提供最稳定可靠的服务体验。支持流式响应和上下文缓存。
+                  </p>
+
+                  <div class="bg-brand-bg/60 p-3 rounded-lg flex items-start gap-3 mb-8">
+                    <i class="fa-solid fa-check-circle text-brand-dark mt-1"></i>
+                    <div>
+                      <p class="text-xs font-bold text-brand-dark">
+                        官方认证 · 完整功能 · 最新模型
+                      </p>
+                    </div>
+                  </div>
+
+                  <a
+                    href="/docs"
+                    class="group flex items-center gap-2 text-xs font-bold uppercase tracking-wide border-b border-brand-dark/30 pb-1 w-max hover-arrow-move"
+                  >
+                    查看详情
+                    <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
+                  </a>
                 </div>
+              </div>
+            </div>
 
-                <a href="/docs"
-                  class="group flex items-center gap-2 text-xs font-bold uppercase tracking-wide border-b border-brand-dark/30 pb-1 w-max hover-arrow-move">
-                  查看详情
-                  <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
-                </a>
+            <!-- Tab 2: Gemini -->
+            <div id="gemini" class="tab-content h-full">
+              <div class="flex flex-col items-center justify-center h-[400px] text-center p-8">
+                <i class="fa-solid fa-sparkles text-4xl text-brand-dark mb-4 opacity-50"></i>
+                <h3 class="text-2xl font-medium text-brand-dark mb-2">Gemini Pro</h3>
+                <p class="text-gray-600 max-w-md">
+                  Google 最新的 Gemini
+                  系列模型，支持多模态输入，强大的推理能力，适合各种复杂任务场景。
+                </p>
+              </div>
+            </div>
+
+            <!-- Tab 3: OpenAI -->
+            <div id="openai" class="tab-content h-full">
+              <div class="flex flex-col items-center justify-center h-[400px] text-center p-8">
+                <i class="fa-solid fa-code text-4xl text-brand-dark mb-4 opacity-50"></i>
+                <h3 class="text-2xl font-medium text-brand-dark mb-2">OpenAI Responses (Codex)</h3>
+                <p class="text-gray-600 max-w-md">
+                  支持 OpenAI Responses 格式，兼容性强，适合代码生成和技术文档编写等专业场景。
+                </p>
+              </div>
+            </div>
+
+            <!-- Tab 4: Bedrock -->
+            <div id="bedrock" class="tab-content h-full">
+              <div class="flex flex-col items-center justify-center h-[400px] text-center p-8">
+                <i class="fa-solid fa-cloud text-4xl text-brand-dark mb-4 opacity-50"></i>
+                <h3 class="text-2xl font-medium text-brand-dark mb-2">AWS Bedrock</h3>
+                <p class="text-gray-600 max-w-md">
+                  企业级 AI 服务，支持多种基础模型，提供高可用性和安全性保障。
+                </p>
               </div>
             </div>
           </div>
-
-          <!-- Tab 2: Gemini -->
-          <div id="gemini" class="tab-content h-full">
-            <div class="flex flex-col items-center justify-center h-[400px] text-center p-8">
-              <i class="fa-solid fa-sparkles text-4xl text-brand-dark mb-4 opacity-50"></i>
-              <h3 class="text-2xl font-medium text-brand-dark mb-2">Gemini Pro</h3>
-              <p class="text-gray-600 max-w-md">
-                Google 最新的 Gemini 系列模型，支持多模态输入，强大的推理能力，适合各种复杂任务场景。
-              </p>
-            </div>
-          </div>
-
-          <!-- Tab 3: OpenAI -->
-          <div id="openai" class="tab-content h-full">
-            <div class="flex flex-col items-center justify-center h-[400px] text-center p-8">
-              <i class="fa-solid fa-code text-4xl text-brand-dark mb-4 opacity-50"></i>
-              <h3 class="text-2xl font-medium text-brand-dark mb-2">OpenAI Responses (Codex)</h3>
-              <p class="text-gray-600 max-w-md">
-                支持 OpenAI Responses 格式，兼容性强，适合代码生成和技术文档编写等专业场景。
-              </p>
-            </div>
-          </div>
-
-          <!-- Tab 4: Bedrock -->
-          <div id="bedrock" class="tab-content h-full">
-            <div class="flex flex-col items-center justify-center h-[400px] text-center p-8">
-              <i class="fa-solid fa-cloud text-4xl text-brand-dark mb-4 opacity-50"></i>
-              <h3 class="text-2xl font-medium text-brand-dark mb-2">AWS Bedrock</h3>
-              <p class="text-gray-600 max-w-md">
-                企业级 AI 服务，支持多种基础模型，提供高可用性和安全性保障。
-              </p>
-            </div>
-          </div>
-
         </div>
-      </div>
-    </section>
+      </section>
 
-    <!-- Footer -->
-    <div class="border-t border-gray-300/50 pt-8 pb-12">
-      <div class="flex flex-col md:flex-row justify-between items-center gap-6">
-        <div class="flex items-center gap-3">
-          <div class="inline-logo-wrapper" style="transform: scale(0.8); transform-origin: left center;">
-            <div class="inline-logo-main">
-              <div class="symbols">
-                <span>&gt;</span>
-                <span>_</span>
+      <!-- Footer -->
+      <div class="border-t border-gray-300/50 pt-8 pb-12">
+        <div class="flex flex-col md:flex-row justify-between items-center gap-6">
+          <div class="flex items-center gap-3">
+            <div
+              class="inline-logo-wrapper"
+              style="transform: scale(0.8); transform-origin: left center"
+            >
+              <div class="inline-logo-main">
+                <div class="symbols">
+                  <span>&gt;</span>
+                  <span>_</span>
+                </div>
+                <div class="letters">
+                  <span>J</span>
+                  <span>O</span>
+                </div>
               </div>
-              <div class="letters">
-                <span>J</span>
-                <span>O</span>
-              </div>
+              <div class="inline-logo-subtitle">JO</div>
             </div>
-            <div class="inline-logo-subtitle">JO</div>
+            <span class="text-sm text-gray-500">© 2024 JojoCode. 高性价比 AI API 中转服务.</span>
           </div>
-          <span class="text-sm text-gray-500">© 2024 JojoCode. 高性价比 AI API 中转服务.</span>
-        </div>
-        <div class="flex items-center gap-6 text-sm">
-          <a href="/stats" class="text-gray-500 hover:text-brand-dark transition">查询统计</a>
-          <a href="/docs" class="text-gray-500 hover:text-brand-dark transition">使用文档</a>
-          <a href="/admin-next/" class="text-gray-500 hover:text-brand-dark transition">管理后台</a>
+          <div class="flex items-center gap-6 text-sm">
+            <a href="/stats" class="text-gray-500 hover:text-brand-dark transition">查询统计</a>
+            <a href="/docs" class="text-gray-500 hover:text-brand-dark transition">使用文档</a>
+          </div>
         </div>
       </div>
     </div>
 
-  </div>
+    <!-- JavaScript for Tabs -->
+    <script>
+      ;(function () {
+        const form = document.getElementById('nav-key-search')
+        const toggle = document.getElementById('nav-key-toggle')
+        const input = document.getElementById('nav-key-input')
+        if (!form || !toggle || !input) return
 
-  <!-- JavaScript for Tabs -->
-  <script>
-    function openTab(evt, tabName) {
-      var i, tabcontent, tablinks;
-      tabcontent = document.getElementsByClassName("tab-content");
-      for (i = 0; i < tabcontent.length; i++) {
-        tabcontent[i].classList.remove("active");
-        tabcontent[i].style.display = "none";
+        function setExpanded(expanded) {
+          form.classList.toggle('is-expanded', expanded)
+          toggle.setAttribute('aria-expanded', String(expanded))
+          if (expanded) {
+            requestAnimationFrame(() => input.focus())
+          } else if (!input.value.trim()) {
+            input.value = ''
+          }
+        }
+
+        setExpanded(false)
+
+        toggle.addEventListener('click', function () {
+          const expanded = form.classList.contains('is-expanded')
+          if (!expanded) return setExpanded(true)
+          if (!input.value.trim()) return setExpanded(false)
+          input.focus()
+        })
+
+        document.addEventListener('click', function (e) {
+          if (!form.classList.contains('is-expanded')) return
+          if (form.contains(e.target)) return
+          if (!input.value.trim()) setExpanded(false)
+        })
+
+        input.addEventListener('keydown', function (e) {
+          if (e.key === 'Escape' && !input.value.trim()) setExpanded(false)
+        })
+
+        form.addEventListener('submit', function (e) {
+          e.preventDefault()
+          const value = (input.value || '').trim()
+          window.location.href = value ? `/stats?id=${encodeURIComponent(value)}` : '/stats'
+        })
+      })()
+
+      function openTab(evt, tabName) {
+        var i, tabcontent, tablinks
+        tabcontent = document.getElementsByClassName('tab-content')
+        for (i = 0; i < tabcontent.length; i++) {
+          tabcontent[i].classList.remove('active')
+          tabcontent[i].style.display = 'none'
+        }
+
+        tablinks = document.getElementsByClassName('tab-btn')
+        for (i = 0; i < tablinks.length; i++) {
+          tablinks[i].classList.remove('active', 'bg-brand-dark', 'text-white', 'shadow-lg')
+          tablinks[i].classList.add('bg-[#EAE8E1]', 'text-brand-dark')
+        }
+
+        document.getElementById(tabName).style.display = 'block'
+        setTimeout(() => {
+          document.getElementById(tabName).classList.add('active')
+        }, 10)
+
+        evt.currentTarget.classList.remove('bg-[#EAE8E1]', 'text-brand-dark')
+        evt.currentTarget.classList.add('active', 'bg-brand-dark', 'text-white', 'shadow-lg')
       }
-
-      tablinks = document.getElementsByClassName("tab-btn");
-      for (i = 0; i < tablinks.length; i++) {
-        tablinks[i].classList.remove("active", "bg-brand-dark", "text-white", "shadow-lg");
-        tablinks[i].classList.add("bg-[#EAE8E1]", "text-brand-dark");
-      }
-
-      document.getElementById(tabName).style.display = "block";
-      setTimeout(() => {
-        document.getElementById(tabName).classList.add("active");
-      }, 10);
-
-      evt.currentTarget.classList.remove("bg-[#EAE8E1]", "text-brand-dark");
-      evt.currentTarget.classList.add("active", "bg-brand-dark", "text-white", "shadow-lg");
-    }
-  </script>
-</body>
-
+    </script>
+  </body>
 </html>

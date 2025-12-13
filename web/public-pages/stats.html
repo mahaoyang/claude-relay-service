@@ -1,556 +1,920 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="/public-pages/assets/favicon-light.svg"
+      id="favicon"
+    />
+    <script>
+      // 动态设置 favicon 根据主题
+      ;(function () {
+        const theme = localStorage.getItem('theme') || 'light'
+        const favicon = document.getElementById('favicon')
+        favicon.href =
+          theme === 'dark'
+            ? '/public-pages/assets/favicon-dark.svg'
+            : '/public-pages/assets/favicon-light.svg'
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="icon" type="image/png" href="/public-pages/assets/logo-light.png" id="favicon">
-  <script>
-    // 动态设置 favicon 根据主题
-    (function() {
-      const theme = localStorage.getItem('theme') || 'light';
-      const favicon = document.getElementById('favicon');
-      favicon.href = theme === 'dark'
-        ? '/public-pages/assets/logo-dark.png'
-        : '/public-pages/assets/logo-light.png';
+        // 监听主题变化
+        window.addEventListener('storage', function (e) {
+          if (e.key === 'theme') {
+            favicon.href =
+              e.newValue === 'dark'
+                ? '/public-pages/assets/favicon-dark.svg'
+                : '/public-pages/assets/favicon-light.svg'
+          }
+        })
+      })()
+    </script>
 
-      // 监听主题变化
-      window.addEventListener('storage', function(e) {
-        if (e.key === 'theme') {
-          favicon.href = e.newValue === 'dark'
-            ? '/public-pages/assets/logo-dark.png'
-            : '/public-pages/assets/logo-light.png';
+    <!-- SEO Meta 标签 -->
+    <title>API Key 统计查询 - JojoCode</title>
+    <meta name="description" content="查询您的 API Key 使用统计、费用消耗和配额状态" />
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts: Manrope -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- FontAwesome for Icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+
+    <!-- Alpine.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+    <!-- Custom Config -->
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              'brand-bg': '#F2F0E9',
+              'brand-dark': '#1F2F22',
+              'brand-gray': '#8A8A8A',
+              'brand-card': '#EAE8E1'
+            },
+            fontFamily: {
+              sans: ['Manrope', 'sans-serif']
+            }
+          }
         }
-      });
-    })();
-  </script>
-  <title>API Key 统计查询 - JojoCode</title>
-  <meta name="description" content="查询您的 API Key 使用统计、费用消耗和配额状态">
-  <link rel="stylesheet" href="/public-pages/assets/lily-ui.css">
-  <script defer src="/public-pages/assets/navbar.js"></script>
-  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-  <script src="https://unpkg.com/lucide@latest"></script>
-  <style>
-    [x-cloak] {
-      display: none !important;
-    }
-
-    .stat-card {
-      background: rgba(255, 255, 255, 0.8);
-      backdrop-filter: blur(12px);
-      border: 1px solid var(--sand-6);
-      border-radius: 16px;
-      transition: all 0.3s ease;
-    }
-
-    .stat-card:hover {
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
-      transform: translateY(-2px);
-    }
-
-    .dark .stat-card {
-      background: rgba(30, 30, 35, 0.8);
-      border: 1px solid var(--sand-7);
-    }
-
-    .stat-card-main {
-      position: relative;
-      overflow: hidden;
-      padding: 20px;
-    }
-
-    .stat-card-main .stat-icon {
-      width: 48px;
-      height: 48px;
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 12px;
-      background: linear-gradient(135deg, var(--sand-4), var(--sand-6));
-      color: var(--sand-12);
-    }
-
-    .dark .stat-card-main .stat-icon {
-      background: linear-gradient(135deg, var(--sand-4), var(--sand-7));
-      color: var(--sand-1);
-    }
-
-    .stat-card-main .stat-icon svg {
-      width: 24px;
-      height: 24px;
-      color: currentColor;
-    }
-
-    .stat-card-main .stat-label {
-      font-size: 13px;
-      color: var(--sand-11);
-      margin-bottom: 4px;
-    }
-
-    .stat-card-main .stat-value {
-      font-size: 28px;
-      font-weight: 700;
-      color: var(--sand-12);
-      line-height: 1.2;
-    }
-
-    .progress-container {
-      background: var(--sand-4);
-      border-radius: 999px;
-      height: 8px;
-      overflow: hidden;
-    }
-
-    .progress-bar-fill {
-      height: 100%;
-      border-radius: 999px;
-      transition: width 0.5s ease;
-    }
-
-    .progress-blue {
-      background: linear-gradient(90deg, #3b82f6, #60a5fa);
-    }
-
-    .progress-green {
-      background: linear-gradient(90deg, #10b981, #34d399);
-    }
-
-    .progress-red {
-      background: linear-gradient(90deg, #ef4444, #f87171);
-    }
-
-    .input-glass {
-      background: rgba(255, 255, 255, 0.6);
-      backdrop-filter: blur(10px);
-      border: 1px solid var(--sand-7);
-      transition: all 0.2s ease;
-    }
-
-    .input-glass:focus {
-      outline: none;
-      border-color: var(--accent-8);
-      box-shadow: 0 0 0 3px var(--accent-3);
-    }
-
-    .dark .input-glass {
-      background: rgba(0, 0, 0, 0.3);
-    }
-
-    .model-card {
-      background: var(--sand-2);
-      border-radius: 12px;
-      padding: 16px;
-      transition: all 0.2s ease;
-    }
-
-    .model-card:hover {
-      background: var(--sand-3);
-    }
-
-    .dark .model-card {
-      background: var(--sand-3);
-    }
-
-    .dark .model-card:hover {
-      background: var(--sand-4);
-    }
-
-    .stats-grid {
-      display: grid;
-      gap: 16px;
-    }
-
-    .stats-grid-4 {
-      grid-template-columns: repeat(4, 1fr);
-    }
-
-    .stats-grid-2 {
-      grid-template-columns: repeat(2, 1fr);
-    }
-
-    @media (max-width: 1024px) {
-      .stats-grid-4 {
-        grid-template-columns: repeat(2, 1fr);
       }
-    }
+    </script>
 
-    @media (max-width: 640px) {
-
-      .stats-grid-4,
-      .stats-grid-2 {
-        grid-template-columns: 1fr;
+    <style>
+      body {
+        background-color: #f2f0e9;
+        color: #1f2f22;
       }
-    }
 
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      padding: 4px 10px;
-      border-radius: 6px;
-      font-size: 12px;
-      font-weight: 500;
-    }
+      /* Custom scrollbar */
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
 
-    .badge-accent {
-      background: var(--accent-3);
-      color: var(--accent-11);
-    }
+      ::-webkit-scrollbar-track {
+        background: #f2f0e9;
+      }
 
-    .badge-green {
-      background: rgba(16, 185, 129, 0.15);
-      color: #059669;
-    }
+      ::-webkit-scrollbar-thumb {
+        background: #d1d1d1;
+        border-radius: 4px;
+      }
 
-    .dark .badge-green {
-      color: #34d399;
-    }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #1f2f22;
+      }
+      [x-cloak] {
+        display: none !important;
+      }
 
-    .badge-blue {
-      background: rgba(59, 130, 246, 0.15);
-      color: #2563eb;
-    }
+      /* Inline Logo Styles */
+      .inline-logo-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        line-height: 1;
+      }
 
-    .dark .badge-blue {
-      color: #60a5fa;
-    }
+      .inline-logo-main {
+        display: flex;
+        align-items: baseline;
+        font-weight: 700;
+        color: #1f2f22;
+        line-height: 1;
+        filter: drop-shadow(1px 2px 2px rgba(0, 0, 0, 0.15));
+      }
 
-    .badge-red {
-      background: rgba(239, 68, 68, 0.15);
-      color: #dc2626;
-    }
+      .inline-logo-main .symbols {
+        font-size: 8px;
+        letter-spacing: -0.5px;
+        font-weight: 600;
+        display: flex;
+        align-items: baseline;
+        margin-right: 3px;
+      }
 
-    .dark .badge-red {
-      color: #f87171;
-    }
+      .inline-logo-main .letters {
+        font-size: 20px;
+        letter-spacing: -1.2px;
+        display: flex;
+        align-items: baseline;
+        font-weight: 700;
+      }
 
-    .badge-orange {
-      background: rgba(249, 115, 22, 0.15);
-      color: #ea580c;
-    }
+      .inline-logo-subtitle {
+        font-size: 5px;
+        font-weight: 500;
+        color: #1f2f22;
+        letter-spacing: 0.4px;
+        opacity: 0.8;
+        margin-top: 1px;
+        text-shadow: 0.5px 0.5px 1px rgba(0, 0, 0, 0.1);
+        text-align: center;
+      }
 
-    .dark .badge-orange {
-      color: #fb923c;
-    }
+      /* Nav mini search */
+      #nav-key-search {
+        position: relative;
+        border: 0;
+        background: transparent;
+        box-shadow: none;
+        padding: 0;
+        backdrop-filter: none;
+      }
 
-    .badge-yellow {
-      background: rgba(234, 179, 8, 0.15);
-      color: #ca8a04;
-    }
+      #nav-key-search .nav-search-field {
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        position: absolute;
+        top: 50%;
+        right: calc(100% + 0.5rem);
+        transform: translateY(-50%) scale(0.98);
+        z-index: 20;
+        padding: 0.25rem 0.375rem 0.25rem 0.75rem;
+        border-radius: 9999px;
+        border: 1px solid rgba(31, 47, 34, 0.12);
+        background: rgba(255, 255, 255, 0.6);
+        backdrop-filter: blur(12px);
+        box-shadow: 0 8px 24px rgba(31, 47, 34, 0.07);
+        flex: 0 0 auto;
+        max-width: 0;
+        width: 0;
+        opacity: 0;
+        overflow: hidden;
+        pointer-events: none;
+        transition:
+          width 320ms cubic-bezier(0.16, 1, 0.3, 1),
+          max-width 320ms cubic-bezier(0.16, 1, 0.3, 1),
+          opacity 220ms ease,
+          transform 320ms cubic-bezier(0.16, 1, 0.3, 1),
+          border-color 220ms ease,
+          box-shadow 220ms ease;
+      }
 
-    .dark .badge-yellow {
-      color: #facc15;
-    }
-  </style>
-</head>
+      #nav-key-search.is-expanded .nav-search-field {
+        max-width: min(16rem, 65vw);
+        width: min(16rem, 65vw);
+        opacity: 1;
+        transform: translateY(-50%) scale(1);
+        pointer-events: auto;
+      }
 
-<body data-scaling="100%" data-radius="medium"
-  class="rt-Theme radix-themes min-h-screen text-sand-12 antialiased bg-gradient-to-br from-iris-2 to-violet-2"
-  data-is-root-theme="true" x-data="statsApp()" x-init="init()"
-  :class="[theme === 'dark' ? 'dark' : '', 'accent-' + accent]" :data-accent-color="accent">
-  <div data-navbar></div>
-  <main class="pt-28 pb-16 px-4">
-    <div class="max-w-5xl mx-auto">
-      <div x-show="statsData" x-cloak class="space-y-6">
-        <div class="flex items-center justify-between flex-wrap gap-3">
-          <h2 class="text-xl font-bold text-sand-12" x-text="statsData?.name || 'API Key 统计'"></h2>
+      #nav-key-search.is-expanded .nav-search-field:hover {
+        border-color: rgba(31, 47, 34, 0.18);
+      }
+
+      #nav-key-search.is-expanded .nav-search-field:focus-within {
+        border-color: rgba(31, 47, 34, 0.22);
+        box-shadow: 0 6px 18px rgba(31, 47, 34, 0.05);
+      }
+    </style>
+  </head>
+
+  <body
+    class="font-sans antialiased selection:bg-brand-dark selection:text-white"
+    x-data="statsApp()"
+    x-init="init()"
+  >
+    <!-- Main Container -->
+    <div class="max-w-[1440px] mx-auto px-6 md:px-12 py-6">
+      <!-- Navigation Header -->
+      <nav class="mb-16" x-data="{ mobileMenuOpen: false }">
+        <div class="flex items-center justify-between gap-4">
+          <!-- Logo -->
           <div class="flex items-center gap-3">
-            <!-- 过期时间显示 -->
-            <span class="badge" :class="getExpiryBadgeClass()" x-show="statsData">
-              <svg class="w-3 h-3 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-              <span x-text="getExpiryText()"></span>
-            </span>
-            <span class="badge badge-green"><svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 8 8">
-                <circle cx="4" cy="4" r="3" />
-              </svg>活跃</span>
-          </div>
-        </div>
-        <div class="stats-grid stats-grid-4">
-          <div class="stat-card stat-card-main">
-            <div class="stat-icon"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"
-                stroke-width="2">
-                <path d="M13 10V3L4 14h7v7l9-11h-7z" />
-              </svg></div>
-            <div class="stat-label">总请求数</div>
-            <div class="stat-value" x-text="statsData?.usage.total.requests.toLocaleString()"></div>
-          </div>
-          <div class="stat-card stat-card-main">
-            <div class="stat-icon"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"
-                stroke-width="2">
-                <path
-                  d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A2 2 0 013 12V7a4 4 0 014-4z" />
-              </svg></div>
-            <div class="stat-label">总 Token 消耗</div>
-            <div class="stat-value" x-text="statsData?.usage.total.allTokens.toLocaleString()"></div>
-          </div>
-          <div class="stat-card stat-card-main">
-            <div class="stat-icon"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"
-                stroke-width="2">
-                <path
-                  d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg></div>
-            <div class="stat-label">总费用</div>
-            <div class="stat-value" x-text="statsData?.usage.total.formattedCost"></div>
-          </div>
-          <div class="stat-card stat-card-main">
-            <div class="stat-icon"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"
-                stroke-width="2">
-                <path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-              </svg></div>
-            <div class="stat-label">今日费用</div>
-            <div class="stat-value">$<span x-text="statsData?.limits.currentDailyCost.toFixed(4)"></span></div>
-          </div>
-          <div class="stat-card stat-card-main" x-show="statsData?.limits.totalCostLimit > 0">
-            <div class="stat-icon"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"
-                stroke-width="2">
-                <path d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
-              </svg></div>
-            <div class="stat-label">总费用限制</div>
-            <div class="stat-value text-lg">
-              <span :class="getUsedBudgetClass()">$<span x-text="getUsedBudget().toFixed(2)"></span></span>
-              <span class="text-sand-10 text-base"> / $<span x-text="statsData?.limits.totalCostLimit.toFixed(2)"></span></span>
-            </div>
-          </div>
-        </div>
-        <div class="stat-card p-6">
-          <h3 class="text-base font-bold text-sand-12 mb-4">Token 使用详情</h3>
-          <div class="stats-grid stats-grid-4">
-            <div class="model-card text-center">
-              <div class="text-xs text-sand-10 mb-1">输入 Token</div>
-              <div class="text-xl font-bold text-blue-600 dark:text-blue-400"
-                x-text="statsData?.usage.total.inputTokens.toLocaleString()"></div>
-            </div>
-            <div class="model-card text-center">
-              <div class="text-xs text-sand-10 mb-1">输出 Token</div>
-              <div class="text-xl font-bold text-green-600 dark:text-green-400"
-                x-text="statsData?.usage.total.outputTokens.toLocaleString()"></div>
-            </div>
-            <div class="model-card text-center">
-              <div class="text-xs text-sand-10 mb-1">缓存创建</div>
-              <div class="text-xl font-bold text-purple-600 dark:text-purple-400"
-                x-text="statsData?.usage.total.cacheCreationTokens?.toLocaleString() || '0'"></div>
-            </div>
-            <div class="model-card text-center">
-              <div class="text-xs text-sand-10 mb-1">缓存读取</div>
-              <div class="text-xl font-bold text-amber-600 dark:text-amber-400"
-                x-text="statsData?.usage.total.cacheReadTokens?.toLocaleString() || '0'"></div>
-            </div>
-          </div>
-        </div>
-        <div class="stat-card p-6">
-          <h3 class="text-base font-bold text-sand-12 mb-4">配额状态</h3>
-          <div class="space-y-4">
-            <div x-show="statsData?.limits && statsData?.limits.rateLimitRequests !== undefined">
-              <div class="flex justify-between text-sm mb-2"><span class="text-sand-11">当前窗口请求</span><span
-                  class="font-semibold text-sand-12"><span x-text="statsData?.limits.currentWindowRequests ?? 0"></span>
-                  /
-                  <span x-text="statsData?.limits.rateLimitRequests ?? 0"></span></span></div>
-              <div class="progress-container">
-                <div class="progress-bar-fill"
-                  :class="(() => { const total = statsData?.limits?.rateLimitRequests || 0; const current = statsData?.limits?.currentWindowRequests || 0; if (!total) return 'progress-blue'; const ratio = current / total * 100; return ratio > 80 ? 'progress-red' : 'progress-blue'; })()"
-                  :style="(() => { const total = statsData?.limits?.rateLimitRequests || 0; const current = statsData?.limits?.currentWindowRequests || 0; if (!total) return 'width: 0%'; return 'width: ' + Math.min(100, current / total * 100).toFixed(2) + '%'; })()">
+            <div class="inline-logo-wrapper">
+              <div class="inline-logo-main">
+                <div class="symbols">
+                  <span>&gt;</span>
+                  <span>_</span>
+                </div>
+                <div class="letters">
+                  <span>J</span>
+                  <span>O</span>
                 </div>
               </div>
-            </div>
-            <div x-show="statsData?.limits && statsData?.limits.tokenLimit !== undefined">
-              <div class="flex justify-between text-sm mb-2"><span class="text-sand-11">当前窗口 Token</span><span
-                  class="font-semibold text-sand-12"><span
-                    x-text="(statsData?.limits.currentWindowTokens ?? 0).toLocaleString()"></span> / <span
-                    x-text="(statsData?.limits.tokenLimit ?? 0).toLocaleString()"></span></span></div>
-              <div class="progress-container">
-                <div class="progress-bar-fill"
-                  :class="(() => { const total = statsData?.limits?.tokenLimit || 0; const current = statsData?.limits?.currentWindowTokens || 0; if (!total) return 'progress-green'; const ratio = current / total * 100; return ratio > 80 ? 'progress-red' : 'progress-green'; })()"
-                  :style="(() => { const total = statsData?.limits?.tokenLimit || 0; const current = statsData?.limits?.currentWindowTokens || 0; if (!total) return 'width: 0%'; return 'width: ' + Math.min(100, current / total * 100).toFixed(2) + '%'; })()">
-                </div>
-              </div>
-            </div>
-            <div class="stats-grid stats-grid-2 mt-4"
-              x-show="statsData?.limits && statsData?.limits.windowRemainingSeconds !== undefined">
-              <div class="model-card">
-                <div class="text-xs text-sand-10 mb-1">窗口剩余时间</div>
-                <div class="text-lg font-bold text-sand-12"><span
-                    x-text="Math.floor((statsData?.limits.windowRemainingSeconds || 0) / 60)"></span> 分钟</div>
-              </div>
-              <div class="model-card">
-                <div class="text-xs text-sand-10 mb-1">窗口总时长</div>
-                <div class="text-lg font-bold text-sand-12"><span
-                    x-text="statsData?.limits.rateLimitWindowMinutes ?? '-'"></span> 分钟</div>
-              </div>
-            </div>
-            <div class="text-sm text-sand-11"
-              x-show="(() => { const limits = statsData?.limits; if (!limits) return true; const hasRequest = limits.rateLimitRequests !== undefined && limits.rateLimitRequests !== null; const hasToken = limits.tokenLimit !== undefined && limits.tokenLimit !== null; return !(hasRequest || hasToken); })()">
-              暂无配额数据，可能未设置限制或暂时无法获取。
+              <div class="inline-logo-subtitle">JO</div>
             </div>
           </div>
+
+          <!-- Nav Links (Desktop) -->
+          <div class="hidden md:flex items-center space-x-8 text-sm font-medium">
+            <a href="/" class="hover:text-brand-dark transition">首页</a>
+            <a href="/stats" class="hover:text-brand-dark transition">查询统计</a>
+            <a href="/docs" class="hover:text-brand-dark transition">使用文档</a>
+          </div>
+
+          <div class="flex items-center gap-4">
+            <!-- Key Search -->
+            <form
+              id="nav-key-search"
+              class="flex items-center flex-none rounded-full"
+              autocomplete="off"
+            >
+              <button
+                id="nav-key-toggle"
+                type="button"
+                class="h-7 w-7 shrink-0 rounded-full bg-white/60 border border-brand-dark/10 flex items-center justify-center hover:border-brand-dark/20 transition"
+                aria-label="搜索 API Key"
+                aria-expanded="false"
+              >
+                <i class="fa-solid fa-magnifying-glass text-brand-gray text-xs"></i>
+              </button>
+
+              <div class="nav-search-field">
+                <input
+                  id="nav-key-input"
+                  type="text"
+                  inputmode="text"
+                  autocapitalize="off"
+                  spellcheck="false"
+                  placeholder="输入 API Key 查询"
+                  class="bg-transparent outline-none placeholder:text-brand-gray/70 text-xs w-full min-w-0"
+                />
+                <button
+                  type="submit"
+                  class="h-7 w-7 shrink-0 rounded-full bg-brand-dark text-white flex items-center justify-center hover:bg-opacity-90 transition shadow-md shadow-brand-dark/10"
+                  aria-label="查询统计"
+                >
+                  <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                </button>
+              </div>
+            </form>
+
+            <!-- CTA Button -->
+            <a
+              href="/"
+              class="bg-brand-dark text-white px-3 py-1.5 md:px-5 md:py-2 rounded-full text-xs md:text-sm font-medium hover:bg-opacity-90 transition shadow-lg shadow-brand-dark/10 whitespace-nowrap"
+            >
+              返回首页
+            </a>
+
+            <!-- Mobile Menu Button -->
+            <button
+              @click="mobileMenuOpen = !mobileMenuOpen"
+              class="md:hidden h-7 w-7 rounded-full bg-white/60 border border-brand-dark/10 flex items-center justify-center hover:border-brand-dark/20 transition"
+              aria-label="菜单"
+            >
+              <i
+                class="fa-solid text-brand-gray text-xs"
+                :class="mobileMenuOpen ? 'fa-xmark' : 'fa-bars'"
+              ></i>
+            </button>
+          </div>
         </div>
-        <div class="stat-card p-6" x-show="modelStats.length > 0">
-          <h3 class="text-base font-bold text-sand-12 mb-4">模型使用统计</h3>
-          <div class="space-y-3">
-            <template x-for="model in modelStats" :key="model.model">
-              <div class="model-card">
-                <div class="flex justify-between items-center mb-3"><span class="font-semibold text-sm text-sand-12"
-                    x-text="model.model"></span>
+
+        <!-- Mobile Menu -->
+        <div
+          x-show="mobileMenuOpen"
+          x-cloak
+          @click.away="mobileMenuOpen = false"
+          x-transition:enter="transition ease-out duration-200"
+          x-transition:enter-start="opacity-0 -translate-y-2"
+          x-transition:enter-end="opacity-100 translate-y-0"
+          x-transition:leave="transition ease-in duration-150"
+          x-transition:leave-start="opacity-100 translate-y-0"
+          x-transition:leave-end="opacity-0 -translate-y-2"
+          class="md:hidden mt-4 bg-white/80 backdrop-blur-sm border border-gray-200 rounded-2xl overflow-hidden"
+        >
+          <div class="flex flex-col">
+            <a
+              href="/"
+              class="px-6 py-3 text-sm font-medium hover:bg-brand-bg/50 transition border-b border-gray-200"
+            >
+              首页
+            </a>
+            <a
+              href="/stats"
+              class="px-6 py-3 text-sm font-medium hover:bg-brand-bg/50 transition border-b border-gray-200"
+            >
+              查询统计
+            </a>
+            <a href="/docs" class="px-6 py-3 text-sm font-medium hover:bg-brand-bg/50 transition">
+              使用文档
+            </a>
+          </div>
+        </div>
+      </nav>
+
+      <!-- Main Content -->
+      <main class="max-w-5xl mx-auto">
+        <div x-show="statsData" x-cloak class="space-y-6">
+          <!-- Header -->
+          <div class="flex items-center justify-between flex-wrap gap-3 mb-8">
+            <h2
+              class="text-2xl font-semibold text-brand-dark"
+              x-text="statsData?.name || 'API Key 统计'"
+            ></h2>
+            <div class="flex items-center gap-3">
+              <!-- 过期时间显示 -->
+              <span
+                class="inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-medium"
+                :class="getExpiryBadgeClass()"
+                x-show="statsData"
+              >
+                <i class="fa-solid fa-clock mr-1.5"></i>
+                <span x-text="getExpiryText()"></span>
+              </span>
+              <span
+                class="inline-flex items-center px-3 py-1.5 rounded-lg bg-green-100 text-green-700 text-xs font-medium"
+              >
+                <i class="fa-solid fa-circle text-[6px] mr-1.5"></i>活跃
+              </span>
+            </div>
+          </div>
+
+          <!-- Stats Grid - Main Metrics -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <!-- 总请求数 -->
+            <div
+              class="bg-white/80 backdrop-blur-sm border border-gray-200 rounded-2xl p-6 hover:shadow-lg transition-all duration-300"
+            >
+              <div
+                class="flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-br from-blue-400 to-blue-600 text-white mb-4"
+              >
+                <i class="fa-solid fa-bolt text-xl"></i>
+              </div>
+              <div class="text-xs text-gray-500 mb-1">总请求数</div>
+              <div
+                class="text-2xl font-bold text-brand-dark"
+                x-text="statsData?.usage.total.requests.toLocaleString()"
+              ></div>
+            </div>
+
+            <!-- 总 Token -->
+            <div
+              class="bg-white/80 backdrop-blur-sm border border-gray-200 rounded-2xl p-6 hover:shadow-lg transition-all duration-300"
+            >
+              <div
+                class="flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-br from-purple-400 to-purple-600 text-white mb-4"
+              >
+                <i class="fa-solid fa-tag text-xl"></i>
+              </div>
+              <div class="text-xs text-gray-500 mb-1">总 Token 消耗</div>
+              <div
+                class="text-2xl font-bold text-brand-dark"
+                x-text="statsData?.usage.total.allTokens.toLocaleString()"
+              ></div>
+            </div>
+
+            <!-- 总费用 -->
+            <div
+              class="bg-white/80 backdrop-blur-sm border border-gray-200 rounded-2xl p-6 hover:shadow-lg transition-all duration-300"
+            >
+              <div
+                class="flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-br from-green-400 to-green-600 text-white mb-4"
+              >
+                <i class="fa-solid fa-dollar-sign text-xl"></i>
+              </div>
+              <div class="text-xs text-gray-500 mb-1">总费用</div>
+              <div
+                class="text-2xl font-bold text-brand-dark"
+                x-text="statsData?.usage.total.formattedCost"
+              ></div>
+            </div>
+
+            <!-- 今日费用 -->
+            <div
+              class="bg-white/80 backdrop-blur-sm border border-gray-200 rounded-2xl p-6 hover:shadow-lg transition-all duration-300"
+            >
+              <div
+                class="flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 text-white mb-4"
+              >
+                <i class="fa-solid fa-calendar-day text-xl"></i>
+              </div>
+              <div class="text-xs text-gray-500 mb-1">今日费用</div>
+              <div class="text-2xl font-bold text-brand-dark">
+                $<span x-text="statsData?.limits.currentDailyCost.toFixed(4)"></span>
+              </div>
+            </div>
+
+            <!-- 总费用限制 -->
+            <div
+              class="bg-white/80 backdrop-blur-sm border border-gray-200 rounded-2xl p-6 hover:shadow-lg transition-all duration-300"
+              x-show="statsData?.limits.totalCostLimit > 0"
+            >
+              <div
+                class="flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-br from-red-400 to-red-600 text-white mb-4"
+              >
+                <i class="fa-solid fa-wallet text-xl"></i>
+              </div>
+              <div class="text-xs text-gray-500 mb-1">总费用限制</div>
+              <div class="text-lg font-bold">
+                <span :class="getUsedBudgetClass()"
+                  >$<span x-text="getUsedBudget().toFixed(2)"></span
+                ></span>
+                <span class="text-gray-400 text-base">
+                  / $<span x-text="statsData?.limits.totalCostLimit.toFixed(2)"></span
+                ></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Token 使用详情 -->
+          <div class="bg-white/80 backdrop-blur-sm border border-gray-200 rounded-2xl p-6">
+            <h3 class="text-lg font-semibold text-brand-dark mb-6">Token 使用详情</h3>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <div class="bg-brand-card rounded-xl p-4 text-center hover:bg-opacity-80 transition">
+                <div class="text-xs text-gray-500 mb-2">输入 Token</div>
+                <div
+                  class="text-xl font-bold text-blue-600"
+                  x-text="statsData?.usage.total.inputTokens.toLocaleString()"
+                ></div>
+              </div>
+              <div class="bg-brand-card rounded-xl p-4 text-center hover:bg-opacity-80 transition">
+                <div class="text-xs text-gray-500 mb-2">输出 Token</div>
+                <div
+                  class="text-xl font-bold text-green-600"
+                  x-text="statsData?.usage.total.outputTokens.toLocaleString()"
+                ></div>
+              </div>
+              <div class="bg-brand-card rounded-xl p-4 text-center hover:bg-opacity-80 transition">
+                <div class="text-xs text-gray-500 mb-2">缓存创建</div>
+                <div
+                  class="text-xl font-bold text-purple-600"
+                  x-text="statsData?.usage.total.cacheCreationTokens?.toLocaleString() || '0'"
+                ></div>
+              </div>
+              <div class="bg-brand-card rounded-xl p-4 text-center hover:bg-opacity-80 transition">
+                <div class="text-xs text-gray-500 mb-2">缓存读取</div>
+                <div
+                  class="text-xl font-bold text-amber-600"
+                  x-text="statsData?.usage.total.cacheReadTokens?.toLocaleString() || '0'"
+                ></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 配额状态 -->
+          <div class="bg-white/80 backdrop-blur-sm border border-gray-200 rounded-2xl p-6">
+            <h3 class="text-lg font-semibold text-brand-dark mb-6">配额状态</h3>
+            <div class="space-y-6">
+              <!-- 当前窗口请求 -->
+              <div x-show="statsData?.limits && statsData?.limits.rateLimitRequests !== undefined">
+                <div class="flex justify-between text-sm mb-2">
+                  <span class="text-gray-600">当前窗口请求</span>
+                  <span class="font-semibold text-brand-dark">
+                    <span x-text="statsData?.limits.currentWindowRequests ?? 0"></span> /
+                    <span x-text="statsData?.limits.rateLimitRequests ?? 0"></span>
+                  </span>
                 </div>
-                <div class="stats-grid stats-grid-3 text-xs">
-                  <div><span class="text-sand-10">请求</span>
-                    <div class="font-semibold text-sand-12" x-text="model.requests"></div>
+                <div class="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
+                  <div
+                    class="h-full rounded-full transition-all duration-500"
+                    :class="(() => { const total = statsData?.limits?.rateLimitRequests || 0; const current = statsData?.limits?.currentWindowRequests || 0; if (!total) return 'bg-blue-500'; const ratio = current / total * 100; return ratio > 80 ? 'bg-red-500' : 'bg-blue-500'; })()"
+                    :style="(() => { const total = statsData?.limits?.rateLimitRequests || 0; const current = statsData?.limits?.currentWindowRequests || 0; if (!total) return 'width: 0%'; return 'width: ' + Math.min(100, current / total * 100).toFixed(2) + '%'; })()"
+                  ></div>
+                </div>
+              </div>
+
+              <!-- 当前窗口 Token -->
+              <div x-show="statsData?.limits && statsData?.limits.tokenLimit !== undefined">
+                <div class="flex justify-between text-sm mb-2">
+                  <span class="text-gray-600">当前窗口 Token</span>
+                  <span class="font-semibold text-brand-dark">
+                    <span
+                      x-text="(statsData?.limits.currentWindowTokens ?? 0).toLocaleString()"
+                    ></span>
+                    / <span x-text="(statsData?.limits.tokenLimit ?? 0).toLocaleString()"></span>
+                  </span>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
+                  <div
+                    class="h-full rounded-full transition-all duration-500"
+                    :class="(() => { const total = statsData?.limits?.tokenLimit || 0; const current = statsData?.limits?.currentWindowTokens || 0; if (!total) return 'bg-green-500'; const ratio = current / total * 100; return ratio > 80 ? 'bg-red-500' : 'bg-green-500'; })()"
+                    :style="(() => { const total = statsData?.limits?.tokenLimit || 0; const current = statsData?.limits?.currentWindowTokens || 0; if (!total) return 'width: 0%'; return 'width: ' + Math.min(100, current / total * 100).toFixed(2) + '%'; })()"
+                  ></div>
+                </div>
+              </div>
+
+              <!-- 窗口时间信息 -->
+              <div
+                class="grid grid-cols-2 gap-4"
+                x-show="statsData?.limits && statsData?.limits.windowRemainingSeconds !== undefined"
+              >
+                <div class="bg-brand-card rounded-xl p-4">
+                  <div class="text-xs text-gray-500 mb-1">窗口剩余时间</div>
+                  <div class="text-lg font-bold text-brand-dark">
+                    <span
+                      x-text="Math.floor((statsData?.limits.windowRemainingSeconds || 0) / 60)"
+                    ></span>
+                    分钟
                   </div>
-                  <div><span class="text-sand-10">输入</span>
-                    <div class="font-semibold text-sand-12" x-text="model.inputTokens.toLocaleString()"></div>
-                  </div>
-                  <div><span class="text-sand-10">输出</span>
-                    <div class="font-semibold text-sand-12" x-text="model.outputTokens.toLocaleString()"></div>
-                  </div>
-                  <div><span class="text-sand-10">缓存写入</span>
-                    <div class="font-semibold text-sand-12" x-text="(model.cacheCreateTokens || 0).toLocaleString()"></div>
-                  </div>
-                  <div><span class="text-sand-10">缓存读取</span>
-                    <div class="font-semibold text-sand-12" x-text="(model.cacheReadTokens || 0).toLocaleString()"></div>
-                  </div>
-                  <div><span class="text-sand-10">总计</span>
-                    <div class="font-semibold text-sand-12" x-text="model.allTokens.toLocaleString()"></div>
+                </div>
+                <div class="bg-brand-card rounded-xl p-4">
+                  <div class="text-xs text-gray-500 mb-1">窗口总时长</div>
+                  <div class="text-lg font-bold text-brand-dark">
+                    <span x-text="statsData?.limits.rateLimitWindowMinutes ?? '-'"></span> 分钟
                   </div>
                 </div>
               </div>
-            </template>
+
+              <div
+                class="text-sm text-gray-500"
+                x-show="(() => { const limits = statsData?.limits; if (!limits) return true; const hasRequest = limits.rateLimitRequests !== undefined && limits.rateLimitRequests !== null; const hasToken = limits.tokenLimit !== undefined && limits.tokenLimit !== null; return !(hasRequest || hasToken); })()"
+              >
+                暂无配额数据，可能未设置限制或暂时无法获取。
+              </div>
+            </div>
+          </div>
+
+          <!-- 模型使用统计 -->
+          <div
+            class="bg-white/80 backdrop-blur-sm border border-gray-200 rounded-2xl p-6"
+            x-show="modelStats.length > 0"
+          >
+            <h3 class="text-lg font-semibold text-brand-dark mb-6">模型使用统计</h3>
+            <div class="space-y-4">
+              <template x-for="model in modelStats" :key="model.model">
+                <div class="bg-brand-card rounded-xl p-5 hover:bg-opacity-80 transition">
+                  <div class="flex justify-between items-center mb-4">
+                    <span class="font-semibold text-sm text-brand-dark" x-text="model.model"></span>
+                  </div>
+                  <div class="grid grid-cols-3 md:grid-cols-6 gap-4 text-xs">
+                    <div>
+                      <span class="text-gray-500 block mb-1">请求</span>
+                      <div class="font-semibold text-brand-dark" x-text="model.requests"></div>
+                    </div>
+                    <div>
+                      <span class="text-gray-500 block mb-1">输入</span>
+                      <div
+                        class="font-semibold text-brand-dark"
+                        x-text="model.inputTokens.toLocaleString()"
+                      ></div>
+                    </div>
+                    <div>
+                      <span class="text-gray-500 block mb-1">输出</span>
+                      <div
+                        class="font-semibold text-brand-dark"
+                        x-text="model.outputTokens.toLocaleString()"
+                      ></div>
+                    </div>
+                    <div>
+                      <span class="text-gray-500 block mb-1">缓存写入</span>
+                      <div
+                        class="font-semibold text-brand-dark"
+                        x-text="(model.cacheCreateTokens || 0).toLocaleString()"
+                      ></div>
+                    </div>
+                    <div>
+                      <span class="text-gray-500 block mb-1">缓存读取</span>
+                      <div
+                        class="font-semibold text-brand-dark"
+                        x-text="(model.cacheReadTokens || 0).toLocaleString()"
+                      ></div>
+                    </div>
+                    <div>
+                      <span class="text-gray-500 block mb-1">总计</span>
+                      <div
+                        class="font-semibold text-brand-dark"
+                        x-text="model.allTokens.toLocaleString()"
+                      ></div>
+                    </div>
+                  </div>
+                </div>
+              </template>
+            </div>
+          </div>
+
+          <!-- 无模型数据状态 -->
+          <div
+            class="bg-white/80 backdrop-blur-sm border border-gray-200 rounded-2xl p-8 text-center text-gray-500"
+            x-show="modelStats.length === 0"
+          >
+            <i class="fa-solid fa-chart-simple text-3xl mb-3 opacity-30"></i>
+            <p>暂无模型使用统计数据</p>
           </div>
         </div>
-        <div class="stat-card p-6 text-center text-sand-11" x-show="modelStats.length === 0">暂无模型使用统计数据</div>
-      </div>
-      <div x-show="!statsData" x-cloak class="stat-card p-6 text-center text-sand-11">
-        通过导航栏搜索框输入 API Key 可查看用量和配额。
+
+        <!-- 无数据状态 -->
+        <div
+          x-show="!statsData"
+          x-cloak
+          class="bg-white/80 backdrop-blur-sm border border-gray-200 rounded-2xl p-16 md:p-24 text-center"
+        >
+          <!-- 图标 - 主视觉 -->
+          <div class="mb-12">
+            <i class="fa-solid fa-chart-line text-7xl md:text-8xl text-gray-200/60"></i>
+          </div>
+
+          <!-- 标题 - 超大醒目 -->
+          <h1
+            class="text-4xl md:text-6xl font-bold text-brand-dark mb-6 tracking-tight leading-tight"
+          >
+            查询 API Key 统计
+          </h1>
+
+          <!-- 副标题 - 中等大小 -->
+          <p class="text-xl md:text-2xl text-gray-500 mb-4 font-light">输入您的 API Key</p>
+
+          <!-- 说明文字 - 小字 -->
+          <p class="text-sm text-gray-400 mb-12 font-light">查看用量和配额信息</p>
+
+          <!-- 搜索框 - 独立区域 -->
+          <form @submit.prevent="queryStats" class="max-w-xl mx-auto mb-6">
+            <div
+              class="flex items-center gap-4 bg-brand-card rounded-full p-3 border border-gray-300/50 hover:border-brand-dark/30 focus-within:border-brand-dark/50 transition-all shadow-sm hover:shadow-md"
+            >
+              <i class="fa-solid fa-key text-gray-400 ml-4 text-lg"></i>
+              <input
+                type="text"
+                x-model="apiKeyId"
+                placeholder="输入 API Key 或 Key ID"
+                class="flex-1 bg-transparent outline-none text-base placeholder:text-gray-400 text-brand-dark"
+                autocomplete="off"
+                spellcheck="false"
+              />
+              <button
+                type="submit"
+                class="bg-brand-dark text-white px-8 py-3 rounded-full text-sm font-semibold hover:bg-opacity-90 transition-all shadow-md shadow-brand-dark/20 hover:shadow-lg flex items-center gap-2 shrink-0"
+                :disabled="loading"
+              >
+                <i class="fa-solid fa-arrow-right text-xs"></i>
+                <span x-text="loading ? '查询中' : '查询统计'"></span>
+              </button>
+            </div>
+          </form>
+
+          <!-- 错误提示 -->
+          <div x-show="error" class="text-red-500 text-sm font-medium" x-text="error"></div>
+        </div>
+      </main>
+
+      <!-- Footer -->
+      <div class="border-t border-gray-300/50 pt-8 pb-12 mt-16">
+        <div class="flex flex-col md:flex-row justify-between items-center gap-6">
+          <div class="flex items-center gap-3">
+            <div
+              class="inline-logo-wrapper"
+              style="transform: scale(0.8); transform-origin: left center"
+            >
+              <div class="inline-logo-main">
+                <div class="symbols">
+                  <span>&gt;</span>
+                  <span>_</span>
+                </div>
+                <div class="letters">
+                  <span>J</span>
+                  <span>O</span>
+                </div>
+              </div>
+              <div class="inline-logo-subtitle">JO</div>
+            </div>
+            <span class="text-sm text-gray-500">© 2024 JojoCode. 高性价比 AI API 中转服务.</span>
+          </div>
+          <div class="flex items-center gap-6 text-sm">
+            <a href="/" class="text-gray-500 hover:text-brand-dark transition">首页</a>
+            <a href="/stats" class="text-gray-500 hover:text-brand-dark transition">查询统计</a>
+            <a href="/docs" class="text-gray-500 hover:text-brand-dark transition">使用文档</a>
+          </div>
+        </div>
       </div>
     </div>
-  </main>
-  <script>
-    function statsApp() {
-      return {
-        theme: localStorage.getItem('theme') || 'light',
-        accent: localStorage.getItem('accent') || 'iris',
-        apiKeyId: '',
-        statsData: null,
-        modelStats: [],
-        loading: false,
-        error: '',
-        init() {
-          this.$watch('theme', val => localStorage.setItem('theme', val));
-          this.$watch('accent', val => localStorage.setItem('accent', val));
-          const urlParams = new URLSearchParams(window.location.search);
-          const keyId = urlParams.get('id');
-          if (keyId) { this.apiKeyId = keyId; this.queryStats(); }
-        },
-        getExpiryText() {
-          if (!this.statsData) return '';
-          const expiresAt = this.statsData.expiresAt;
-          const expirationMode = this.statsData.expirationMode;
-          const isActivated = this.statsData.isActivated;
-          const activationDays = this.statsData.activationDays;
-          const activationUnit = this.statsData.activationUnit;
 
-          // 未激活状态
-          if (expirationMode === 'activation' && !isActivated) {
-            const unit = activationUnit === 'hours' ? '小时' : '天';
-            const days = activationDays || (activationUnit === 'hours' ? 24 : 30);
-            return `未激活 (激活后 ${days} ${unit}过期)`;
+    <!-- JavaScript -->
+    <script>
+      // Nav search functionality
+      ;(function () {
+        const form = document.getElementById('nav-key-search')
+        const toggle = document.getElementById('nav-key-toggle')
+        const input = document.getElementById('nav-key-input')
+        if (!form || !toggle || !input) return
+
+        function setExpanded(expanded) {
+          form.classList.toggle('is-expanded', expanded)
+          toggle.setAttribute('aria-expanded', String(expanded))
+          if (expanded) {
+            requestAnimationFrame(() => input.focus())
+          } else if (!input.value.trim()) {
+            input.value = ''
           }
+        }
 
-          // 永不过期
-          if (!expiresAt) return '永不过期';
+        setExpanded(false)
 
-          const expiryDate = new Date(expiresAt);
-          const now = new Date();
-          const diffMs = expiryDate - now;
-          const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+        toggle.addEventListener('click', function () {
+          const expanded = form.classList.contains('is-expanded')
+          if (!expanded) return setExpanded(true)
+          if (!input.value.trim()) return setExpanded(false)
+          input.focus()
+        })
 
-          const formatted = expiryDate.toLocaleString('zh-CN', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' });
+        document.addEventListener('click', function (e) {
+          if (!form.classList.contains('is-expanded')) return
+          if (form.contains(e.target)) return
+          if (!input.value.trim()) setExpanded(false)
+        })
 
-          if (diffMs < 0) return `已过期 (${formatted})`;
-          if (diffDays <= 7) return `${formatted} (${diffDays}天后)`;
-          if (diffDays <= 30) return `${formatted} (${diffDays}天后)`;
-          return `${formatted}`;
-        },
-        getExpiryBadgeClass() {
-          if (!this.statsData) return 'badge-accent';
-          const expiresAt = this.statsData.expiresAt;
-          const expirationMode = this.statsData.expirationMode;
-          const isActivated = this.statsData.isActivated;
+        input.addEventListener('keydown', function (e) {
+          if (e.key === 'Escape' && !input.value.trim()) setExpanded(false)
+        })
 
-          // 未激活状态 - 蓝色
-          if (expirationMode === 'activation' && !isActivated) return 'badge-blue';
+        form.addEventListener('submit', function (e) {
+          e.preventDefault()
+          const value = (input.value || '').trim()
+          window.location.href = value ? `/stats?id=${encodeURIComponent(value)}` : '/stats'
+        })
+      })()
 
-          // 永不过期 - 默认色
-          if (!expiresAt) return 'badge-accent';
-
-          const expiryDate = new Date(expiresAt);
-          const now = new Date();
-          const diffMs = expiryDate - now;
-          const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
-
-          if (diffMs < 0) return 'badge-red';
-          if (diffDays <= 7) return 'badge-orange';
-          if (diffDays <= 30) return 'badge-yellow';
-          return 'badge-green';
-        },
-        getRemainingBudget() {
-          if (!this.statsData) return 0;
-          const totalLimit = this.statsData.limits?.totalCostLimit || 0;
-          const currentCost = this.statsData.usage?.total?.cost || 0;
-          return Math.max(0, totalLimit - currentCost);
-        },
-        getRemainingBudgetClass() {
-          if (!this.statsData) return 'text-sand-12';
-          const totalLimit = this.statsData.limits?.totalCostLimit || 0;
-          if (totalLimit <= 0) return 'text-sand-12';
-          const remaining = this.getRemainingBudget();
-          const ratio = remaining / totalLimit;
-          if (ratio <= 0.1) return 'text-red-500';
-          if (ratio <= 0.3) return 'text-orange-500';
-          return 'text-green-600 dark:text-green-400';
-        },
-        getUsedBudget() {
-          if (!this.statsData) return 0;
-          return this.statsData.usage?.total?.cost || 0;
-        },
-        getUsedBudgetClass() {
-          if (!this.statsData) return 'text-sand-12';
-          const totalLimit = this.statsData.limits?.totalCostLimit || 0;
-          if (totalLimit <= 0) return 'text-sand-12';
-          const used = this.getUsedBudget();
-          const ratio = used / totalLimit;
-          if (ratio >= 0.9) return 'text-red-500';
-          if (ratio >= 0.7) return 'text-orange-500';
-          return 'text-green-600 dark:text-green-400';
-        },
-        async queryStats() {
-          const input = this.apiKeyId.trim();
-          if (!input) { this.error = '请输入 API Key'; return; }
-          this.loading = true; this.error = ''; this.statsData = null; this.modelStats = [];
-          const uuidRegex = /^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/i;
-          const isUUID = uuidRegex.test(input);
-          let apiId = input;
-          try {
-            if (!isUUID) {
-              const idResponse = await fetch('/apiStats/api/get-key-id', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ apiKey: input }) });
-              if (!idResponse.ok) { const errorData = await idResponse.json(); throw new Error(errorData.message || '无效的 API Key'); }
-              const idResult = await idResponse.json();
-              apiId = idResult.data.id;
+      // Stats app
+      function statsApp() {
+        return {
+          theme: localStorage.getItem('theme') || 'light',
+          accent: localStorage.getItem('accent') || 'iris',
+          apiKeyId: '',
+          statsData: null,
+          modelStats: [],
+          loading: false,
+          error: '',
+          init() {
+            this.$watch('theme', (val) => localStorage.setItem('theme', val))
+            this.$watch('accent', (val) => localStorage.setItem('accent', val))
+            const urlParams = new URLSearchParams(window.location.search)
+            const keyId = urlParams.get('id')
+            if (keyId) {
+              this.apiKeyId = keyId
+              this.queryStats()
             }
-            const response = await fetch('/apiStats/api/user-stats', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ apiId: apiId }) });
-            if (!response.ok) { const errorData = await response.json(); throw new Error(errorData.message || '查询失败'); }
-            const result = await response.json();
-            this.statsData = result.data;
-            const modelResponse = await fetch('/apiStats/api/user-model-stats', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ apiId: apiId, period: 'monthly' }) });
-            if (modelResponse.ok) { const modelResult = await modelResponse.json(); this.modelStats = modelResult.data || []; }
-          } catch (err) { this.error = err.message || '查询失败，请检查网络连接'; console.error('Query error:', err); } finally { this.loading = false; }
+          },
+          getExpiryText() {
+            if (!this.statsData) return ''
+            const expiresAt = this.statsData.expiresAt
+            const expirationMode = this.statsData.expirationMode
+            const isActivated = this.statsData.isActivated
+            const activationDays = this.statsData.activationDays
+            const activationUnit = this.statsData.activationUnit
+
+            // 未激活状态
+            if (expirationMode === 'activation' && !isActivated) {
+              const unit = activationUnit === 'hours' ? '小时' : '天'
+              const days = activationDays || (activationUnit === 'hours' ? 24 : 30)
+              return `未激活 (激活后 ${days} ${unit}过期)`
+            }
+
+            // 永不过期
+            if (!expiresAt) return '永不过期'
+
+            const expiryDate = new Date(expiresAt)
+            const now = new Date()
+            const diffMs = expiryDate - now
+            const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24))
+
+            const formatted = expiryDate.toLocaleString('zh-CN', {
+              year: 'numeric',
+              month: '2-digit',
+              day: '2-digit',
+              hour: '2-digit',
+              minute: '2-digit'
+            })
+
+            if (diffMs < 0) return `已过期 (${formatted})`
+            if (diffDays <= 7) return `${formatted} (${diffDays}天后)`
+            if (diffDays <= 30) return `${formatted} (${diffDays}天后)`
+            return `${formatted}`
+          },
+          getExpiryBadgeClass() {
+            if (!this.statsData) return 'bg-gray-100 text-gray-600'
+            const expiresAt = this.statsData.expiresAt
+            const expirationMode = this.statsData.expirationMode
+            const isActivated = this.statsData.isActivated
+
+            // 未激活状态 - 蓝色
+            if (expirationMode === 'activation' && !isActivated) return 'bg-blue-100 text-blue-600'
+
+            // 永不过期 - 默认色
+            if (!expiresAt) return 'bg-gray-100 text-gray-600'
+
+            const expiryDate = new Date(expiresAt)
+            const now = new Date()
+            const diffMs = expiryDate - now
+            const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24))
+
+            if (diffMs < 0) return 'bg-red-100 text-red-600'
+            if (diffDays <= 7) return 'bg-orange-100 text-orange-600'
+            if (diffDays <= 30) return 'bg-yellow-100 text-yellow-600'
+            return 'bg-green-100 text-green-600'
+          },
+          getRemainingBudget() {
+            if (!this.statsData) return 0
+            const totalLimit = this.statsData.limits?.totalCostLimit || 0
+            const currentCost = this.statsData.usage?.total?.cost || 0
+            return Math.max(0, totalLimit - currentCost)
+          },
+          getRemainingBudgetClass() {
+            if (!this.statsData) return 'text-brand-dark'
+            const totalLimit = this.statsData.limits?.totalCostLimit || 0
+            if (totalLimit <= 0) return 'text-brand-dark'
+            const remaining = this.getRemainingBudget()
+            const ratio = remaining / totalLimit
+            if (ratio <= 0.1) return 'text-red-500'
+            if (ratio <= 0.3) return 'text-orange-500'
+            return 'text-green-600'
+          },
+          getUsedBudget() {
+            if (!this.statsData) return 0
+            return this.statsData.usage?.total?.cost || 0
+          },
+          getUsedBudgetClass() {
+            if (!this.statsData) return 'text-brand-dark'
+            const totalLimit = this.statsData.limits?.totalCostLimit || 0
+            if (totalLimit <= 0) return 'text-brand-dark'
+            const used = this.getUsedBudget()
+            const ratio = used / totalLimit
+            if (ratio >= 0.9) return 'text-red-500'
+            if (ratio >= 0.7) return 'text-orange-500'
+            return 'text-green-600'
+          },
+          async queryStats() {
+            const input = this.apiKeyId.trim()
+            if (!input) {
+              this.error = '请输入 API Key'
+              return
+            }
+            this.loading = true
+            this.error = ''
+            this.statsData = null
+            this.modelStats = []
+            const uuidRegex = /^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/i
+            const isUUID = uuidRegex.test(input)
+            let apiId = input
+            try {
+              if (!isUUID) {
+                const idResponse = await fetch('/apiStats/api/get-key-id', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ apiKey: input })
+                })
+                if (!idResponse.ok) {
+                  const errorData = await idResponse.json()
+                  throw new Error(errorData.message || '无效的 API Key')
+                }
+                const idResult = await idResponse.json()
+                apiId = idResult.data.id
+              }
+              const response = await fetch('/apiStats/api/user-stats', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ apiId: apiId })
+              })
+              if (!response.ok) {
+                const errorData = await response.json()
+                throw new Error(errorData.message || '查询失败')
+              }
+              const result = await response.json()
+              this.statsData = result.data
+              const modelResponse = await fetch('/apiStats/api/user-model-stats', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ apiId: apiId, period: 'monthly' })
+              })
+              if (modelResponse.ok) {
+                const modelResult = await modelResponse.json()
+                this.modelStats = modelResult.data || []
+              }
+            } catch (err) {
+              this.error = err.message || '查询失败，请检查网络连接'
+              console.error('Query error:', err)
+            } finally {
+              this.loading = false
+            }
+          }
         }
       }
-    }
-
-    // Initialize Lucide icons
-    lucide.createIcons();
-  </script>
-</body>
-
+    </script>
+  </body>
 </html>
