@@ -62,7 +62,8 @@
 |------|------|
 | `navbar.js` | 共享导航栏组件 |
 | `lily-ui.css` | UI 样式库 |
-| `logo.png` | Logo 图标 |
+| `logo-light.png` | Logo 图标（明亮主题） |
+| `logo-dark.png` | Logo 图标（暗黑主题） |
 | `retro_typewriter.png` | 背景图片 |
 
 ### 3.3 路由文件
