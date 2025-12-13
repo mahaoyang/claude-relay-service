@@ -3,7 +3,26 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="icon" type="image/png" href="/public-pages/assets/logo.png">
+  <link rel="icon" type="image/png" href="/public-pages/assets/logo-light.png" id="favicon">
+  <script>
+    // 动态设置 favicon 根据主题
+    (function() {
+      const theme = localStorage.getItem('theme') || 'light';
+      const favicon = document.getElementById('favicon');
+      favicon.href = theme === 'dark'
+        ? '/public-pages/assets/logo-dark.png'
+        : '/public-pages/assets/logo-light.png';
+
+      // 监听主题变化
+      window.addEventListener('storage', function(e) {
+        if (e.key === 'theme') {
+          favicon.href = e.newValue === 'dark'
+            ? '/public-pages/assets/logo-dark.png'
+            : '/public-pages/assets/logo-light.png';
+        }
+      });
+    })();
+  </script>
 
   <!-- SEO Meta 标签 -->
   <title>使用文档 - JojoCode</title>
