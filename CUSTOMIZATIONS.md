@@ -192,19 +192,58 @@ redis: {
 
 ---
 
-## 11. 其他修改
+## 11. 智能定价 Fallback 机制
 
-### 11.1 新增文件
+### 11.1 功能描述
+当新模型发布但定价数据尚未更新时，自动使用同系列最新模型价格进行合理估算，避免返回 $0 导致收入损失。
+
+### 11.2 代码实现 (`src/services/pricingService.js`)
+**关键代码位置**: `calculateCost()` 方法中的 `FORK CUSTOMIZATION` 代码块
+
+**覆盖的模型系列**:
+- **GPT 系列** → 使用 GPT-5.1 定价估算
+  - Input: $1.75 / 1M tokens
+  - Output: $14 / 1M tokens
+
+- **Claude 系列** → 使用 Claude Sonnet 4.5 定价估算
+  - Input: $3 / 1M tokens
+  - Output: $15 / 1M tokens
+  - Cache Read: $0.30 / 1M tokens
+  - Cache Creation: $3.75 / 1M tokens
+
+- **Gemini 系列** → 使用 Gemini 2.0 Flash 定价估算
+  - Input: $0.15 / 1M tokens
+  - Output: $0.60 / 1M tokens
+  - Cache Read: $0.0375 / 1M tokens
+
+### 11.3 日志行为
+当触发估算价格时，会记录：
+```
+⚠️  Model gpt-6 not found in pricing data, using estimated gpt-5.1 pricing
+💰 Estimated cost for gpt-6: $0.002450 (multiplier: 1x, source: gpt-5.1)
+```
+
+### 11.4 返回值标记
+估算价格的响应包含特殊标记：
+- `hasPricing: true`
+- `isEstimated: true`
+- `estimatedSource: "gpt-5.1"` / `"claude-sonnet-4.5"` / `"gemini-2.0-flash-exp"`
+
+---
+
+## 12. 其他修改
+
+### 12.1 新增文件
 | 文件 | 功能 |
 |------|------|
 | `config/index.js` | 配置入口点 |
 | `tests/userMessageQueue.test.js` | 消息队列测试 |
 | `backups/README.txt` | 备份说明 |
 
-### 11.2 移除文件
+### 12.2 移除文件
 - `pnpm-lock.yaml` - 解决 Vercel 部署问题（使用 npm）
 
-### 11.3 API Key 哈希映射重建
+### 12.3 API Key 哈希映射重建
 - `src/models/redis.js` 新增 `rebuildApiKeyHashMap()` 方法
 
 ---
@@ -221,6 +260,9 @@ redis: {
 7. 检查 `src/routes/apiStats.js` 中费用统计的统一化修改
 8. 检查 `src/models/redis.js` 中的 URL 连接和锁续租代码
 9. 检查 `src/services/userMessageQueueService.js` 中的锁续租机制
+10. **保留 `src/services/pricingService.js` 中的智能定价 Fallback 代码块**
+   - 搜索 "FORK CUSTOMIZATION: Intelligent Pricing Fallback"
+   - 确保 GPT/Claude/Gemini 三个模型系列的估算价格逻辑完整保留
 
 ### 合并策略
 ```bash
@@ -267,3 +309,4 @@ CRS_REDIS_URL=rediss://...
 | 日期 | 内容 |
 |------|------|
 | 2025-12-10 | 初始版本，整理所有定制功能 |
+| 2025-12-13 | 新增智能定价 Fallback 机制（GPT/Claude/Gemini），避免新模型返回 $0 造成收入损失 |
