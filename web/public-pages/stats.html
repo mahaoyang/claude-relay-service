@@ -409,6 +409,17 @@
               </div>
 
               <div class="flex items-center gap-3">
+                <button
+                  type="button"
+                  class="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white/70 border border-brand-dark/10 text-brand-dark text-xs font-medium hover:border-brand-dark/20 hover:bg-white transition disabled:opacity-60 disabled:cursor-not-allowed"
+                  @click="queryStats"
+                  :disabled="loading"
+                  title="刷新"
+                  aria-label="刷新统计"
+                >
+                  <i class="fa-solid fa-rotate-right text-[10px]" :class="loading ? 'fa-spin' : ''"></i>
+                  <span>刷新</span>
+                </button>
                 <!-- 过期时间显示 -->
                 <span
                   class="inline-flex items-center px-3 py-1.5 rounded-xl text-xs font-medium"
