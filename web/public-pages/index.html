@@ -140,8 +140,29 @@
       }
 
       body {
-        background-color: #f2f0e9;
+        background: radial-gradient(1200px 600px at 20% 10%, rgba(31, 47, 34, 0.06), transparent 60%),
+          radial-gradient(1000px 500px at 90% 30%, rgba(31, 47, 34, 0.05), transparent 55%),
+          #f2f0e9;
         color: #1f2f22;
+      }
+
+      .jo-surface {
+        border: 1px solid rgba(31, 47, 34, 0.12);
+        background: rgba(255, 255, 255, 0.38);
+        backdrop-filter: blur(10px);
+        box-shadow:
+          0 24px 60px rgba(31, 47, 34, 0.08),
+          0 2px 0 rgba(255, 255, 255, 0.4) inset;
+      }
+
+      .jo-soft-ring {
+        box-shadow:
+          0 18px 40px rgba(31, 47, 34, 0.08),
+          0 0 0 1px rgba(31, 47, 34, 0.10) inset;
+      }
+
+      .jo-h1 {
+        letter-spacing: -0.03em;
       }
 
       /* Custom scrollbar */
@@ -299,9 +320,15 @@
 
   <body class="font-sans antialiased selection:bg-brand-dark selection:text-white">
     <!-- Main Container -->
-    <div class="max-w-[1440px] mx-auto px-6 md:px-12 py-6">
-      <!-- Navigation Header -->
-      <nav class="mb-16" x-data="{ mobileMenuOpen: false }" role="navigation" aria-label="主导航">
+    <div class="max-w-[1440px] mx-auto px-6 md:px-12 py-8 md:py-12">
+      <div class="jo-surface rounded-[2.5rem] px-6 md:px-12 py-6 md:py-10">
+        <!-- Navigation Header -->
+        <nav
+          class="pb-6 md:pb-8 mb-10 md:mb-12 border-b border-brand-dark/10"
+          x-data="{ mobileMenuOpen: false }"
+          role="navigation"
+          aria-label="主导航"
+        >
         <div class="flex items-center justify-between gap-4">
           <!-- Logo -->
           <div class="flex items-center gap-3">
@@ -439,21 +466,34 @@
       </nav>
 
       <!-- Hero Section -->
-      <header class="mb-20">
-        <div class="flex flex-col md:flex-row justify-between items-end mb-8">
+      <header class="mb-16 md:mb-20">
+        <div class="flex flex-col md:flex-row justify-between items-start mb-8 gap-8">
           <div>
             <p class="text-sm md:text-base text-gray-500 mb-2">/ AI API Gateway Service</p>
             <h1
-              class="text-5xl md:text-7xl font-semibold tracking-tight leading-tight uppercase text-brand-dark"
+              class="jo-h1 text-5xl md:text-7xl font-semibold tracking-tight leading-tight uppercase text-brand-dark"
             >
               JoJoCode <br />
               API Gateway
             </h1>
           </div>
-          <div class="flex flex-col items-end mt-6 md:mt-0 gap-4 md:gap-8">
-            <p class="text-gray-600 text-sm md:text-base max-w-xs text-right">
-              高性价比 AI API 中转服务<br />底价让利 · 保真不掺水
-            </p>
+          <div class="flex flex-col items-end mt-1 md:mt-0 gap-3 md:gap-4">
+            <div class="text-right max-w-xs">
+              <p class="text-gray-600 text-sm md:text-base leading-relaxed">
+                高性价比 AI API 中转服务<br />底价让利 · 保真不掺水
+              </p>
+              <div class="mt-3 flex flex-col gap-1.5 text-xs text-gray-500">
+                <div class="flex items-center justify-end gap-2">
+                  <span class="h-1.5 w-1.5 rounded-full bg-brand-dark/35"></span>
+                  <span>一个 Key 通用多模型</span>
+                </div>
+                <div class="flex items-center justify-end gap-2">
+                  <span class="h-1.5 w-1.5 rounded-full bg-brand-dark/35"></span>
+                  <span>价格透明 · 按量计费</span>
+                </div>
+              </div>
+            </div>
+
             <a
               href="/stats"
               class="group flex items-center gap-2 text-xs font-bold uppercase tracking-wide border-b border-brand-dark/30 pb-1 hover-arrow-move"
@@ -465,7 +505,7 @@
         </div>
 
         <!-- Hero Image -->
-        <div class="w-full h-[300px] md:h-[500px] overflow-hidden rounded-[2rem] shadow-sm">
+        <div class="w-full h-[260px] md:h-[420px] overflow-hidden rounded-[2rem] jo-soft-ring">
           <img
             src="https://images.unsplash.com/photo-1654355229863-95a8a7a779dd?auto=format&fit=crop&w=1800&q=80"
             alt="Digital nomad working on the beach"
@@ -475,13 +515,13 @@
       </header>
 
       <!-- About Section Grid -->
-      <section class="grid grid-cols-1 md:grid-cols-12 gap-6 mb-24">
+      <section class="grid grid-cols-1 md:grid-cols-12 gap-6 mb-20 md:mb-24">
         <!-- Left Image -->
         <div class="md:col-span-3 h-[300px] md:h-[400px]">
           <img
             src="https://images.unsplash.com/photo-1653907696261-be994f43ffbd?auto=format&fit=crop&w=1200&q=80"
             alt="Remote work with laptop"
-            class="w-full h-full object-cover rounded-[1.5rem]"
+            class="w-full h-full object-cover rounded-[1.5rem] jo-soft-ring"
             loading="lazy"
           />
         </div>
@@ -515,65 +555,78 @@
           <img
             src="https://images.unsplash.com/photo-1494783367193-149034c05e8f?auto=format&fit=crop&w=1200&q=80"
             alt="Travel road landscape"
-            class="w-full h-full object-cover rounded-[1.5rem]"
+            class="w-full h-full object-cover rounded-[1.5rem] jo-soft-ring"
             loading="lazy"
           />
         </div>
       </section>
 
       <!-- Why Choose Us -->
-      <section class="mb-24">
-        <h3 class="text-2xl font-medium mb-8 text-brand-dark">为什么选择我们？</h3>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 border-t border-gray-300/50 pt-8">
+      <section class="mb-20 md:mb-24">
+        <div class="flex items-end justify-between gap-6 mb-8">
+          <h3 class="text-2xl font-medium text-brand-dark">为什么选择我们？</h3>
+          <p class="text-sm text-gray-500 max-w-md text-right hidden md:block">
+            少折腾，多产出：更像“工具基础设施”，而不是又一个平台账号体系。
+          </p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 border-t border-brand-dark/10 pt-8">
           <!-- Card 1 -->
-          <div class="flex justify-between items-start group">
+          <div class="flex items-start justify-between gap-6 rounded-2xl bg-white/30 p-6 jo-soft-ring">
             <div>
               <h4 class="font-semibold text-lg mb-2">价格透明</h4>
               <p class="text-gray-500 text-sm max-w-xs">
                 所有费用公开透明，按实际使用量计费，无隐藏收费，随时查询用量统计。
               </p>
             </div>
-            <div class="text-gray-400 group-hover:text-brand-dark transition-colors duration-300">
-              <i class="fa-solid fa-dollar-sign text-xl"></i>
+            <div
+              class="h-10 w-10 rounded-full bg-brand-bg/60 flex items-center justify-center text-brand-dark/80"
+            >
+              <i class="fa-solid fa-dollar-sign text-sm"></i>
             </div>
           </div>
 
           <!-- Card 2 -->
-          <div class="flex justify-between items-start group">
+          <div class="flex items-start justify-between gap-6 rounded-2xl bg-white/30 p-6 jo-soft-ring">
             <div>
               <h4 class="font-semibold text-lg mb-2">模型保真</h4>
               <p class="text-gray-500 text-sm max-w-xs">
                 直连官方 API，保证模型原汁原味，绝不掺水降级，确保最佳使用体验。
               </p>
             </div>
-            <div class="text-gray-400 group-hover:text-brand-dark transition-colors duration-300">
-              <i class="fa-solid fa-shield-halved text-xl"></i>
+            <div
+              class="h-10 w-10 rounded-full bg-brand-bg/60 flex items-center justify-center text-brand-dark/80"
+            >
+              <i class="fa-solid fa-shield-halved text-sm"></i>
             </div>
           </div>
 
           <!-- Card 3 -->
-          <div class="flex justify-between items-start group">
+          <div class="flex items-start justify-between gap-6 rounded-2xl bg-white/30 p-6 jo-soft-ring">
             <div>
               <h4 class="font-semibold text-lg mb-2">即买即用</h4>
               <p class="text-gray-500 text-sm max-w-xs">
                 无需繁琐注册流程，一个 API Key 通用所有平台和模型，简单高效。
               </p>
             </div>
-            <div class="text-gray-400 group-hover:text-brand-dark transition-colors duration-300">
-              <i class="fa-solid fa-bolt text-xl"></i>
+            <div
+              class="h-10 w-10 rounded-full bg-brand-bg/60 flex items-center justify-center text-brand-dark/80"
+            >
+              <i class="fa-solid fa-bolt text-sm"></i>
             </div>
           </div>
 
           <!-- Card 4 -->
-          <div class="flex justify-between items-start group">
+          <div class="flex items-start justify-between gap-6 rounded-2xl bg-white/30 p-6 jo-soft-ring">
             <div>
               <h4 class="font-semibold text-lg mb-2">稳定可靠</h4>
               <p class="text-gray-500 text-sm max-w-xs">
                 7x24 小时稳定运行，智能负载均衡，多账户冗余，确保服务持续可用。
               </p>
             </div>
-            <div class="text-gray-400 group-hover:text-brand-dark transition-colors duration-300">
-              <i class="fa-solid fa-server text-xl"></i>
+            <div
+              class="h-10 w-10 rounded-full bg-brand-bg/60 flex items-center justify-center text-brand-dark/80"
+            >
+              <i class="fa-solid fa-server text-sm"></i>
             </div>
           </div>
         </div>
@@ -590,7 +643,7 @@
           </div>
           <h2 class="text-3xl font-medium text-brand-dark mb-3">我们支持哪些平台？</h2>
           <p class="text-gray-500 text-sm max-w-md mx-auto">
-            从 Claude 到 Gemini，从 OpenAI 到 AWS Bedrock - 我们为您提供一站式 AI API 接入服务。
+            从 Claude 到 Gemini，从 OpenAI 到 VSCode - 我们为您提供一站式 AI API 接入服务。
           </p>
         </div>
 
@@ -625,12 +678,12 @@
           </div>
 
           <!-- Content Area -->
-          <div class="lg:col-span-9 bg-[#EAE8E1] rounded-[2rem] p-4 lg:p-6 min-h-[400px]">
+          <div class="lg:col-span-9 rounded-[2rem] p-4 lg:p-6 min-h-[400px] bg-white/30 jo-soft-ring">
             <!-- Tab 1: Claude Code (Active by default) -->
             <div id="claude" class="tab-content active h-full">
               <div class="grid grid-cols-1 md:grid-cols-2 gap-6 h-full items-center">
                 <!-- Image -->
-                <div class="h-[300px] md:h-[400px] overflow-hidden rounded-xl">
+                <div class="h-[300px] md:h-[400px] overflow-hidden rounded-2xl jo-soft-ring">
                   <img
                     src="https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=1400&q=80"
                     alt="Lake and mountains landscape"
@@ -675,7 +728,7 @@
             <div id="gemini" class="tab-content h-full">
               <div class="grid grid-cols-1 md:grid-cols-2 gap-6 h-full items-center">
                 <!-- Image -->
-                <div class="h-[300px] md:h-[400px] overflow-hidden rounded-xl">
+                <div class="h-[300px] md:h-[400px] overflow-hidden rounded-2xl jo-soft-ring">
                   <img
                     src="https://images.unsplash.com/photo-1433838552652-f9a46b332c40?auto=format&fit=crop&w=1400&q=80"
                     alt="Hot air balloons travel scene"
@@ -720,7 +773,7 @@
             <div id="openai" class="tab-content h-full">
               <div class="grid grid-cols-1 md:grid-cols-2 gap-6 h-full items-center">
                 <!-- Image -->
-                <div class="h-[300px] md:h-[400px] overflow-hidden rounded-xl">
+                <div class="h-[300px] md:h-[400px] overflow-hidden rounded-2xl jo-soft-ring">
                   <img
                     src="https://images.unsplash.com/photo-1740547564530-4ee105d69feb?auto=format&fit=crop&w=1400&q=80"
                     alt="Train window travel view"
@@ -767,7 +820,7 @@
             <div id="vscode" class="tab-content h-full">
               <div class="grid grid-cols-1 md:grid-cols-2 gap-6 h-full items-center">
                 <!-- Image -->
-                <div class="h-[300px] md:h-[400px] overflow-hidden rounded-xl">
+                <div class="h-[300px] md:h-[400px] overflow-hidden rounded-2xl jo-soft-ring">
                   <img
                     src="https://images.unsplash.com/photo-1634089821954-6de886910141?auto=format&fit=crop&w=1400&q=80"
                     alt="Remote work lifestyle"
@@ -840,6 +893,7 @@
             <a href="/docs" class="text-gray-500 hover:text-brand-dark transition">使用文档</a>
           </div>
         </div>
+      </div>
       </div>
     </div>
 
