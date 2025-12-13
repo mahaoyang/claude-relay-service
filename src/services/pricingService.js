@@ -119,7 +119,9 @@ class PricingService {
    * @returns {number} 最终倍率
    */
   getCostMultiplier(modelName) {
-    if (!modelName) return this.globalMultiplier
+    if (!modelName) {
+      return this.globalMultiplier
+    }
 
     const normalizedName = modelName.toLowerCase()
 
@@ -676,19 +678,59 @@ class PricingService {
     const pricing = this.getModelPricing(modelName)
 
     if (!pricing && !useLongContextPricing) {
-      // 智能 fallback：对于未知的 GPT 模型，使用合理的估算价格
-      if (modelName && modelName.startsWith('gpt-')) {
-        logger.warn(
-          `⚠️  Model ${modelName} not found in pricing data, using estimated GPT-5.1 pricing`
-        )
+      // ============================================================================
+      // 🔧 FORK CUSTOMIZATION: Intelligent Pricing Fallback
+      // ============================================================================
+      // 当模型定价数据缺失时，使用最新同系列模型价格作为合理估算，
+      // 避免返回 $0 导致收入损失。
+      //
+      // 覆盖模型系列：
+      // - GPT 系列 → 使用 GPT-5.1 定价
+      // - Claude 系列 → 使用 Claude Sonnet 4.5 定价
+      // - Gemini 系列 → 使用 Gemini 2.0 Flash 定价
+      //
+      // 注意：此功能为 fork 定制，合并上游更新时请保留此代码块。
+      // ============================================================================
 
-        const estimatedPricing = {
+      let estimatedPricing = null
+      let estimatedSource = null
+
+      // 1️⃣ GPT 模型 Fallback (基于 GPT-5.1)
+      if (modelName && modelName.startsWith('gpt-')) {
+        estimatedSource = 'gpt-5.1'
+        estimatedPricing = {
           input_cost_per_token: 0.00000175, // $1.75 / 1M tokens
           output_cost_per_token: 0.000014, // $14 / 1M tokens
           cache_read_input_token_cost: 0.000000175, // $0.175 / 1M tokens
-          cache_creation_input_token_cost: 0.00000175, // $1.75 / 1M tokens (same as input)
-          source: 'estimated_fallback'
+          cache_creation_input_token_cost: 0.00000175 // $1.75 / 1M tokens
         }
+      }
+      // 2️⃣ Claude 模型 Fallback (基于 Claude Sonnet 4.5)
+      else if (modelName && modelName.includes('claude')) {
+        estimatedSource = 'claude-sonnet-4.5'
+        estimatedPricing = {
+          input_cost_per_token: 0.000003, // $3 / 1M tokens
+          output_cost_per_token: 0.000015, // $15 / 1M tokens
+          cache_read_input_token_cost: 0.0000003, // $0.30 / 1M tokens
+          cache_creation_input_token_cost: 0.00000375 // $3.75 / 1M tokens
+        }
+      }
+      // 3️⃣ Gemini 模型 Fallback (基于 Gemini 2.0 Flash)
+      else if (modelName && modelName.includes('gemini')) {
+        estimatedSource = 'gemini-2.0-flash-exp'
+        estimatedPricing = {
+          input_cost_per_token: 0.00000015, // $0.15 / 1M tokens
+          output_cost_per_token: 0.0000006, // $0.60 / 1M tokens
+          cache_read_input_token_cost: 0.0000000375, // $0.0375 / 1M tokens
+          cache_creation_input_token_cost: 0.00000015 // 估算为与 input 相同
+        }
+      }
+
+      // 如果找到了估算价格，计算费用
+      if (estimatedPricing) {
+        logger.warn(
+          `⚠️  Model ${modelName} not found in pricing data, using estimated ${estimatedSource} pricing`
+        )
 
         // 计算费用使用估算价格
         const inputCost = (usage.input_tokens || 0) * estimatedPricing.input_cost_per_token
@@ -703,7 +745,7 @@ class PricingService {
         const multiplier = this.getCostMultiplier(modelName)
 
         logger.info(
-          `💰 Estimated cost for ${modelName}: $${(totalCost * multiplier).toFixed(6)} (multiplier: ${multiplier}x)`
+          `💰 Estimated cost for ${modelName}: $${(totalCost * multiplier).toFixed(6)} (multiplier: ${multiplier}x, source: ${estimatedSource})`
         )
 
         return {
@@ -716,13 +758,17 @@ class PricingService {
           totalCost: totalCost * multiplier,
           hasPricing: true,
           isEstimated: true, // 标记为估算价格
-          estimatedSource: 'gpt-5.1',
+          estimatedSource,
           isLongContextRequest: false
         }
       }
 
-      // 对于非 GPT 模型，返回 0（避免错误计费）
-      logger.error(`❌ No pricing data found for model: ${modelName}`)
+      // ============================================================================
+      // END FORK CUSTOMIZATION
+      // ============================================================================
+
+      // 对于未知模型系列，返回 0（避免错误计费）
+      logger.error(`❌ No pricing data or estimation available for model: ${modelName}`)
       return {
         inputCost: 0,
         outputCost: 0,
@@ -994,12 +1040,12 @@ class PricingService {
       // 使用 https 模块获取 OpenAI 定价页面
       const pricingPageUrl = 'https://openai.com/api/pricing/'
 
-      return new Promise((resolve, reject) => {
+      return new Promise((resolve, _reject) => {
         const request = https.get(pricingPageUrl, (response) => {
-          let data = ''
+          let _data = ''
 
           response.on('data', (chunk) => {
-            data += chunk
+            _data += chunk
           })
 
           response.on('end', () => {
