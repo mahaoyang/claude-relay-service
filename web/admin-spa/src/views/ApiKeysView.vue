@@ -920,6 +920,14 @@
                             <span class="ml-1">编辑</span>
                           </button>
                           <button
+                            class="rounded px-2 py-1 text-xs font-medium text-amber-600 transition-colors hover:bg-amber-50 hover:text-amber-900 dark:hover:bg-amber-900/20"
+                            title="修改费用"
+                            @click="openEditUsedCostModal(key)"
+                          >
+                            <i class="fas fa-dollar-sign" />
+                            <span class="ml-1">费用</span>
+                          </button>
+                          <button
                             v-if="
                               key.expiresAt &&
                               (isApiKeyExpired(key.expiresAt) ||
