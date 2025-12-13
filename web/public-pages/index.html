@@ -32,15 +32,65 @@
     </script>
 
     <!-- SEO Meta 标签 -->
-    <title>JojoCode - 高性价比 AI API 中转服务</title>
+    <title>JoJoCode - 高性价比 AI API 中转服务 | Claude、Gemini、OpenAI API 代理</title>
     <meta
       name="description"
-      content="JojoCode - 高性价比 AI API 中转服务，无需繁琐注册，一 Key 通用多模型，底价让利，模型绝对保真，拒绝掺水，价格透明。支持 Claude、Gemini、OpenAI 等多平台。"
+      content="JoJoCode 提供高性价比 AI API 中转服务，支持 Claude Code、Gemini 3、OpenAI Codex、AWS Bedrock 等多平台。一个 API Key 通用所有模型，底价让利，模型保真不掺水，价格透明可查。"
     />
     <meta
       name="keywords"
-      content="JojoCode, Claude API, Gemini API, OpenAI API, AI中转, API代理, 高性价比, 底价让利, 保真模型"
+      content="JoJoCode, Claude API, Claude Code, Gemini API, Gemini 3, OpenAI API, OpenAI Codex, AWS Bedrock, AI中转, API代理, API Gateway, 高性价比, 底价让利, 保真模型, AI API 服务"
     />
+    <meta name="author" content="JoJoCode" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://www.jojocode.org/" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://www.jojocode.org/" />
+    <meta property="og:title" content="JoJoCode - 高性价比 AI API 中转服务" />
+    <meta
+      property="og:description"
+      content="支持 Claude、Gemini、OpenAI 等多平台，一个 Key 通用所有模型，价格透明，模型保真。"
+    />
+    <meta property="og:image" content="/public-pages/index.jpg" />
+    <meta property="og:locale" content="zh_CN" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="https://www.jojocode.org/" />
+    <meta name="twitter:title" content="JoJoCode - 高性价比 AI API 中转服务" />
+    <meta
+      name="twitter:description"
+      content="支持 Claude、Gemini、OpenAI 等多平台，一个 Key 通用所有模型，价格透明，模型保真。"
+    />
+    <meta name="twitter:image" content="/public-pages/index.jpg" />
+
+    <!-- 结构化数据 (JSON-LD) -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "JoJoCode",
+        "description": "高性价比 AI API 中转服务",
+        "url": "https://www.jojocode.org/",
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": "https://www.jojocode.org/stats?id={search_term_string}",
+          "query-input": "required name=search_term_string"
+        }
+      }
+    </script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "JoJoCode",
+        "url": "https://www.jojocode.org/",
+        "logo": "/public-pages/assets/logo-light.png",
+        "description": "高性价比 AI API 中转服务，支持 Claude、Gemini、OpenAI 等多平台"
+      }
+    </script>
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -85,6 +135,10 @@
     </script>
 
     <style>
+      html {
+        scrollbar-gutter: stable;
+      }
+
       body {
         background-color: #f2f0e9;
         color: #1f2f22;
@@ -247,30 +301,36 @@
     <!-- Main Container -->
     <div class="max-w-[1440px] mx-auto px-6 md:px-12 py-6">
       <!-- Navigation Header -->
-      <nav class="mb-16" x-data="{ mobileMenuOpen: false }">
+      <nav class="mb-16" x-data="{ mobileMenuOpen: false }" role="navigation" aria-label="主导航">
         <div class="flex items-center justify-between gap-4">
           <!-- Logo -->
           <div class="flex items-center gap-3">
-            <div class="inline-logo-wrapper">
-              <div class="inline-logo-main">
-                <div class="symbols">
-                  <span>&gt;</span>
-                  <span>_</span>
+            <a href="/" aria-label="JoJoCode 首页" class="inline-flex">
+              <div class="inline-logo-wrapper">
+                <div class="inline-logo-main">
+                  <div class="symbols">
+                    <span>&gt;</span>
+                    <span>_</span>
+                  </div>
+                  <div class="letters">
+                    <span>J</span>
+                    <span>O</span>
+                  </div>
                 </div>
-                <div class="letters">
-                  <span>J</span>
-                  <span>O</span>
-                </div>
+                <div class="inline-logo-subtitle">JO</div>
               </div>
-              <div class="inline-logo-subtitle">JO</div>
-            </div>
+            </a>
           </div>
 
           <!-- Nav Links (Desktop) -->
-          <div class="hidden md:flex items-center space-x-8 text-sm font-medium">
-            <a href="/" class="hover:text-brand-dark transition">首页</a>
-            <a href="/stats" class="hover:text-brand-dark transition">查询统计</a>
-            <a href="/docs" class="hover:text-brand-dark transition">使用文档</a>
+          <div
+            class="hidden md:flex items-center space-x-8 text-sm font-medium"
+            role="menubar"
+            aria-label="桌面导航菜单"
+          >
+            <a href="/" class="hover:text-brand-dark transition" role="menuitem">首页</a>
+            <a href="/stats" class="hover:text-brand-dark transition" role="menuitem">查询统计</a>
+            <a href="/docs" class="hover:text-brand-dark transition" role="menuitem">使用文档</a>
           </div>
 
           <div class="flex items-center gap-4">
@@ -322,11 +382,15 @@
             <button
               @click="mobileMenuOpen = !mobileMenuOpen"
               class="md:hidden h-7 w-7 rounded-full bg-white/60 border border-brand-dark/10 flex items-center justify-center hover:border-brand-dark/20 transition"
-              aria-label="菜单"
+              aria-label="打开移动菜单"
+              aria-expanded="false"
+              :aria-expanded="mobileMenuOpen"
+              aria-controls="mobile-menu"
             >
               <i
                 class="fa-solid text-brand-gray text-xs"
                 :class="mobileMenuOpen ? 'fa-xmark' : 'fa-bars'"
+                aria-hidden="true"
               ></i>
             </button>
           </div>
@@ -334,6 +398,7 @@
 
         <!-- Mobile Menu -->
         <div
+          id="mobile-menu"
           x-show="mobileMenuOpen"
           x-cloak
           @click.away="mobileMenuOpen = false"
@@ -344,21 +409,29 @@
           x-transition:leave-start="opacity-100 translate-y-0"
           x-transition:leave-end="opacity-0 -translate-y-2"
           class="md:hidden mt-4 bg-white/80 backdrop-blur-sm border border-gray-200 rounded-2xl overflow-hidden"
+          role="menu"
+          aria-label="移动导航菜单"
         >
           <div class="flex flex-col">
             <a
               href="/"
               class="px-6 py-3 text-sm font-medium hover:bg-brand-bg/50 transition border-b border-gray-200"
+              role="menuitem"
             >
               首页
             </a>
             <a
               href="/stats"
               class="px-6 py-3 text-sm font-medium hover:bg-brand-bg/50 transition border-b border-gray-200"
+              role="menuitem"
             >
               查询统计
             </a>
-            <a href="/docs" class="px-6 py-3 text-sm font-medium hover:bg-brand-bg/50 transition">
+            <a
+              href="/docs"
+              class="px-6 py-3 text-sm font-medium hover:bg-brand-bg/50 transition"
+              role="menuitem"
+            >
               使用文档
             </a>
           </div>
@@ -373,7 +446,7 @@
             <h1
               class="text-5xl md:text-7xl font-semibold tracking-tight leading-tight uppercase text-brand-dark"
             >
-              JojoCode <br />
+              JoJoCode <br />
               API Gateway
             </h1>
           </div>
@@ -394,8 +467,8 @@
         <!-- Hero Image -->
         <div class="w-full h-[300px] md:h-[500px] overflow-hidden rounded-[2rem] shadow-sm">
           <img
-            src="/public-pages/assets/hero-code-1.jpg"
-            alt="Code Development"
+            src="https://images.unsplash.com/photo-1654355229863-95a8a7a779dd?auto=format&fit=crop&w=1800&q=80"
+            alt="Digital nomad working on the beach"
             class="w-full h-full object-cover hover:scale-105 transition duration-700 ease-in-out"
           />
         </div>
@@ -406,9 +479,10 @@
         <!-- Left Image -->
         <div class="md:col-span-3 h-[300px] md:h-[400px]">
           <img
-            src="/public-pages/assets/about-code-1.jpg"
-            alt="Code Development"
+            src="https://images.unsplash.com/photo-1653907696261-be994f43ffbd?auto=format&fit=crop&w=1200&q=80"
+            alt="Remote work with laptop"
             class="w-full h-full object-cover rounded-[1.5rem]"
+            loading="lazy"
           />
         </div>
 
@@ -423,7 +497,7 @@
             一个 Key 通用所有平台<br />价格透明，按量计费
           </h2>
           <p class="text-gray-600 text-sm leading-relaxed mb-8">
-            JojoCode 提供稳定可靠的 AI API 中转服务，支持 Claude、Gemini、OpenAI 等多个主流平台。
+            JoJoCode 提供稳定可靠的 AI API 中转服务，支持 Claude、Gemini、OpenAI 等多个主流平台。
             无需繁琐注册，一个 API Key
             即可访问所有模型。底价让利，模型绝对保真，拒绝掺水，价格透明可查。
           </p>
@@ -439,9 +513,10 @@
         <!-- Right Image -->
         <div class="md:col-span-4 h-[300px] md:h-[400px]">
           <img
-            src="/public-pages/assets/about-code-2.jpg"
-            alt="Programming"
+            src="https://images.unsplash.com/photo-1494783367193-149034c05e8f?auto=format&fit=crop&w=1200&q=80"
+            alt="Travel road landscape"
             class="w-full h-full object-cover rounded-[1.5rem]"
+            loading="lazy"
           />
         </div>
       </section>
@@ -527,39 +602,40 @@
               onclick="openTab(event, 'claude')"
               class="tab-btn active text-left px-6 py-4 rounded-xl text-sm font-medium transition-all duration-300 bg-brand-dark text-white shadow-lg"
             >
-              <i class="fa-solid fa-message-dots mr-2"></i> Claude
+              <i class="fa-solid fa-wand-magic-sparkles mr-2"></i> Claude Code
             </button>
             <button
               onclick="openTab(event, 'gemini')"
-              class="tab-btn text-left px-6 py-4 rounded-xl text-sm font-medium transition-all duration-300 hover:bg-brand-card text-brand-dark bg-[#EAE8E1]"
+              class="tab-btn text-left px-6 py-4 rounded-xl text-sm font-medium transition-all duration-300 hover:bg-brand-dark/15 text-brand-dark bg-[#EAE8E1]"
             >
-              <i class="fa-solid fa-sparkles mr-2"></i> Gemini
+              <i class="fa-solid fa-gem mr-2"></i> Gemini 3
             </button>
             <button
               onclick="openTab(event, 'openai')"
-              class="tab-btn text-left px-6 py-4 rounded-xl text-sm font-medium transition-all duration-300 hover:bg-brand-card text-brand-dark bg-[#EAE8E1]"
+              class="tab-btn text-left px-6 py-4 rounded-xl text-sm font-medium transition-all duration-300 hover:bg-brand-dark/15 text-brand-dark bg-[#EAE8E1]"
             >
-              <i class="fa-solid fa-code mr-2"></i> OpenAI Responses
+              <i class="fa-solid fa-code mr-2"></i> OpenAI Codex
             </button>
             <button
-              onclick="openTab(event, 'bedrock')"
-              class="tab-btn text-left px-6 py-4 rounded-xl text-sm font-medium transition-all duration-300 hover:bg-brand-card text-brand-dark bg-[#EAE8E1]"
+              onclick="openTab(event, 'vscode')"
+              class="tab-btn text-left px-6 py-4 rounded-xl text-sm font-medium transition-all duration-300 hover:bg-brand-dark/15 text-brand-dark bg-[#EAE8E1]"
             >
-              <i class="fa-solid fa-cloud mr-2"></i> AWS Bedrock
+              <i class="fa-solid fa-laptop-code mr-2"></i> VSCode
             </button>
           </div>
 
           <!-- Content Area -->
           <div class="lg:col-span-9 bg-[#EAE8E1] rounded-[2rem] p-4 lg:p-6 min-h-[400px]">
-            <!-- Tab 1: Claude (Active by default) -->
+            <!-- Tab 1: Claude Code (Active by default) -->
             <div id="claude" class="tab-content active h-full">
               <div class="grid grid-cols-1 md:grid-cols-2 gap-6 h-full items-center">
                 <!-- Image -->
                 <div class="h-[300px] md:h-[400px] overflow-hidden rounded-xl">
                   <img
-                    src="/public-pages/assets/claude-api.jpg"
-                    alt="Claude API Development"
+                    src="https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=1400&q=80"
+                    alt="Lake and mountains landscape"
                     class="w-full h-full object-cover hover:scale-105 transition duration-500"
+                    loading="lazy"
                   />
                 </div>
                 <!-- Text -->
@@ -569,12 +645,10 @@
                   >
                     <i class="fa-solid fa-crown text-[10px]"></i> 旗舰模型
                   </div>
-                  <h3 class="text-2xl md:text-3xl font-medium mb-4 text-brand-dark">
-                    Claude <span class="italic font-serif">Official API</span>
-                  </h3>
+                  <h3 class="text-2xl md:text-3xl font-medium mb-4 text-brand-dark">Claude Code</h3>
                   <p class="text-gray-600 text-sm leading-relaxed mb-6">
                     支持 Claude 3.5 Sonnet、Claude 3 Opus 等全系列模型。通过 OAuth 认证直连官方
-                    API， 提供最稳定可靠的服务体验。支持流式响应和上下文缓存。
+                    API，提供最稳定可靠的服务体验。支持流式响应和上下文缓存。
                   </p>
 
                   <div class="bg-brand-bg/60 p-3 rounded-lg flex items-start gap-3 mb-8">
@@ -597,37 +671,140 @@
               </div>
             </div>
 
-            <!-- Tab 2: Gemini -->
+            <!-- Tab 2: Gemini 3 -->
             <div id="gemini" class="tab-content h-full">
-              <div class="flex flex-col items-center justify-center h-[400px] text-center p-8">
-                <i class="fa-solid fa-sparkles text-4xl text-brand-dark mb-4 opacity-50"></i>
-                <h3 class="text-2xl font-medium text-brand-dark mb-2">Gemini Pro</h3>
-                <p class="text-gray-600 max-w-md">
-                  Google 最新的 Gemini
-                  系列模型，支持多模态输入，强大的推理能力，适合各种复杂任务场景。
-                </p>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6 h-full items-center">
+                <!-- Image -->
+                <div class="h-[300px] md:h-[400px] overflow-hidden rounded-xl">
+                  <img
+                    src="https://images.unsplash.com/photo-1433838552652-f9a46b332c40?auto=format&fit=crop&w=1400&q=80"
+                    alt="Hot air balloons travel scene"
+                    class="w-full h-full object-cover hover:scale-105 transition duration-500"
+                    loading="lazy"
+                  />
+                </div>
+                <!-- Text -->
+                <div class="flex flex-col justify-center pr-4">
+                  <div
+                    class="flex items-center gap-2 text-xs font-bold text-gray-500 uppercase tracking-wide mb-4"
+                  >
+                    <i class="fa-solid fa-sparkles text-[10px]"></i> 多模态 AI
+                  </div>
+                  <h3 class="text-2xl md:text-3xl font-medium mb-4 text-brand-dark">Gemini 3</h3>
+                  <p class="text-gray-600 text-sm leading-relaxed mb-6">
+                    Google 最新的 Gemini 系列模型，支持多模态输入，强大的推理能力。通过 Google OAuth
+                    认证，适合文本生成、图像理解等各种复杂任务场景。
+                  </p>
+
+                  <div class="bg-brand-bg/60 p-3 rounded-lg flex items-start gap-3 mb-8">
+                    <i class="fa-solid fa-check-circle text-brand-dark mt-1"></i>
+                    <div>
+                      <p class="text-xs font-bold text-brand-dark">
+                        多模态支持 · 强大推理 · 高性价比
+                      </p>
+                    </div>
+                  </div>
+
+                  <a
+                    href="/docs"
+                    class="group flex items-center gap-2 text-xs font-bold uppercase tracking-wide border-b border-brand-dark/30 pb-1 w-max hover-arrow-move"
+                  >
+                    查看详情
+                    <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
+                  </a>
+                </div>
               </div>
             </div>
 
-            <!-- Tab 3: OpenAI -->
+            <!-- Tab 3: OpenAI Codex -->
             <div id="openai" class="tab-content h-full">
-              <div class="flex flex-col items-center justify-center h-[400px] text-center p-8">
-                <i class="fa-solid fa-code text-4xl text-brand-dark mb-4 opacity-50"></i>
-                <h3 class="text-2xl font-medium text-brand-dark mb-2">OpenAI Responses (Codex)</h3>
-                <p class="text-gray-600 max-w-md">
-                  支持 OpenAI Responses 格式，兼容性强，适合代码生成和技术文档编写等专业场景。
-                </p>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6 h-full items-center">
+                <!-- Image -->
+                <div class="h-[300px] md:h-[400px] overflow-hidden rounded-xl">
+                  <img
+                    src="https://images.unsplash.com/photo-1740547564530-4ee105d69feb?auto=format&fit=crop&w=1400&q=80"
+                    alt="Train window travel view"
+                    class="w-full h-full object-cover hover:scale-105 transition duration-500"
+                    loading="lazy"
+                  />
+                </div>
+                <!-- Text -->
+                <div class="flex flex-col justify-center pr-4">
+                  <div
+                    class="flex items-center gap-2 text-xs font-bold text-gray-500 uppercase tracking-wide mb-4"
+                  >
+                    <i class="fa-solid fa-code text-[10px]"></i> 代码专家
+                  </div>
+                  <h3 class="text-2xl md:text-3xl font-medium mb-4 text-brand-dark">
+                    OpenAI Codex
+                  </h3>
+                  <p class="text-gray-600 text-sm leading-relaxed mb-6">
+                    支持 OpenAI Responses
+                    格式，兼容性强，专为代码生成和技术文档编写优化。适合开发者使用的专业 AI 工具。
+                  </p>
+
+                  <div class="bg-brand-bg/60 p-3 rounded-lg flex items-start gap-3 mb-8">
+                    <i class="fa-solid fa-check-circle text-brand-dark mt-1"></i>
+                    <div>
+                      <p class="text-xs font-bold text-brand-dark">
+                        代码优化 · 开发者友好 · 高兼容性
+                      </p>
+                    </div>
+                  </div>
+
+                  <a
+                    href="/docs"
+                    class="group flex items-center gap-2 text-xs font-bold uppercase tracking-wide border-b border-brand-dark/30 pb-1 w-max hover-arrow-move"
+                  >
+                    查看详情
+                    <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
+                  </a>
+                </div>
               </div>
             </div>
 
-            <!-- Tab 4: Bedrock -->
-            <div id="bedrock" class="tab-content h-full">
-              <div class="flex flex-col items-center justify-center h-[400px] text-center p-8">
-                <i class="fa-solid fa-cloud text-4xl text-brand-dark mb-4 opacity-50"></i>
-                <h3 class="text-2xl font-medium text-brand-dark mb-2">AWS Bedrock</h3>
-                <p class="text-gray-600 max-w-md">
-                  企业级 AI 服务，支持多种基础模型，提供高可用性和安全性保障。
-                </p>
+            <!-- Tab 4: VSCode -->
+            <div id="vscode" class="tab-content h-full">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6 h-full items-center">
+                <!-- Image -->
+                <div class="h-[300px] md:h-[400px] overflow-hidden rounded-xl">
+                  <img
+                    src="https://images.unsplash.com/photo-1634089821954-6de886910141?auto=format&fit=crop&w=1400&q=80"
+                    alt="Remote work lifestyle"
+                    class="w-full h-full object-cover hover:scale-105 transition duration-500"
+                    loading="lazy"
+                  />
+                </div>
+                <!-- Text -->
+                <div class="flex flex-col justify-center pr-4">
+                  <div
+                    class="flex items-center gap-2 text-xs font-bold text-gray-500 uppercase tracking-wide mb-4"
+                  >
+                    <i class="fa-solid fa-plug text-[10px]"></i> 编辑器集成
+                  </div>
+                  <h3 class="text-2xl md:text-3xl font-medium mb-4 text-brand-dark">VSCode</h3>
+                  <p class="text-gray-600 text-sm leading-relaxed mb-6">
+                    直接在 VSCode / Cursor 等编辑器里使用同一个 Key，统一接入多模型与多厂商能力。
+                    支持流式输出、会话上下文与常见插件工作流，让你边写边补全、边改边解释。
+                  </p>
+
+                  <div class="bg-brand-bg/60 p-3 rounded-lg flex items-start gap-3 mb-8">
+                    <i class="fa-solid fa-check-circle text-brand-dark mt-1"></i>
+                    <div>
+                      <p class="text-xs font-bold text-brand-dark">
+                        一键配置 · 统一 Key · 开发者工作流
+                      </p>
+                    </div>
+                  </div>
+
+                  <a
+                    href="/docs"
+                    class="group flex items-center gap-2 text-xs font-bold uppercase tracking-wide border-b border-brand-dark/30 pb-1 w-max hover-arrow-move"
+                  >
+                    查看详情
+                    <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
+                  </a>
+                </div>
               </div>
             </div>
           </div>
@@ -642,19 +819,21 @@
               class="inline-logo-wrapper"
               style="transform: scale(0.8); transform-origin: left center"
             >
-              <div class="inline-logo-main">
-                <div class="symbols">
-                  <span>&gt;</span>
-                  <span>_</span>
+              <a href="/" aria-label="JoJoCode 首页" class="block">
+                <div class="inline-logo-main">
+                  <div class="symbols">
+                    <span>&gt;</span>
+                    <span>_</span>
+                  </div>
+                  <div class="letters">
+                    <span>J</span>
+                    <span>O</span>
+                  </div>
                 </div>
-                <div class="letters">
-                  <span>J</span>
-                  <span>O</span>
-                </div>
-              </div>
-              <div class="inline-logo-subtitle">JO</div>
+                <div class="inline-logo-subtitle">JO</div>
+              </a>
             </div>
-            <span class="text-sm text-gray-500">© 2024 JojoCode. 高性价比 AI API 中转服务.</span>
+            <span class="text-sm text-gray-500">© 2024 JoJoCode. 高性价比 AI API 中转服务.</span>
           </div>
           <div class="flex items-center gap-6 text-sm">
             <a href="/stats" class="text-gray-500 hover:text-brand-dark transition">查询统计</a>
@@ -663,6 +842,17 @@
         </div>
       </div>
     </div>
+
+    <!--
+      Photo credits (Unsplash):
+      - hero-nomad-beach.jpg: https://unsplash.com/photos/Y7AwRJmfC0I
+      - about-nomad-laptop.jpg: https://unsplash.com/photos/lryOuTup7C8
+      - about-travel-road.jpg: https://unsplash.com/photos/A-NVHPka9Rk
+      - tab-lake-mountain.jpg: https://unsplash.com/photos/T7K4aEPoGGk
+      - tab-hot-air-balloon.jpg: https://unsplash.com/photos/t7YycgAoVSw
+      - tab-train-window.jpg: https://unsplash.com/photos/OZNrrSOI3U8
+      - tab-city-sunset.jpg: https://unsplash.com/photos/QKnoHdX72XE
+    -->
 
     <!-- JavaScript for Tabs -->
     <script>
@@ -719,7 +909,7 @@
         tablinks = document.getElementsByClassName('tab-btn')
         for (i = 0; i < tablinks.length; i++) {
           tablinks[i].classList.remove('active', 'bg-brand-dark', 'text-white', 'shadow-lg')
-          tablinks[i].classList.add('bg-[#EAE8E1]', 'text-brand-dark')
+          tablinks[i].classList.add('bg-[#EAE8E1]', 'text-brand-dark', 'hover:bg-brand-dark/15')
         }
 
         document.getElementById(tabName).style.display = 'block'
@@ -727,7 +917,11 @@
           document.getElementById(tabName).classList.add('active')
         }, 10)
 
-        evt.currentTarget.classList.remove('bg-[#EAE8E1]', 'text-brand-dark')
+        evt.currentTarget.classList.remove(
+          'bg-[#EAE8E1]',
+          'text-brand-dark',
+          'hover:bg-brand-dark/15'
+        )
         evt.currentTarget.classList.add('active', 'bg-brand-dark', 'text-white', 'shadow-lg')
       }
     </script>
