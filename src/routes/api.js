@@ -8,7 +8,7 @@ const unifiedClaudeScheduler = require('../services/unifiedClaudeScheduler')
 const apiKeyService = require('../services/apiKeyService')
 const { authenticateApiKey } = require('../middleware/auth')
 const disguiseMiddleware = require('../middleware/disguise')
-// const requestLogger = require('../middleware/requestLogger') // 已禁用 - 测试中间件
+const requestLogger = require('../middleware/requestLogger') // 重新启用 - 用于调试 anthropic-version
 const logger = require('../utils/logger')
 const { getEffectiveModel, parseVendorPrefixedModel } = require('../utils/modelHelper')
 const sessionHelper = require('../utils/sessionHelper')
@@ -1158,7 +1158,7 @@ async function handleMessagesRequest(req, res) {
 // 🚀 Claude API messages 端点 - /api/v1/messages
 router.post(
   '/v1/messages',
-  // requestLogger, // 已禁用 - 测试中间件
+  requestLogger, // 重新启用 - 用于调试 anthropic-version
   authenticateApiKey,
   disguiseMiddleware,
   handleMessagesRequest
@@ -1167,7 +1167,7 @@ router.post(
 // 🚀 Claude API messages 端点 - /claude/v1/messages (别名)
 router.post(
   '/claude/v1/messages',
-  // requestLogger, // 已禁用 - 测试中间件
+  requestLogger, // 重新启用 - 用于调试 anthropic-version
   authenticateApiKey,
   disguiseMiddleware,
   handleMessagesRequest

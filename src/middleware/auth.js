@@ -1768,8 +1768,7 @@ const corsMiddleware = (req, res, next) => {
   }
 }
 
-// 📝 请求日志中间件（优化版）- 已禁用
-// eslint-disable-next-line no-unused-vars
+// 📝 请求日志中间件（优化版）- 重新启用用于调试 anthropic-version
 const requestLogger = (req, res, next) => {
   const start = Date.now()
   const requestId = Math.random().toString(36).substring(2, 15)
@@ -2089,7 +2088,7 @@ module.exports = {
   requireRole,
   requireAdmin,
   corsMiddleware,
-  // requestLogger, // 已禁用 - 测试中间件
+  requestLogger, // 重新启用 - 用于调试 anthropic-version
   securityMiddleware,
   errorHandler,
   globalRateLimit,

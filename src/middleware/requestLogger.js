@@ -36,6 +36,9 @@ function requestLoggerMiddleware(req, res, next) {
     '',
     '🔍 关键字段提取:',
     `  - User-Agent: ${req.headers['user-agent'] || 'N/A'}`,
+    `  - anthropic-version: ${req.headers['anthropic-version'] || 'N/A'}`,
+    `  - anthropic-beta: ${req.headers['anthropic-beta'] || 'N/A'}`,
+    `  - x-app: ${req.headers['x-app'] || 'N/A'}`,
     `  - sentry-trace: ${req.headers['sentry-trace'] || 'N/A'}`,
     `  - baggage: ${req.headers.baggage || 'N/A'}`,
     `  - session_id (header): ${req.headers['session_id'] || 'N/A'}`,
@@ -81,6 +84,9 @@ function requestLoggerMiddleware(req, res, next) {
   // 同时输出到控制台
   console.log(`\n🔍 [Request Logger] ${req.method} ${req.originalUrl}`)
   console.log(`   User-Agent: ${req.headers['user-agent'] || 'N/A'}`)
+  console.log(`   anthropic-version: ${req.headers['anthropic-version'] || 'N/A'}`)
+  console.log(`   anthropic-beta: ${req.headers['anthropic-beta'] || 'N/A'}`)
+  console.log(`   x-app: ${req.headers['x-app'] || 'N/A'}`)
   console.log(`   sentry-trace: ${req.headers['sentry-trace'] || 'N/A'}`)
 
   if (req.body?.metadata?.user_id) {
