@@ -1,18 +1,22 @@
-// Sentry 三元组池管理服务
-// 管理真实的 (session_id, trace_id, span_id) 配对
+// Claude 请求头配置池管理服务
+// 管理真实的 (session_id, trace_id, span_id, anthropic-version, anthropic-beta, x-app) 完整配置
 
 const redisClient = require('../models/redis')
 const logger = require('../utils/logger')
 
-const REDIS_KEY_AVAILABLE = 'sentry_triplet_pool:available'
-const REDIS_KEY_CURRENT = 'sentry_triplet_pool:current'
-const REDIS_KEY_LAST_SWITCH = 'sentry_triplet_pool:last_switch'
+const REDIS_KEY_AVAILABLE = 'claude_headers_pool:available'
+const REDIS_KEY_CURRENT = 'claude_headers_pool:current'
+const REDIS_KEY_LAST_SWITCH = 'claude_headers_pool:last_switch'
 
-// 默认三元组（当池为空时使用）
-const DEFAULT_TRIPLET = {
+// 默认配置（当池为空时使用）
+const DEFAULT_CONFIG = {
   session: '9f10edbb-1407-47e1-9b85-fa634be33732',
   trace: '988f1b80178baa34cc02b67566c0269d',
-  span: '8a43fcfc28f7ba8e'
+  span: '8a43fcfc28f7ba8e',
+  anthropicVersion: '2023-06-01',
+  anthropicBeta:
+    'claude-code-20250219,oauth-2025-04-20,interleaved-thinking-2025-05-14,fine-grained-tool-streaming-2025-05-14',
+  xApp: 'cli'
 }
 
 // 配置
@@ -24,13 +28,13 @@ const MIN_SWITCH_INTERVAL_MS = parseInt(
   10
 )
 
-class SentryTripletPoolService {
+class ClaudeHeadersPoolService {
   constructor() {
     this.initialized = false
   }
 
   /**
-   * 初始化三元组池
+   * 初始化配置池
    */
   async initialize() {
     if (this.initialized) {
@@ -38,29 +42,29 @@ class SentryTripletPoolService {
     }
 
     try {
-      // 检查是否已有当前三元组
+      // 检查是否已有当前配置
       const current = await redisClient.get(REDIS_KEY_CURRENT)
 
       if (!current) {
-        // 使用默认三元组初始化
-        const defaultTripletStr = JSON.stringify(DEFAULT_TRIPLET)
-        await redisClient.set(REDIS_KEY_CURRENT, defaultTripletStr)
-        await redisClient.sadd(REDIS_KEY_AVAILABLE, defaultTripletStr)
+        // 使用默认配置初始化
+        const defaultConfigStr = JSON.stringify(DEFAULT_CONFIG)
+        await redisClient.set(REDIS_KEY_CURRENT, defaultConfigStr)
+        await redisClient.sadd(REDIS_KEY_AVAILABLE, defaultConfigStr)
         logger.info(
-          `[SentryTripletPool] Initialized with default triplet: session=${DEFAULT_TRIPLET.session.substring(0, 8)}...`
+          `[ClaudeHeadersPool] Initialized with default config: session=${DEFAULT_CONFIG.session.substring(0, 8)}..., anthropic-beta=${DEFAULT_CONFIG.anthropicBeta.substring(0, 30)}...`
         )
       }
 
       this.initialized = true
     } catch (error) {
-      logger.error(`[SentryTripletPool] Initialization failed: ${error.message}`)
+      logger.error(`[ClaudeHeadersPool] Initialization failed: ${error.message}`)
     }
   }
 
   /**
-   * 从请求中提取三元组
+   * 从请求中提取完整的头部配置
    */
-  extractTriplet(req) {
+  extractConfig(req) {
     try {
       // 提取 session_id
       const userId = req.body?.metadata?.user_id
@@ -88,26 +92,34 @@ class SentryTripletPoolService {
       const traceId = parts[0]
       const spanId = parts[1]
 
-      // 验证格式
-      if (!this.isValidTriplet(sessionId, traceId, spanId)) {
+      // 提取 anthropic 相关头部
+      const anthropicVersion = req.headers['anthropic-version']
+      const anthropicBeta = req.headers['anthropic-beta']
+      const xApp = req.headers['x-app']
+
+      // 验证基本格式
+      if (!this.isValidConfig(sessionId, traceId, spanId, anthropicVersion, xApp)) {
         return null
       }
 
       return {
         session: sessionId,
         trace: traceId,
-        span: spanId
+        span: spanId,
+        anthropicVersion: anthropicVersion || '2023-06-01',
+        anthropicBeta: anthropicBeta || '',
+        xApp: xApp || 'cli'
       }
     } catch (error) {
-      logger.debug(`[SentryTripletPool] Failed to extract triplet: ${error.message}`)
+      logger.debug(`[ClaudeHeadersPool] Failed to extract config: ${error.message}`)
       return null
     }
   }
 
   /**
-   * 验证三元组格式
+   * 验证配置格式
    */
-  isValidTriplet(sessionId, traceId, spanId) {
+  isValidConfig(sessionId, traceId, spanId, anthropicVersion, xApp) {
     // session: UUID 格式
     const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
     if (!uuidRegex.test(sessionId)) {
@@ -124,11 +136,21 @@ class SentryTripletPoolService {
       return false
     }
 
+    // anthropicVersion: 必须存在且格式为 YYYY-MM-DD
+    if (!anthropicVersion || !/^\d{4}-\d{2}-\d{2}$/.test(anthropicVersion)) {
+      return false
+    }
+
+    // xApp: 必须存在且非空
+    if (!xApp || xApp.trim() === '') {
+      return false
+    }
+
     return true
   }
 
   /**
-   * 从白名单请求收集三元组
+   * 从白名单请求收集完整配置
    */
   async collectFromWhitelist(req) {
     try {
@@ -137,80 +159,80 @@ class SentryTripletPoolService {
         return
       }
 
-      // 提取三元组
-      const triplet = this.extractTriplet(req)
-      if (!triplet) {
+      // 提取完整配置
+      const config = this.extractConfig(req)
+      if (!config) {
         return
       }
 
       // 添加到池中
-      await this.addToPool(triplet)
+      await this.addToPool(config)
 
       logger.info(
-        `[SentryTripletPool] Collected triplet from whitelist API Key: ${req.apiKeyData.id} -> session=${triplet.session.substring(0, 8)}..., trace=${triplet.trace.substring(0, 8)}..., span=${triplet.span.substring(0, 8)}...`
+        `[ClaudeHeadersPool] Collected config from whitelist API Key: ${req.apiKeyData.id} -> session=${config.session.substring(0, 8)}..., trace=${config.trace.substring(0, 8)}..., anthropic-beta=${config.anthropicBeta.substring(0, 30)}...`
       )
     } catch (error) {
-      logger.error(`[SentryTripletPool] Failed to collect triplet: ${error.message}`)
+      logger.error(`[ClaudeHeadersPool] Failed to collect config: ${error.message}`)
     }
   }
 
   /**
-   * 添加三元组到池中
+   * 添加配置到池中
    */
-  async addToPool(triplet) {
+  async addToPool(config) {
     await this.initialize()
 
     try {
-      const tripletStr = JSON.stringify(triplet)
+      const configStr = JSON.stringify(config)
 
       // 检查池大小
       const currentSize = await redisClient.scard(REDIS_KEY_AVAILABLE)
 
       if (currentSize >= MAX_POOL_SIZE) {
         logger.debug(
-          `[SentryTripletPool] Pool is full (${currentSize}/${MAX_POOL_SIZE}), not adding new triplet`
+          `[ClaudeHeadersPool] Pool is full (${currentSize}/${MAX_POOL_SIZE}), not adding new config`
         )
         return false
       }
 
       // 添加到池中（Set 会自动去重）
-      const added = await redisClient.sadd(REDIS_KEY_AVAILABLE, tripletStr)
+      const added = await redisClient.sadd(REDIS_KEY_AVAILABLE, configStr)
 
       if (added) {
         const newSize = await redisClient.scard(REDIS_KEY_AVAILABLE)
         logger.info(
-          `[SentryTripletPool] Added new triplet to pool: session=${triplet.session.substring(0, 8)}... (pool size: ${newSize})`
+          `[ClaudeHeadersPool] Added new config to pool: session=${config.session.substring(0, 8)}..., anthropic-beta=${config.anthropicBeta.substring(0, 30)}... (pool size: ${newSize})`
         )
         return true
       }
 
       return false
     } catch (error) {
-      logger.error(`[SentryTripletPool] Failed to add triplet to pool: ${error.message}`)
+      logger.error(`[ClaudeHeadersPool] Failed to add config to pool: ${error.message}`)
       return false
     }
   }
 
   /**
-   * 获取当前三元组
+   * 获取当前配置
    */
-  async getCurrentTriplet() {
+  async getCurrentConfig() {
     await this.initialize()
 
     try {
-      const tripletStr = await redisClient.get(REDIS_KEY_CURRENT)
-      if (tripletStr) {
-        return JSON.parse(tripletStr)
+      const configStr = await redisClient.get(REDIS_KEY_CURRENT)
+      if (configStr) {
+        return JSON.parse(configStr)
       }
-      return DEFAULT_TRIPLET
+      return DEFAULT_CONFIG
     } catch (error) {
-      logger.error(`[SentryTripletPool] Failed to get current triplet: ${error.message}`)
-      return DEFAULT_TRIPLET
+      logger.error(`[ClaudeHeadersPool] Failed to get current config: ${error.message}`)
+      return DEFAULT_CONFIG
     }
   }
 
   /**
-   * 随机决定是否切换三元组
+   * 随机决定是否切换配置
    */
   async maybeSwitch() {
     await this.initialize()
@@ -220,7 +242,7 @@ class SentryTripletPoolService {
       const poolSize = await redisClient.scard(REDIS_KEY_AVAILABLE)
       if (poolSize < MIN_POOL_SIZE) {
         logger.debug(
-          `[SentryTripletPool] Pool size (${poolSize}) below minimum (${MIN_POOL_SIZE}), not switching`
+          `[ClaudeHeadersPool] Pool size (${poolSize}) below minimum (${MIN_POOL_SIZE}), not switching`
         )
         return false
       }
@@ -234,7 +256,7 @@ class SentryTripletPoolService {
 
         if (elapsed < MIN_SWITCH_INTERVAL_MS) {
           logger.debug(
-            `[SentryTripletPool] Too soon to switch (elapsed: ${elapsed}ms, min: ${MIN_SWITCH_INTERVAL_MS}ms)`
+            `[ClaudeHeadersPool] Too soon to switch (elapsed: ${elapsed}ms, min: ${MIN_SWITCH_INTERVAL_MS}ms)`
           )
           return false
         }
@@ -246,57 +268,57 @@ class SentryTripletPoolService {
       }
 
       // 执行切换
-      return await this.switchTriplet()
+      return await this.switchConfig()
     } catch (error) {
-      logger.error(`[SentryTripletPool] Failed to check switch: ${error.message}`)
+      logger.error(`[ClaudeHeadersPool] Failed to check switch: ${error.message}`)
       return false
     }
   }
 
   /**
-   * 切换到新的三元组
+   * 切换到新的配置
    */
-  async switchTriplet() {
+  async switchConfig() {
     await this.initialize()
 
     try {
-      // 获取当前三元组
+      // 获取当前配置
       const currentStr = await redisClient.get(REDIS_KEY_CURRENT)
 
-      // 获取所有可用三元组
-      const allTriplets = await redisClient.smembers(REDIS_KEY_AVAILABLE)
+      // 获取所有可用配置
+      const allConfigs = await redisClient.smembers(REDIS_KEY_AVAILABLE)
 
-      if (allTriplets.length === 0) {
-        logger.warn('[SentryTripletPool] No triplets available for switching')
+      if (allConfigs.length === 0) {
+        logger.warn('[ClaudeHeadersPool] No configs available for switching')
         return false
       }
 
-      // 过滤掉当前三元组
-      let availableTriplets = allTriplets
-      if (currentStr && allTriplets.length > 1) {
-        availableTriplets = allTriplets.filter((s) => s !== currentStr)
+      // 过滤掉当前配置
+      let availableConfigs = allConfigs
+      if (currentStr && allConfigs.length > 1) {
+        availableConfigs = allConfigs.filter((s) => s !== currentStr)
       }
 
-      if (availableTriplets.length === 0) {
-        availableTriplets = allTriplets
+      if (availableConfigs.length === 0) {
+        availableConfigs = allConfigs
       }
 
-      // 随机选择一个新三元组
-      const newTripletStr = availableTriplets[Math.floor(Math.random() * availableTriplets.length)]
-      const newTriplet = JSON.parse(newTripletStr)
+      // 随机选择一个新配置
+      const newConfigStr = availableConfigs[Math.floor(Math.random() * availableConfigs.length)]
+      const newConfig = JSON.parse(newConfigStr)
 
-      // 更新当前三元组
-      await redisClient.set(REDIS_KEY_CURRENT, newTripletStr)
+      // 更新当前配置
+      await redisClient.set(REDIS_KEY_CURRENT, newConfigStr)
       await redisClient.set(REDIS_KEY_LAST_SWITCH, Date.now().toString())
 
-      const oldTriplet = currentStr ? JSON.parse(currentStr) : null
+      const oldConfig = currentStr ? JSON.parse(currentStr) : null
       logger.info(
-        `[SentryTripletPool] Switched triplet: session ${oldTriplet?.session.substring(0, 8) || 'default'}... → ${newTriplet.session.substring(0, 8)}..., trace ${oldTriplet?.trace.substring(0, 8) || 'default'}... → ${newTriplet.trace.substring(0, 8)}...`
+        `[ClaudeHeadersPool] Switched config: session ${oldConfig?.session.substring(0, 8) || 'default'}... → ${newConfig.session.substring(0, 8)}..., anthropic-beta ${oldConfig?.anthropicBeta.substring(0, 20) || 'default'}... → ${newConfig.anthropicBeta.substring(0, 20)}...`
       )
 
       return true
     } catch (error) {
-      logger.error(`[SentryTripletPool] Failed to switch triplet: ${error.message}`)
+      logger.error(`[ClaudeHeadersPool] Failed to switch config: ${error.message}`)
       return false
     }
   }
@@ -311,15 +333,15 @@ class SentryTripletPoolService {
       const currentStr = await redisClient.get(REDIS_KEY_CURRENT)
       const current = currentStr ? JSON.parse(currentStr) : null
       const poolSize = await redisClient.scard(REDIS_KEY_AVAILABLE)
-      const allTriplets = await redisClient.smembers(REDIS_KEY_AVAILABLE)
-      const triplets = allTriplets.map((s) => JSON.parse(s))
+      const allConfigs = await redisClient.smembers(REDIS_KEY_AVAILABLE)
+      const configs = allConfigs.map((s) => JSON.parse(s))
       const lastSwitchStr = await redisClient.get(REDIS_KEY_LAST_SWITCH)
       const lastSwitchTime = lastSwitchStr ? parseInt(lastSwitchStr, 10) : null
 
       return {
-        currentTriplet: current,
+        currentConfig: current,
         poolSize,
-        triplets,
+        configs,
         lastSwitchTime,
         config: {
           minPoolSize: MIN_POOL_SIZE,
@@ -329,37 +351,45 @@ class SentryTripletPoolService {
         }
       }
     } catch (error) {
-      logger.error(`[SentryTripletPool] Failed to get stats: ${error.message}`)
+      logger.error(`[ClaudeHeadersPool] Failed to get stats: ${error.message}`)
       throw error
     }
   }
 
   /**
-   * 设置当前三元组
+   * 设置当前配置
    */
-  async setCurrentTriplet(triplet) {
+  async setCurrentConfig(config) {
     await this.initialize()
 
     try {
-      if (!this.isValidTriplet(triplet.session, triplet.trace, triplet.span)) {
-        throw new Error('Invalid triplet format')
+      if (
+        !this.isValidConfig(
+          config.session,
+          config.trace,
+          config.span,
+          config.anthropicVersion,
+          config.xApp
+        )
+      ) {
+        throw new Error('Invalid config format')
       }
 
-      const tripletStr = JSON.stringify(triplet)
+      const configStr = JSON.stringify(config)
 
-      // 确保三元组在池中
-      await redisClient.sadd(REDIS_KEY_AVAILABLE, tripletStr)
+      // 确保配置在池中
+      await redisClient.sadd(REDIS_KEY_AVAILABLE, configStr)
 
       // 设置为当前
-      await redisClient.set(REDIS_KEY_CURRENT, tripletStr)
+      await redisClient.set(REDIS_KEY_CURRENT, configStr)
       await redisClient.set(REDIS_KEY_LAST_SWITCH, Date.now().toString())
 
       logger.info(
-        `[SentryTripletPool] Set current triplet: session=${triplet.session.substring(0, 8)}..., trace=${triplet.trace.substring(0, 8)}..., span=${triplet.span.substring(0, 8)}...`
+        `[ClaudeHeadersPool] Set current config: session=${config.session.substring(0, 8)}..., anthropic-beta=${config.anthropicBeta.substring(0, 30)}...`
       )
       return true
     } catch (error) {
-      logger.error(`[SentryTripletPool] Failed to set current triplet: ${error.message}`)
+      logger.error(`[ClaudeHeadersPool] Failed to set current config: ${error.message}`)
       throw error
     }
   }
@@ -373,16 +403,16 @@ class SentryTripletPoolService {
       await redisClient.del(REDIS_KEY_CURRENT)
       await redisClient.del(REDIS_KEY_LAST_SWITCH)
       this.initialized = false
-      logger.info('[SentryTripletPool] Pool cleared')
+      logger.info('[ClaudeHeadersPool] Pool cleared')
       return true
     } catch (error) {
-      logger.error(`[SentryTripletPool] Failed to clear pool: ${error.message}`)
+      logger.error(`[ClaudeHeadersPool] Failed to clear pool: ${error.message}`)
       throw error
     }
   }
 }
 
 // 单例
-const sentryTripletPoolService = new SentryTripletPoolService()
+const claudeHeadersPoolService = new ClaudeHeadersPoolService()
 
-module.exports = sentryTripletPoolService
+module.exports = claudeHeadersPoolService

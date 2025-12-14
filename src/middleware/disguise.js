@@ -1,19 +1,23 @@
-// 简化版 Claude 伪装中间件
-// 使用真实的 (session, trace, span) 三元组进行伪装
+// Claude 伪装中间件 - 完整版
+// 使用真实的完整请求头配置（session, trace, span, anthropic-version, anthropic-beta, x-app）
 
-const sentryTripletPoolService = require('../services/sentryTripletPoolService')
+const claudeHeadersPoolService = require('../services/sentryTripletPoolService')
 
 const FIXED_CLAUDE_MACHINE_ID =
   process.env.DISGUISE_CLIENT_ID ||
   '1afa2e8165ce838aac57ba26c30a0b8468f0b287fcfce2d8b6e2f6169ebf76cf'
 const FIXED_CLAUDE_UA = process.env.DISGUISE_UA || 'claude-cli/2.0.69 (external, cli)'
-const USE_SENTRY_TRIPLET_POOL = process.env.USE_SENTRY_TRIPLET_POOL !== 'false' // 默认启用
+const USE_CLAUDE_HEADERS_POOL = process.env.USE_SENTRY_TRIPLET_POOL !== 'false' // 默认启用（保持环境变量兼容）
 
-// Fallback 三元组（当池为空或禁用时使用）
-const FALLBACK_TRIPLET = {
+// Fallback 完整配置（当池为空或禁用时使用）
+const FALLBACK_CONFIG = {
   session: process.env.DISGUISE_SESSION_ID || '9f10edbb-1407-47e1-9b85-fa634be33732',
   trace: '988f1b80178baa34cc02b67566c0269d',
-  span: '8a43fcfc28f7ba8e'
+  span: '8a43fcfc28f7ba8e',
+  anthropicVersion: '2023-06-01',
+  anthropicBeta:
+    'claude-code-20250219,oauth-2025-04-20,interleaved-thinking-2025-05-14,fine-grained-tool-streaming-2025-05-14',
+  xApp: 'cli'
 }
 
 function buildUserId(sessionId) {
@@ -49,33 +53,45 @@ async function disguiseMiddleware(req, res, next) {
       req.body.metadata = {}
     }
 
-    // 获取当前三元组 (session, trace, span)
-    let triplet
-    if (USE_SENTRY_TRIPLET_POOL) {
-      // 随机决定是否切换三元组
-      await sentryTripletPoolService.maybeSwitch()
-      // 获取当前三元组
-      triplet = await sentryTripletPoolService.getCurrentTriplet()
+    // 获取当前完整配置 (session, trace, span, anthropic-version, anthropic-beta, x-app)
+    let config
+    if (USE_CLAUDE_HEADERS_POOL) {
+      // 随机决定是否切换配置
+      await claudeHeadersPoolService.maybeSwitch()
+      // 获取当前配置
+      config = await claudeHeadersPoolService.getCurrentConfig()
     } else {
-      // 使用 fallback 三元组
-      triplet = FALLBACK_TRIPLET
+      // 使用 fallback 配置
+      config = FALLBACK_CONFIG
     }
 
-    // 核心伪装字段：使用真实的三元组配对
-    req.body.metadata.user_id = buildUserId(triplet.session)
+    // 核心伪装字段：使用真实的完整配置
+    req.body.metadata.user_id = buildUserId(config.session)
     req.headers['user-agent'] = FIXED_CLAUDE_UA
-    req.headers['sentry-trace'] = `${triplet.trace}-${triplet.span}`
-    req.headers.baggage = generateBaggage(triplet.trace)
+    req.headers['sentry-trace'] = `${config.trace}-${config.span}`
+    req.headers.baggage = generateBaggage(config.trace)
+    req.headers['anthropic-version'] = config.anthropicVersion
+    req.headers['anthropic-beta'] = config.anthropicBeta
+    req.headers['x-app'] = config.xApp
 
     req.isDisguised = true
   } catch (error) {
     // 遇到异常不阻塞请求，使用 fallback
     if (!req.body.metadata?.user_id) {
-      req.body.metadata.user_id = buildUserId(FALLBACK_TRIPLET.session)
+      req.body.metadata.user_id = buildUserId(FALLBACK_CONFIG.session)
     }
     if (!req.headers['sentry-trace']) {
-      req.headers['sentry-trace'] = `${FALLBACK_TRIPLET.trace}-${FALLBACK_TRIPLET.span}`
-      req.headers.baggage = generateBaggage(FALLBACK_TRIPLET.trace)
+      req.headers['sentry-trace'] = `${FALLBACK_CONFIG.trace}-${FALLBACK_CONFIG.span}`
+      req.headers.baggage = generateBaggage(FALLBACK_CONFIG.trace)
+    }
+    if (!req.headers['anthropic-version']) {
+      req.headers['anthropic-version'] = FALLBACK_CONFIG.anthropicVersion
+    }
+    if (!req.headers['anthropic-beta']) {
+      req.headers['anthropic-beta'] = FALLBACK_CONFIG.anthropicBeta
+    }
+    if (!req.headers['x-app']) {
+      req.headers['x-app'] = FALLBACK_CONFIG.xApp
     }
   }
 
