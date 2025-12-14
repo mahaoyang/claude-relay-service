@@ -358,7 +358,8 @@ class ApiKeyService {
           totalCost,
           weeklyOpusCost: (await redis.getWeeklyOpusCost(keyData.id)) || 0,
           tags,
-          usage
+          usage,
+          collectSession: keyData.collectSession === 'true' // 白名单收集标记
         }
       }
     } catch (error) {

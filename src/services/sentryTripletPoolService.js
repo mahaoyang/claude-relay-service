@@ -153,25 +153,36 @@ class ClaudeHeadersPoolService {
    * 从白名单请求收集完整配置
    */
   async collectFromWhitelist(req) {
+    const { createDebugLogger } = require('../utils/debugLogger')
+    const poolDebugLog = createDebugLogger('POOL', 'pool-debug.log')
+
     try {
+      poolDebugLog(`collectFromWhitelist called, collectSession=${req.apiKey?.collectSession}`)
+
       // 检查是否是白名单 API Key
-      if (!req.apiKeyData?.collectSession) {
+      if (!req.apiKey?.collectSession) {
+        poolDebugLog(`Skipping: collectSession is ${req.apiKey?.collectSession}`)
         return
       }
 
       // 提取完整配置
       const config = this.extractConfig(req)
       if (!config) {
+        poolDebugLog(`Skipping: config extraction failed`)
         return
       }
+
+      poolDebugLog(`Config extracted: session=${config.session?.substring(0, 8)}...`)
 
       // 添加到池中
       await this.addToPool(config)
 
+      poolDebugLog(`Successfully collected config from key: ${req.apiKey.id}`)
       logger.info(
-        `[ClaudeHeadersPool] Collected config from whitelist API Key: ${req.apiKeyData.id} -> session=${config.session.substring(0, 8)}..., trace=${config.trace.substring(0, 8)}..., anthropic-beta=${config.anthropicBeta.substring(0, 30)}...`
+        `[ClaudeHeadersPool] Collected config from whitelist API Key: ${req.apiKey.id} -> session=${config.session.substring(0, 8)}..., trace=${config.trace.substring(0, 8)}..., anthropic-beta=${config.anthropicBeta.substring(0, 30)}...`
       )
     } catch (error) {
+      poolDebugLog(`Error: ${error.message}`)
       logger.error(`[ClaudeHeadersPool] Failed to collect config: ${error.message}`)
     }
   }
@@ -181,6 +192,9 @@ class ClaudeHeadersPoolService {
    */
   async addToPool(config) {
     await this.initialize()
+
+    const { createDebugLogger } = require('../utils/debugLogger')
+    const poolDebugLog = createDebugLogger('POOL', 'pool-debug.log')
 
     try {
       const configStr = JSON.stringify(config)
@@ -198,15 +212,18 @@ class ClaudeHeadersPoolService {
       // 添加到池中（Set 会自动去重）
       const added = await redisClient.sadd(REDIS_KEY_AVAILABLE, configStr)
 
+      poolDebugLog(`sadd returned: ${added}, config: ${config.session.substring(0, 8)}...`)
+
       if (added) {
         const newSize = await redisClient.scard(REDIS_KEY_AVAILABLE)
         logger.info(
           `[ClaudeHeadersPool] Added new config to pool: session=${config.session.substring(0, 8)}..., anthropic-beta=${config.anthropicBeta.substring(0, 30)}... (pool size: ${newSize})`
         )
         return true
+      } else {
+        poolDebugLog(`Config already exists in pool or failed to add`)
+        return false
       }
-
-      return false
     } catch (error) {
       logger.error(`[ClaudeHeadersPool] Failed to add config to pool: ${error.message}`)
       return false

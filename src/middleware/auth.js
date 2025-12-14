@@ -1307,7 +1307,8 @@ const authenticateApiKey = async (req, res, next) => {
       dailyCost: validation.keyData.dailyCost,
       totalCostLimit: validation.keyData.totalCostLimit,
       totalCost: validation.keyData.totalCost,
-      usage: validation.keyData.usage
+      usage: validation.keyData.usage,
+      collectSession: validation.keyData.collectSession // 白名单收集标记
     }
     req.usage = validation.keyData.usage
 
@@ -1345,15 +1346,22 @@ const authenticateApiKey = async (req, res, next) => {
     }
 
     // 🔍 收集白名单 API Key 的 Sentry 三元组（session, trace, span）到池中（非阻塞）
+    const { createDebugLogger } = require('../utils/debugLogger')
+    const authDebugLog = createDebugLogger('AUTH', 'auth-debug.log')
+
+    authDebugLog(`Checking USE_SENTRY_TRIPLET_POOL: ${process.env.USE_SENTRY_TRIPLET_POOL}`)
     if (process.env.USE_SENTRY_TRIPLET_POOL !== 'false') {
       try {
+        authDebugLog(
+          `Attempting to collect from whitelist for key: ${req.apiKey.id}, collectSession=${req.apiKey.collectSession}`
+        )
         const sentryTripletPoolService = require('../services/sentryTripletPoolService')
         // 异步收集，不等待结果，不影响请求性能
         sentryTripletPoolService.collectFromWhitelist(req).catch((err) => {
-          logger.debug(`[SentryTripletPool] Collection failed: ${err.message}`)
+          authDebugLog(`Collection failed: ${err.message}`)
         })
       } catch (err) {
-        // 忽略错误
+        authDebugLog(`Failed to require sentryTripletPoolService: ${err.message}`)
       }
     }
 

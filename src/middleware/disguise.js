@@ -2,27 +2,9 @@
 // 使用真实的完整请求头配置（session, trace, span, anthropic-version, anthropic-beta, x-app）
 
 const claudeHeadersPoolService = require('../services/sentryTripletPoolService')
-const fs = require('fs')
-const path = require('path')
+const { createDebugLogger } = require('../utils/debugLogger')
 
-const DEBUG_LOG_PATH = path.join(__dirname, '../../logs/disguise-debug.log')
-
-function debugLog(message) {
-  const timestamp = new Date().toISOString()
-  const logMessage = `[${timestamp}] ${message}`
-
-  // 线上环境（Vercel等只读文件系统）使用 console.log
-  if (process.env.NODE_ENV === 'production' || process.env.VERCEL) {
-    console.log('[DISGUISE]', logMessage)
-  } else {
-    // 本地开发环境写文件
-    try {
-      fs.appendFileSync(DEBUG_LOG_PATH, `${logMessage}\n`)
-    } catch (err) {
-      console.log('[DISGUISE]', logMessage)
-    }
-  }
-}
+const debugLog = createDebugLogger('DISGUISE', 'disguise-debug.log')
 
 const DISGUISE_ENABLED = process.env.DISGUISE_ENABLED !== 'false' // 默认启用
 const FIXED_CLAUDE_MACHINE_ID =
