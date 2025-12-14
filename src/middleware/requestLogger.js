@@ -2,12 +2,21 @@
 const fs = require('fs')
 const path = require('path')
 
-const LOG_DIR = path.join(__dirname, '../../logs')
+// 使用环境检测来决定日志目录
+const isVercel = process.env.VERCEL === '1' || process.env.NOW_REGION !== undefined
+const LOG_DIR = isVercel ? '/tmp/crs-debug-logs' : path.join(__dirname, '../../logs')
 const LOG_FILE = path.join(LOG_DIR, 'claude-cli-requests.log')
 
-// 确保日志目录存在
-if (!fs.existsSync(LOG_DIR)) {
-  fs.mkdirSync(LOG_DIR, { recursive: true })
+// 确保日志目录存在（使用 try-catch 处理权限问题）
+let fileLoggingEnabled = true
+try {
+  if (!fs.existsSync(LOG_DIR)) {
+    fs.mkdirSync(LOG_DIR, { recursive: true })
+  }
+} catch (error) {
+  // 如果无法创建目录，禁用文件日志
+  fileLoggingEnabled = false
+  console.warn('[RequestLogger] File logging disabled:', error.message)
 }
 
 function formatJson(obj) {
@@ -49,37 +58,43 @@ function requestLoggerMiddleware(req, res, next) {
   ].join('\n')
 
   // 解析 sentry-trace
-  if (req.headers['sentry-trace']) {
-    const parts = req.headers['sentry-trace'].split('-')
-    const parsed = [
-      `  - trace_id: ${parts[0] || 'N/A'}`,
-      `  - span_id: ${parts[1] || 'N/A'}`,
-      `  - sampled: ${parts[2] || 'N/A'}`,
-      ''
-    ].join('\n')
+  if (fileLoggingEnabled) {
+    try {
+      if (req.headers['sentry-trace']) {
+        const parts = req.headers['sentry-trace'].split('-')
+        const parsed = [
+          `  - trace_id: ${parts[0] || 'N/A'}`,
+          `  - span_id: ${parts[1] || 'N/A'}`,
+          `  - sampled: ${parts[2] || 'N/A'}`,
+          ''
+        ].join('\n')
 
-    fs.appendFileSync(LOG_FILE, `${logEntry}\n${parsed}`)
-  } else {
-    fs.appendFileSync(LOG_FILE, `${logEntry}\n  - (无 sentry-trace)\n\n`)
+        fs.appendFileSync(LOG_FILE, `${logEntry}\n${parsed}`)
+      } else {
+        fs.appendFileSync(LOG_FILE, `${logEntry}\n  - (无 sentry-trace)\n\n`)
+      }
+
+      // 解析 user_id 中的 session
+      if (req.body?.metadata?.user_id) {
+        const userId = req.body.metadata.user_id
+        const sessionMatch = userId.match(/session_([a-f0-9-]+)$/i)
+        const sessionExtracted = sessionMatch ? sessionMatch[1] : 'N/A'
+
+        const userIdParsed = [
+          '🆔 User ID 解析:',
+          `  - 完整 user_id: ${userId}`,
+          `  - 提取的 session_id: ${sessionExtracted}`,
+          ''
+        ].join('\n')
+
+        fs.appendFileSync(LOG_FILE, userIdParsed)
+      }
+
+      fs.appendFileSync(LOG_FILE, '\n')
+    } catch (error) {
+      console.warn('[RequestLogger] Failed to write log:', error.message)
+    }
   }
-
-  // 解析 user_id 中的 session
-  if (req.body?.metadata?.user_id) {
-    const userId = req.body.metadata.user_id
-    const sessionMatch = userId.match(/session_([a-f0-9-]+)$/i)
-    const sessionExtracted = sessionMatch ? sessionMatch[1] : 'N/A'
-
-    const userIdParsed = [
-      '🆔 User ID 解析:',
-      `  - 完整 user_id: ${userId}`,
-      `  - 提取的 session_id: ${sessionExtracted}`,
-      ''
-    ].join('\n')
-
-    fs.appendFileSync(LOG_FILE, userIdParsed)
-  }
-
-  fs.appendFileSync(LOG_FILE, '\n')
 
   // 同时输出到控制台
   console.log(`\n🔍 [Request Logger] ${req.method} ${req.originalUrl}`)

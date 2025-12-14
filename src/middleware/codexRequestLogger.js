@@ -2,12 +2,21 @@
 const fs = require('fs')
 const path = require('path')
 
-const LOG_DIR = path.join(__dirname, '../../logs')
+// 使用环境检测来决定日志目录
+const isVercel = process.env.VERCEL === '1' || process.env.NOW_REGION !== undefined
+const LOG_DIR = isVercel ? '/tmp/crs-debug-logs' : path.join(__dirname, '../../logs')
 const LOG_FILE = path.join(LOG_DIR, 'codex-requests.log')
 
-// 确保日志目录存在
-if (!fs.existsSync(LOG_DIR)) {
-  fs.mkdirSync(LOG_DIR, { recursive: true })
+// 确保日志目录存在（使用 try-catch 处理权限问题）
+let fileLoggingEnabled = true
+try {
+  if (!fs.existsSync(LOG_DIR)) {
+    fs.mkdirSync(LOG_DIR, { recursive: true })
+  }
+} catch (error) {
+  // 如果无法创建目录，禁用文件日志
+  fileLoggingEnabled = false
+  console.warn('[CodexRequestLogger] File logging disabled:', error.message)
 }
 
 function formatJson(obj) {
@@ -44,7 +53,14 @@ function codexRequestLoggerMiddleware(req, res, next) {
     ''
   ].join('\n')
 
-  fs.appendFileSync(LOG_FILE, `${logEntry}\n`)
+  // 写入文件（如果启用）
+  if (fileLoggingEnabled) {
+    try {
+      fs.appendFileSync(LOG_FILE, `${logEntry}\n`)
+    } catch (error) {
+      console.warn('[CodexRequestLogger] Failed to write log:', error.message)
+    }
+  }
 
   // 同时输出到控制台
   console.log(`\n🔍 [Codex Request Logger] ${req.method} ${req.originalUrl}`)
