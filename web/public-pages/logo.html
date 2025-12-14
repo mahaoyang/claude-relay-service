@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logo Recreated</title>
+    <!-- 引入几何感较强的字体 -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* 配色方案 */
+            --bg-color: #e8eaf0; /* 整体背景色 */
+            --card-surface: linear-gradient(145deg, #ffffff, #dcdfe6); /* 卡片表面光感 */
+            --text-color: #2b2e33; /* 文字深灰 */
+            --shadow-light: rgba(255, 255, 255, 0.8);
+            --shadow-dark: rgba(0, 0, 0, 0.15);
+            --floating-shadow: 0 10px 20px rgba(0, 0, 0, 0.15), 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #d1d5db; /* 网页背景深一点，突显卡片 */
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        /* 主卡片容器 */
+        .logo-card {
+            width: 320px;
+            height: 320px;
+            background: var(--card-surface);
+            border-radius: 50px; /* 大圆角 */
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            
+            /* 制造卡片的立体厚度和边缘光感 */
+            box-shadow: 
+                -10px -10px 30px var(--shadow-light), /* 左上高光 */
+                15px 15px 30px var(--shadow-dark),   /* 右下阴影 */
+                inset 2px 2px 5px rgba(255,255,255, 0.5), /* 内部微光 */
+                inset -2px -2px 5px rgba(0,0,0, 0.05); /* 内部微暗 */
+            
+            /* 玻璃/陶瓷质感的边框 */
+            border: 1px solid rgba(255, 255, 255, 0.6);
+        }
+
+        /* 内部内容容器 */
+        .content-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transform: translateY(25px); /* 整体下移，调整重心 */
+        }
+
+        /* 上方大 Logo 区域 */
+        .main-logo-row {
+            display: flex;
+            align-items: baseline; /* 基线对齐 */
+            font-weight: 700;
+            color: var(--text-color);
+            line-height: 1;
+            /* 给文字整体添加悬浮阴影 */
+            filter: drop-shadow(4px 8px 6px rgba(0,0,0,0.25));
+        }
+
+        /* 符号组 (> _) */
+        .symbols {
+            font-size: 50px;
+            letter-spacing: -2px;
+            margin-right: 15px; /* 增加一点间距，防止和J太挤 */
+            font-weight: 600;
+            display: flex;
+            align-items: baseline;
+        }
+
+        .symbol-arrow {
+            transform: translateY(-2px); /* 微调箭头位置 */
+        }
+        
+        .symbol-underscore {
+            margin-left: 2px;
+        }
+
+        /* 字母组 (J O) */
+        .letters {
+            font-size: 130px; /* 字母非常大 */
+            letter-spacing: -5px;
+            display: flex;
+            align-items: center;
+        }
+
+        /* 定制字母 J */
+        .letter-j {
+            /* 移除了 relative 定位，因为不再需要伪元素 */
+            margin-right: 5px;
+        }
+
+        /* 删除了 .letter-j::before 相关的所有代码，不再进行伪造拼接 */
+
+        /* 字母 O */
+        .letter-o {
+            font-weight: 600; /* O 可以稍微细一点或保持一致 */
+        }
+
+        /* 底部小文字 */
+        .subtitle {
+            margin-top: 20px;
+            font-size: 32px;
+            font-weight: 500;
+            color: var(--text-color);
+            letter-spacing: 2px;
+            opacity: 0.8;
+            /* 底部文字的阴影稍淡 */
+            text-shadow: 2px 4px 6px rgba(0,0,0,0.15);
+        }
+
+        /* 添加一点光泽纹理覆盖 (可选，增加真实感) */
+        .gloss-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: 50px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 40%);
+            pointer-events: none;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="logo-card">
+        <div class="gloss-overlay"></div>
+        
+        <div class="content-wrapper">
+            <!-- 主 Logo 行 -->
+            <div class="main-logo-row">
+                <div class="symbols">
+                    <span class="symbol-arrow">&gt;</span>
+                    <span class="symbol-underscore">_</span>
+                </div>
+                <div class="letters">
+                    <span class="letter-j">J</span>
+                    <span class="letter-o">O</span>
+                </div>
+            </div>
+
+            <!-- 底部文字 -->
+            <div class="subtitle">JO</div>
+        </div>
+    </div>
+
+</body>
+</html>

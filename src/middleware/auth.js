@@ -2088,7 +2088,7 @@ module.exports = {
   requireRole,
   requireAdmin,
   corsMiddleware,
-  requestLogger,
+  // requestLogger, // 已禁用 - 测试中间件
   securityMiddleware,
   errorHandler,
   globalRateLimit,

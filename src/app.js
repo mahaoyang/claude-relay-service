@@ -31,7 +31,7 @@ const webhookRoutes = require('./routes/webhook')
 // Import middleware
 const {
   corsMiddleware,
-  requestLogger,
+  // requestLogger, // 已禁用 - 测试中间件
   securityMiddleware,
   errorHandler,
   globalRateLimit,
@@ -148,8 +148,8 @@ class Application {
       // 📏 请求大小限制
       this.app.use(requestSizeLimit)
 
-      // 📝 请求日志（使用自定义logger而不是morgan）
-      this.app.use(requestLogger)
+      // 📝 请求日志（使用自定义logger而不是morgan）- 已禁用
+      // this.app.use(requestLogger)
 
       // 🐛 HTTP调试拦截器（仅在启用调试时生效）
       if (process.env.DEBUG_HTTP_TRAFFIC === 'true') {
