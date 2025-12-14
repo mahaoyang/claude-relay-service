@@ -5,6 +5,7 @@ const logger = require('../utils/logger')
 const config = require('../../config')
 const { authenticateApiKey } = require('../middleware/auth')
 const codexDisguise = require('../middleware/codexDisguise')
+const codexRequestLogger = require('../middleware/codexRequestLogger')
 const unifiedOpenAIScheduler = require('../services/unifiedOpenAIScheduler')
 const openaiAccountService = require('../services/openaiAccountService')
 const openaiResponsesAccountService = require('../services/openaiResponsesAccountService')
@@ -868,10 +869,22 @@ const handleResponses = async (req, res) => {
 }
 
 // 注册两个路由路径，都使用相同的处理函数
-router.post('/responses', authenticateApiKey, codexDisguise, handleResponses)
-router.post('/v1/responses', authenticateApiKey, codexDisguise, handleResponses)
-router.post('/responses/compact', authenticateApiKey, codexDisguise, handleResponses)
-router.post('/v1/responses/compact', authenticateApiKey, codexDisguise, handleResponses)
+router.post('/responses', codexRequestLogger, authenticateApiKey, codexDisguise, handleResponses)
+router.post('/v1/responses', codexRequestLogger, authenticateApiKey, codexDisguise, handleResponses)
+router.post(
+  '/responses/compact',
+  codexRequestLogger,
+  authenticateApiKey,
+  codexDisguise,
+  handleResponses
+)
+router.post(
+  '/v1/responses/compact',
+  codexRequestLogger,
+  authenticateApiKey,
+  codexDisguise,
+  handleResponses
+)
 
 // 使用情况统计端点
 router.get('/usage', authenticateApiKey, async (req, res) => {
