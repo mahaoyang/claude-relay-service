@@ -389,33 +389,47 @@ class Application {
   // 🔧 初始化管理员凭据（总是从 init.json 加载，确保数据一致性）
   async initializeAdmin() {
     try {
-      const initFilePath = path.join(__dirname, '..', 'data', 'init.json')
+      let username, password, source
 
-      if (!fs.existsSync(initFilePath)) {
-        logger.warn('⚠️ No admin credentials found. Please run npm run setup first.')
-        return
+      // 优先使用环境变量（生产环境）
+      if (process.env.ADMIN_USERNAME && process.env.ADMIN_PASSWORD) {
+        username = process.env.ADMIN_USERNAME
+        password = process.env.ADMIN_PASSWORD
+        source = 'environment variables'
+      } else {
+        // 回退到 init.json（本地开发）
+        const initFilePath = path.join(__dirname, '..', 'data', 'init.json')
+
+        if (!fs.existsSync(initFilePath)) {
+          logger.warn(
+            '⚠️ No admin credentials found. Set ADMIN_USERNAME and ADMIN_PASSWORD environment variables or run npm run setup.'
+          )
+          return
+        }
+
+        const initData = JSON.parse(fs.readFileSync(initFilePath, 'utf8'))
+        username = initData.adminUsername
+        password = initData.adminPassword
+        source = 'init.json'
       }
-
-      // 从 init.json 读取管理员凭据（作为唯一真实数据源）
-      const initData = JSON.parse(fs.readFileSync(initFilePath, 'utf8'))
 
       // 将明文密码哈希化
       const saltRounds = 10
-      const passwordHash = await bcrypt.hash(initData.adminPassword, saltRounds)
+      const passwordHash = await bcrypt.hash(password, saltRounds)
 
-      // 存储到Redis（每次启动都覆盖，确保与 init.json 同步）
+      // 存储到Redis
       const adminCredentials = {
-        username: initData.adminUsername,
+        username,
         passwordHash,
-        createdAt: initData.initializedAt || new Date().toISOString(),
+        createdAt: new Date().toISOString(),
         lastLogin: null,
-        updatedAt: initData.updatedAt || null
+        updatedAt: null
       }
 
       await redis.setSession('admin_credentials', adminCredentials)
 
-      logger.success('✅ Admin credentials loaded from init.json (single source of truth)')
-      logger.info(`📋 Admin username: ${adminCredentials.username}`)
+      logger.success(`✅ Admin credentials loaded from ${source}`)
+      logger.info(`📋 Admin username: ${username}`)
     } catch (error) {
       logger.error('❌ Failed to initialize admin credentials:', {
         error: error.message,
