@@ -44,8 +44,9 @@ class ClaudeHeadersPoolService {
     try {
       // 检查是否已有当前配置
       const current = await redisClient.get(REDIS_KEY_CURRENT)
+      const poolSize = await redisClient.scard(REDIS_KEY_AVAILABLE)
 
-      if (!current) {
+      if (!current || poolSize === 0) {
         // 使用默认配置初始化
         const defaultConfigStr = JSON.stringify(DEFAULT_CONFIG)
         await redisClient.set(REDIS_KEY_CURRENT, defaultConfigStr)
@@ -62,7 +63,7 @@ class ClaudeHeadersPoolService {
   }
 
   /**
-   * 从请求中提取完整的头部配置
+   * 从请求中提取核心配置（session, trace, span）
    */
   extractConfig(req) {
     try {
@@ -92,13 +93,8 @@ class ClaudeHeadersPoolService {
       const traceId = parts[0]
       const spanId = parts[1]
 
-      // 提取 anthropic 相关头部
-      const anthropicVersion = req.headers['anthropic-version']
-      const anthropicBeta = req.headers['anthropic-beta']
-      const xApp = req.headers['x-app']
-
       // 验证基本格式
-      if (!this.isValidConfig(sessionId, traceId, spanId, anthropicVersion, xApp)) {
+      if (!this.isValidConfig(sessionId, traceId, spanId)) {
         return null
       }
 
@@ -106,9 +102,10 @@ class ClaudeHeadersPoolService {
         session: sessionId,
         trace: traceId,
         span: spanId,
-        anthropicVersion: anthropicVersion || '2023-06-01',
-        anthropicBeta: anthropicBeta || '',
-        xApp: xApp || 'cli'
+        anthropicVersion: '2023-06-01',
+        anthropicBeta:
+          'claude-code-20250219,oauth-2025-04-20,interleaved-thinking-2025-05-14,fine-grained-tool-streaming-2025-05-14',
+        xApp: 'cli'
       }
     } catch (error) {
       logger.debug(`[ClaudeHeadersPool] Failed to extract config: ${error.message}`)
@@ -117,9 +114,9 @@ class ClaudeHeadersPoolService {
   }
 
   /**
-   * 验证配置格式
+   * 验证配置格式（只验证核心三元组）
    */
-  isValidConfig(sessionId, traceId, spanId, anthropicVersion, xApp) {
+  isValidConfig(sessionId, traceId, spanId) {
     // session: UUID 格式
     const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
     if (!uuidRegex.test(sessionId)) {
@@ -133,16 +130,6 @@ class ClaudeHeadersPoolService {
 
     // span: 16位 hex
     if (!/^[0-9a-f]{16}$/i.test(spanId)) {
-      return false
-    }
-
-    // anthropicVersion: 必须存在且格式为 YYYY-MM-DD
-    if (!anthropicVersion || !/^\d{4}-\d{2}-\d{2}$/.test(anthropicVersion)) {
-      return false
-    }
-
-    // xApp: 必须存在且非空
-    if (!xApp || xApp.trim() === '') {
       return false
     }
 
@@ -380,15 +367,7 @@ class ClaudeHeadersPoolService {
     await this.initialize()
 
     try {
-      if (
-        !this.isValidConfig(
-          config.session,
-          config.trace,
-          config.span,
-          config.anthropicVersion,
-          config.xApp
-        )
-      ) {
+      if (!this.isValidConfig(config.session, config.trace, config.span)) {
         throw new Error('Invalid config format')
       }
 
