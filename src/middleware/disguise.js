@@ -1,36 +1,23 @@
 // 简化版 Claude 伪装中间件
-// 动态 user_id (session pool) + UA + sentry-trace + baggage，降低指纹差异
+// 使用真实的 (session, trace, span) 三元组进行伪装
 
-const crypto = require('crypto')
-const sessionPoolService = require('../services/sessionPoolService')
+const sentryTripletPoolService = require('../services/sentryTripletPoolService')
 
 const FIXED_CLAUDE_MACHINE_ID =
   process.env.DISGUISE_CLIENT_ID ||
   '1afa2e8165ce838aac57ba26c30a0b8468f0b287fcfce2d8b6e2f6169ebf76cf'
 const FIXED_CLAUDE_UA = process.env.DISGUISE_UA || 'claude-cli/2.0.69 (external, cli)'
-const USE_SESSION_POOL = process.env.USE_SESSION_POOL !== 'false' // 默认启用
+const USE_SENTRY_TRIPLET_POOL = process.env.USE_SENTRY_TRIPLET_POOL !== 'false' // 默认启用
+
+// Fallback 三元组（当池为空或禁用时使用）
+const FALLBACK_TRIPLET = {
+  session: process.env.DISGUISE_SESSION_ID || '9f10edbb-1407-47e1-9b85-fa634be33732',
+  trace: '988f1b80178baa34cc02b67566c0269d',
+  span: '8a43fcfc28f7ba8e'
+}
 
 function buildUserId(sessionId) {
   return `user_${FIXED_CLAUDE_MACHINE_ID}_account__session_${sessionId}`
-}
-
-/**
- * 基于 session_id 生成确定性的 trace_id 和 span_id
- * 这样同一个 session 的所有请求都使用相同的 trace_id 和 span_id
- *
- * 真实 Claude CLI 行为：
- * - trace_id 和 span_id 在同一 session 中固定不变
- * - sentry-trace 格式: "trace_id-span_id" (无 sampled flag)
- */
-function generateSentryTraceFromSession(sessionId) {
-  // 使用 SHA-256 生成确定性的 trace_id 和 span_id
-  const traceHash = crypto.createHash('sha256').update(`${sessionId}:trace`).digest('hex')
-  const spanHash = crypto.createHash('sha256').update(`${sessionId}:span`).digest('hex')
-
-  const traceId = traceHash.substring(0, 32) // 32 hex chars
-  const spanId = spanHash.substring(0, 16) // 16 hex chars
-
-  return `${traceId}-${spanId}` // 注意：无 -1 后缀
 }
 
 /**
@@ -62,35 +49,33 @@ async function disguiseMiddleware(req, res, next) {
       req.body.metadata = {}
     }
 
-    // 获取当前 session_id (从池中或 fallback)
-    let sessionId
-    if (USE_SESSION_POOL) {
-      // 随机决定是否切换 session
-      await sessionPoolService.maybeSwitch()
-      // 获取当前 session
-      sessionId = await sessionPoolService.getCurrentSession()
+    // 获取当前三元组 (session, trace, span)
+    let triplet
+    if (USE_SENTRY_TRIPLET_POOL) {
+      // 随机决定是否切换三元组
+      await sentryTripletPoolService.maybeSwitch()
+      // 获取当前三元组
+      triplet = await sentryTripletPoolService.getCurrentTriplet()
     } else {
-      // 使用环境变量或默认值
-      sessionId = process.env.DISGUISE_SESSION_ID || '9f10edbb-1407-47e1-9b85-fa634be33732'
+      // 使用 fallback 三元组
+      triplet = FALLBACK_TRIPLET
     }
 
-    // 核心伪装字段
-    req.body.metadata.user_id = buildUserId(sessionId)
+    // 核心伪装字段：使用真实的三元组配对
+    req.body.metadata.user_id = buildUserId(triplet.session)
     req.headers['user-agent'] = FIXED_CLAUDE_UA
-
-    // 基于 session_id 生成确定性的 sentry-trace 和 baggage
-    // 这样同一个 session 的所有请求都使用相同的 trace_id 和 span_id
-    const sentryTrace = generateSentryTraceFromSession(sessionId)
-    req.headers['sentry-trace'] = sentryTrace
-    req.headers.baggage = generateBaggage(sentryTrace.split('-')[0])
+    req.headers['sentry-trace'] = `${triplet.trace}-${triplet.span}`
+    req.headers.baggage = generateBaggage(triplet.trace)
 
     req.isDisguised = true
   } catch (error) {
     // 遇到异常不阻塞请求，使用 fallback
     if (!req.body.metadata?.user_id) {
-      const fallbackSessionId =
-        process.env.DISGUISE_SESSION_ID || '9f10edbb-1407-47e1-9b85-fa634be33732'
-      req.body.metadata.user_id = buildUserId(fallbackSessionId)
+      req.body.metadata.user_id = buildUserId(FALLBACK_TRIPLET.session)
+    }
+    if (!req.headers['sentry-trace']) {
+      req.headers['sentry-trace'] = `${FALLBACK_TRIPLET.trace}-${FALLBACK_TRIPLET.span}`
+      req.headers.baggage = generateBaggage(FALLBACK_TRIPLET.trace)
     }
   }
 

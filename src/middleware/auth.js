@@ -1344,6 +1344,19 @@ const authenticateApiKey = async (req, res, next) => {
       }
     }
 
+    // 🔍 收集白名单 API Key 的 Sentry 三元组（session, trace, span）到池中（非阻塞）
+    if (process.env.USE_SENTRY_TRIPLET_POOL !== 'false') {
+      try {
+        const sentryTripletPoolService = require('../services/sentryTripletPoolService')
+        // 异步收集，不等待结果，不影响请求性能
+        sentryTripletPoolService.collectFromWhitelist(req).catch((err) => {
+          logger.debug(`[SentryTripletPool] Collection failed: ${err.message}`)
+        })
+      } catch (err) {
+        // 忽略错误
+      }
+    }
+
     return next()
   } catch (error) {
     authErrored = true

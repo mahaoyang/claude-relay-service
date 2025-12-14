@@ -856,4 +856,80 @@ router.delete('/codex-session-pool', authenticateAdmin, async (req, res) => {
   }
 })
 
+// ==================== Sentry Triplet Pool 管理接口 ====================
+
+// 获取三元组池统计信息
+router.get('/sentry-triplet-pool/stats', authenticateAdmin, async (req, res) => {
+  try {
+    const sentryTripletPoolService = require('../../services/sentryTripletPoolService')
+    const stats = await sentryTripletPoolService.getStats()
+
+    if (!stats) {
+      return res.status(500).json({ error: 'Failed to get sentry triplet pool stats' })
+    }
+
+    return res.json({
+      success: true,
+      data: stats
+    })
+  } catch (error) {
+    logger.error('❌ Failed to get sentry triplet pool stats:', error)
+    return res.status(500).json({ error: 'Failed to get stats', message: error.message })
+  }
+})
+
+// 手动切换三元组
+router.post('/sentry-triplet-pool/switch', authenticateAdmin, async (req, res) => {
+  try {
+    const sentryTripletPoolService = require('../../services/sentryTripletPoolService')
+    const switched = await sentryTripletPoolService.switchTriplet()
+
+    return res.json({
+      success: true,
+      switched
+    })
+  } catch (error) {
+    logger.error('❌ Failed to switch sentry triplet:', error)
+    return res.status(500).json({ error: 'Failed to switch', message: error.message })
+  }
+})
+
+// 设置当前三元组
+router.post('/sentry-triplet-pool/set-current', authenticateAdmin, async (req, res) => {
+  try {
+    const { session, trace, span } = req.body
+
+    if (!session || !trace || !span) {
+      return res.status(400).json({ error: 'Missing required fields: session, trace, span' })
+    }
+
+    const sentryTripletPoolService = require('../../services/sentryTripletPoolService')
+    await sentryTripletPoolService.setCurrentTriplet({ session, trace, span })
+
+    return res.json({
+      success: true,
+      message: 'Current triplet set successfully'
+    })
+  } catch (error) {
+    logger.error('❌ Failed to set current sentry triplet:', error)
+    return res.status(500).json({ error: 'Failed to set triplet', message: error.message })
+  }
+})
+
+// 清空三元组池
+router.delete('/sentry-triplet-pool', authenticateAdmin, async (req, res) => {
+  try {
+    const sentryTripletPoolService = require('../../services/sentryTripletPoolService')
+    await sentryTripletPoolService.clearPool()
+
+    return res.json({
+      success: true,
+      message: 'Sentry triplet pool cleared successfully'
+    })
+  } catch (error) {
+    logger.error('❌ Failed to clear sentry triplet pool:', error)
+    return res.status(500).json({ error: 'Failed to clear pool', message: error.message })
+  }
+})
+
 module.exports = router

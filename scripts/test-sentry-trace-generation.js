@@ -11,7 +11,7 @@ function generateSentryTraceFromSession(sessionId) {
   const spanHash = crypto.createHash('sha256').update(`${sessionId}:span`).digest('hex')
 
   const traceId = traceHash.substring(0, 32) // 32 hex chars
-  const spanId = spanHash.substring(0, 16)   // 16 hex chars
+  const spanId = spanHash.substring(0, 16) // 16 hex chars
 
   return `${traceId}-${spanId}`
 }
@@ -59,13 +59,17 @@ const parts = trace1.split('-')
 console.log(`   trace_id 长度: ${parts[0].length} (期望: 32)`)
 console.log(`   span_id 长度: ${parts[1].length} (期望: 16)`)
 console.log(`   部分数量: ${parts.length} (期望: 2, 无sampled flag)`)
-console.log(`   ✔️  结果: ${parts[0].length === 32 && parts[1].length === 16 && parts.length === 2 ? '通过' : '失败'}`)
+console.log(
+  `   ✔️  结果: ${parts[0].length === 32 && parts[1].length === 16 && parts.length === 2 ? '通过' : '失败'}`
+)
 
 // 测试4：Baggage格式
 console.log(`\n✅ Baggage 格式测试:`)
 const baggage = generateBaggage(parts[0])
 console.log(`   ${baggage}`)
-console.log(`   包含 environment=external: ${baggage.includes('sentry-environment=external') ? '✔️' : '❌'}`)
+console.log(
+  `   包含 environment=external: ${baggage.includes('sentry-environment=external') ? '✔️' : '❌'}`
+)
 console.log(`   包含 release=2.0.69: ${baggage.includes('sentry-release=2.0.69') ? '✔️' : '❌'}`)
 console.log(`   包含 public_key: ${baggage.includes('sentry-public_key=') ? '✔️' : '❌'}`)
 console.log(`   包含 trace_id: ${baggage.includes(`sentry-trace_id=${parts[0]}`) ? '✔️' : '❌'}`)
