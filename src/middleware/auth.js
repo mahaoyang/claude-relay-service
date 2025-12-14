@@ -1768,7 +1768,8 @@ const corsMiddleware = (req, res, next) => {
   }
 }
 
-// 📝 请求日志中间件（优化版）
+// 📝 请求日志中间件（优化版）- 已禁用
+// eslint-disable-next-line no-unused-vars
 const requestLogger = (req, res, next) => {
   const start = Date.now()
   const requestId = Math.random().toString(36).substring(2, 15)
