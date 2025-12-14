@@ -970,6 +970,14 @@
                           </button>
                           <button
                             class="rounded px-2 py-1 text-xs font-medium text-red-600 transition-colors hover:bg-red-50 hover:text-red-900 dark:hover:bg-red-900/20"
+                            title="重置额度"
+                            @click="resetApiKeyUsageActionRef?.open(key)"
+                          >
+                            <i class="fas fa-rotate-left" />
+                            <span class="ml-1">重置额度</span>
+                          </button>
+                          <button
+                            class="rounded px-2 py-1 text-xs font-medium text-red-600 transition-colors hover:bg-red-50 hover:text-red-900 dark:hover:bg-red-900/20"
                             title="删除"
                             @click="deleteApiKey(key.id)"
                           >
