@@ -46,10 +46,17 @@ const toggle = async () => {
   loading.value = true
   try {
     const newValue = !props.value
+
+    // 从 localStorage 获取认证 token
+    const authToken = localStorage.getItem('authToken')
+
     const response = await axios.patch(
       `/admin/api-keys/${props.apiKeyId}/collect-session`,
       { collectSession: newValue },
-      { withCredentials: true }
+      {
+        withCredentials: true,
+        headers: authToken ? { Authorization: `Bearer ${authToken}` } : {}
+      }
     )
 
     if (response.data.success) {

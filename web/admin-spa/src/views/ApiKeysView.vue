@@ -615,7 +615,7 @@
                       <td class="whitespace-nowrap px-3 py-3">
                         <CollectSessionToggle
                           :api-key-id="key.id"
-                          :value="key.collectSession || false"
+                          :value="!!key.collectSession"
                           @error="handleCollectSessionError"
                           @update="handleCollectSessionUpdate"
                         />

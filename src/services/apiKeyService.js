@@ -555,6 +555,7 @@ class ApiKeyService {
         key.expirationMode = key.expirationMode || 'fixed'
         key.isActivated = key.isActivated === 'true'
         key.activatedAt = key.activatedAt || null
+        key.collectSession = key.collectSession === 'true' // 新增：白名单收集状态
 
         // 获取当前时间窗口的请求次数、Token使用量和费用
         if (key.rateLimitWindow > 0) {

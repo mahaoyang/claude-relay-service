@@ -254,7 +254,14 @@ class RedisClient {
     const parsed = { ...data }
 
     // 布尔字段
-    const boolFields = ['isActive', 'enableModelRestriction', 'isDeleted']
+    const boolFields = [
+      'isActive',
+      'enableModelRestriction',
+      'enableClientRestriction',
+      'isDeleted',
+      'isActivated',
+      'collectSession'
+    ]
     for (const field of boolFields) {
       if (parsed[field] !== undefined) {
         parsed[field] = parsed[field] === 'true'
