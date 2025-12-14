@@ -32,37 +32,16 @@ router.post('/auth/login', async (req, res) => {
     // 从Redis获取管理员信息
     let adminData = await redis.getSession('admin_credentials')
 
-    // 如果Redis中没有管理员凭据，尝试重新初始化
+    // 如果Redis中没有管理员凭据，从环境变量重新初始化
     if (!adminData || Object.keys(adminData).length === 0) {
-      let adminUsername, adminPassword
+      const adminUsername = process.env.ADMIN_USERNAME
+      const adminPassword = process.env.ADMIN_PASSWORD
 
-      // 优先使用环境变量
-      if (process.env.ADMIN_USERNAME && process.env.ADMIN_PASSWORD) {
-        adminUsername = process.env.ADMIN_USERNAME
-        adminPassword = process.env.ADMIN_PASSWORD
-      } else {
-        // 回退到 init.json（本地开发）
-        const initFilePath = path.join(__dirname, '../../data/init.json')
-
-        if (!fs.existsSync(initFilePath)) {
-          return res.status(401).json({
-            error: 'Invalid credentials',
-            message: 'Admin credentials not configured'
-          })
-        }
-
-        try {
-          const initData = JSON.parse(fs.readFileSync(initFilePath, 'utf8'))
-          const { adminUsername: loadedUsername, adminPassword: loadedPassword } = initData
-          adminUsername = loadedUsername
-          adminPassword = loadedPassword
-        } catch (error) {
-          logger.error('❌ Failed to reload admin credentials:', error)
-          return res.status(401).json({
-            error: 'Invalid credentials',
-            message: 'Invalid username or password'
-          })
-        }
+      if (!adminUsername || !adminPassword) {
+        return res.status(401).json({
+          error: 'Invalid credentials',
+          message: 'Admin credentials not configured'
+        })
       }
 
       // 哈希密码并存储
@@ -80,7 +59,7 @@ router.post('/auth/login', async (req, res) => {
       // 重新存储到Redis
       await redis.getClient().hset('session:admin_credentials', adminData)
 
-      logger.info('✅ Admin credentials reloaded')
+      logger.info('✅ Admin credentials reloaded from environment variables')
     }
 
     // 验证用户名和密码

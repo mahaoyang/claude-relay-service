@@ -389,28 +389,15 @@ class Application {
   // 🔧 初始化管理员凭据（总是从 init.json 加载，确保数据一致性）
   async initializeAdmin() {
     try {
-      let username, password, source
+      // 从环境变量读取管理员凭据
+      const username = process.env.ADMIN_USERNAME
+      const password = process.env.ADMIN_PASSWORD
 
-      // 优先使用环境变量（生产环境）
-      if (process.env.ADMIN_USERNAME && process.env.ADMIN_PASSWORD) {
-        username = process.env.ADMIN_USERNAME
-        password = process.env.ADMIN_PASSWORD
-        source = 'environment variables'
-      } else {
-        // 回退到 init.json（本地开发）
-        const initFilePath = path.join(__dirname, '..', 'data', 'init.json')
-
-        if (!fs.existsSync(initFilePath)) {
-          logger.warn(
-            '⚠️ No admin credentials found. Set ADMIN_USERNAME and ADMIN_PASSWORD environment variables or run npm run setup.'
-          )
-          return
-        }
-
-        const initData = JSON.parse(fs.readFileSync(initFilePath, 'utf8'))
-        username = initData.adminUsername
-        password = initData.adminPassword
-        source = 'init.json'
+      if (!username || !password) {
+        logger.warn(
+          '⚠️ Admin credentials not configured. Set ADMIN_USERNAME and ADMIN_PASSWORD environment variables.'
+        )
+        return
       }
 
       // 将明文密码哈希化
@@ -428,7 +415,7 @@ class Application {
 
       await redis.setSession('admin_credentials', adminCredentials)
 
-      logger.success(`✅ Admin credentials loaded from ${source}`)
+      logger.success('✅ Admin credentials loaded from environment variables')
       logger.info(`📋 Admin username: ${username}`)
     } catch (error) {
       logger.error('❌ Failed to initialize admin credentials:', {
