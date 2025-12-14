@@ -2,7 +2,29 @@
 // 使用真实的完整请求头配置（session, trace, span, anthropic-version, anthropic-beta, x-app）
 
 const claudeHeadersPoolService = require('../services/sentryTripletPoolService')
+const fs = require('fs')
+const path = require('path')
 
+const DEBUG_LOG_PATH = path.join(__dirname, '../../logs/disguise-debug.log')
+
+function debugLog(message) {
+  const timestamp = new Date().toISOString()
+  const logMessage = `[${timestamp}] ${message}`
+
+  // 线上环境（Vercel等只读文件系统）使用 console.log
+  if (process.env.NODE_ENV === 'production' || process.env.VERCEL) {
+    console.log('[DISGUISE]', logMessage)
+  } else {
+    // 本地开发环境写文件
+    try {
+      fs.appendFileSync(DEBUG_LOG_PATH, `${logMessage}\n`)
+    } catch (err) {
+      console.log('[DISGUISE]', logMessage)
+    }
+  }
+}
+
+const DISGUISE_ENABLED = process.env.DISGUISE_ENABLED !== 'false' // 默认启用
 const FIXED_CLAUDE_MACHINE_ID =
   process.env.DISGUISE_CLIENT_ID ||
   '1afa2e8165ce838aac57ba26c30a0b8468f0b287fcfce2d8b6e2f6169ebf76cf'
@@ -44,8 +66,17 @@ function generateBaggage(traceId) {
 }
 
 async function disguiseMiddleware(req, res, next) {
+  // 如果伪装功能被禁用，直接跳过
+  if (!DISGUISE_ENABLED) {
+    debugLog('Middleware disabled, skipping')
+    return next()
+  }
+
+  debugLog('=== Middleware started ===')
+
   try {
     if (!req.body || typeof req.body !== 'object' || !req.headers) {
+      debugLog('Invalid req.body or req.headers, skipping')
       return next()
     }
 
@@ -65,14 +96,22 @@ async function disguiseMiddleware(req, res, next) {
       config = FALLBACK_CONFIG
     }
 
-    // 核心伪装字段：使用真实的完整配置
+    // ========================================
+    // 最小伪装模式：只修改身份标识，其他完全透传
+    // ========================================
+    // 1. 修改 user_id（从 session 构建）
     req.body.metadata.user_id = buildUserId(config.session)
+
+    // 2. 修改 UA
     req.headers['user-agent'] = FIXED_CLAUDE_UA
+
+    // 3. 修改 sentry-trace 和 baggage（从 trace + span 构建）
     req.headers['sentry-trace'] = `${config.trace}-${config.span}`
     req.headers.baggage = generateBaggage(config.trace)
-    req.headers['anthropic-version'] = config.anthropicVersion
-    req.headers['anthropic-beta'] = config.anthropicBeta
-    req.headers['x-app'] = config.xApp
+
+    // 其他字段（anthropic-version、anthropic-beta、x-app）完全透传，不修改
+
+    debugLog(`Minimal disguise applied: session=${config.session.substring(0, 8)}...`)
 
     req.isDisguised = true
   } catch (error) {

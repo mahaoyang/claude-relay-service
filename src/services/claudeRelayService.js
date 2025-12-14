@@ -38,14 +38,14 @@ class ClaudeRelayService {
 
     // 如果客户端传递了 anthropic-beta
     if (clientBetaHeader) {
+      const parts = clientBetaHeader.split(',').map((p) => p.trim())
+
       // 检查是否已包含 oauth-2025-04-20
-      if (clientBetaHeader.includes(OAUTH_BETA)) {
-        return clientBetaHeader
+      if (parts.includes(OAUTH_BETA)) {
+        return parts.join(',')
       }
 
       // 需要添加 oauth-2025-04-20
-      const parts = clientBetaHeader.split(',').map((p) => p.trim())
-
       // 找到 claude-code-20250219 的位置
       const claudeCodeIndex = parts.findIndex((p) => p === CLAUDE_CODE_BETA)
 
@@ -646,6 +646,12 @@ class ClaudeRelayService {
 
     // 深拷贝请求体
     const processedBody = JSON.parse(JSON.stringify(body))
+
+    // DEBUG: 检查是否有 context_management 字段
+    if (processedBody.context_management !== undefined) {
+      console.log('[DEBUG] _processRequestBody: Found context_management field in request')
+      logger.info('🔧 [_processRequestBody] Found context_management field, will remove later')
+    }
 
     // 验证并限制max_tokens参数
     this._validateAndLimitMaxTokens(processedBody)
