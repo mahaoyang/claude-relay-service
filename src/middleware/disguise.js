@@ -14,25 +14,41 @@ function buildUserId(sessionId) {
   return `user_${FIXED_CLAUDE_MACHINE_ID}_account__session_${sessionId}`
 }
 
-function generateHex(bytes) {
-  return crypto.randomBytes(bytes).toString('hex')
+/**
+ * 基于 session_id 生成确定性的 trace_id 和 span_id
+ * 这样同一个 session 的所有请求都使用相同的 trace_id 和 span_id
+ *
+ * 真实 Claude CLI 行为：
+ * - trace_id 和 span_id 在同一 session 中固定不变
+ * - sentry-trace 格式: "trace_id-span_id" (无 sampled flag)
+ */
+function generateSentryTraceFromSession(sessionId) {
+  // 使用 SHA-256 生成确定性的 trace_id 和 span_id
+  const traceHash = crypto.createHash('sha256').update(`${sessionId}:trace`).digest('hex')
+  const spanHash = crypto.createHash('sha256').update(`${sessionId}:span`).digest('hex')
+
+  const traceId = traceHash.substring(0, 32) // 32 hex chars
+  const spanId = spanHash.substring(0, 16) // 16 hex chars
+
+  return `${traceId}-${spanId}` // 注意：无 -1 后缀
 }
 
-function generateSentryTrace() {
-  const traceId = generateHex(16) // 32 hex chars
-  const spanId = generateHex(8) // 16 hex chars
-  return `${traceId}-${spanId}-1`
-}
-
+/**
+ * 生成 Baggage 头
+ *
+ * 真实 Claude CLI 格式：
+ * sentry-environment=external,sentry-release=2.0.69,sentry-public_key=xxx,sentry-trace_id=xxx
+ */
 function generateBaggage(traceId) {
   const match = FIXED_CLAUDE_UA.match(/claude-cli\/([0-9.]+)/)
   const version = (match && match[1]) || '2.0.69'
-  const release = encodeURIComponent(`claude-cli@${version}`)
+  const publicKey = process.env.SENTRY_PUBLIC_KEY || 'e531a1d9ec1de9064fae9d4affb0b0f4'
+
   return [
-    `sentry-environment=production`,
-    `sentry-release=${release}`,
-    `sentry-trace_id=${traceId}`,
-    `sentry-sample_rate=1`
+    `sentry-environment=external`, // 真实值是 external，不是 production
+    `sentry-release=${version}`, // 真实值是 2.0.69，不是 claude-cli@2.0.69
+    `sentry-public_key=${publicKey}`,
+    `sentry-trace_id=${traceId}`
   ].join(',')
 }
 
@@ -62,7 +78,9 @@ async function disguiseMiddleware(req, res, next) {
     req.body.metadata.user_id = buildUserId(sessionId)
     req.headers['user-agent'] = FIXED_CLAUDE_UA
 
-    const sentryTrace = generateSentryTrace()
+    // 基于 session_id 生成确定性的 sentry-trace 和 baggage
+    // 这样同一个 session 的所有请求都使用相同的 trace_id 和 span_id
+    const sentryTrace = generateSentryTraceFromSession(sessionId)
     req.headers['sentry-trace'] = sentryTrace
     req.headers.baggage = generateBaggage(sentryTrace.split('-')[0])
 
