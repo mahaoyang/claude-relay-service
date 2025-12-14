@@ -1358,6 +1358,84 @@ class RedisClient {
     }
   }
 
+  // 🧹 清空单个 API Key 的使用统计数据（危险操作）
+  async resetUsageStatsForKey(keyId) {
+    const client = this.getClientSafe()
+    const stats = {
+      keyId,
+      deletedKeys: 0,
+      deletedByGroup: {}
+    }
+
+    const delKeysInBatches = async (keys, group) => {
+      if (!keys || keys.length === 0) {
+        return 0
+      }
+      const batchSize = 500
+      let deleted = 0
+      for (let i = 0; i < keys.length; i += batchSize) {
+        // eslint-disable-next-line no-await-in-loop
+        deleted += await client.del(...keys.slice(i, i + batchSize))
+      }
+      stats.deletedKeys += deleted
+      if (group) {
+        stats.deletedByGroup[group] = (stats.deletedByGroup[group] || 0) + deleted
+      }
+      return deleted
+    }
+
+    const delPattern = async (pattern, group) => {
+      const keys = await client.keys(pattern)
+      await delKeysInBatches(keys, group)
+    }
+
+    try {
+      // usage records
+      await delKeysInBatches([`usage:records:${keyId}`], 'usageRecords')
+
+      // token usage aggregates
+      await delKeysInBatches([`usage:${keyId}`], 'usageTotal')
+      await delPattern(`usage:daily:${keyId}:*`, 'usageDaily')
+      await delPattern(`usage:monthly:${keyId}:*`, 'usageMonthly')
+      await delPattern(`usage:hourly:${keyId}:*`, 'usageHourly')
+      await delPattern(`usage:${keyId}:model:daily:*`, 'usageModelDaily')
+      await delPattern(`usage:${keyId}:model:monthly:*`, 'usageModelMonthly')
+      await delPattern(`usage:${keyId}:model:hourly:*`, 'usageModelHourly')
+
+      // cost aggregates
+      await delKeysInBatches([`usage:cost:total:${keyId}`], 'costTotal')
+      await delPattern(`usage:cost:daily:${keyId}:*`, 'costDaily')
+      await delPattern(`usage:cost:monthly:${keyId}:*`, 'costMonthly')
+      await delPattern(`usage:cost:hourly:${keyId}:*`, 'costHourly')
+
+      // opus cost aggregates (weekly + total)
+      await delKeysInBatches([`usage:opus:total:${keyId}`], 'opusTotal')
+      await delPattern(`usage:opus:weekly:${keyId}:*`, 'opusWeekly')
+
+      // rate limit counters (current window)
+      await delKeysInBatches(
+        [
+          `rate_limit:window_start:${keyId}`,
+          `rate_limit:requests:${keyId}`,
+          `rate_limit:tokens:${keyId}`,
+          `rate_limit:cost:${keyId}`
+        ],
+        'rateLimit'
+      )
+
+      // reset API Key lastUsedAt (best-effort)
+      const keyData = await client.hgetall(`apikey:${keyId}`)
+      if (keyData && Object.keys(keyData).length > 0) {
+        keyData.lastUsedAt = ''
+        await client.hset(`apikey:${keyId}`, keyData)
+      }
+
+      return stats
+    } catch (error) {
+      throw new Error(`Failed to reset usage stats for key ${keyId}: ${error.message}`)
+    }
+  }
+
   // 🏢 Claude 账户管理
   async setClaudeAccount(accountId, accountData) {
     const key = `claude:account:${accountId}`

@@ -2130,6 +2130,8 @@
       @close="showEditUsedCostModal = false"
       @saved="handleUsedCostSaved"
     />
+
+    <ResetApiKeyUsageAction ref="resetApiKeyUsageActionRef" @success="loadApiKeys" />
   </div>
 </template>
 
@@ -2150,6 +2152,7 @@ import BatchEditApiKeyModal from '@/components/apikeys/BatchEditApiKeyModal.vue'
 import ExpiryEditModal from '@/components/apikeys/ExpiryEditModal.vue'
 import UsageDetailModal from '@/components/apikeys/UsageDetailModal.vue'
 import EditUsedCostModal from '@/components/apikeys/EditUsedCostModal.vue'
+import ResetApiKeyUsageAction from '@/components/apikeys/ResetApiKeyUsageAction.vue'
 import LimitProgressBar from '@/components/apikeys/LimitProgressBar.vue'
 import CustomDropdown from '@/components/common/CustomDropdown.vue'
 import ActionDropdown from '@/components/common/ActionDropdown.vue'
@@ -2170,6 +2173,7 @@ const isIndeterminate = ref(false)
 const showCheckboxes = ref(false)
 const apiKeysLoading = ref(false)
 const apiKeyStatsTimeRange = ref('today')
+const resetApiKeyUsageActionRef = ref(null)
 
 // 全局日期筛选器
 const globalDateFilter = reactive({
@@ -3873,6 +3877,14 @@ const getApiKeyActions = (key) => {
   })
 
   // 删除
+  actions.push({
+    key: 'resetUsage',
+    label: '重置额度',
+    icon: 'fa-rotate-left',
+    color: 'red',
+    handler: () => resetApiKeyUsageActionRef.value?.open(key)
+  })
+
   actions.push({
     key: 'delete',
     label: '删除',

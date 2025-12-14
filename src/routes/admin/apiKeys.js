@@ -2026,6 +2026,41 @@ router.put('/api-keys/:keyId', authenticateAdmin, async (req, res) => {
   }
 })
 
+// 🧹 重置单个 API Key 的历史用量/费用（危险操作）
+router.post('/api-keys/:keyId/reset-usage', authenticateAdmin, async (req, res) => {
+  try {
+    const { keyId } = req.params
+    const keyData = await redis.getApiKey(keyId)
+
+    if (!keyData || Object.keys(keyData).length === 0) {
+      return res.status(404).json({
+        success: false,
+        error: 'API key not found'
+      })
+    }
+
+    logger.warn(
+      `🧹 Admin reset usage for API key ${keyId} (${keyData.name || 'unknown'}) by ${
+        req.admin?.username || 'unknown'
+      }`
+    )
+
+    const stats = await redis.resetUsageStatsForKey(keyId)
+    return res.json({
+      success: true,
+      message: 'Usage stats reset successfully',
+      data: stats
+    })
+  } catch (error) {
+    logger.error('❌ Failed to reset API key usage stats:', error)
+    return res.status(500).json({
+      success: false,
+      error: 'Failed to reset API key usage stats',
+      message: error.message
+    })
+  }
+})
+
 // 修改API Key过期时间（包括手动激活功能）
 router.patch('/api-keys/:keyId/expiration', authenticateAdmin, async (req, res) => {
   try {
