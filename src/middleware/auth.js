@@ -1318,6 +1318,32 @@ const authenticateApiKey = async (req, res, next) => {
     )
     logger.api(`   User-Agent: "${userAgent}"`)
 
+    // 🔍 收集白名单 API Key 的 session_id 到池中（非阻塞）
+    if (process.env.USE_SESSION_POOL !== 'false') {
+      try {
+        const sessionPoolService = require('../services/sessionPoolService')
+        // 异步收集，不等待结果，不影响请求性能
+        sessionPoolService.collectFromWhitelist(req).catch((err) => {
+          logger.debug(`[SessionPool] Collection failed: ${err.message}`)
+        })
+      } catch (err) {
+        // 忽略错误
+      }
+    }
+
+    // 🔍 收集 Codex session_id 到池中（非阻塞）
+    if (process.env.USE_CODEX_SESSION_POOL !== 'false') {
+      try {
+        const codexSessionPoolService = require('../services/codexSessionPoolService')
+        // 异步收集，不等待结果，不影响请求性能
+        codexSessionPoolService.collectFromWhitelist(req).catch((err) => {
+          logger.debug(`[CodexSessionPool] Collection failed: ${err.message}`)
+        })
+      } catch (err) {
+        // 忽略错误
+      }
+    }
+
     return next()
   } catch (error) {
     authErrored = true

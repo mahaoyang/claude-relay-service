@@ -2402,4 +2402,42 @@ router.delete('/api-keys/deleted/clear-all', authenticateAdmin, async (req, res)
   }
 })
 
+// 🎭 设置 API Key 的 session 收集状态（白名单）
+router.patch('/api-keys/:id/collect-session', authenticateAdmin, async (req, res) => {
+  try {
+    const { id } = req.params
+    const { collectSession } = req.body
+
+    if (typeof collectSession !== 'boolean') {
+      return res.status(400).json({
+        success: false,
+        error: 'Invalid collectSession value',
+        message: 'collectSession must be a boolean value'
+      })
+    }
+
+    const result = await apiKeyService.updateApiKey(id, { collectSession })
+
+    logger.success(
+      `🎭 Updated API key ${id} session collection: ${collectSession ? 'enabled' : 'disabled'}`
+    )
+
+    return res.json({
+      success: true,
+      message: `Session collection ${collectSession ? 'enabled' : 'disabled'} for API key`,
+      data: {
+        id,
+        collectSession
+      }
+    })
+  } catch (error) {
+    logger.error('❌ Failed to update API key session collection:', error)
+    return res.status(500).json({
+      success: false,
+      error: 'Failed to update session collection setting',
+      message: error.message
+    })
+  }
+})
+
 module.exports = router

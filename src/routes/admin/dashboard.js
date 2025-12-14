@@ -704,4 +704,156 @@ router.post('/cleanup', authenticateAdmin, async (req, res) => {
   }
 })
 
+// 📊 Session Pool 状态
+router.get('/session-pool/stats', authenticateAdmin, async (req, res) => {
+  try {
+    const sessionPoolService = require('../../services/sessionPoolService')
+    const stats = await sessionPoolService.getStats()
+
+    if (!stats) {
+      return res.status(500).json({ error: 'Failed to get session pool stats' })
+    }
+
+    return res.json({
+      success: true,
+      data: stats
+    })
+  } catch (error) {
+    logger.error('❌ Failed to get session pool stats:', error)
+    return res.status(500).json({ error: 'Failed to get stats', message: error.message })
+  }
+})
+
+// 🔧 Session Pool 管理
+router.post('/session-pool/switch', authenticateAdmin, async (req, res) => {
+  try {
+    const sessionPoolService = require('../../services/sessionPoolService')
+    const switched = await sessionPoolService.maybeSwitch()
+
+    return res.json({
+      success: true,
+      switched,
+      message: switched
+        ? 'Session switched successfully'
+        : 'Session not switched (random decision or pool too small)'
+    })
+  } catch (error) {
+    logger.error('❌ Failed to switch session:', error)
+    return res.status(500).json({ error: 'Failed to switch session', message: error.message })
+  }
+})
+
+router.post('/session-pool/set-current', authenticateAdmin, async (req, res) => {
+  try {
+    const { sessionId } = req.body
+
+    if (!sessionId) {
+      return res.status(400).json({ error: 'Session ID is required' })
+    }
+
+    const sessionPoolService = require('../../services/sessionPoolService')
+    await sessionPoolService.setCurrentSession(sessionId)
+
+    return res.json({
+      success: true,
+      message: 'Current session set successfully',
+      sessionId
+    })
+  } catch (error) {
+    logger.error('❌ Failed to set current session:', error)
+    return res.status(500).json({ error: 'Failed to set session', message: error.message })
+  }
+})
+
+router.delete('/session-pool', authenticateAdmin, async (req, res) => {
+  try {
+    const sessionPoolService = require('../../services/sessionPoolService')
+    await sessionPoolService.clearPool()
+
+    return res.json({
+      success: true,
+      message: 'Session pool cleared successfully'
+    })
+  } catch (error) {
+    logger.error('❌ Failed to clear session pool:', error)
+    return res.status(500).json({ error: 'Failed to clear pool', message: error.message })
+  }
+})
+
+// 📊 Codex Session Pool 状态
+router.get('/codex-session-pool/stats', authenticateAdmin, async (req, res) => {
+  try {
+    const codexSessionPoolService = require('../../services/codexSessionPoolService')
+    const stats = await codexSessionPoolService.getStats()
+
+    if (!stats) {
+      return res.status(500).json({ error: 'Failed to get codex session pool stats' })
+    }
+
+    return res.json({
+      success: true,
+      data: stats
+    })
+  } catch (error) {
+    logger.error('❌ Failed to get codex session pool stats:', error)
+    return res.status(500).json({ error: 'Failed to get stats', message: error.message })
+  }
+})
+
+// 🔧 Codex Session Pool 管理
+router.post('/codex-session-pool/switch', authenticateAdmin, async (req, res) => {
+  try {
+    const codexSessionPoolService = require('../../services/codexSessionPoolService')
+    const switched = await codexSessionPoolService.maybeSwitch()
+
+    return res.json({
+      success: true,
+      switched,
+      message: switched
+        ? 'Codex session switched successfully'
+        : 'Codex session not switched (random decision or pool too small)'
+    })
+  } catch (error) {
+    logger.error('❌ Failed to switch codex session:', error)
+    return res.status(500).json({ error: 'Failed to switch session', message: error.message })
+  }
+})
+
+router.post('/codex-session-pool/set-current', authenticateAdmin, async (req, res) => {
+  try {
+    const { sessionId } = req.body
+
+    if (!sessionId) {
+      return res.status(400).json({ error: 'Session ID is required' })
+    }
+
+    const codexSessionPoolService = require('../../services/codexSessionPoolService')
+    await codexSessionPoolService.setCurrentSession(sessionId)
+
+    return res.json({
+      success: true,
+      message: 'Current codex session set successfully',
+      sessionId
+    })
+  } catch (error) {
+    logger.error('❌ Failed to set current codex session:', error)
+    return res.status(500).json({ error: 'Failed to set session', message: error.message })
+  }
+})
+
+router.delete('/codex-session-pool', authenticateAdmin, async (req, res) => {
+  try {
+    const codexSessionPoolService = require('../../services/codexSessionPoolService')
+    await codexSessionPoolService.clearPool()
+
+    return res.json({
+      success: true,
+      message: 'Codex session pool cleared successfully'
+    })
+  } catch (error) {
+    logger.error('❌ Failed to clear codex session pool:', error)
+    return res.status(500).json({ error: 'Failed to clear pool', message: error.message })
+  }
+})
+
 module.exports = router
