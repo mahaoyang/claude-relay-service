@@ -337,6 +337,12 @@
                       <i v-else class="fas fa-sort ml-1 text-gray-400" />
                     </th>
                     <th
+                      class="min-w-[80px] px-3 py-4 text-center text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-gray-300"
+                      title="用于收集真实 Claude CLI 请求头配置"
+                    >
+                      白名单
+                    </th>
+                    <th
                       class="min-w-[70px] px-3 py-4 text-right text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-gray-300"
                       :class="{
                         'cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600': canSortByCost,
@@ -604,6 +610,15 @@
                           />
                           {{ key.isActive ? '活跃' : '禁用' }}
                         </span>
+                      </td>
+                      <!-- 白名单收集列 -->
+                      <td class="whitespace-nowrap px-3 py-3">
+                        <CollectSessionToggle
+                          :api-key-id="key.id"
+                          :value="key.collectSession || false"
+                          @error="handleCollectSessionError"
+                          @update="handleCollectSessionUpdate"
+                        />
                       </td>
                       <!-- 费用 -->
                       <td class="whitespace-nowrap px-3 py-3 text-right" style="font-size: 13px">
@@ -2156,6 +2171,7 @@ import ResetApiKeyUsageAction from '@/components/apikeys/ResetApiKeyUsageAction.
 import LimitProgressBar from '@/components/apikeys/LimitProgressBar.vue'
 import CustomDropdown from '@/components/common/CustomDropdown.vue'
 import ActionDropdown from '@/components/common/ActionDropdown.vue'
+import CollectSessionToggle from '@/components/apikeys/CollectSessionToggle.vue'
 
 // 响应式数据
 const router = useRouter()
@@ -4866,6 +4882,23 @@ onMounted(async () => {
   // 异步加载账号数据（不阻塞页面显示）
   loadAccounts()
 })
+
+// 处理白名单收集状态更新
+const handleCollectSessionUpdate = ({ apiKeyId, collectSession }) => {
+  const apiKey = apiKeys.value.find((k) => k.id === apiKeyId)
+  if (apiKey) {
+    apiKey.collectSession = collectSession
+  }
+  showToast(
+    collectSession ? '已启用白名单收集' : '已禁用白名单收集',
+    collectSession ? 'success' : 'info'
+  )
+}
+
+// 处理白名单收集错误
+const handleCollectSessionError = (message) => {
+  showToast(message || '更新白名单收集状态失败', 'error')
+}
 
 // 组件卸载时清理定时器
 onUnmounted(() => {
