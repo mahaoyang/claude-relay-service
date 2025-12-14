@@ -178,6 +178,12 @@ certs/
 dump.rdb
 appendonly.aof
 
+# Local backups / exports (potentially sensitive)
+backup-*.json
+backups/*.json
+backups/*.rdb
+redis-backup-*.rdb
+
 # PM2 files
 ecosystem.config.js
 .pm2/
