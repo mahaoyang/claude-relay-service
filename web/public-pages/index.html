@@ -134,15 +134,26 @@
           0 2px 0 rgba(255, 255, 255, 0.4) inset;
       }
 
-      .jo-soft-ring {
-        box-shadow:
-          0 18px 40px rgba(31, 47, 34, 0.08),
-          0 0 0 1px rgba(31, 47, 34, 0.10) inset;
-      }
-
-	      .jo-h1 {
-	        letter-spacing: -0.03em;
+	      .jo-soft-ring {
+	        box-shadow:
+	          0 18px 40px rgba(31, 47, 34, 0.08),
+	          0 0 0 1px rgba(31, 47, 34, 0.10) inset;
 	      }
+
+	      .jo-tab-badge-icon {
+	        width: 15px;
+	        height: 15px;
+	        font-size: 15px;
+	        line-height: 1;
+	        display: inline-flex;
+	        align-items: center;
+	        justify-content: center;
+	        flex: 0 0 15px;
+	      }
+
+		      .jo-h1 {
+		        letter-spacing: -0.03em;
+		      }
 
       /* Custom scrollbar */
       ::-webkit-scrollbar {
@@ -721,19 +732,19 @@
                     <i class="fa-solid fa-crown text-[10px]"></i> 旗舰模型
                   </div>
                   <h3 class="text-2xl md:text-3xl font-medium mb-4 text-brand-dark">Claude Code</h3>
-                  <p class="text-gray-600 text-sm leading-relaxed mb-6">
-                    支持 Claude 3.5 Sonnet、Claude 3 Opus 等全系列模型。通过 OAuth 认证直连官方
-                    API，提供最稳定可靠的服务体验。支持流式响应和上下文缓存。
-                  </p>
+	                  <p class="text-gray-600 text-sm leading-relaxed mb-6">
+	                    支持 Claude 4.5（Sonnet/Opus）等全系列模型。通过 OAuth 认证直连官方 API，提供最稳定可靠的服务体验。
+	                    本网站会同步更新最新模型，以官方公告为准。支持流式响应和上下文缓存。
+	                  </p>
 
-                  <div class="bg-brand-bg/60 p-3 rounded-lg flex items-start gap-3 mb-8">
-                    <i class="fa-solid fa-check-circle text-brand-dark mt-1"></i>
-                    <div>
-                      <p class="text-xs font-bold text-brand-dark">
-                        官方认证 · 完整功能 · 最新模型
-                      </p>
-                    </div>
-                  </div>
+	                  <div class="bg-brand-bg/60 p-3 rounded-lg flex items-center gap-3 mb-8">
+	                    <i class="fa-solid fa-check-circle jo-tab-badge-icon text-brand-dark"></i>
+	                    <div class="flex items-center">
+	                      <p class="text-xs font-bold text-brand-dark leading-none">
+	                        官方认证 · 完整功能 · 最新模型
+	                      </p>
+	                    </div>
+	                  </div>
 
                   <a
                     href="/docs"
@@ -771,14 +782,14 @@
                     认证，适合文本生成、图像理解等各种复杂任务场景。
                   </p>
 
-                  <div class="bg-brand-bg/60 p-3 rounded-lg flex items-start gap-3 mb-8">
-                    <i class="fa-solid fa-check-circle text-brand-dark mt-1"></i>
-                    <div>
-                      <p class="text-xs font-bold text-brand-dark">
-                        多模态支持 · 强大推理 · 高性价比
-                      </p>
-                    </div>
-                  </div>
+	                  <div class="bg-brand-bg/60 p-3 rounded-lg flex items-center gap-3 mb-8">
+	                    <i class="fa-solid fa-check-circle jo-tab-badge-icon text-brand-dark"></i>
+	                    <div class="flex items-center">
+	                      <p class="text-xs font-bold text-brand-dark leading-none">
+	                        多模态支持 · 强大推理 · 高性价比
+	                      </p>
+	                    </div>
+	                  </div>
 
                   <a
                     href="/docs"
@@ -818,14 +829,14 @@
                     格式，兼容性强，专为代码生成和技术文档编写优化。适合开发者使用的专业 AI 工具。
                   </p>
 
-                  <div class="bg-brand-bg/60 p-3 rounded-lg flex items-start gap-3 mb-8">
-                    <i class="fa-solid fa-check-circle text-brand-dark mt-1"></i>
-                    <div>
-                      <p class="text-xs font-bold text-brand-dark">
-                        代码优化 · 开发者友好 · 高兼容性
-                      </p>
-                    </div>
-                  </div>
+	                  <div class="bg-brand-bg/60 p-3 rounded-lg flex items-center gap-3 mb-8">
+	                    <i class="fa-solid fa-check-circle jo-tab-badge-icon text-brand-dark"></i>
+	                    <div class="flex items-center">
+	                      <p class="text-xs font-bold text-brand-dark leading-none">
+	                        代码优化 · 开发者友好 · 高兼容性
+	                      </p>
+	                    </div>
+	                  </div>
 
                   <a
                     href="/docs"
@@ -863,14 +874,14 @@
                     支持流式输出、会话上下文与常见插件工作流，让你边写边补全、边改边解释。
                   </p>
 
-                  <div class="bg-brand-bg/60 p-3 rounded-lg flex items-start gap-3 mb-8">
-                    <i class="fa-solid fa-check-circle text-brand-dark mt-1"></i>
-                    <div>
-                      <p class="text-xs font-bold text-brand-dark">
-                        一键配置 · 统一 Key · 开发者工作流
-                      </p>
-                    </div>
-                  </div>
+	                  <div class="bg-brand-bg/60 p-3 rounded-lg flex items-center gap-3 mb-8">
+	                    <i class="fa-solid fa-check-circle jo-tab-badge-icon text-brand-dark"></i>
+	                    <div class="flex items-center">
+	                      <p class="text-xs font-bold text-brand-dark leading-none">
+	                        一键配置 · 统一 Key · 开发者工作流
+	                      </p>
+	                    </div>
+	                  </div>
 
                   <a
                     href="/docs"
