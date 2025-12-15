@@ -57,4 +57,34 @@ router.get('/docs', (req, res) => {
   res.status(404).send('Docs page not found')
 })
 
+// 隐私协议页面
+router.get('/privacy', (req, res) => {
+  const privacyPath = path.join(publicPagesDir, 'privacy.html')
+
+  if (fs.existsSync(privacyPath)) {
+    res.setHeader('Cache-Control', 'public, max-age=3600')
+    res.setHeader('Content-Type', 'text/html; charset=utf-8')
+    logger.info('🔐 Serving Privacy page')
+    return res.sendFile(privacyPath)
+  }
+
+  logger.warn('❌ Privacy page not found at:', privacyPath)
+  res.status(404).send('Privacy page not found')
+})
+
+// 服务协议页面
+router.get('/terms', (req, res) => {
+  const termsPath = path.join(publicPagesDir, 'terms.html')
+
+  if (fs.existsSync(termsPath)) {
+    res.setHeader('Cache-Control', 'public, max-age=3600')
+    res.setHeader('Content-Type', 'text/html; charset=utf-8')
+    logger.info('📜 Serving Terms page')
+    return res.sendFile(termsPath)
+  }
+
+  logger.warn('❌ Terms page not found at:', termsPath)
+  res.status(404).send('Terms page not found')
+})
+
 module.exports = router
