@@ -1115,24 +1115,21 @@ brew install node</code>
                             x-text="`[System.Environment]::SetEnvironmentVariable('ANTHROPIC_BASE_URL', '${baseUrl}/api', [System.EnvironmentVariableTarget]::User)`"
                           ></code
                           ><br />
-                          <code
-                            >[System.Environment]::SetEnvironmentVariable('ANTHROPIC_AUTH_TOKEN',
-                            '你的API密钥', [System.EnvironmentVariableTarget]::User)</code
-                          >
+	                          <code
+	                            >[System.Environment]::SetEnvironmentVariable('ANTHROPIC_AUTH_TOKEN', '你的API密钥', [System.EnvironmentVariableTarget]::User)</code
+	                          >
                         </div>
                       <p class="text-xs text-gray-600">设置后需要重新打开 PowerShell 窗口才能生效。</p>
 
                       <p class="text-sm text-gray-600 mt-4 mb-2">查看已设置的环境变量：</p>
                       <div class="code-block mb-4">
                         <code># 查看用户级环境变量</code><br />
-                        <code
-                          >[System.Environment]::GetEnvironmentVariable('ANTHROPIC_BASE_URL',
-                          [System.EnvironmentVariableTarget]::User)</code
-                        ><br />
-                        <code
-                          >[System.Environment]::GetEnvironmentVariable('ANTHROPIC_AUTH_TOKEN',
-                          [System.EnvironmentVariableTarget]::User)</code
-                        >
+	                        <code
+	                          >[System.Environment]::GetEnvironmentVariable('ANTHROPIC_BASE_URL', [System.EnvironmentVariableTarget]::User)</code
+	                        ><br />
+	                        <code
+	                          >[System.Environment]::GetEnvironmentVariable('ANTHROPIC_AUTH_TOKEN', [System.EnvironmentVariableTarget]::User)</code
+	                        >
                       </div>
 
                         <div class="info-box mt-5">
@@ -1381,14 +1378,12 @@ brew install node</code>
                     x-text="`[System.Environment]::SetEnvironmentVariable('GOOGLE_GEMINI_BASE_URL', '${baseUrl}/gemini', [System.EnvironmentVariableTarget]::User)`"
                   ></code
                   ><br />
-                  <code
-                    >[System.Environment]::SetEnvironmentVariable('GEMINI_API_KEY', '你的API密钥',
-                    [System.EnvironmentVariableTarget]::User)</code
-                  ><br />
-                  <code
-                    >[System.Environment]::SetEnvironmentVariable('GEMINI_MODEL', 'gemini-2.0-flash-exp',
-                    [System.EnvironmentVariableTarget]::User)</code
-                  >
+	                  <code
+	                    >[System.Environment]::SetEnvironmentVariable('GEMINI_API_KEY', '你的API密钥', [System.EnvironmentVariableTarget]::User)</code
+	                  ><br />
+	                  <code
+	                    >[System.Environment]::SetEnvironmentVariable('GEMINI_MODEL', 'gemini-2.0-flash-exp', [System.EnvironmentVariableTarget]::User)</code
+	                  >
                 </div>
               </div>
               <div x-show="system !== 'windows'" x-cloak>
