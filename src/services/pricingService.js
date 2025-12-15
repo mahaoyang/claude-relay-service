@@ -80,6 +80,16 @@ class PricingService {
     // 价格倍率配置（从环境变量加载）
     this.globalMultiplier = parseFloat(process.env.COST_MULTIPLIER) || 1.0
     this.modelMultipliers = this._loadModelMultipliers()
+
+    // Codex 系列模型固定倍率
+    this.codexSeriesMultiplier = 0.71
+  }
+
+  _isCodexSeriesModel(normalizedModelName) {
+    return (
+      typeof normalizedModelName === 'string' &&
+      (normalizedModelName.includes('codex') || normalizedModelName.startsWith('gpt-5'))
+    )
   }
 
   /**
@@ -104,7 +114,10 @@ class PricingService {
     if (Object.keys(multipliers).length > 0) {
       logger.info(`💰 Loaded ${Object.keys(multipliers).length} model-specific cost multipliers`)
       for (const [model, mult] of Object.entries(multipliers)) {
-        const effectiveMult = this.globalMultiplier * mult
+        const effectiveMult =
+          this.globalMultiplier *
+          mult *
+          (this._isCodexSeriesModel(model) ? this.codexSeriesMultiplier : 1)
         logger.info(`   ${model}: ${mult}x (effective: ${effectiveMult}x)`)
       }
     }
@@ -119,25 +132,30 @@ class PricingService {
    * @returns {number} 最终倍率
    */
   getCostMultiplier(modelName) {
-    if (!modelName) {
-      return this.globalMultiplier
-    }
+    const normalizedName = modelName ? modelName.toLowerCase() : null
 
-    const normalizedName = modelName.toLowerCase()
+    let multiplier = this.globalMultiplier
 
-    // 精确匹配
-    if (this.modelMultipliers[normalizedName]) {
-      return this.globalMultiplier * this.modelMultipliers[normalizedName]
-    }
+    if (normalizedName) {
+      // 精确匹配
+      if (this.modelMultipliers[normalizedName]) {
+        multiplier *= this.modelMultipliers[normalizedName]
+      } else {
+        // 前缀匹配（如 claude-opus-4-5 匹配 claude-opus-4-5-20251101）
+        for (const [pattern, modelMultiplier] of Object.entries(this.modelMultipliers)) {
+          if (normalizedName.startsWith(pattern)) {
+            multiplier *= modelMultiplier
+            break
+          }
+        }
+      }
 
-    // 前缀匹配（如 claude-opus-4-5 匹配 claude-opus-4-5-20251101）
-    for (const [pattern, multiplier] of Object.entries(this.modelMultipliers)) {
-      if (normalizedName.startsWith(pattern)) {
-        return this.globalMultiplier * multiplier
+      if (this._isCodexSeriesModel(normalizedName)) {
+        multiplier *= this.codexSeriesMultiplier
       }
     }
 
-    return this.globalMultiplier
+    return multiplier
   }
 
   // 初始化价格服务
