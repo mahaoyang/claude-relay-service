@@ -64,8 +64,8 @@
       content="查询您的 API Key 使用统计、Token 消耗、费用明细和配额状态"
     />
 
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Tailwind CSS (Local) -->
+    <link rel="stylesheet" href="/public-pages/assets/tailwind-public-pages.css" />
 
     <!-- Google Fonts: Manrope -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -84,28 +84,10 @@
     <!-- Alpine.js -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
-    <!-- Custom Config -->
-    <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            colors: {
-              'brand-bg': '#F2F0E9',
-              'brand-dark': '#1F2F22',
-              'brand-gray': '#8A8A8A',
-              'brand-card': '#EAE8E1'
-            },
-            fontFamily: {
-              sans: ['Manrope', 'sans-serif']
-            }
-          }
-        }
-      }
-    </script>
-
     <style>
       html {
         scrollbar-gutter: stable;
+        --jo-scrollbar-horizontal-size: 4px;
       }
 
       body {
@@ -127,6 +109,7 @@
       /* Custom scrollbar */
       ::-webkit-scrollbar {
         width: 8px;
+        height: var(--jo-scrollbar-horizontal-size);
       }
 
       ::-webkit-scrollbar-track {
@@ -198,6 +181,47 @@
         box-shadow: none;
         padding: 0;
         backdrop-filter: none;
+      }
+
+      .jo-nav-link {
+        position: relative;
+        display: inline-block;
+        color: rgba(31, 47, 34, 0.72);
+        text-decoration: none;
+        transition: color 160ms ease;
+      }
+
+      .jo-nav-link:hover {
+        color: #1f2f22;
+      }
+
+      .jo-nav-link::after {
+        content: '';
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 0;
+        height: 1px;
+        bottom: -2px;
+        background-color: #1f2f22;
+        transition: width 220ms ease;
+      }
+
+      .jo-nav-link:hover::after {
+        width: 100%;
+      }
+
+      .jo-nav-link[aria-current='page'] {
+        color: #1f2f22;
+      }
+
+      .jo-nav-link[aria-current='page']::after {
+        width: 100%;
+      }
+
+      .jo-nav-link:focus-visible {
+        outline: 2px solid rgba(31, 47, 34, 0.22);
+        outline-offset: 3px;
       }
 
       #nav-key-search .nav-search-field {
@@ -281,9 +305,9 @@
 
           <!-- Nav Links (Desktop) -->
           <div class="hidden md:flex items-center space-x-8 text-sm font-medium">
-            <a href="/" class="hover:text-brand-dark transition">首页</a>
-            <a href="/stats" class="hover:text-brand-dark transition">查询统计</a>
-            <a href="/docs" class="hover:text-brand-dark transition">使用文档</a>
+            <a href="/" class="jo-nav-link">首页</a>
+            <a href="/stats" class="jo-nav-link" aria-current="page">查询统计</a>
+            <a href="/docs" class="jo-nav-link">使用文档</a>
           </div>
 
           <div class="flex items-center gap-4">
@@ -368,6 +392,7 @@
             <a
               href="/stats"
               class="px-6 py-3 text-sm font-medium hover:bg-brand-bg/50 transition border-b border-gray-200"
+              aria-current="page"
             >
               查询统计
             </a>
@@ -811,7 +836,7 @@
                 <img
                   src="/public-pages/assets/laptop-code.jpg"
                   alt="Usage Stats"
-                  class="w-full h-full object-cover"
+                  class="w-full h-full object-cover hover:scale-105 transition duration-700 ease-in-out"
                   loading="lazy"
                 />
               </div>

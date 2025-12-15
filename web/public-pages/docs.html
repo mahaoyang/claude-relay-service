@@ -82,8 +82,8 @@
       }
     </script>
 
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Tailwind CSS (Local) -->
+    <link rel="stylesheet" href="/public-pages/assets/tailwind-public-pages.css" />
 
     <!-- Google Fonts: Manrope -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -100,6 +100,7 @@
     />
 
     <!-- Alpine.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/collapse@3.x.x/dist/cdn.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
     <!-- Highlight.js for code syntax highlighting -->
@@ -111,28 +112,11 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/bash.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/powershell.min.js"></script>
 
-    <!-- Custom Config -->
-    <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            colors: {
-              'brand-bg': '#F2F0E9',
-              'brand-dark': '#1F2F22',
-              'brand-gray': '#8A8A8A',
-              'brand-card': '#EAE8E1'
-            },
-            fontFamily: {
-              sans: ['Manrope', 'sans-serif']
-            }
-          }
-        }
-      }
-    </script>
-
     <style>
       html {
         scrollbar-gutter: stable;
+        --jo-scrollbar-horizontal-size: 4px;
+        scroll-behavior: smooth;
       }
 
       body {
@@ -154,6 +138,7 @@
       /* Custom scrollbar */
       ::-webkit-scrollbar {
         width: 8px;
+        height: var(--jo-scrollbar-horizontal-size);
       }
 
       ::-webkit-scrollbar-track {
@@ -218,14 +203,120 @@
         text-align: center;
       }
 
-      /* Nav mini search */
-      #nav-key-search {
-        position: relative;
-        border: 0;
-        background: transparent;
-        box-shadow: none;
-        padding: 0;
-        backdrop-filter: none;
+	      /* Nav mini search */
+	      #nav-key-search {
+	        position: relative;
+	        border: 0;
+	        background: transparent;
+	        box-shadow: none;
+	        padding: 0;
+	        backdrop-filter: none;
+	      }
+
+	      .jo-nav-link {
+	        position: relative;
+	        display: inline-block;
+	        color: rgba(31, 47, 34, 0.72);
+	        text-decoration: none;
+	        transition: color 160ms ease;
+	      }
+
+	      .jo-nav-link:hover {
+	        color: #1f2f22;
+	      }
+
+	      .jo-nav-link::after {
+	        content: '';
+	        position: absolute;
+	        left: 50%;
+	        transform: translateX(-50%);
+	        width: 0;
+	        height: 1px;
+	        bottom: -2px;
+	        background-color: #1f2f22;
+	        transition: width 220ms ease;
+	      }
+
+	      .jo-nav-link:hover::after {
+	        width: 100%;
+	      }
+
+	      .jo-nav-link[aria-current='page'] {
+	        color: #1f2f22;
+	      }
+
+	      .jo-nav-link[aria-current='page']::after {
+	        width: 100%;
+	      }
+
+	      .jo-nav-link:focus-visible {
+	        outline: 2px solid rgba(31, 47, 34, 0.22);
+	        outline-offset: 3px;
+	      }
+
+      /* Sticky System Tabs divider badge (match temp-docs positioning pattern) */
+      .jo-sticky-divider-badge {
+        position: absolute;
+        left: 50%;
+        top: 0;
+        transform: translate(-50%, -50%);
+        pointer-events: none;
+        z-index: 5;
+      }
+
+      .jo-sticky-divider-badge .jo-sticky-divider-badge-outer {
+        width: 6rem;
+        height: 6rem;
+        background: rgba(255, 255, 255, 0.38);
+        border-radius: 9999px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .jo-sticky-divider-badge .jo-sticky-divider-badge-inner {
+        width: 5rem;
+        height: 5rem;
+        background: #ffffff;
+        border-radius: 9999px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        pointer-events: auto;
+        cursor: pointer;
+        text-decoration: none;
+        box-shadow: 0 1px 2px rgba(31, 47, 34, 0.14);
+        transition:
+          transform 160ms cubic-bezier(0.16, 1, 0.3, 1),
+          box-shadow 160ms ease,
+          background-color 160ms ease;
+        will-change: transform;
+      }
+
+      .jo-sticky-divider-badge .jo-sticky-divider-badge-inner:focus-visible {
+        outline: 2px solid rgba(31, 47, 34, 0.28);
+        outline-offset: 4px;
+      }
+
+      .jo-sticky-divider-badge .jo-sticky-divider-badge-inner i {
+        color: #5d6b3f;
+        font-size: 1.875rem;
+        transition:
+          transform 160ms cubic-bezier(0.16, 1, 0.3, 1),
+          color 160ms ease;
+      }
+
+      @media (hover: hover) {
+        .jo-sticky-divider-badge .jo-sticky-divider-badge-inner:hover {
+          transform: translateY(-1px) scale(1.04);
+          box-shadow: 0 14px 36px rgba(31, 47, 34, 0.12);
+          background-color: rgba(255, 255, 255, 0.95);
+        }
+
+        .jo-sticky-divider-badge .jo-sticky-divider-badge-inner:hover i {
+          transform: rotate(-6deg) scale(1.03);
+          color: #4a5632;
+        }
       }
 
       #nav-key-search .nav-search-field {
@@ -283,15 +374,23 @@
         padding: 1rem 1.25rem;
         font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
         font-size: 0.8125rem;
-        line-height: 1.7;
+        line-height: 1.35;
         overflow-x: auto;
         color: #1f2f22;
+        white-space: normal;
+        text-align: left;
+      }
+
+      .code-block br {
+        display: none;
       }
 
       .code-block code {
         background: transparent;
         padding: 0;
         color: inherit;
+        display: block;
+        white-space: pre;
       }
 
       /* Step number */
@@ -311,16 +410,29 @@
       }
 
       /* Tab buttons */
+      .tab-shell {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 0.25rem;
+        padding: 0.25rem;
+        border-radius: 9999px;
+        border: 1px solid rgba(31, 47, 34, 0.12);
+        background: rgba(255, 255, 255, 0.55);
+        backdrop-filter: blur(12px);
+        box-shadow: 0 10px 30px rgba(31, 47, 34, 0.06);
+      }
+
       .tab-button {
-        flex: 1;
-        padding: 0.75rem 1.5rem;
-        border-radius: 12px;
+        flex: 0 0 auto;
+        padding: 0.55rem 0.95rem;
+        border-radius: 9999px;
         font-size: 0.875rem;
         font-weight: 500;
         transition: all 0.2s ease;
         cursor: pointer;
         border: none;
-        background: #f8f8f8;
+        background: transparent;
         color: #6b7280;
         display: flex;
         align-items: center;
@@ -338,6 +450,66 @@
         color: white;
         box-shadow: 0 2px 8px rgba(31, 47, 34, 0.15);
         font-weight: 600;
+      }
+
+      .hover-arrow-move:hover i {
+        transform: translateX(4px) translateY(-4px);
+        transition: transform 0.2s ease;
+      }
+
+      /* Lily-UI accordion structure with JoJoCode card styling */
+      .rt-AccordionRoot {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .rt-AccordionItem {
+        border: 1px solid rgba(31, 47, 34, 0.12);
+        background: rgba(255, 255, 255, 0.45);
+        backdrop-filter: blur(10px);
+        border-radius: 1rem;
+        padding: 1rem 1.25rem;
+      }
+
+      .rt-AccordionTrigger {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        padding: 0;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        text-align: left;
+        font-family: inherit;
+        transition: color 150ms;
+      }
+
+      .rt-AccordionTrigger:hover {
+        background-color: transparent;
+      }
+
+      .rt-AccordionTrigger[data-state='open'] {
+        background-color: transparent;
+      }
+
+      .rt-AccordionChevron {
+        transition: transform 200ms cubic-bezier(0.87, 0, 0.13, 1);
+        color: #6b7280;
+        flex-shrink: 0;
+      }
+
+      .rt-AccordionTrigger[data-state='open'] .rt-AccordionChevron {
+        transform: rotate(180deg);
+      }
+
+      .rt-AccordionContent {
+        overflow: hidden;
+      }
+
+      .rt-AccordionContentInner {
+        padding-top: 1rem;
       }
 
       /* Info boxes */
@@ -399,13 +571,64 @@
     </style>
   </head>
 
-  <body
-    class="font-sans antialiased selection:bg-brand-dark selection:text-white min-h-screen"
-    x-data="{
-      system: 'windows',
-      baseUrl: 'https://www.jojocode.org'
-    }"
-  >
+	  <body
+	    class="font-sans antialiased selection:bg-brand-dark selection:text-white min-h-screen"
+	    x-data="{
+	      system: 'windows',
+	      baseUrl: 'https://www.jojocode.org',
+	      envLine(name, value) {
+	        return this.system === 'windows' ? `$env:${name} = '${value}'` : `export ${name}='${value}'`
+	      },
+	      claudeSetupCmd() {
+	        const lines = [
+	          this.envLine('ANTHROPIC_BASE_URL', `${this.baseUrl}/api`),
+	          this.envLine('ANTHROPIC_AUTH_TOKEN', '你的API密钥'),
+	          'claude'
+	        ]
+	        return lines.join('\n')
+	      },
+	      installNodeCmd() {
+	        if (this.system === 'windows') {
+	          return ['# 推荐：下载并安装 Node.js LTS', 'https://nodejs.org/'].join('\n')
+	        }
+	        if (this.system === 'macos') {
+	          return ['# Homebrew（推荐）', 'brew install node'].join('\n')
+	        }
+	        return [
+	          '# Ubuntu / Debian（示例）',
+	          'curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -',
+	          'sudo apt-get install -y nodejs'
+	        ].join('\n')
+	      },
+	      verifyCmd() {
+	        return ['node --version', 'npm --version', 'claude --version'].join('\n')
+	      },
+	      geminiCmd() {
+	        return [
+	          this.envLine('GOOGLE_GEMINI_BASE_URL', `${this.baseUrl}/gemini`),
+	          this.envLine('GEMINI_API_KEY', '你的API密钥'),
+	          this.envLine('GEMINI_MODEL', 'gemini-2.0-flash-exp')
+	        ].join('\n')
+	      },
+	      codexCmd() {
+	        return [
+	          this.envLine('OPENAI_API_BASE', `${this.baseUrl}/openai`),
+	          this.envLine('OPENAI_API_KEY', '你的API密钥')
+	        ].join('\n')
+	      },
+	      droidCmd() {
+	        return [
+	          this.envLine('DROID_BASE_URL', `${this.baseUrl}/droid/claude`),
+	          this.envLine('DROID_API_KEY', '你的API密钥')
+	        ].join('\n')
+	      },
+	      vscodeConfigPath() {
+	        return this.system === 'windows'
+	          ? 'C:\\\\Users\\\\你的用户名\\\\.claude\\\\config.json'
+	          : '~/.claude/config.json'
+	      }
+	    }"
+	  >
     <!-- Main Container -->
     <div class="max-w-[1440px] mx-auto px-0 sm:px-6 md:px-12 py-2 sm:py-8 md:py-12">
       <div class="jo-surface rounded-2xl sm:rounded-[2.5rem] px-4 sm:px-6 md:px-12 py-4 sm:py-6 md:py-10">
@@ -431,12 +654,12 @@
             </a>
           </div>
 
-          <!-- Nav Links (Desktop) -->
-          <div class="hidden md:flex items-center space-x-8 text-sm font-medium">
-            <a href="/" class="hover:text-brand-dark transition">首页</a>
-            <a href="/stats" class="hover:text-brand-dark transition">查询统计</a>
-            <a href="/docs" class="hover:text-brand-dark transition">使用文档</a>
-          </div>
+	          <!-- Nav Links (Desktop) -->
+	          <div class="hidden md:flex items-center space-x-8 text-sm font-medium">
+	            <a href="/" class="jo-nav-link">首页</a>
+	            <a href="/stats" class="jo-nav-link">查询统计</a>
+	            <a href="/docs" class="jo-nav-link" aria-current="page">使用文档</a>
+	          </div>
 
           <div class="flex items-center gap-4">
             <!-- Key Search -->
@@ -510,738 +733,766 @@
           x-transition:leave-end="opacity-0 -translate-y-2"
           class="md:hidden mt-4 bg-white/80 backdrop-blur-sm border border-gray-200 rounded-2xl overflow-hidden"
         >
-          <div class="flex flex-col">
-            <a
-              href="/"
-              class="px-6 py-3 text-sm font-medium hover:bg-brand-bg/50 transition border-b border-gray-200"
-            >
-              首页
-            </a>
-            <a
-              href="/stats"
-              class="px-6 py-3 text-sm font-medium hover:bg-brand-bg/50 transition border-b border-gray-200"
-            >
-              查询统计
-            </a>
-            <a href="/docs" class="px-6 py-3 text-sm font-medium hover:bg-brand-bg/50 transition">
-              使用文档
-            </a>
-          </div>
-        </div>
+	          <div class="flex flex-col">
+	            <a
+	              href="/"
+	              class="px-6 py-3 text-sm font-medium hover:bg-brand-bg/50 transition border-b border-gray-200"
+	            >
+	              首页
+	            </a>
+	            <a
+	              href="/stats"
+	              class="px-6 py-3 text-sm font-medium hover:bg-brand-bg/50 transition border-b border-gray-200"
+	            >
+	              查询统计
+	            </a>
+	            <a
+	              href="/docs"
+	              class="px-6 py-3 text-sm font-medium hover:bg-brand-bg/50 transition"
+	              aria-current="page"
+	            >
+	              使用文档
+	            </a>
+	          </div>
+	        </div>
       </nav>
 
       <!-- Main Content -->
       <main class="max-w-6xl mx-auto">
-        <!-- Header -->
-        <div class="mb-12 flex flex-col md:flex-row justify-between items-start gap-8">
-          <div class="min-w-0">
-            <p class="text-sm md:text-base text-gray-500 mb-2">/ Documentation</p>
-            <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold text-brand-dark mb-4 flex items-center gap-4">
-              <i class="fa-solid fa-book text-2xl sm:text-3xl md:text-4xl"></i>
-              AI 工具使用教程
-            </h1>
-          </div>
-
-          <div class="flex flex-col items-end gap-3 md:gap-4">
-            <div class="text-right max-w-sm">
-              <p class="text-base md:text-lg text-gray-600 font-light leading-relaxed">
-                跟着这个教程，快速配置 Claude Code、Gemini CLI、Codex、Droid CLI 等工具，直接开干。
+        <!-- Hero -->
+        <section class="mb-10 md:mb-14">
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+            <div class="lg:col-span-7 min-w-0">
+              <p class="text-sm md:text-base text-gray-500 mb-2">/ Documentation</p>
+              <h1
+                class="text-3xl sm:text-4xl md:text-5xl font-bold text-brand-dark mb-4 flex items-center gap-4"
+              >
+                <i class="fa-solid fa-book text-2xl sm:text-3xl md:text-4xl"></i>
+                使用文档
+              </h1>
+              <p class="text-base md:text-lg text-gray-600 font-light leading-relaxed max-w-2xl">
+                选好系统，复制命令即可完成配置。支持 Claude Code、Gemini CLI、Codex、Droid CLI 等常见工具。
               </p>
-              <div class="mt-3 flex flex-col gap-1.5 text-xs text-gray-500">
-                <div class="flex items-center justify-end gap-2">
-                  <span class="h-1.5 w-1.5 rounded-full bg-brand-dark/35"></span>
-                  <span>按系统一键切换命令</span>
+
+              <div class="mt-6 flex flex-wrap items-center gap-3">
+                <a
+                  href="/stats"
+                  class="group inline-flex items-center gap-2 rounded-full bg-brand-dark text-white px-4 py-2 text-xs md:text-sm font-medium hover:bg-opacity-90 transition shadow-lg shadow-brand-dark/10 hover-arrow-move"
+                >
+                  查询用量
+                  <i class="fa-solid fa-arrow-up-right-from-square text-[11px]"></i>
+                </a>
+                <a
+                  href="/"
+                  class="inline-flex items-center gap-2 rounded-full border border-brand-dark/15 bg-white/55 px-4 py-2 text-xs md:text-sm font-medium text-brand-dark hover:bg-white/70 transition"
+                >
+                  返回首页
+                  <i class="fa-solid fa-arrow-right text-[11px]"></i>
+                </a>
+              </div>
+
+              <div class="mt-6 grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs text-gray-600">
+                <div class="rounded-xl border border-brand-dark/10 bg-white/45 px-3 py-2">
+                  一个 API Key 通用
                 </div>
-                <div class="flex items-center justify-end gap-2">
-                  <span class="h-1.5 w-1.5 rounded-full bg-brand-dark/35"></span>
-                  <span>复制粘贴即可完成配置</span>
+                <div class="rounded-xl border border-brand-dark/10 bg-white/45 px-3 py-2">
+                  按系统自动切换命令
+                </div>
+                <div class="rounded-xl border border-brand-dark/10 bg-white/45 px-3 py-2">
+                  复制粘贴直接开干
                 </div>
               </div>
             </div>
 
-            <a
-              href="/stats"
-              class="group flex items-center gap-2 text-xs font-bold uppercase tracking-wide border-b border-brand-dark/30 pb-1 hover-arrow-move"
-            >
-              查询用量
-              <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
-            </a>
+            <div class="lg:col-span-5">
+              <div
+                class="relative overflow-hidden rounded-3xl border border-brand-dark/10 bg-white/30 shadow-[0_22px_55px_rgba(31,47,34,0.10)]"
+              >
+                <img
+                  src="https://plus.unsplash.com/premium_photo-1661962244825-73142e2b6d93?q=80&w=1868&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                  alt="Docs"
+                  class="w-full h-60 sm:h-72 lg:h-80 object-cover opacity-90 hover:scale-105 transition duration-700 ease-in-out"
+                />
+                <div
+                  class="absolute inset-0 bg-gradient-to-tr from-brand-dark/30 via-transparent to-white/10 pointer-events-none"
+                ></div>
+                <div class="absolute bottom-4 left-4 right-4">
+                  <div class="rounded-2xl bg-white/70 backdrop-blur-md border border-white/60 px-4 py-3">
+                    <p class="text-sm font-semibold text-brand-dark">Tab 选择系统</p>
+                    <p class="text-xs text-gray-600 mt-1">本页所有命令会随系统切换自动更新。</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Sticky System Tabs -->
+        <div class="mb-10" id="choose-system" style="padding-top: 2rem">
+          <div
+            class="relative rounded-2xl border border-brand-dark/10 bg-white/60 backdrop-blur-xl px-4 py-3 shadow-[0_18px_45px_rgba(31,47,34,0.10)]"
+          >
+            <div class="jo-sticky-divider-badge">
+              <div class="jo-sticky-divider-badge-outer">
+                <a
+                  class="jo-sticky-divider-badge-inner"
+                  href="#choose-system"
+                  aria-label="跳到选择系统"
+                >
+                  <i class="fa-brands fa-envira"></i>
+                </a>
+              </div>
+            </div>
+            <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+              <div class="flex items-center gap-2 text-sm font-semibold text-brand-dark">
+                <i class="fa-solid fa-desktop text-xs"></i>
+                选择系统
+              </div>
+              <div class="tab-shell" role="tablist" aria-label="操作系统选择">
+                <button
+                  class="tab-button"
+                  :class="{ 'active': system === 'windows' }"
+                  @click="system = 'windows'"
+                  role="tab"
+                  :aria-selected="system === 'windows'"
+                  type="button"
+                >
+                  <i class="fa-brands fa-windows"></i>
+                  Windows
+                </button>
+                <button
+                  class="tab-button"
+                  :class="{ 'active': system === 'macos' }"
+                  @click="system = 'macos'"
+                  role="tab"
+                  :aria-selected="system === 'macos'"
+                  type="button"
+                >
+                  <i class="fa-brands fa-apple"></i>
+                  macOS
+                </button>
+                <button
+                  class="tab-button"
+                  :class="{ 'active': system === 'linux' }"
+                  @click="system = 'linux'"
+                  role="tab"
+                  :aria-selected="system === 'linux'"
+                  type="button"
+                >
+                  <i class="fa-brands fa-linux"></i>
+                  Linux
+                </button>
+              </div>
+            </div>
           </div>
         </div>
 
-        <!-- System Tabs -->
-        <div class="mb-10 flex gap-3 flex-wrap">
-          <button
-            class="tab-button"
-            :class="{ 'active': system === 'windows' }"
-            @click="system = 'windows'"
-          >
-            <i class="fa-brands fa-windows"></i>
-            Windows
-          </button>
-          <button
-            class="tab-button"
-            :class="{ 'active': system === 'macos' }"
-            @click="system = 'macos'"
-          >
-            <i class="fa-brands fa-apple"></i>
-            macOS
-          </button>
-          <button
-            class="tab-button"
-            :class="{ 'active': system === 'linux' }"
-            @click="system = 'linux'"
-          >
-            <i class="fa-brands fa-linux"></i>
-            Linux
-          </button>
-        </div>
+        <!-- Docs Content -->
+        <section class="mb-14" id="docs-content">
+          <h2 class="section-title">
+            <i class="fa-solid fa-bolt w-5 h-5 text-brand-dark"></i>
+            快速开始（Claude Code）
+          </h2>
 
-        <!-- Windows Tutorial -->
-        <div x-show="system === 'windows'" x-cloak>
-          <!-- Step 1: Install Node.js -->
-          <div class="mb-10">
-            <h2 class="section-title flex items-center gap-3">
-              <span class="step-number">1</span>
-              安装 Node.js 环境
-            </h2>
-            <p class="text-sm text-gray-600 mb-4">Claude Code 需要 Node.js 环境才能运行。</p>
+	          <div class="space-y-4">
+	              <div class="rounded-2xl border border-brand-dark/10 bg-white/45 px-5 py-5">
+	                <div class="flex items-start gap-4">
+	                  <span class="step-number">1</span>
+	                  <div class="min-w-0 flex-1">
+	                    <h3 class="text-base font-semibold text-brand-dark mb-1">准备 API Key</h3>
+	                    <p class="text-sm text-gray-600 leading-relaxed">
+	                      在控制台的 <span class="font-medium">API Keys</span> 页面创建并复制你的 Key。请勿把 Key
+	                      公开到截图、仓库或日志中。
+	                      <span class="block mt-2 font-semibold text-brand-dark"
+	                        >注意：已有 key 则跳过此步骤。</span
+	                      >
+	                    </p>
+	                  </div>
+	                </div>
+	              </div>
 
-            <h3 class="text-lg font-semibold text-brand-dark mb-3">Windows 安装方法</h3>
+              <div class="rounded-2xl border border-brand-dark/10 bg-white/45 px-5 py-5">
+                <div class="flex items-start gap-4">
+                  <span class="step-number">2</span>
+                  <div class="min-w-0 flex-1">
+                    <h3 class="text-base font-semibold text-brand-dark mb-1">安装 Node.js</h3>
+                    <p class="text-sm text-gray-600 mb-3 leading-relaxed">
+                      Claude Code 需要 Node.js（推荐 LTS）。按当前系统使用下方命令/链接：
+                    </p>
+                    <div class="code-block"><code x-text="installNodeCmd()"></code></div>
 
-            <div class="mb-4">
-              <p class="text-sm text-gray-600 mb-2 font-medium">方法一：官网下载（推荐）</p>
-              <ol class="list-decimal list-inside space-y-2 text-sm text-gray-600 ml-4">
-                <li>
-                  打开浏览器访问
-                  <code class="px-2 py-1 bg-gray-100 dark:bg-gray-200 rounded text-xs"
-                    >https://nodejs.org/</code
-                  >
-                </li>
-                <li>点击 "LTS" 版本进行下载（推荐长期支持版本）</li>
-                <li>
-                  下载完成后双击
-                  <code class="px-2 py-1 bg-gray-100 dark:bg-gray-200 rounded text-xs">.msi</code>
-                  文件
-                </li>
-                <li>按照安装向导完成安装，保持默认设置即可</li>
-              </ol>
-            </div>
+                    <div class="mt-4 space-y-6">
+                      <div x-show="system === 'windows'" x-cloak>
+                        <p class="text-sm text-gray-600 mb-2 font-medium">方法一：官网下载（推荐）</p>
+                        <ol class="list-decimal list-inside space-y-2 text-sm text-gray-600 ml-4">
+                          <li>
+                            打开浏览器访问 <code>https://nodejs.org/</code>
+                          </li>
+                          <li>点击 “LTS” 版本下载（推荐长期支持版本）</li>
+                          <li>双击 <code>.msi</code> 安装包按向导完成安装（保持默认即可）</li>
+                        </ol>
 
-            <div class="mb-4">
-              <p class="text-sm text-gray-600 mb-2 font-medium">方法二：使用包管理器</p>
-              <p class="text-sm text-gray-600 mb-3">
-                如果你安装了 Chocolatey 或 Scoop，可以使用命令行安装：
-              </p>
-              <div class="code-block">
-                <code
-                  ># 使用 Chocolatey choco install nodejs # 或使用 Scoop scoop install nodejs</code
-                >
+                        <div class="mt-5">
+                          <p class="text-sm text-gray-600 mb-2 font-medium">方法二：使用包管理器</p>
+                          <p class="text-sm text-gray-600 mb-3">
+                            如果你安装了 Chocolatey 或 Scoop，可以使用命令行安装：
+                          </p>
+                          <div class="code-block">
+                            <code class="language-bash"># 使用 Chocolatey
+choco install nodejs
+# 或使用 Scoop
+scoop install nodejs</code>
+                          </div>
+                        </div>
+
+                        <div class="info-box mt-5">
+                          <h4
+                            class="text-sm font-semibold text-brand-dark mb-2 flex items-center gap-2"
+                          >
+                            <i class="fa-solid fa-circle-exclamation" class="w-4 h-4"></i>
+                            Windows 注意事项
+                          </h4>
+                          <ul class="list-disc list-inside space-y-1 text-sm text-gray-600">
+                            <li>建议使用 PowerShell 而不是 CMD</li>
+                            <li>如果遇到权限问题，尝试以管理员身份运行</li>
+                            <li>某些杀毒软件可能会误报，需要添加白名单</li>
+                          </ul>
+                        </div>
+
+                        <div class="info-box mt-5">
+                          <h4
+                            class="text-sm font-semibold text-brand-dark mb-2 flex items-center gap-2"
+                          >
+                            <i class="fa-solid fa-circle-check" class="w-4 h-4 text-gray-600"></i>
+                            验证安装是否成功
+                          </h4>
+                          <p class="text-sm text-gray-600 mb-3">
+                            安装完成后，打开 PowerShell 或 CMD，输入以下命令：
+                          </p>
+                          <div class="code-block">
+                            <code>node --version</code><br />
+                            <code>npm --version</code>
+                          </div>
+                          <p class="text-sm text-gray-600 mt-2">如果显示版本号，说明安装成功。</p>
+                        </div>
+                      </div>
+
+                      <div x-show="system === 'macos'" x-cloak>
+                        <p class="text-sm text-gray-600 mb-2 font-medium">方法一：使用 Homebrew（推荐）</p>
+                        <div class="code-block mb-4">
+                          <code class="language-bash"># 如果还没安装 Homebrew，先安装它
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+# 使用 Homebrew 安装 Node.js
+brew install node</code>
+                        </div>
+
+                        <p class="text-sm text-gray-600 mb-2 font-medium">方法二：官网下载</p>
+                        <ol class="list-decimal list-inside space-y-2 text-sm text-gray-600 ml-4">
+                          <li>
+                            打开浏览器访问 <code>https://nodejs.org/</code>
+                          </li>
+                          <li>点击 “LTS” 版本下载</li>
+                          <li>双击 <code>.pkg</code> 安装包完成安装</li>
+                        </ol>
+
+                        <div class="info-box mt-5">
+                          <h4
+                            class="text-sm font-semibold text-brand-dark mb-2 flex items-center gap-2"
+                          >
+                            <i class="fa-solid fa-circle-check" class="w-4 h-4 text-gray-600"></i>
+                            验证安装
+                          </h4>
+                          <p class="text-sm text-gray-600 mb-3">打开终端，输入以下命令：</p>
+                          <div class="code-block">
+                            <code>node --version</code><br />
+                            <code>npm --version</code>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div x-show="system === 'linux'" x-cloak>
+                        <p class="text-sm text-gray-600 mb-2 font-medium">Ubuntu/Debian</p>
+                        <div class="code-block mb-4">
+                          <code># 使用 NodeSource 仓库安装 LTS</code><br />
+                          <code>curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -</code
+                          ><br />
+                          <code>sudo apt-get install -y nodejs</code>
+                        </div>
+
+                        <p class="text-sm text-gray-600 mb-2 font-medium">Fedora/RHEL/CentOS</p>
+                        <div class="code-block mb-4">
+                          <code># 使用 NodeSource 仓库</code><br />
+                          <code>curl -fsSL https://rpm.nodesource.com/setup_lts.x | sudo bash -</code><br />
+                          <code>sudo dnf install -y nodejs</code>
+                        </div>
+
+                        <p class="text-sm text-gray-600 mb-2 font-medium">Arch Linux</p>
+                        <div class="code-block mb-4">
+                          <code>sudo pacman -S nodejs npm</code>
+                        </div>
+
+                        <div class="info-box">
+                          <h4 class="text-sm font-semibold text-brand-dark mb-2">验证安装</h4>
+                          <div class="code-block">
+                            <code>node --version</code><br />
+                            <code>npm --version</code>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="rounded-2xl border border-brand-dark/10 bg-white/45 px-5 py-5">
+                <div class="flex items-start gap-4">
+                  <span class="step-number">3</span>
+                  <div class="min-w-0 flex-1">
+                    <h3 class="text-base font-semibold text-brand-dark mb-1">安装 Claude Code</h3>
+                    <p class="text-sm text-gray-600 mb-3 leading-relaxed">
+                      在终端/PowerShell 执行：
+                    </p>
+                    <div class="code-block">
+                      <code># 全局安装 Claude Code</code><br />
+                      <code>npm install -g @anthropic-ai/claude-code</code>
+                    </div>
+                    <p class="text-sm text-gray-600 mt-3 leading-relaxed">
+                      这个命令会从 npm 官方仓库下载并安装最新版本的 Claude Code。
+                    </p>
+
+                    <div class="info-box mt-5">
+                      <h4
+                        class="text-sm font-semibold text-brand-dark mb-2 flex items-center gap-2"
+                      >
+                        <i class="fa-solid fa-circle-check" class="w-4 h-4 text-gray-600"></i>
+                        验证安装
+                      </h4>
+                      <p class="text-sm text-gray-600 mb-3">安装完成后，输入以下命令检查是否安装成功：</p>
+                      <div class="code-block">
+                        <code>claude --version</code>
+                      </div>
+                      <p class="text-sm text-gray-600 mt-2">如果显示版本号，说明 Claude Code 安装成功。</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="rounded-2xl border border-brand-dark/10 bg-white/45 px-5 py-5">
+                <div class="flex items-start gap-4">
+                  <span class="step-number">4</span>
+                  <div class="min-w-0 flex-1">
+                    <h3 class="text-base font-semibold text-brand-dark mb-1">设置环境变量并启动</h3>
+                    <p class="text-sm text-gray-600 mb-3 leading-relaxed">
+                      需要设置两个环境变量：<code>ANTHROPIC_BASE_URL</code>、<code>ANTHROPIC_AUTH_TOKEN</code>。
+                      把 <code>你的API密钥</code> 替换为实际 Key，然后按当前系统执行下方命令：
+                    </p>
+
+                    <div class="code-block mb-4"><code x-text="claudeSetupCmd()"></code></div>
+
+                    <div class="mt-4 space-y-6">
+                      <div x-show="system === 'windows'" x-cloak>
+                        <h4 class="text-sm font-semibold text-brand-dark mb-2">
+                          方法一：PowerShell 临时设置（当前会话）
+                        </h4>
+                        <p class="text-sm text-gray-600 mb-3">在 PowerShell 中运行：</p>
+                      <div class="code-block mb-4">
+                        <code x-text="`$env:ANTHROPIC_BASE_URL = '${baseUrl}/api'`"></code><br />
+                        <code>$env:ANTHROPIC_AUTH_TOKEN = '你的API密钥'</code>
+                      </div>
+                      <p class="text-xs text-gray-600">
+                        💡 记得将 “你的API密钥” 替换为在控制台创建的实际密钥。
+                      </p>
+
+                        <h4 class="text-sm font-semibold text-brand-dark mb-2">
+                          方法二：PowerShell 永久设置（用户级）
+                        </h4>
+                        <p class="text-sm text-gray-600 mb-3">
+                          在 PowerShell 中运行以下命令设置用户级环境变量：
+                        </p>
+                        <div class="code-block mb-4">
+                          <code># 设置用户级环境变量（永久生效）</code><br />
+                          <code
+                            x-text="`[System.Environment]::SetEnvironmentVariable('ANTHROPIC_BASE_URL', '${baseUrl}/api', [System.EnvironmentVariableTarget]::User)`"
+                          ></code
+                          ><br />
+                          <code
+                            >[System.Environment]::SetEnvironmentVariable('ANTHROPIC_AUTH_TOKEN',
+                            '你的API密钥', [System.EnvironmentVariableTarget]::User)</code
+                          >
+                        </div>
+                      <p class="text-xs text-gray-600">设置后需要重新打开 PowerShell 窗口才能生效。</p>
+
+                      <p class="text-sm text-gray-600 mt-4 mb-2">查看已设置的环境变量：</p>
+                      <div class="code-block mb-4">
+                        <code># 查看用户级环境变量</code><br />
+                        <code
+                          >[System.Environment]::GetEnvironmentVariable('ANTHROPIC_BASE_URL',
+                          [System.EnvironmentVariableTarget]::User)</code
+                        ><br />
+                        <code
+                          >[System.Environment]::GetEnvironmentVariable('ANTHROPIC_AUTH_TOKEN',
+                          [System.EnvironmentVariableTarget]::User)</code
+                        >
+                      </div>
+
+                        <div class="info-box mt-5">
+                          <h4 class="text-sm font-semibold text-brand-dark mb-2">
+                            VSCode Claude 插件配置
+                          </h4>
+                          <p class="text-sm text-gray-600 mb-2">
+                            配置文件位置：<code>C:\\Users\\你的用户名\\.claude\\config.json</code>
+                          </p>
+                          <p class="text-xs text-gray-600 mb-3">如果该文件不存在，请手动创建。</p>
+                          <div class="code-block">
+                            <code>{ "primaryApiKey": "你的API密钥" }</code>
+                          </div>
+                        </div>
+
+                        <div class="info-box mt-5">
+                          <h4
+                            class="text-sm font-semibold text-brand-dark mb-2 flex items-center gap-2"
+                          >
+                            <i class="fa-solid fa-circle-check" class="w-4 h-4 text-gray-600"></i>
+                            验证环境变量
+                          </h4>
+                          <div class="code-block">
+                            <code># PowerShell</code><br />
+                            <code>echo $env:ANTHROPIC_BASE_URL</code><br />
+                            <code>echo $env:ANTHROPIC_AUTH_TOKEN</code><br />
+                            <code># CMD</code><br />
+                            <code>echo %ANTHROPIC_BASE_URL%</code><br />
+                            <code>echo %ANTHROPIC_AUTH_TOKEN%</code>
+                          </div>
+                        </div>
+
+                        <h4 class="text-sm font-semibold text-brand-dark mb-2 mt-6">开始使用</h4>
+                        <div class="code-block mb-4">
+                          <code>claude</code>
+                        </div>
+                        <p class="text-sm text-gray-600 mb-2">在特定项目中使用：</p>
+                        <div class="code-block">
+                          <code># 进入你的项目目录</code><br />
+                          <code>cd C:\\path\\to\\your\\project</code><br />
+                          <code># 启动 Claude Code</code><br />
+                          <code>claude</code>
+                        </div>
+                      </div>
+
+                      <div x-show="system === 'macos'" x-cloak>
+                        <h4 class="text-sm font-semibold text-brand-dark mb-2">
+                          方法一：临时设置（当前终端会话）
+                        </h4>
+                        <div class="code-block mb-4">
+                          <code x-text="`export ANTHROPIC_BASE_URL='${baseUrl}/api'`"></code><br />
+                          <code>export ANTHROPIC_AUTH_TOKEN='你的API密钥'</code>
+                        </div>
+
+                        <h4 class="text-sm font-semibold text-brand-dark mb-2">方法二：永久设置</h4>
+                        <p class="text-sm text-gray-600 mb-3">编辑 shell 配置文件（按你使用的 shell）：</p>
+                        <div class="code-block mb-4">
+                          <code># 对于 zsh（macOS 默认）</code><br />
+                          <code>nano ~/.zshrc</code><br />
+                          <code># 对于 bash</code><br />
+                          <code>nano ~/.bash_profile</code>
+                        </div>
+                        <p class="text-sm text-gray-600 mb-3">在文件末尾添加：</p>
+                        <div class="code-block mb-4">
+                          <code x-text="`export ANTHROPIC_BASE_URL='${baseUrl}/api'`"></code><br />
+                          <code>export ANTHROPIC_AUTH_TOKEN='你的API密钥'</code>
+                        </div>
+                        <p class="text-sm text-gray-600 mb-3">保存后重新加载配置：</p>
+                        <div class="code-block mb-4">
+                          <code># 对于 zsh</code><br />
+                          <code>source ~/.zshrc</code><br />
+                          <code># 对于 bash</code><br />
+                          <code>source ~/.bash_profile</code>
+                        </div>
+
+                        <div class="info-box">
+                          <h4 class="text-sm font-semibold text-brand-dark mb-2">验证环境变量</h4>
+                          <div class="code-block">
+                            <code>echo $ANTHROPIC_BASE_URL</code><br />
+                            <code>echo $ANTHROPIC_AUTH_TOKEN</code>
+                          </div>
+                        </div>
+
+                        <h4 class="text-sm font-semibold text-brand-dark mb-2 mt-6">开始使用</h4>
+                        <div class="code-block">
+                          <code>claude</code>
+                        </div>
+                      </div>
+
+                      <div x-show="system === 'linux'" x-cloak>
+                        <h4 class="text-sm font-semibold text-brand-dark mb-2">方法一：临时设置</h4>
+                        <div class="code-block mb-4">
+                          <code x-text="`export ANTHROPIC_BASE_URL='${baseUrl}/api'`"></code><br />
+                          <code>export ANTHROPIC_AUTH_TOKEN='你的API密钥'</code>
+                        </div>
+
+                        <h4 class="text-sm font-semibold text-brand-dark mb-2">方法二：永久设置</h4>
+                        <p class="text-sm text-gray-600 mb-3">编辑 <code>~/.bashrc</code> 或 <code>~/.zshrc</code>：</p>
+                        <div class="code-block mb-4">
+                          <code>nano ~/.bashrc</code>
+                        </div>
+                        <p class="text-sm text-gray-600 mb-3">在文件末尾添加：</p>
+                        <div class="code-block mb-4">
+                          <code x-text="`export ANTHROPIC_BASE_URL='${baseUrl}/api'`"></code><br />
+                          <code>export ANTHROPIC_AUTH_TOKEN='你的API密钥'</code>
+                        </div>
+                        <p class="text-sm text-gray-600 mb-3">重新加载配置：</p>
+                        <div class="code-block mb-4">
+                          <code>source ~/.bashrc</code>
+                        </div>
+
+                        <div class="info-box">
+                          <h4 class="text-sm font-semibold text-brand-dark mb-2">验证环境变量</h4>
+                          <div class="code-block">
+                            <code>echo $ANTHROPIC_BASE_URL</code><br />
+                            <code>echo $ANTHROPIC_AUTH_TOKEN</code>
+                          </div>
+                        </div>
+
+                        <h4 class="text-sm font-semibold text-brand-dark mb-2 mt-6">开始使用</h4>
+                        <div class="code-block">
+                          <code>claude</code>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+	              <div class="rounded-2xl border border-brand-dark/10 bg-white/45 px-5 py-5">
+	                <div class="flex items-start gap-4">
+	                  <span class="step-number">5</span>
+	                  <div class="min-w-0 flex-1">
+	                    <h3 class="text-base font-semibold text-brand-dark mb-1">验证是否就绪</h3>
+                    <p class="text-sm text-gray-600 mt-2 mb-4 leading-relaxed">
+                      如果版本号能正常输出，说明环境 OK。
+                    </p>
+                    <div class="code-block"><code x-text="verifyCmd()"></code></div>
+
+                    <div class="mt-5 text-xs text-gray-500 leading-relaxed">
+                      默认中转地址：<code x-text="`${baseUrl}/api`"></code>
+                    </div>
+	                  </div>
+	                </div>
+	              </div>
+	          </div>
+	        </section>
+
+        <section class="mb-14">
+          <h2 class="section-title">
+            <i class="fa-solid fa-screwdriver-wrench w-5 h-5 text-brand-dark"></i>
+            进阶设置
+          </h2>
+
+          <div class="rt-AccordionRoot" x-data="{ openItem: '' }">
+            <div class="rt-AccordionItem">
+              <button
+                class="rt-AccordionTrigger"
+                :data-state="openItem === 'advanced-env' ? 'open' : 'closed'"
+                @click="openItem = openItem === 'advanced-env' ? '' : 'advanced-env'"
+                :aria-expanded="openItem === 'advanced-env'"
+                type="button"
+              >
+                <span class="text-sm font-semibold text-brand-dark">环境变量写到哪里？（永久生效）</span>
+                <svg class="rt-AccordionChevron" width="15" height="15" viewBox="0 0 15 15" fill="none">
+                  <path
+                    d="M3.13523 6.15803C3.3241 5.95657 3.64052 5.94637 3.84197 6.13523L7.5 9.56464L11.158 6.13523C11.3595 5.94637 11.6759 5.95657 11.8648 6.15803C12.0536 6.35949 12.0434 6.67591 11.842 6.86477L7.84197 10.6148C7.64964 10.7951 7.35036 10.7951 7.15803 10.6148L3.15803 6.86477C2.95657 6.67591 2.94637 6.35949 3.13523 6.15803Z"
+                    fill="currentColor"
+                    fill-rule="evenodd"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+              </button>
+              <div class="rt-AccordionContent" x-show="openItem === 'advanced-env'" x-collapse x-cloak>
+                <div class="rt-AccordionContentInner text-sm text-gray-600 leading-relaxed">
+                  <div x-show="system === 'windows'" x-cloak>
+                    建议使用 PowerShell 的用户级环境变量，或者在系统环境变量里添加：
+                    <code>ANTHROPIC_BASE_URL</code>、<code>ANTHROPIC_AUTH_TOKEN</code>。
+                  </div>
+                  <div x-show="system !== 'windows'" x-cloak>
+                    把 export 写到 <code>~/.zshrc</code> 或 <code>~/.bashrc</code>，然后执行
+                    <code>source ~/.zshrc</code> / <code>source ~/.bashrc</code> 使其生效。
+                  </div>
+                </div>
               </div>
             </div>
 
-            <div class="info-box">
-              <h4 class="text-sm font-semibold text-brand-dark mb-2 flex items-center gap-2">
-                <i class="fa-solid fa-circle-exclamation" class="w-4 h-4"></i>
-                Windows 注意事项
-              </h4>
-              <ul class="list-disc list-inside space-y-1 text-sm text-gray-600">
-                <li>建议使用 PowerShell 而不是 CMD</li>
-                <li>如果遇到权限问题，尝试以管理员身份运行</li>
-                <li>某些杀毒软件可能会误报，需要添加白名单</li>
-              </ul>
-            </div>
-
-            <div class="info-box">
-              <h4 class="text-sm font-semibold text-brand-dark mb-2 flex items-center gap-2">
-                <i class="fa-solid fa-circle-check" class="w-4 h-4 text-gray-600"></i>
-                验证安装是否成功
-              </h4>
-              <p class="text-sm text-gray-600 mb-3">
-                安装完成后，打开 PowerShell 或 CMD，输入以下命令：
-              </p>
-              <div class="code-block">
-                <code>node --version npm --version</code>
+            <div class="rt-AccordionItem">
+              <button
+                class="rt-AccordionTrigger"
+                :data-state="openItem === 'advanced-vscode' ? 'open' : 'closed'"
+                @click="openItem = openItem === 'advanced-vscode' ? '' : 'advanced-vscode'"
+                :aria-expanded="openItem === 'advanced-vscode'"
+                type="button"
+              >
+                <span class="text-sm font-semibold text-brand-dark">VSCode Claude 插件怎么配？</span>
+                <svg class="rt-AccordionChevron" width="15" height="15" viewBox="0 0 15 15" fill="none">
+                  <path
+                    d="M3.13523 6.15803C3.3241 5.95657 3.64052 5.94637 3.84197 6.13523L7.5 9.56464L11.158 6.13523C11.3595 5.94637 11.6759 5.95657 11.8648 6.15803C12.0536 6.35949 12.0434 6.67591 11.842 6.86477L7.84197 10.6148C7.64964 10.7951 7.35036 10.7951 7.15803 10.6148L3.15803 6.86477C2.95657 6.67591 2.94637 6.35949 3.13523 6.15803Z"
+                    fill="currentColor"
+                    fill-rule="evenodd"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+              </button>
+              <div class="rt-AccordionContent" x-show="openItem === 'advanced-vscode'" x-collapse x-cloak>
+                <div class="rt-AccordionContentInner text-sm text-gray-600 leading-relaxed">
+                  <p class="mb-3">
+                    配置文件路径：
+                    <code x-text="vscodeConfigPath()"></code>
+                  </p>
+                  <div class="code-block">
+                    <code>{ "primaryApiKey": "你的API密钥" }</code>
+                  </div>
+                </div>
               </div>
-              <p class="text-sm text-gray-600 mt-2">如果显示版本号，说明安装成功了！</p>
             </div>
           </div>
+        </section>
 
-          <!-- Step 2: Install Claude Code -->
-          <div class="mb-10">
-            <h2 class="section-title flex items-center gap-3">
-              <span class="step-number">2</span>
-              安装 Claude Code
-            </h2>
-            <p class="text-sm text-gray-600 mb-4">打开 PowerShell 或 CMD，运行以下命令：</p>
-            <div class="code-block mb-4">
-              <code># 全局安装 Claude Code npm install -g @anthropic-ai/claude-code</code>
-            </div>
-            <p class="text-sm text-gray-600 mb-4">
-              这个命令会从 npm 官方仓库下载并安装最新版本的 Claude Code。
-            </p>
+        <section class="mb-14">
+          <h2 class="section-title">
+            <i class="fa-solid fa-layer-group w-5 h-5 text-brand-dark"></i>
+            其他工具（可选）
+          </h2>
+          <p class="text-sm text-gray-600 mb-6">
+            如果你除了 Claude Code 还想配置其他工具，按系统切换后直接复制对应环境变量即可。
+          </p>
 
-            <div class="info-box">
-              <h4 class="text-sm font-semibold text-brand-dark mb-2 flex items-center gap-2">
-                <i class="fa-solid fa-circle-check" class="w-4 h-4 text-gray-600"></i>
-                验证 Claude Code 安装
-              </h4>
-              <p class="text-sm text-gray-600 mb-3">安装完成后，输入以下命令检查是否安装成功：</p>
-              <div class="code-block">
-                <code>claude --version</code>
-              </div>
-              <p class="text-sm text-gray-600 mt-2">
-                如果显示版本号，恭喜你！Claude Code 已经成功安装了。
-              </p>
-            </div>
-          </div>
-
-          <!-- Step 3: Set Environment Variables -->
-          <div class="mb-10">
-            <h2 class="section-title flex items-center gap-3">
-              <span class="step-number">3</span>
-              设置环境变量
-            </h2>
-            <p class="text-sm text-gray-600 mb-4">
-              为了让 Claude Code 连接到你的中转服务，需要设置两个环境变量：
-            </p>
-
-            <div class="mb-6">
-              <h3 class="text-lg font-semibold text-brand-dark mb-3">
-                方法一：PowerShell 临时设置（当前会话）
-              </h3>
-              <p class="text-sm text-gray-600 mb-3">在 PowerShell 中运行以下命令：</p>
-              <div class="code-block mb-3">
-                <code x-text="`$env:ANTHROPIC_BASE_URL = '${baseUrl}/api'`"></code><br />
-                <code>$env:ANTHROPIC_AUTH_TOKEN = '你的API密钥'</code>
-              </div>
-              <p class="text-xs text-gray-600">
-                💡 记得将 "你的API密钥" 替换为在 "API Keys" 标签页中创建的实际密钥。
-              </p>
-            </div>
-
-            <div class="mb-6">
-              <h3 class="text-lg font-semibold text-brand-dark mb-3">
-                方法二：PowerShell 永久设置（用户级）
-              </h3>
-              <p class="text-sm text-gray-600 mb-3">
-                在 PowerShell 中运行以下命令设置用户级环境变量：
-              </p>
-              <div class="code-block mb-3">
-                <code># 设置用户级环境变量（永久生效）</code><br />
-                <code
-                  x-text="`[System.Environment]::SetEnvironmentVariable('ANTHROPIC_BASE_URL', '${baseUrl}/api', [System.EnvironmentVariableTarget]::User)`"
-                ></code
-                ><br />
-                <code
-                  >[System.Environment]::SetEnvironmentVariable('ANTHROPIC_AUTH_TOKEN',
-                  '你的API密钥', [System.EnvironmentVariableTarget]::User)</code
-                >
-              </div>
-              <p class="text-xs text-gray-600 mb-3">查看已设置的环境变量：</p>
-              <div class="code-block mb-3">
-                <code># 查看用户级环境变量</code><br />
-                <code
-                  >[System.Environment]::GetEnvironmentVariable('ANTHROPIC_BASE_URL',
-                  [System.EnvironmentVariableTarget]::User)</code
-                ><br />
-                <code
-                  >[System.Environment]::GetEnvironmentVariable('ANTHROPIC_AUTH_TOKEN',
-                  [System.EnvironmentVariableTarget]::User)</code
-                >
-              </div>
-              <p class="text-xs text-gray-600">💡 设置后需要重新打开 PowerShell 窗口才能生效。</p>
-            </div>
-
-            <div class="info-box">
-              <h4 class="text-sm font-semibold text-brand-dark mb-2">VSCode Claude 插件配置</h4>
-              <p class="text-sm text-gray-600 mb-3">
-                如果使用 VSCode 的 Claude 插件，需要在配置文件中进行设置：
-              </p>
-              <p class="text-sm text-gray-600 mb-2">
-                <strong>配置文件位置：</strong>
-                <code class="px-2 py-1 bg-gray-100 dark:bg-gray-200 rounded text-xs"
-                  >C:\Users\你的用户名\.claude\config.json</code
-                >
-              </p>
-              <p class="text-xs text-gray-600 mb-3">💡 如果该文件不存在，请手动创建。</p>
-              <div class="code-block">
-                <code>{ "primaryApiKey": "你的API密钥" }</code>
-              </div>
-            </div>
-
-            <div class="info-box mt-6">
-              <h4 class="text-sm font-semibold text-brand-dark mb-2 flex items-center gap-2">
-                <i class="fa-solid fa-circle-check" class="w-4 h-4 text-gray-600"></i>
-                验证环境变量设置
-              </h4>
-              <p class="text-sm text-gray-600 mb-3">
-                设置完环境变量后，可以通过以下命令验证是否设置成功：
-              </p>
-              <div class="code-block mb-3">
-                <code># PowerShell 验证</code><br />
-                <code>echo $env:ANTHROPIC_BASE_URL</code><br />
-                <code>echo $env:ANTHROPIC_AUTH_TOKEN</code><br />
-                <br />
-                <code># CMD 验证</code><br />
-                <code>echo %ANTHROPIC_BASE_URL%</code><br />
-                <code>echo %ANTHROPIC_AUTH_TOKEN%</code>
-              </div>
-              <p class="text-xs text-gray-600">
-                💡 如果输出为空或显示变量名本身，说明环境变量设置失败，请重新设置。
-              </p>
-            </div>
-          </div>
-
-          <!-- Step 4: Start Using -->
-          <div class="mb-10">
-            <h2 class="section-title flex items-center gap-3">
-              <span class="step-number">4</span>
-              开始使用 Claude Code
-            </h2>
-            <p class="text-sm text-gray-600 mb-4">现在你可以开始使用 Claude Code 了！</p>
-
-            <h3 class="text-lg font-semibold text-brand-dark mb-3">启动 Claude Code</h3>
-            <div class="code-block mb-6">
-              <code>claude</code>
-            </div>
-
-            <h3 class="text-lg font-semibold text-brand-dark mb-3">在特定项目中使用</h3>
-            <div class="code-block">
-              <code># 进入你的项目目录</code><br />
-              <code>cd C:\path\to\your\project</code><br />
-              <br />
-              <code># 启动 Claude Code</code><br />
-              <code>claude</code>
-            </div>
-          </div>
-
-          <!-- Other AI Tools -->
-          <div class="mb-10">
-            <h2 class="section-title flex items-center gap-3">
-              <i class="fa-solid fa-layer-group" class="w-6 h-6 text-brand-dark"></i>
-              其他 AI 工具配置（可选）
-            </h2>
-            <p class="text-sm text-gray-600 mb-6">
-              除了 Claude Code，本服务还支持以下 AI 工具。根据你的需求选择配置：
-            </p>
-
-            <!-- Gemini CLI -->
-            <div
-              class="p-6 rounded-xl border border-gray-300 bg-brand-card dark:bg-brand-card mb-6"
-            >
-              <h3 class="text-lg font-bold text-brand-dark mb-2 flex items-center gap-2">
-                <i class="fa-solid fa-bolt" class="w-5 h-5 text-brand-dark"></i>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="rounded-2xl border border-brand-dark/10 bg-white/45 px-5 py-5">
+              <h3 class="text-base font-semibold text-brand-dark mb-2 flex items-center gap-2">
+                <i class="fa-solid fa-bolt text-xs"></i>
                 Gemini CLI
               </h3>
-              <p class="text-sm text-gray-600 mb-4">Google Gemini 命令行工具</p>
-
-              <p class="text-sm text-gray-600 mb-3">PowerShell 临时设置：</p>
-              <div class="code-block mb-4">
-                <code x-text="`$env:GOOGLE_GEMINI_BASE_URL = '${baseUrl}/gemini'`"></code><br />
-                <code>$env:GEMINI_API_KEY = '你的API密钥'</code><br />
-                <code>$env:GEMINI_MODEL = 'gemini-2.0-flash-exp'</code>
+              <p class="text-sm text-gray-600 mb-3">Google Gemini 命令行工具</p>
+              <div x-show="system === 'windows'" x-cloak>
+                <p class="text-sm text-gray-600 mb-2">PowerShell 临时设置：</p>
+                <div class="code-block mb-4">
+                  <code x-text="`$env:GOOGLE_GEMINI_BASE_URL = '${baseUrl}/gemini'`"></code><br />
+                  <code>$env:GEMINI_API_KEY = '你的API密钥'</code><br />
+                  <code>$env:GEMINI_MODEL = 'gemini-2.0-flash-exp'</code>
+                </div>
+                <p class="text-sm text-gray-600 mb-2">PowerShell 永久设置：</p>
+                <div class="code-block">
+                  <code
+                    x-text="`[System.Environment]::SetEnvironmentVariable('GOOGLE_GEMINI_BASE_URL', '${baseUrl}/gemini', [System.EnvironmentVariableTarget]::User)`"
+                  ></code
+                  ><br />
+                  <code
+                    >[System.Environment]::SetEnvironmentVariable('GEMINI_API_KEY', '你的API密钥',
+                    [System.EnvironmentVariableTarget]::User)</code
+                  ><br />
+                  <code
+                    >[System.Environment]::SetEnvironmentVariable('GEMINI_MODEL', 'gemini-2.0-flash-exp',
+                    [System.EnvironmentVariableTarget]::User)</code
+                  >
+                </div>
               </div>
-
-              <p class="text-sm text-gray-600 mb-3">PowerShell 永久设置：</p>
-              <div class="code-block">
-                <code
-                  x-text="`[System.Environment]::SetEnvironmentVariable('GOOGLE_GEMINI_BASE_URL', '${baseUrl}/gemini', [System.EnvironmentVariableTarget]::User)`"
-                ></code
-                ><br />
-                <code
-                  >[System.Environment]::SetEnvironmentVariable('GEMINI_API_KEY', '你的API密钥',
-                  [System.EnvironmentVariableTarget]::User)</code
-                ><br />
-                <code
-                  >[System.Environment]::SetEnvironmentVariable('GEMINI_MODEL',
-                  'gemini-2.0-flash-exp', [System.EnvironmentVariableTarget]::User)</code
-                >
+              <div x-show="system !== 'windows'" x-cloak>
+                <div class="code-block">
+                  <code x-text="`export GOOGLE_GEMINI_BASE_URL='${baseUrl}/gemini'`"></code><br />
+                  <code>export GEMINI_API_KEY='你的API密钥'</code><br />
+                  <code>export GEMINI_MODEL='gemini-2.0-flash-exp'</code>
+                </div>
               </div>
             </div>
 
-            <!-- Codex -->
-            <div
-              class="p-6 rounded-xl border border-gray-300 bg-brand-card dark:bg-brand-card mb-6"
-            >
-              <h3 class="text-lg font-bold text-brand-dark mb-2 flex items-center gap-2">
-                <i class="fa-solid fa-code" class="w-5 h-5 text-brand-dark"></i>
+            <div class="rounded-2xl border border-brand-dark/10 bg-white/45 px-5 py-5">
+              <h3 class="text-base font-semibold text-brand-dark mb-2 flex items-center gap-2">
+                <i class="fa-solid fa-code text-xs"></i>
                 Codex
               </h3>
-              <p class="text-sm text-gray-600 mb-4">OpenAI Codex 工具</p>
-
-              <p class="text-sm text-gray-600 mb-3">PowerShell 设置：</p>
-              <div class="code-block">
+              <p class="text-sm text-gray-600 mb-3">OpenAI Codex / OpenAI 兼容工具</p>
+              <div x-show="system === 'windows'" x-cloak class="code-block">
                 <code x-text="`$env:OPENAI_API_BASE = '${baseUrl}/openai'`"></code><br />
                 <code>$env:OPENAI_API_KEY = '你的API密钥'</code>
               </div>
+              <div x-show="system !== 'windows'" x-cloak class="code-block">
+                <code x-text="`export OPENAI_API_BASE='${baseUrl}/openai'`"></code><br />
+                <code>export OPENAI_API_KEY='你的API密钥'</code>
+              </div>
             </div>
 
-            <!-- Droid CLI -->
-            <div class="p-6 rounded-xl border border-gray-300 bg-brand-card dark:bg-brand-card">
-              <h3 class="text-lg font-bold text-brand-dark mb-2 flex items-center gap-2">
-                <i class="fa-solid fa-robot" class="w-5 h-5 text-brand-dark"></i>
+            <div class="rounded-2xl border border-brand-dark/10 bg-white/45 px-5 py-5 md:col-span-2">
+              <h3 class="text-base font-semibold text-brand-dark mb-2 flex items-center gap-2">
+                <i class="fa-solid fa-robot text-xs"></i>
                 Droid CLI
               </h3>
-              <p class="text-sm text-gray-600 mb-4">Factory.ai Droid 命令行工具</p>
-
-              <p class="text-sm text-gray-600 mb-3">PowerShell 设置：</p>
-              <div class="code-block">
+              <p class="text-sm text-gray-600 mb-3">Factory.ai Droid 命令行工具</p>
+              <div x-show="system === 'windows'" x-cloak class="code-block">
                 <code x-text="`$env:DROID_BASE_URL = '${baseUrl}/droid/claude'`"></code><br />
                 <code>$env:DROID_API_KEY = '你的API密钥'</code>
               </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- macOS Tutorial -->
-        <div x-show="system === 'macos'" x-cloak>
-          <!-- Step 1: Install Node.js -->
-          <div class="mb-10">
-            <h2 class="section-title flex items-center gap-3">
-              <span class="step-number">1</span>
-              安装 Node.js 环境
-            </h2>
-            <p class="text-sm text-gray-600 mb-4">Claude Code 需要 Node.js 环境才能运行。</p>
-
-            <h3 class="text-lg font-semibold text-brand-dark mb-3">macOS 安装方法</h3>
-
-            <div class="mb-4">
-              <p class="text-sm text-gray-600 mb-2 font-medium">方法一：使用 Homebrew（推荐）</p>
-              <div class="code-block mb-3">
-                <code># 如果还没安装 Homebrew，先安装它</code><br />
-                <code
-                  >/bin/bash -c "$(curl -fsSL
-                  https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"</code
-                ><br />
-                <br />
-                <code># 使用 Homebrew 安装 Node.js</code><br />
-                <code>brew install node</code>
-              </div>
-            </div>
-
-            <div class="mb-4">
-              <p class="text-sm text-gray-600 mb-2 font-medium">方法二：官网下载</p>
-              <ol class="list-decimal list-inside space-y-2 text-sm text-gray-600 ml-4">
-                <li>
-                  打开浏览器访问
-                  <code class="px-2 py-1 bg-gray-100 dark:bg-gray-200 rounded text-xs"
-                    >https://nodejs.org/</code
-                  >
-                </li>
-                <li>点击 "LTS" 版本进行下载</li>
-                <li>
-                  下载完成后双击
-                  <code class="px-2 py-1 bg-gray-100 dark:bg-gray-200 rounded text-xs">.pkg</code>
-                  文件进行安装
-                </li>
-              </ol>
-            </div>
-
-            <div class="info-box">
-              <h4 class="text-sm font-semibold text-brand-dark mb-2 flex items-center gap-2">
-                <i class="fa-solid fa-circle-check" class="w-4 h-4 text-gray-600"></i>
-                验证安装
-              </h4>
-              <p class="text-sm text-gray-600 mb-3">打开终端，输入以下命令：</p>
-              <div class="code-block">
-                <code>node --version</code><br />
-                <code>npm --version</code>
-              </div>
-            </div>
-          </div>
-
-          <!-- Step 2: Install Claude Code -->
-          <div class="mb-10">
-            <h2 class="section-title flex items-center gap-3">
-              <span class="step-number">2</span>
-              安装 Claude Code
-            </h2>
-            <div class="code-block mb-4">
-              <code># 全局安装 Claude Code</code><br />
-              <code>npm install -g @anthropic-ai/claude-code</code>
-            </div>
-
-            <div class="info-box">
-              <h4 class="text-sm font-semibold text-brand-dark mb-2">验证安装</h4>
-              <div class="code-block">
-                <code>claude --version</code>
-              </div>
-            </div>
-          </div>
-
-          <!-- Step 3: Set Environment Variables -->
-          <div class="mb-10">
-            <h2 class="section-title flex items-center gap-3">
-              <span class="step-number">3</span>
-              设置环境变量
-            </h2>
-
-            <div class="mb-6">
-              <h3 class="text-lg font-semibold text-brand-dark mb-3">
-                方法一：临时设置（当前终端会话）
-              </h3>
-              <div class="code-block mb-3">
-                <code x-text="`export ANTHROPIC_BASE_URL='${baseUrl}/api'`"></code><br />
-                <code>export ANTHROPIC_AUTH_TOKEN='你的API密钥'</code>
-              </div>
-            </div>
-
-            <div class="mb-6">
-              <h3 class="text-lg font-semibold text-brand-dark mb-3">方法二：永久设置</h3>
-              <p class="text-sm text-gray-600 mb-3">编辑 shell 配置文件（根据你使用的 shell）：</p>
-              <div class="code-block mb-3">
-                <code># 对于 zsh（macOS 默认）</code><br />
-                <code>nano ~/.zshrc</code><br />
-                <br />
-                <code># 对于 bash</code><br />
-                <code>nano ~/.bash_profile</code>
-              </div>
-              <p class="text-sm text-gray-600 mb-3">在文件末尾添加：</p>
-              <div class="code-block mb-3">
-                <code x-text="`export ANTHROPIC_BASE_URL='${baseUrl}/api'`"></code><br />
-                <code>export ANTHROPIC_AUTH_TOKEN='你的API密钥'</code>
-              </div>
-              <p class="text-sm text-gray-600 mb-3">保存后重新加载配置：</p>
-              <div class="code-block">
-                <code># 对于 zsh</code><br />
-                <code>source ~/.zshrc</code><br />
-                <br />
-                <code># 对于 bash</code><br />
-                <code>source ~/.bash_profile</code>
-              </div>
-            </div>
-
-            <div class="info-box">
-              <h4 class="text-sm font-semibold text-brand-dark mb-2">验证环境变量</h4>
-              <div class="code-block">
-                <code>echo $ANTHROPIC_BASE_URL</code><br />
-                <code>echo $ANTHROPIC_AUTH_TOKEN</code>
-              </div>
-            </div>
-          </div>
-
-          <!-- Step 4: Start Using -->
-          <div class="mb-10">
-            <h2 class="section-title flex items-center gap-3">
-              <span class="step-number">4</span>
-              开始使用 Claude Code
-            </h2>
-            <div class="code-block">
-              <code>claude</code>
-            </div>
-          </div>
-
-          <!-- Other AI Tools (macOS) -->
-          <div class="mb-10">
-            <h2 class="section-title flex items-center gap-3">
-              <i class="fa-solid fa-layer-group" class="w-6 h-6 text-brand-dark"></i>
-              其他 AI 工具配置（可选）
-            </h2>
-
-            <div
-              class="p-6 rounded-xl border border-gray-300 bg-brand-card dark:bg-brand-card mb-4"
-            >
-              <h3 class="text-lg font-bold text-brand-dark mb-2 flex items-center gap-2">
-                <i class="fa-solid fa-bolt" class="w-5 h-5 text-brand-dark"></i>
-                Gemini CLI
-              </h3>
-              <div class="code-block">
-                <code x-text="`export GOOGLE_GEMINI_BASE_URL='${baseUrl}/gemini'`"></code><br />
-                <code>export GEMINI_API_KEY='你的API密钥'</code><br />
-                <code>export GEMINI_MODEL='gemini-2.0-flash-exp'</code>
-              </div>
-            </div>
-
-            <div
-              class="p-6 rounded-xl border border-gray-300 bg-brand-card dark:bg-brand-card mb-4"
-            >
-              <h3 class="text-lg font-bold text-brand-dark mb-2 flex items-center gap-2">
-                <i class="fa-solid fa-code" class="w-5 h-5 text-brand-dark"></i>
-                Codex
-              </h3>
-              <div class="code-block">
-                <code x-text="`export OPENAI_API_BASE='${baseUrl}/openai'`"></code><br />
-                <code>export OPENAI_API_KEY='你的API密钥'</code>
-              </div>
-            </div>
-
-            <div class="p-6 rounded-xl border border-gray-300 bg-brand-card dark:bg-brand-card">
-              <h3 class="text-lg font-bold text-brand-dark mb-2 flex items-center gap-2">
-                <i class="fa-solid fa-robot" class="w-5 h-5 text-brand-dark"></i>
-                Droid CLI
-              </h3>
-              <div class="code-block">
+              <div x-show="system !== 'windows'" x-cloak class="code-block">
                 <code x-text="`export DROID_BASE_URL='${baseUrl}/droid/claude'`"></code><br />
                 <code>export DROID_API_KEY='你的API密钥'</code>
               </div>
             </div>
           </div>
-        </div>
+        </section>
 
-        <!-- Linux Tutorial -->
-        <div x-show="system === 'linux'" x-cloak>
-          <!-- Step 1: Install Node.js -->
-          <div class="mb-10">
-            <h2 class="section-title flex items-center gap-3">
-              <span class="step-number">1</span>
-              安装 Node.js 环境
-            </h2>
+        <section class="mb-4">
+          <h2 class="section-title">
+            <i class="fa-solid fa-circle-question w-5 h-5 text-brand-dark"></i>
+            常见问题
+          </h2>
+          <div class="rt-AccordionRoot" x-data="{ openItem: '' }">
+            <div class="rt-AccordionItem">
+              <button
+                class="rt-AccordionTrigger"
+                :data-state="openItem === 'faq-baseurl' ? 'open' : 'closed'"
+                @click="openItem = openItem === 'faq-baseurl' ? '' : 'faq-baseurl'"
+                :aria-expanded="openItem === 'faq-baseurl'"
+                type="button"
+              >
+                <span class="text-sm font-semibold text-brand-dark">我应该把 baseUrl 改成什么？</span>
+                <svg class="rt-AccordionChevron" width="15" height="15" viewBox="0 0 15 15" fill="none">
+                  <path
+                    d="M3.13523 6.15803C3.3241 5.95657 3.64052 5.94637 3.84197 6.13523L7.5 9.56464L11.158 6.13523C11.3595 5.94637 11.6759 5.95657 11.8648 6.15803C12.0536 6.35949 12.0434 6.67591 11.842 6.86477L7.84197 10.6148C7.64964 10.7951 7.35036 10.7951 7.15803 10.6148L3.15803 6.86477C2.95657 6.67591 2.94637 6.35949 3.13523 6.15803Z"
+                    fill="currentColor"
+                    fill-rule="evenodd"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+              </button>
+	              <div class="rt-AccordionContent" x-show="openItem === 'faq-baseurl'" x-collapse x-cloak>
+	                <div class="rt-AccordionContentInner text-sm text-gray-600 leading-relaxed">
+	                  默认是 <code>https://www.jojocode.org</code>。如果你是私有定制部署的用户，部署了自己的域名/地址，
+	                  把它替换成你的即可。
+	                </div>
+	              </div>
+	            </div>
 
-            <h3 class="text-lg font-semibold text-brand-dark mb-3">Linux 安装方法</h3>
-
-            <div class="mb-4">
-              <p class="text-sm text-gray-600 mb-2 font-medium">Ubuntu/Debian:</p>
-              <div class="code-block mb-3">
-                <code># 使用 NodeSource 仓库安装最新版本</code><br />
-                <code>curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -</code
-                ><br />
-                <code>sudo apt-get install -y nodejs</code>
-              </div>
-            </div>
-
-            <div class="mb-4">
-              <p class="text-sm text-gray-600 mb-2 font-medium">Fedora/RHEL/CentOS:</p>
-              <div class="code-block mb-3">
-                <code># 使用 NodeSource 仓库</code><br />
-                <code>curl -fsSL https://rpm.nodesource.com/setup_lts.x | sudo bash -</code><br />
-                <code>sudo dnf install -y nodejs</code>
-              </div>
-            </div>
-
-            <div class="mb-4">
-              <p class="text-sm text-gray-600 mb-2 font-medium">Arch Linux:</p>
-              <div class="code-block mb-3">
-                <code>sudo pacman -S nodejs npm</code>
-              </div>
-            </div>
-
-            <div class="info-box">
-              <h4 class="text-sm font-semibold text-brand-dark mb-2">验证安装</h4>
-              <div class="code-block">
-                <code>node --version</code><br />
-                <code>npm --version</code>
-              </div>
-            </div>
-          </div>
-
-          <!-- Step 2: Install Claude Code -->
-          <div class="mb-10">
-            <h2 class="section-title flex items-center gap-3">
-              <span class="step-number">2</span>
-              安装 Claude Code
-            </h2>
-            <div class="code-block mb-4">
-              <code># 全局安装 Claude Code</code><br />
-              <code>npm install -g @anthropic-ai/claude-code</code>
-            </div>
-
-            <div class="info-box">
-              <h4 class="text-sm font-semibold text-brand-dark mb-2">验证安装</h4>
-              <div class="code-block">
-                <code>claude --version</code>
+            <div class="rt-AccordionItem">
+              <button
+                class="rt-AccordionTrigger"
+                :data-state="openItem === 'faq-401' ? 'open' : 'closed'"
+                @click="openItem = openItem === 'faq-401' ? '' : 'faq-401'"
+                :aria-expanded="openItem === 'faq-401'"
+                type="button"
+              >
+                <span class="text-sm font-semibold text-brand-dark">为什么我能访问但工具提示 401？</span>
+                <svg class="rt-AccordionChevron" width="15" height="15" viewBox="0 0 15 15" fill="none">
+                  <path
+                    d="M3.13523 6.15803C3.3241 5.95657 3.64052 5.94637 3.84197 6.13523L7.5 9.56464L11.158 6.13523C11.3595 5.94637 11.6759 5.95657 11.8648 6.15803C12.0536 6.35949 12.0434 6.67591 11.842 6.86477L7.84197 10.6148C7.64964 10.7951 7.35036 10.7951 7.15803 10.6148L3.15803 6.86477C2.95657 6.67591 2.94637 6.35949 3.13523 6.15803Z"
+                    fill="currentColor"
+                    fill-rule="evenodd"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+              </button>
+              <div class="rt-AccordionContent" x-show="openItem === 'faq-401'" x-collapse x-cloak>
+                <div class="rt-AccordionContentInner text-sm text-gray-600 leading-relaxed">
+                  通常是 Key 写错、空格/引号问题，或环境变量未生效。先用上面的“验证是否就绪”检查版本与变量，
+                  再确认 Key 在控制台处于启用状态。
+                </div>
               </div>
             </div>
           </div>
-
-          <!-- Step 3: Set Environment Variables -->
-          <div class="mb-10">
-            <h2 class="section-title flex items-center gap-3">
-              <span class="step-number">3</span>
-              设置环境变量
-            </h2>
-
-            <div class="mb-6">
-              <h3 class="text-lg font-semibold text-brand-dark mb-3">方法一：临时设置</h3>
-              <div class="code-block mb-3">
-                <code x-text="`export ANTHROPIC_BASE_URL='${baseUrl}/api'`"></code><br />
-                <code>export ANTHROPIC_AUTH_TOKEN='你的API密钥'</code>
-              </div>
-            </div>
-
-            <div class="mb-6">
-              <h3 class="text-lg font-semibold text-brand-dark mb-3">方法二：永久设置</h3>
-              <p class="text-sm text-gray-600 mb-3">编辑 ~/.bashrc 或 ~/.zshrc：</p>
-              <div class="code-block mb-3">
-                <code>nano ~/.bashrc</code>
-              </div>
-              <p class="text-sm text-gray-600 mb-3">在文件末尾添加：</p>
-              <div class="code-block mb-3">
-                <code x-text="`export ANTHROPIC_BASE_URL='${baseUrl}/api'`"></code><br />
-                <code>export ANTHROPIC_AUTH_TOKEN='你的API密钥'</code>
-              </div>
-              <p class="text-sm text-gray-600 mb-3">重新加载配置：</p>
-              <div class="code-block">
-                <code>source ~/.bashrc</code>
-              </div>
-            </div>
-
-            <div class="info-box">
-              <h4 class="text-sm font-semibold text-brand-dark mb-2">验证环境变量</h4>
-              <div class="code-block">
-                <code>echo $ANTHROPIC_BASE_URL</code><br />
-                <code>echo $ANTHROPIC_AUTH_TOKEN</code>
-              </div>
-            </div>
-          </div>
-
-          <!-- Step 4: Start Using -->
-          <div class="mb-10">
-            <h2 class="section-title flex items-center gap-3">
-              <span class="step-number">4</span>
-              开始使用 Claude Code
-            </h2>
-            <div class="code-block">
-              <code>claude</code>
-            </div>
-          </div>
-
-          <!-- Other AI Tools (Linux) -->
-          <div class="mb-10">
-            <h2 class="section-title flex items-center gap-3">
-              <i class="fa-solid fa-layer-group" class="w-6 h-6 text-brand-dark"></i>
-              其他 AI 工具配置（可选）
-            </h2>
-
-            <div
-              class="p-6 rounded-xl border border-gray-300 bg-brand-card dark:bg-brand-card mb-4"
-            >
-              <h3 class="text-lg font-bold text-brand-dark mb-2 flex items-center gap-2">
-                <i class="fa-solid fa-bolt" class="w-5 h-5 text-brand-dark"></i>
-                Gemini CLI
-              </h3>
-              <div class="code-block">
-                <code x-text="`export GOOGLE_GEMINI_BASE_URL='${baseUrl}/gemini'`"></code><br />
-                <code>export GEMINI_API_KEY='你的API密钥'</code><br />
-                <code>export GEMINI_MODEL='gemini-2.0-flash-exp'</code>
-              </div>
-            </div>
-
-            <div
-              class="p-6 rounded-xl border border-gray-300 bg-brand-card dark:bg-brand-card mb-4"
-            >
-              <h3 class="text-lg font-bold text-brand-dark mb-2 flex items-center gap-2">
-                <i class="fa-solid fa-code" class="w-5 h-5 text-brand-dark"></i>
-                Codex
-              </h3>
-              <div class="code-block">
-                <code x-text="`export OPENAI_API_BASE='${baseUrl}/openai'`"></code><br />
-                <code>export OPENAI_API_KEY='你的API密钥'</code>
-              </div>
-            </div>
-
-            <div class="p-6 rounded-xl border border-gray-300 bg-brand-card dark:bg-brand-card">
-              <h3 class="text-lg font-bold text-brand-dark mb-2 flex items-center gap-2">
-                <i class="fa-solid fa-robot" class="w-5 h-5 text-brand-dark"></i>
-                Droid CLI
-              </h3>
-              <div class="code-block">
-                <code x-text="`export DROID_BASE_URL='${baseUrl}/droid/claude'`"></code><br />
-                <code>export DROID_API_KEY='你的API密钥'</code>
-              </div>
-            </div>
-          </div>
-        </div>
+        </section>
       </main>
 
       <!-- Footer -->

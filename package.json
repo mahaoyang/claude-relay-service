@@ -5,7 +5,10 @@
   "main": "src/app.js",
   "scripts": {
     "start": "npm run lint && node src/app.js",
-    "dev": "nodemon",
+    "dev": "node scripts/dev.js",
+    "dev:server": "nodemon",
+    "build:public-pages:css": "node web/admin-spa/node_modules/tailwindcss/lib/cli.js -c web/public-pages/tailwind.public-pages.config.cjs -i web/public-pages/assets/tailwind-public-pages.input.css -o web/public-pages/assets/tailwind-public-pages.css --minify",
+    "dev:public-pages:css": "node web/admin-spa/node_modules/tailwindcss/lib/cli.js -c web/public-pages/tailwind.public-pages.config.cjs -i web/public-pages/assets/tailwind-public-pages.input.css -o web/public-pages/assets/tailwind-public-pages.css --watch",
     "build": "cd web/admin-spa && npm ci --include=dev && npm run build",
     "build:web": "cd web/admin-spa && npm run build",
     "install:web": "cd web/admin-spa && npm install",
