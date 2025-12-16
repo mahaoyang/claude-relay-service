@@ -6,6 +6,7 @@ const pricingService = require('../services/pricingService')
 const claudeAccountService = require('../services/claudeAccountService')
 const openaiAccountService = require('../services/openaiAccountService')
 const { createClaudeTestPayload } = require('../utils/testPayloadHelper')
+const CostCalculator = require('../utils/costCalculator')
 
 const router = express.Router()
 
