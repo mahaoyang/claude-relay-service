@@ -209,6 +209,12 @@ docs/dist/
 deploy/
 .deploy/
 
+# Business review and audit materials
+creem-review-materials.md
+*-review-materials.md
+audit/
+review-materials/
+
 # Package lock files (choose one)
 # Uncomment the one you DON'T want to track
 # package-lock.json
