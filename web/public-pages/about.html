@@ -1,0 +1,622 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="/public-pages/assets/favicon-light.svg"
+      id="favicon"
+    />
+    <script>
+      ;(function () {
+        const theme = localStorage.getItem('theme') || 'light'
+        const favicon = document.getElementById('favicon')
+        favicon.href =
+          theme === 'dark'
+            ? '/public-pages/assets/favicon-dark.svg'
+            : '/public-pages/assets/favicon-light.svg'
+
+        window.addEventListener('storage', function (e) {
+          if (e.key === 'theme') {
+            favicon.href =
+              e.newValue === 'dark'
+                ? '/public-pages/assets/favicon-dark.svg'
+                : '/public-pages/assets/favicon-light.svg'
+          }
+        })
+      })()
+    </script>
+
+    <title>关于 - JoJo Code</title>
+    <meta
+      name="description"
+      content="了解 JoJo Code：我们的理念、产品与联系方式。"
+    />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://www.jojocode.org/about" />
+
+    <link rel="stylesheet" href="/public-pages/assets/tailwind-public-pages.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+    <style>
+      html {
+        scrollbar-gutter: stable;
+        --jo-scrollbar-horizontal-size: 4px;
+      }
+
+      body {
+        background: radial-gradient(1200px 600px at 20% 10%, rgba(31, 47, 34, 0.06), transparent 60%),
+          radial-gradient(1000px 500px at 90% 30%, rgba(31, 47, 34, 0.05), transparent 55%),
+          #f2f0e9;
+        color: #1f2f22;
+      }
+
+      .jo-surface {
+        border: 1px solid rgba(31, 47, 34, 0.12);
+        background: rgba(255, 255, 255, 0.38);
+        backdrop-filter: blur(10px);
+        box-shadow:
+          0 24px 60px rgba(31, 47, 34, 0.08),
+          0 2px 0 rgba(255, 255, 255, 0.4) inset;
+      }
+
+      .inline-logo-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        line-height: 1;
+      }
+
+      .inline-logo-main {
+        display: flex;
+        align-items: baseline;
+        font-weight: 700;
+        color: #1f2f22;
+        line-height: 1;
+        filter: drop-shadow(1px 2px 2px rgba(0, 0, 0, 0.15));
+      }
+
+      .inline-logo-main .symbols {
+        font-size: 8px;
+        letter-spacing: -0.5px;
+        font-weight: 600;
+        display: flex;
+        align-items: baseline;
+        margin-right: 3px;
+      }
+
+      .inline-logo-main .letters {
+        font-size: 20px;
+        letter-spacing: -1.2px;
+        display: flex;
+        align-items: baseline;
+        font-weight: 700;
+      }
+
+      .inline-logo-subtitle {
+        font-size: 5px;
+        font-weight: 500;
+        color: #1f2f22;
+        letter-spacing: 0.4px;
+        opacity: 0.8;
+        margin-top: 1px;
+        text-shadow: 0.5px 0.5px 1px rgba(0, 0, 0, 0.1);
+        text-align: center;
+      }
+
+      .jo-nav-link {
+        position: relative;
+        display: inline-block;
+        color: rgba(31, 47, 34, 0.72);
+        text-decoration: none;
+        transition: color 160ms ease;
+      }
+
+      .jo-nav-link:hover {
+        color: #1f2f22;
+      }
+
+      .jo-nav-link::after {
+        content: '';
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 0;
+        height: 1px;
+        bottom: -2px;
+        background-color: #1f2f22;
+        transition: width 220ms ease;
+      }
+
+      .jo-nav-link:hover::after {
+        width: 100%;
+      }
+
+      .jo-nav-link[aria-current='page'] {
+        color: #1f2f22;
+      }
+
+      .jo-nav-link[aria-current='page']::after {
+        width: 100%;
+      }
+
+      /* Nav mini search (expand on click) */
+      #nav-key-search {
+        position: relative;
+        border: 0;
+        background: transparent;
+        box-shadow: none;
+        padding: 0;
+        backdrop-filter: none;
+      }
+
+      #nav-key-search .nav-search-field {
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        position: absolute;
+        top: 50%;
+        right: calc(100% + 0.5rem);
+        transform: translateY(-50%) scale(0.98);
+        z-index: 20;
+        padding: 0.25rem 0.375rem 0.25rem 0.75rem;
+        border-radius: 9999px;
+        border: 1px solid rgba(31, 47, 34, 0.12);
+        background: rgba(255, 255, 255, 0.6);
+        backdrop-filter: blur(12px);
+        box-shadow: 0 8px 24px rgba(31, 47, 34, 0.07);
+        flex: 0 0 auto;
+        max-width: 0;
+        width: 0;
+        opacity: 0;
+        overflow: hidden;
+        pointer-events: none;
+        transition:
+          width 320ms cubic-bezier(0.16, 1, 0.3, 1),
+          max-width 320ms cubic-bezier(0.16, 1, 0.3, 1),
+          opacity 220ms ease,
+          transform 320ms cubic-bezier(0.16, 1, 0.3, 1),
+          border-color 220ms ease,
+          box-shadow 220ms ease;
+      }
+
+      #nav-key-search.is-expanded .nav-search-field {
+        max-width: min(16rem, 65vw);
+        width: min(16rem, 65vw);
+        opacity: 1;
+        transform: translateY(-50%) scale(1);
+        pointer-events: auto;
+      }
+
+      #nav-key-search.is-expanded .nav-search-field:hover {
+        border-color: rgba(31, 47, 34, 0.18);
+      }
+
+      #nav-key-search.is-expanded .nav-search-field:focus-within {
+        border-color: rgba(31, 47, 34, 0.22);
+        box-shadow: 0 6px 18px rgba(31, 47, 34, 0.05);
+      }
+    </style>
+  </head>
+
+  <body class="font-sans antialiased selection:bg-brand-dark selection:text-white">
+    <div class="max-w-[1440px] mx-auto px-0 sm:px-6 md:px-12 py-2 sm:py-8 md:py-12">
+      <div class="jo-surface rounded-2xl sm:rounded-[2.5rem] px-4 sm:px-6 md:px-12 py-4 sm:py-6 md:py-10">
+        <nav
+          class="pb-4 md:pb-8 mb-8 md:mb-12 border-b border-brand-dark/10"
+          x-data="{ mobileMenuOpen: false }"
+          role="navigation"
+          aria-label="主导航"
+        >
+          <div class="flex items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+              <a href="/" aria-label="JoJo Code 首页" class="inline-flex">
+                <div class="inline-logo-wrapper">
+                  <div class="inline-logo-main">
+                    <div class="symbols">
+                      <span>&gt;</span>
+                      <span>_</span>
+                    </div>
+                    <div class="letters">
+                      <span>J</span>
+                      <span>O</span>
+                    </div>
+                  </div>
+                  <div class="inline-logo-subtitle">JO</div>
+                </div>
+              </a>
+            </div>
+
+            <div
+              class="hidden md:flex items-center space-x-8 text-sm font-medium"
+              role="menubar"
+              aria-label="桌面导航菜单"
+            >
+              <a href="/" class="jo-nav-link" role="menuitem">首页</a>
+              <a href="/price" class="jo-nav-link" role="menuitem">价格</a>
+              <a href="/api-gateway-stats" class="jo-nav-link" role="menuitem">查询统计</a>
+              <a href="/docs" class="jo-nav-link" role="menuitem">使用文档</a>
+              <a href="/about" class="jo-nav-link" role="menuitem" aria-current="page">关于</a>
+            </div>
+
+            <div class="flex items-center gap-4">
+              <form
+                id="nav-key-search"
+                class="flex items-center flex-none rounded-full"
+                autocomplete="off"
+              >
+                <button
+                  id="nav-key-toggle"
+                  type="button"
+                  class="h-7 w-7 shrink-0 rounded-full bg-white/60 border border-brand-dark/10 flex items-center justify-center hover:border-brand-dark/20 transition"
+                  aria-label="搜索 Key"
+                  aria-expanded="false"
+                >
+                  <i class="fa-solid fa-magnifying-glass text-brand-gray text-xs"></i>
+                </button>
+
+                <div class="nav-search-field">
+                  <input
+                    id="nav-key-input"
+                    type="text"
+                    inputmode="text"
+                    autocapitalize="off"
+                    spellcheck="false"
+                    placeholder="输入 Key 查询额度"
+                    class="bg-transparent outline-none placeholder:text-brand-gray/70 text-xs w-full min-w-0"
+                  />
+                  <button
+                    type="submit"
+                    class="h-7 w-7 shrink-0 rounded-full bg-brand-dark text-white flex items-center justify-center hover:bg-opacity-90 transition shadow-md shadow-brand-dark/10"
+                    aria-label="查询统计"
+                  >
+                    <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                  </button>
+                </div>
+              </form>
+
+              <a
+                href="/"
+                class="hidden md:inline-flex bg-brand-dark text-white px-3 py-1.5 md:px-5 md:py-2 rounded-full text-xs md:text-sm font-medium hover:bg-opacity-90 transition shadow-lg shadow-brand-dark/10 whitespace-nowrap"
+              >
+                返回首页
+              </a>
+
+              <button
+                @click="mobileMenuOpen = !mobileMenuOpen"
+                class="md:hidden h-7 w-7 rounded-full bg-white/60 border border-brand-dark/10 flex items-center justify-center hover:border-brand-dark/20 transition"
+                aria-label="打开移动菜单"
+                :aria-expanded="mobileMenuOpen"
+                aria-controls="mobile-menu"
+                type="button"
+              >
+                <i
+                  class="fa-solid text-brand-gray text-xs"
+                  :class="mobileMenuOpen ? 'fa-xmark' : 'fa-bars'"
+                  aria-hidden="true"
+                ></i>
+              </button>
+            </div>
+          </div>
+
+          <div
+            id="mobile-menu"
+            x-show="mobileMenuOpen"
+            x-cloak
+            @click.away="mobileMenuOpen = false"
+            x-transition:enter="transition ease-out duration-200"
+            x-transition:enter-start="opacity-0 -translate-y-2"
+            x-transition:enter-end="opacity-100 translate-y-0"
+            x-transition:leave="transition ease-in duration-150"
+            x-transition:leave-start="opacity-100 translate-y-0"
+            x-transition:leave-end="opacity-0 -translate-y-2"
+            class="md:hidden mt-4 bg-white/80 backdrop-blur-sm border border-gray-200 rounded-2xl overflow-hidden"
+            role="menu"
+            aria-label="移动导航菜单"
+          >
+            <div class="flex flex-col">
+              <a
+                href="/"
+                class="px-6 py-3 text-sm font-medium hover:bg-brand-bg/50 transition border-b border-gray-200"
+                role="menuitem"
+              >
+                首页
+              </a>
+              <a
+                href="/price"
+                class="px-6 py-3 text-sm font-medium hover:bg-brand-bg/50 transition border-b border-gray-200"
+                role="menuitem"
+              >
+                价格
+              </a>
+              <a
+                href="/api-gateway-stats"
+                class="px-6 py-3 text-sm font-medium hover:bg-brand-bg/50 transition border-b border-gray-200"
+                role="menuitem"
+              >
+                查询统计
+              </a>
+              <a
+                href="/docs"
+                class="px-6 py-3 text-sm font-medium hover:bg-brand-bg/50 transition border-b border-gray-200"
+                role="menuitem"
+              >
+                使用文档
+              </a>
+              <a
+                href="/about"
+                class="px-6 py-3 text-sm font-medium hover:bg-brand-bg/50 transition"
+                role="menuitem"
+                aria-current="page"
+              >
+                关于
+              </a>
+            </div>
+          </div>
+        </nav>
+
+        <main class="max-w-6xl">
+          <header class="mb-10">
+            <p class="text-sm text-gray-500">/ About</p>
+            <div class="flex flex-col lg:flex-row items-start lg:items-end justify-between gap-6 mt-2">
+              <h1 class="text-4xl sm:text-5xl font-semibold tracking-tight text-brand-dark">
+                JoJo Code
+              </h1>
+              <div class="flex flex-wrap items-center gap-3">
+                <a
+                  href="/privacy"
+                  class="inline-flex items-center gap-2 rounded-full bg-brand-dark text-white px-4 py-2 text-xs sm:text-sm font-medium hover:bg-opacity-90 transition shadow-lg shadow-brand-dark/10"
+                >
+                  隐私协议
+                  <i class="fa-solid fa-shield text-[11px]"></i>
+                </a>
+                <a
+                  href="/terms"
+                  class="inline-flex items-center gap-2 rounded-full border border-brand-dark/15 bg-white/60 px-4 py-2 text-xs sm:text-sm font-medium text-brand-dark hover:bg-white/75 transition"
+                >
+                  服务协议
+                  <i class="fa-solid fa-file-signature text-[11px]"></i>
+                </a>
+              </div>
+            </div>
+
+            <p class="text-gray-600 text-sm sm:text-base leading-relaxed mt-4 max-w-3xl">
+              JoJo Code 是一个面向开发者的 Code CLI。我们希望把「写代码、改代码、排错、补文档」这些高频动作，
+              尽量收敛到一个不打断节奏的终端工作流里。
+            </p>
+          </header>
+
+          <section class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start mb-14">
+            <div class="lg:col-span-5">
+              <div class="rounded-[1.75rem] overflow-hidden border border-brand-dark/10 bg-white/30">
+                <img
+                  src="https://images.unsplash.com/photo-1506784365847-bbad939e9335?auto=format&fit=crop&w=1600&q=80"
+                  alt="Digital nomad workspace"
+                  class="w-full h-48 sm:h-60 lg:h-72 object-cover hover:scale-105 transition duration-700 ease-in-out"
+                  loading="lazy"
+                />
+              </div>
+            </div>
+            <div class="lg:col-span-7">
+              <div class="rounded-[1.75rem] border border-brand-dark/10 bg-white/45 p-6 sm:p-8">
+                <div class="flex items-center gap-2 text-xs font-bold text-gray-500 uppercase tracking-wide mb-3">
+                  <i class="fa-solid fa-seedling text-[10px]"></i> 我们是谁
+                </div>
+                <h2 class="text-2xl sm:text-3xl font-semibold text-brand-dark mb-4">
+                  专注于「命令行里的生产力」
+                </h2>
+                <p class="text-gray-600 text-sm leading-relaxed">
+                  JoJo Code 是一个面向开发者的 Code CLI。我们的目标很简单：让你在终端里完成更多工作，
+                  更少切换窗口。你可以把报错、代码片段、需求描述直接贴进 CLI，得到可执行的建议与下一步操作。
+                </p>
+                <div class="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs text-gray-600">
+                  <div class="rounded-xl border border-brand-dark/10 bg-white/55 px-3 py-2">npm 全局安装</div>
+                  <div class="rounded-xl border border-brand-dark/10 bg-white/55 px-3 py-2">/connect 绑定 Key</div>
+                  <div class="rounded-xl border border-brand-dark/10 bg-white/55 px-3 py-2">/model 选择模型</div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-14">
+            <div class="lg:col-span-7">
+              <div class="rounded-[1.75rem] border border-brand-dark/10 bg-white/45 p-6 sm:p-8 h-full">
+                <div class="flex items-center gap-2 text-xs font-bold text-gray-500 uppercase tracking-wide mb-3">
+                  <i class="fa-solid fa-book-open text-[10px]"></i> 我们的故事
+                </div>
+                <h2 class="text-2xl sm:text-3xl font-semibold text-brand-dark mb-4">
+                  从一个脚本开始，到一个 CLI
+                </h2>
+                <p class="text-gray-600 text-sm leading-relaxed">
+                  JoJo Code 起步于一个很小的脚本：把团队里常用的「代码审阅清单」和「排错流程」变成终端里的固定套路。
+                  随着使用场景变多，它逐渐演化成一个可交互的 CLI：支持连接 Key、选择模型，并把常见工作流串起来。<br />
+                  <br />
+                  同时也要感谢开源项目
+                  <a
+                    class="underline decoration-brand-dark/40 hover:decoration-brand-dark"
+                    href="https://opencode.ai"
+                    rel="noreferrer"
+                    target="_blank"
+                    >Opencode</a
+                  >，JoJo Code 的早期实现参考并基于其工程实践，我们在此之上做了适配、体验优化与功能扩展。<br />
+                  <br />
+                  我们一直坚持一个原则：<strong>让工具更像“基础设施”，而不是又一个复杂平台。</strong>
+                </p>
+                <div class="mt-6 flex flex-wrap items-center gap-3">
+                  <a
+                    href="/docs"
+                    class="inline-flex items-center gap-2 rounded-full bg-brand-dark text-white px-4 py-2 text-xs sm:text-sm font-medium hover:bg-opacity-90 transition"
+                  >
+                    查看使用文档
+                    <i class="fa-solid fa-arrow-right text-[11px]"></i>
+                  </a>
+                  <a
+                    href="mailto:cac900101@gmail.com"
+                    class="inline-flex items-center gap-2 rounded-full border border-brand-dark/15 bg-white/60 px-4 py-2 text-xs sm:text-sm font-medium text-brand-dark hover:bg-white/75 transition"
+                  >
+                    联系我们
+                    <i class="fa-solid fa-envelope text-[11px]"></i>
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div class="lg:col-span-5">
+              <div class="rounded-[1.75rem] overflow-hidden border border-brand-dark/10 bg-white/30">
+                <img
+                  src="https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=1600&q=80"
+                  alt="Coffee break"
+                  class="w-full h-64 sm:h-80 lg:h-96 object-cover hover:scale-105 transition duration-700 ease-in-out"
+                  loading="lazy"
+                />
+              </div>
+            </div>
+          </section>
+
+          <section class="mb-6">
+            <div class="rounded-[1.75rem] border border-brand-dark/10 bg-white/45 p-6 sm:p-8">
+              <div class="flex items-center gap-2 text-xs font-bold text-gray-500 uppercase tracking-wide mb-3">
+                <i class="fa-solid fa-circle-info text-[10px]"></i> 合规与支持
+              </div>
+              <h2 class="text-2xl font-semibold text-brand-dark mb-4">你可能关心的</h2>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <h3 class="font-semibold text-brand-dark mb-2">隐私与条款</h3>
+                  <p class="text-sm text-gray-600 leading-relaxed">
+                    使用前请阅读并同意隐私协议与服务协议。若有疑问可随时联系支持邮箱。
+                  </p>
+                  <div class="mt-3 flex flex-wrap items-center gap-3">
+                    <a
+                      href="/privacy"
+                      class="inline-flex items-center gap-2 rounded-full bg-brand-dark text-white px-4 py-2 text-xs font-medium hover:bg-opacity-90 transition"
+                    >
+                      隐私协议
+                      <i class="fa-solid fa-shield text-[11px]"></i>
+                    </a>
+                    <a
+                      href="/terms"
+                      class="inline-flex items-center gap-2 rounded-full border border-brand-dark/15 bg-white/60 px-4 py-2 text-xs font-medium text-brand-dark hover:bg-white/75 transition"
+                    >
+                      服务协议
+                      <i class="fa-solid fa-file-signature text-[11px]"></i>
+                    </a>
+                  </div>
+                </div>
+                <div>
+                  <h3 class="font-semibold text-brand-dark mb-2">客服邮箱</h3>
+                  <p class="text-sm text-gray-600 leading-relaxed">
+                    需要协助（Key、额度、支付、或使用问题）请邮件联系：
+                    <a
+                      class="underline decoration-brand-dark/40 hover:decoration-brand-dark"
+                      href="mailto:cac900101@gmail.com"
+                      >cac900101@gmail.com</a
+                    >
+                  </p>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <div class="border-t border-gray-300/50 pt-8 pb-12 mt-16">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-6">
+              <div class="flex items-center gap-3">
+                <div
+                  class="inline-logo-wrapper"
+                  style="transform: scale(0.8); transform-origin: left center"
+                >
+                  <a href="/" aria-label="JoJo Code 首页" class="block">
+                    <div class="inline-logo-main">
+                      <div class="symbols">
+                        <span>&gt;</span>
+                        <span>_</span>
+                      </div>
+                      <div class="letters">
+                        <span>J</span>
+                        <span>O</span>
+                      </div>
+                    </div>
+                    <div class="inline-logo-subtitle">JO</div>
+                  </a>
+                </div>
+                <span class="text-sm text-gray-500">© 2024 JoJo Code. Code CLI Provider.</span>
+              </div>
+              <div class="flex flex-wrap items-center justify-center gap-6 text-sm">
+                <a href="/" class="text-gray-500 hover:text-brand-dark transition">首页</a>
+                <a href="/price" class="text-gray-500 hover:text-brand-dark transition">价格</a>
+                <a href="/api-gateway-stats" class="text-gray-500 hover:text-brand-dark transition"
+                  >查询统计</a
+                >
+                <a href="/docs" class="text-gray-500 hover:text-brand-dark transition">使用文档</a>
+                <a href="/about" class="text-gray-500 hover:text-brand-dark transition">关于</a>
+                <a href="/privacy" class="text-gray-500 hover:text-brand-dark transition">隐私协议</a>
+                <a href="/terms" class="text-gray-500 hover:text-brand-dark transition">服务协议</a>
+                <a
+                  href="mailto:cac900101@gmail.com"
+                  class="text-gray-500 hover:text-brand-dark transition"
+                  >客服邮箱</a
+                >
+              </div>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <script>
+      ;(function () {
+        const form = document.getElementById('nav-key-search')
+        const toggle = document.getElementById('nav-key-toggle')
+        const input = document.getElementById('nav-key-input')
+        if (!form || !toggle || !input) return
+
+        function setExpanded(expanded) {
+          form.classList.toggle('is-expanded', expanded)
+          toggle.setAttribute('aria-expanded', String(expanded))
+          if (expanded) {
+            requestAnimationFrame(() => input.focus())
+          } else if (!input.value.trim()) {
+            input.value = ''
+          }
+        }
+
+        setExpanded(false)
+
+        toggle.addEventListener('click', function () {
+          const expanded = form.classList.contains('is-expanded')
+          if (!expanded) return setExpanded(true)
+          if (!input.value.trim()) return setExpanded(false)
+          input.focus()
+        })
+
+        document.addEventListener('click', function (e) {
+          if (!form.classList.contains('is-expanded')) return
+          if (form.contains(e.target)) return
+          if (!input.value.trim()) setExpanded(false)
+        })
+
+        input.addEventListener('keydown', function (e) {
+          if (e.key === 'Escape' && !input.value.trim()) setExpanded(false)
+        })
+
+        form.addEventListener('submit', function (e) {
+          e.preventDefault()
+          const value = (input.value || '').trim()
+          window.location.href = value
+            ? `/api-gateway-stats?id=${encodeURIComponent(value)}`
+            : '/api-gateway-stats'
+        })
+      })()
+    </script>
+  </body>
+</html>

@@ -1,0 +1,1101 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="/public-pages/assets/favicon-light.svg"
+      id="favicon"
+    />
+    <script>
+      // 动态设置 favicon 根据主题
+      ;(function () {
+        const theme = localStorage.getItem('theme') || 'light'
+        const favicon = document.getElementById('favicon')
+        favicon.href =
+          theme === 'dark'
+            ? '/public-pages/assets/favicon-dark.svg'
+            : '/public-pages/assets/favicon-light.svg'
+
+        // 监听主题变化
+        window.addEventListener('storage', function (e) {
+          if (e.key === 'theme') {
+            favicon.href =
+              e.newValue === 'dark'
+                ? '/public-pages/assets/favicon-dark.svg'
+                : '/public-pages/assets/favicon-light.svg'
+          }
+        })
+      })()
+    </script>
+
+    <!-- SEO Meta 标签 -->
+    <title>API Key 统计查询 - JoJoCode | 查看用量、费用和配额</title>
+    <meta
+      name="description"
+      content="查询您的 JoJoCode API Key 使用统计、Token 消耗、费用明细和配额状态。支持实时查询 Claude、Gemini、OpenAI 等多平台 API 使用情况。"
+    />
+    <meta
+      name="keywords"
+      content="API统计,用量查询,费用查询,Token统计,API Key,JoJoCode,Claude统计,Gemini统计,OpenAI统计"
+    />
+    <meta name="author" content="JoJoCode" />
+    <meta name="robots" content="noindex, follow" />
+    <link rel="canonical" href="https://www.jojocode.org/api-gateway-stats" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://www.jojocode.org/api-gateway-stats" />
+    <meta property="og:title" content="API Key 统计查询 - JoJoCode" />
+    <meta
+      property="og:description"
+      content="查询您的 API Key 使用统计、Token 消耗、费用明细和配额状态"
+    />
+    <meta property="og:locale" content="zh_CN" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:url" content="https://www.jojocode.org/api-gateway-stats" />
+    <meta name="twitter:title" content="API Key 统计查询 - JoJoCode" />
+    <meta
+      name="twitter:description"
+      content="查询您的 API Key 使用统计、Token 消耗、费用明细和配额状态"
+    />
+
+    <!-- Tailwind CSS (Local) -->
+    <link rel="stylesheet" href="/public-pages/assets/tailwind-public-pages.css" />
+
+    <!-- Google Fonts: Manrope -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- FontAwesome for Icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+
+    <!-- Alpine.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+    <style>
+      html {
+        scrollbar-gutter: stable;
+        --jo-scrollbar-horizontal-size: 4px;
+      }
+
+      body {
+        background: radial-gradient(1200px 600px at 20% 10%, rgba(31, 47, 34, 0.06), transparent 60%),
+          radial-gradient(1000px 500px at 90% 30%, rgba(31, 47, 34, 0.05), transparent 55%),
+          #f2f0e9;
+        color: #1f2f22;
+      }
+
+      .jo-surface {
+        border: 1px solid rgba(31, 47, 34, 0.12);
+        background: rgba(255, 255, 255, 0.38);
+        backdrop-filter: blur(10px);
+        box-shadow:
+          0 24px 60px rgba(31, 47, 34, 0.08),
+          0 2px 0 rgba(255, 255, 255, 0.4) inset;
+      }
+
+      /* Custom scrollbar */
+      ::-webkit-scrollbar {
+        width: 8px;
+        height: var(--jo-scrollbar-horizontal-size);
+      }
+
+      ::-webkit-scrollbar-track {
+        background: #f2f0e9;
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background: #d1d1d1;
+        border-radius: 4px;
+      }
+
+      ::-webkit-scrollbar-thumb:hover {
+        background: #1f2f22;
+      }
+      [x-cloak] {
+        display: none !important;
+      }
+
+      /* Inline Logo Styles */
+      .inline-logo-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        line-height: 1;
+      }
+
+      .inline-logo-main {
+        display: flex;
+        align-items: baseline;
+        font-weight: 700;
+        color: #1f2f22;
+        line-height: 1;
+        filter: drop-shadow(1px 2px 2px rgba(0, 0, 0, 0.15));
+      }
+
+      .inline-logo-main .symbols {
+        font-size: 8px;
+        letter-spacing: -0.5px;
+        font-weight: 600;
+        display: flex;
+        align-items: baseline;
+        margin-right: 3px;
+      }
+
+      .inline-logo-main .letters {
+        font-size: 20px;
+        letter-spacing: -1.2px;
+        display: flex;
+        align-items: baseline;
+        font-weight: 700;
+      }
+
+      .inline-logo-subtitle {
+        font-size: 5px;
+        font-weight: 500;
+        color: #1f2f22;
+        letter-spacing: 0.4px;
+        opacity: 0.8;
+        margin-top: 1px;
+        text-shadow: 0.5px 0.5px 1px rgba(0, 0, 0, 0.1);
+        text-align: center;
+      }
+
+      /* Nav mini search */
+      #nav-key-search {
+        position: relative;
+        border: 0;
+        background: transparent;
+        box-shadow: none;
+        padding: 0;
+        backdrop-filter: none;
+      }
+
+      .jo-nav-link {
+        position: relative;
+        display: inline-block;
+        color: rgba(31, 47, 34, 0.72);
+        text-decoration: none;
+        transition: color 160ms ease;
+      }
+
+      .jo-nav-link:hover {
+        color: #1f2f22;
+      }
+
+      .jo-nav-link::after {
+        content: '';
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 0;
+        height: 1px;
+        bottom: -2px;
+        background-color: #1f2f22;
+        transition: width 220ms ease;
+      }
+
+      .jo-nav-link:hover::after {
+        width: 100%;
+      }
+
+      .jo-nav-link[aria-current='page'] {
+        color: #1f2f22;
+      }
+
+      .jo-nav-link[aria-current='page']::after {
+        width: 100%;
+      }
+
+      .jo-nav-link:focus-visible {
+        outline: 2px solid rgba(31, 47, 34, 0.22);
+        outline-offset: 3px;
+      }
+
+      #nav-key-search .nav-search-field {
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        position: absolute;
+        top: 50%;
+        right: calc(100% + 0.5rem);
+        transform: translateY(-50%) scale(0.98);
+        z-index: 20;
+        padding: 0.25rem 0.375rem 0.25rem 0.75rem;
+        border-radius: 9999px;
+        border: 1px solid rgba(31, 47, 34, 0.12);
+        background: rgba(255, 255, 255, 0.6);
+        backdrop-filter: blur(12px);
+        box-shadow: 0 8px 24px rgba(31, 47, 34, 0.07);
+        flex: 0 0 auto;
+        max-width: 0;
+        width: 0;
+        opacity: 0;
+        overflow: hidden;
+        pointer-events: none;
+        transition:
+          width 320ms cubic-bezier(0.16, 1, 0.3, 1),
+          max-width 320ms cubic-bezier(0.16, 1, 0.3, 1),
+          opacity 220ms ease,
+          transform 320ms cubic-bezier(0.16, 1, 0.3, 1),
+          border-color 220ms ease,
+          box-shadow 220ms ease;
+      }
+
+      #nav-key-search.is-expanded .nav-search-field {
+        max-width: min(16rem, 65vw);
+        width: min(16rem, 65vw);
+        opacity: 1;
+        transform: translateY(-50%) scale(1);
+        pointer-events: auto;
+      }
+
+      #nav-key-search.is-expanded .nav-search-field:hover {
+        border-color: rgba(31, 47, 34, 0.18);
+      }
+
+      #nav-key-search.is-expanded .nav-search-field:focus-within {
+        border-color: rgba(31, 47, 34, 0.22);
+        box-shadow: 0 6px 18px rgba(31, 47, 34, 0.05);
+      }
+    </style>
+  </head>
+
+  <body
+    class="font-sans antialiased selection:bg-brand-dark selection:text-white"
+    x-data="statsApp()"
+    x-init="init()"
+  >
+    <!-- Main Container -->
+    <div class="max-w-[1440px] mx-auto px-0 sm:px-6 md:px-12 py-2 sm:py-8 md:py-12">
+      <div class="jo-surface rounded-2xl sm:rounded-[2.5rem] px-4 sm:px-6 md:px-12 py-4 sm:py-6 md:py-10">
+      <!-- Navigation Header -->
+      <nav class="mb-10 md:mb-16" x-data="{ mobileMenuOpen: false }">
+        <div class="flex items-center justify-between gap-4">
+          <!-- Logo -->
+          <div class="flex items-center gap-3">
+            <a href="/" aria-label="JoJoCode 首页" class="inline-flex">
+              <div class="inline-logo-wrapper">
+                <div class="inline-logo-main">
+                  <div class="symbols">
+                    <span>&gt;</span>
+                    <span>_</span>
+                  </div>
+                  <div class="letters">
+                    <span>J</span>
+                    <span>O</span>
+                  </div>
+                </div>
+                <div class="inline-logo-subtitle">JO</div>
+              </div>
+            </a>
+          </div>
+
+          <!-- Nav Links (Desktop) -->
+          <div class="hidden md:flex items-center space-x-8 text-sm font-medium">
+            <a href="/" class="jo-nav-link">首页</a>
+            <a href="/price" class="jo-nav-link">价格</a>
+            <a href="/api-gateway-stats" class="jo-nav-link" aria-current="page">查询统计</a>
+            <a href="/docs" class="jo-nav-link">使用文档</a>
+            <a href="/about" class="jo-nav-link">关于</a>
+          </div>
+
+          <div class="flex items-center gap-4">
+            <!-- Key Search -->
+            <form
+              id="nav-key-search"
+              class="flex items-center flex-none rounded-full"
+              autocomplete="off"
+            >
+              <button
+                id="nav-key-toggle"
+                type="button"
+                class="h-7 w-7 shrink-0 rounded-full bg-white/60 border border-brand-dark/10 flex items-center justify-center hover:border-brand-dark/20 transition"
+                aria-label="搜索 API Key"
+                aria-expanded="false"
+              >
+                <i class="fa-solid fa-magnifying-glass text-brand-gray text-xs"></i>
+              </button>
+
+              <div class="nav-search-field">
+                <input
+                  id="nav-key-input"
+                  type="text"
+                  inputmode="text"
+                  autocapitalize="off"
+                  spellcheck="false"
+                  placeholder="输入 API Key 查询"
+                  class="bg-transparent outline-none placeholder:text-brand-gray/70 text-xs w-full min-w-0"
+                />
+                <button
+                  type="submit"
+                  class="h-7 w-7 shrink-0 rounded-full bg-brand-dark text-white flex items-center justify-center hover:bg-opacity-90 transition shadow-md shadow-brand-dark/10"
+                  aria-label="查询统计"
+                >
+                  <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                </button>
+              </div>
+            </form>
+
+            <!-- CTA Button -->
+            <a
+              href="/"
+              class="hidden md:inline-flex bg-brand-dark text-white px-3 py-1.5 md:px-5 md:py-2 rounded-full text-xs md:text-sm font-medium hover:bg-opacity-90 transition shadow-lg shadow-brand-dark/10 whitespace-nowrap"
+            >
+              返回首页
+            </a>
+
+            <!-- Mobile Menu Button -->
+            <button
+              @click="mobileMenuOpen = !mobileMenuOpen"
+              class="md:hidden h-7 w-7 rounded-full bg-white/60 border border-brand-dark/10 flex items-center justify-center hover:border-brand-dark/20 transition"
+              aria-label="菜单"
+            >
+              <i
+                class="fa-solid text-brand-gray text-xs"
+                :class="mobileMenuOpen ? 'fa-xmark' : 'fa-bars'"
+              ></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div
+          x-show="mobileMenuOpen"
+          x-cloak
+          @click.away="mobileMenuOpen = false"
+          x-transition:enter="transition ease-out duration-200"
+          x-transition:enter-start="opacity-0 -translate-y-2"
+          x-transition:enter-end="opacity-100 translate-y-0"
+          x-transition:leave="transition ease-in duration-150"
+          x-transition:leave-start="opacity-100 translate-y-0"
+          x-transition:leave-end="opacity-0 -translate-y-2"
+          class="md:hidden mt-4 bg-white/80 backdrop-blur-sm border border-gray-200 rounded-2xl overflow-hidden"
+        >
+          <div class="flex flex-col">
+            <a
+              href="/"
+              class="px-6 py-3 text-sm font-medium hover:bg-brand-bg/50 transition border-b border-gray-200"
+            >
+              首页
+            </a>
+            <a
+              href="/price"
+              class="px-6 py-3 text-sm font-medium hover:bg-brand-bg/50 transition border-b border-gray-200"
+            >
+              价格
+            </a>
+            <a
+              href="/api-gateway-stats"
+              class="px-6 py-3 text-sm font-medium hover:bg-brand-bg/50 transition border-b border-gray-200"
+              aria-current="page"
+            >
+              查询统计
+            </a>
+            <a href="/docs" class="px-6 py-3 text-sm font-medium hover:bg-brand-bg/50 transition">
+              使用文档
+            </a>
+            <a
+              href="/about"
+              class="px-6 py-3 text-sm font-medium hover:bg-brand-bg/50 transition"
+            >
+              关于
+            </a>
+          </div>
+        </div>
+      </nav>
+
+      <!-- Main Content -->
+      <main class="max-w-6xl mx-auto">
+        <div x-show="statsData" x-cloak class="space-y-6">
+          <!-- Header -->
+          <div class="flex flex-col md:flex-row items-start justify-between gap-6 mb-6">
+            <div class="min-w-0">
+              <p class="text-sm md:text-base text-gray-500 mb-2">/ Usage & Billing</p>
+              <h2
+                class="text-xl sm:text-2xl md:text-3xl font-semibold tracking-tight text-brand-dark truncate"
+                x-text="statsData?.name || 'API Key 统计'"
+              ></h2>
+            </div>
+
+            <div class="flex flex-col items-end gap-3 md:gap-4">
+              <div class="text-right max-w-sm">
+                <p class="text-sm text-gray-500 leading-relaxed">
+                  实时查看用量、费用与配额状态，支持按模型拆分与近 7 天趋势。
+                </p>
+                <div class="mt-3 flex flex-col gap-1.5 text-xs text-gray-500">
+                  <div class="flex items-center justify-end gap-2">
+                    <span class="h-1.5 w-1.5 rounded-full bg-brand-dark/35"></span>
+                    <span>价格透明 · 可查明细</span>
+                  </div>
+                  <div class="flex items-center justify-end gap-2">
+                    <span class="h-1.5 w-1.5 rounded-full bg-brand-dark/35"></span>
+                    <span>支持 Key / Key ID 查询</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="flex items-center gap-2 sm:gap-3">
+                <button
+                  type="button"
+                  class="inline-flex items-baseline gap-1 sm:gap-2 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-xl bg-white/70 border border-brand-dark/10 text-brand-dark text-[10px] sm:text-xs font-medium hover:border-brand-dark/20 hover:bg-white transition disabled:opacity-60 disabled:cursor-not-allowed"
+                  @click="queryStats"
+                  :disabled="loading"
+                  title="刷新"
+                  aria-label="刷新统计"
+                >
+                  <i
+                    class="fa-solid fa-rotate-right text-[8px] leading-none"
+                    :class="loading ? 'fa-spin' : ''"
+                  ></i>
+                  <span>刷新</span>
+                </button>
+                <!-- 过期时间显示 -->
+                <span
+                  class="inline-flex items-baseline px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-xl text-[10px] sm:text-xs font-medium"
+                  :class="getExpiryBadgeClass()"
+                  x-show="statsData"
+                >
+                  <i class="fa-solid fa-clock mr-1.5 text-[8px] leading-none"></i>
+                  <span x-text="getExpiryText()"></span>
+                </span>
+                <span
+                  class="inline-flex items-baseline px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-xl bg-green-100 text-green-700 text-[10px] sm:text-xs font-medium"
+                >
+                  <i class="fa-solid fa-circle text-[5px] mr-1.5 relative -top-[1px]"></i>活跃
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Stats Grid - Main Metrics -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <!-- 总请求数 -->
+            <div
+              class="bg-white/80 backdrop-blur-sm border border-gray-200 rounded-[1.5rem] p-5 md:p-6 hover:shadow-lg transition-all duration-300"
+            >
+              <div class="flex items-start justify-between gap-4">
+                <div class="min-w-0">
+                  <div class="text-sm text-gray-500">总请求数</div>
+                  <div
+                    class="mt-2 text-xl sm:text-2xl md:text-3xl font-semibold tracking-tight text-brand-dark"
+                    x-text="statsData?.usage.total.requests.toLocaleString()"
+                  ></div>
+                </div>
+                <div
+                  class="flex items-center justify-center h-10 w-10 rounded-full bg-brand-card text-brand-dark/70"
+                >
+                  <i class="fa-solid fa-bolt text-base"></i>
+                </div>
+              </div>
+            </div>
+
+            <!-- 总 Token -->
+            <div
+              class="bg-white/80 backdrop-blur-sm border border-gray-200 rounded-[1.5rem] p-5 md:p-6 hover:shadow-lg transition-all duration-300"
+            >
+              <div class="flex items-start justify-between gap-4">
+                <div class="min-w-0">
+                  <div class="text-sm text-gray-500">总 Token 消耗</div>
+                  <div
+                    class="mt-2 text-xl sm:text-2xl md:text-3xl font-semibold tracking-tight text-brand-dark"
+                    x-text="statsData?.usage.total.allTokens.toLocaleString()"
+                  ></div>
+                </div>
+                <div
+                  class="flex items-center justify-center h-10 w-10 rounded-full bg-brand-card text-brand-dark/70"
+                >
+                  <i class="fa-solid fa-tag text-base"></i>
+                </div>
+              </div>
+            </div>
+
+            <!-- 总费用 -->
+            <div
+              class="bg-white/80 backdrop-blur-sm border border-gray-200 rounded-[1.5rem] p-5 md:p-6 hover:shadow-lg transition-all duration-300"
+            >
+              <div class="flex items-start justify-between gap-4">
+                <div class="min-w-0">
+                  <div class="text-sm text-gray-500">总费用</div>
+                  <div
+                    class="mt-2 text-xl sm:text-2xl md:text-3xl font-semibold tracking-tight text-brand-dark"
+                    x-text="statsData?.usage.total.formattedCost"
+                  ></div>
+                </div>
+                <div
+                  class="flex items-center justify-center h-10 w-10 rounded-full bg-brand-card text-brand-dark/70"
+                >
+                  <i class="fa-solid fa-dollar-sign text-base"></i>
+                </div>
+              </div>
+            </div>
+
+            <!-- 今日费用 -->
+            <div
+              class="bg-white/80 backdrop-blur-sm border border-gray-200 rounded-[1.5rem] p-5 md:p-6 hover:shadow-lg transition-all duration-300"
+            >
+              <div class="flex items-start justify-between gap-4">
+                <div class="min-w-0">
+                  <div class="text-sm text-gray-500">今日费用</div>
+                  <div class="mt-2 text-xl sm:text-2xl md:text-3xl font-semibold tracking-tight text-brand-dark">
+                    $<span x-text="(statsData?.limits?.currentDailyCost ?? 0).toFixed(4)"></span>
+                  </div>
+                </div>
+                <div
+                  class="flex items-center justify-center h-10 w-10 rounded-full bg-brand-card text-brand-dark/70"
+                >
+                  <i class="fa-solid fa-calendar-day text-base"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 预算概览 -->
+          <div
+            class="bg-white/80 backdrop-blur-sm border border-gray-200 rounded-[1.5rem] p-5 md:p-6"
+            x-show="(statsData?.limits?.totalCostLimit ?? 0) > 0"
+          >
+            <div class="flex items-start justify-between gap-6">
+              <div class="min-w-0">
+                <div class="flex items-center gap-2 text-sm font-medium text-brand-dark">
+                  <div
+                    class="flex items-center justify-center h-9 w-9 rounded-full bg-brand-card text-brand-dark/70"
+                  >
+                    <i class="fa-solid fa-wallet text-sm"></i>
+                  </div>
+                  预算概览
+                </div>
+                <div class="mt-3 text-sm text-gray-500">已使用 / 总额度</div>
+                <div class="mt-2 text-2xl md:text-3xl font-semibold tracking-tight">
+                  <span :class="getUsedBudgetClass()"
+                    >$<span x-text="getUsedBudget().toFixed(2)"></span
+                  ></span>
+                  <span class="text-gray-400 text-base md:text-lg">
+                    / $<span x-text="(statsData?.limits?.totalCostLimit ?? 0).toFixed(2)"></span>
+                  </span>
+                </div>
+              </div>
+              <div class="text-right shrink-0">
+                <div class="text-sm text-gray-500">剩余预算</div>
+                <div
+                  class="mt-2 text-xl md:text-2xl font-semibold"
+                  :class="getRemainingBudgetClass()"
+                >
+                  $<span x-text="getRemainingBudget().toFixed(2)"></span>
+                </div>
+              </div>
+            </div>
+            <div class="mt-5 w-full bg-brand-dark/10 rounded-full h-2 overflow-hidden">
+              <div
+                class="h-full rounded-full transition-all duration-500 bg-brand-dark"
+                :style="(() => { const total = statsData?.limits?.totalCostLimit || 0; const current = statsData?.usage?.total?.cost || 0; if (!total) return 'width: 0%'; return 'width: ' + Math.min(100, current / total * 100).toFixed(2) + '%'; })()"
+              ></div>
+            </div>
+          </div>
+
+          <!-- Token 使用详情 -->
+          <div
+            class="bg-white/80 backdrop-blur-sm border border-gray-200 rounded-[1.5rem] p-5 md:p-6"
+          >
+            <h3 class="text-lg sm:text-xl font-medium text-brand-dark mb-6">Token 使用详情</h3>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <div
+                class="bg-brand-card rounded-[1.25rem] p-4 text-center hover:bg-opacity-80 transition"
+              >
+                <div class="text-sm text-gray-500 mb-2">输入 Token</div>
+                <div
+                  class="text-2xl font-semibold tracking-tight text-brand-dark tabular-nums"
+                  x-text="statsData?.usage.total.inputTokens.toLocaleString()"
+                ></div>
+              </div>
+              <div
+                class="bg-brand-card rounded-[1.25rem] p-4 text-center hover:bg-opacity-80 transition"
+              >
+                <div class="text-sm text-gray-500 mb-2">输出 Token</div>
+                <div
+                  class="text-2xl font-semibold tracking-tight text-brand-dark tabular-nums"
+                  x-text="statsData?.usage.total.outputTokens.toLocaleString()"
+                ></div>
+              </div>
+              <div
+                class="bg-brand-card rounded-[1.25rem] p-4 text-center hover:bg-opacity-80 transition"
+              >
+                <div class="text-sm text-gray-500 mb-2">缓存创建</div>
+                <div
+                  class="text-2xl font-semibold tracking-tight text-brand-dark/80 tabular-nums"
+                  x-text="statsData?.usage.total.cacheCreationTokens?.toLocaleString() || '0'"
+                ></div>
+              </div>
+              <div
+                class="bg-brand-card rounded-[1.25rem] p-4 text-center hover:bg-opacity-80 transition"
+              >
+                <div class="text-sm text-gray-500 mb-2">缓存读取</div>
+                <div
+                  class="text-2xl font-semibold tracking-tight text-brand-dark/80 tabular-nums"
+                  x-text="statsData?.usage.total.cacheReadTokens?.toLocaleString() || '0'"
+                ></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 配额状态 -->
+          <div
+            class="bg-white/80 backdrop-blur-sm border border-gray-200 rounded-[1.5rem] p-5 md:p-6"
+          >
+            <h3 class="text-lg sm:text-xl font-medium text-brand-dark mb-6">配额状态</h3>
+            <div class="space-y-6">
+              <!-- 当前窗口请求 -->
+              <div x-show="statsData?.limits && statsData?.limits.rateLimitRequests !== undefined">
+                <div class="flex justify-between text-sm mb-2">
+                  <span class="text-gray-600">当前窗口请求</span>
+                  <span class="font-semibold text-brand-dark">
+                    <span x-text="statsData?.limits.currentWindowRequests ?? 0"></span> /
+                    <span x-text="statsData?.limits.rateLimitRequests ?? 0"></span>
+                  </span>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
+                  <div
+                    class="h-full rounded-full transition-all duration-500"
+                    :class="(() => { const total = statsData?.limits?.rateLimitRequests || 0; const current = statsData?.limits?.currentWindowRequests || 0; if (!total) return 'bg-blue-500'; const ratio = current / total * 100; return ratio > 80 ? 'bg-red-500' : 'bg-blue-500'; })()"
+                    :style="(() => { const total = statsData?.limits?.rateLimitRequests || 0; const current = statsData?.limits?.currentWindowRequests || 0; if (!total) return 'width: 0%'; return 'width: ' + Math.min(100, current / total * 100).toFixed(2) + '%'; })()"
+                  ></div>
+                </div>
+              </div>
+
+              <!-- 当前窗口 Token -->
+              <div x-show="statsData?.limits && statsData?.limits.tokenLimit !== undefined">
+                <div class="flex justify-between text-sm mb-2">
+                  <span class="text-gray-600">当前窗口 Token</span>
+                  <span class="font-semibold text-brand-dark">
+                    <span
+                      x-text="(statsData?.limits.currentWindowTokens ?? 0).toLocaleString()"
+                    ></span>
+                    / <span x-text="(statsData?.limits.tokenLimit ?? 0).toLocaleString()"></span>
+                  </span>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
+                  <div
+                    class="h-full rounded-full transition-all duration-500"
+                    :class="(() => { const total = statsData?.limits?.tokenLimit || 0; const current = statsData?.limits?.currentWindowTokens || 0; if (!total) return 'bg-green-500'; const ratio = current / total * 100; return ratio > 80 ? 'bg-red-500' : 'bg-green-500'; })()"
+                    :style="(() => { const total = statsData?.limits?.tokenLimit || 0; const current = statsData?.limits?.currentWindowTokens || 0; if (!total) return 'width: 0%'; return 'width: ' + Math.min(100, current / total * 100).toFixed(2) + '%'; })()"
+                  ></div>
+                </div>
+              </div>
+
+              <!-- 窗口时间信息 -->
+              <div
+                class="grid grid-cols-2 gap-4"
+                x-show="statsData?.limits && statsData?.limits.windowRemainingSeconds !== undefined"
+              >
+                <div class="bg-brand-card rounded-[1.25rem] p-4">
+                  <div class="text-sm text-gray-500 mb-1">窗口剩余时间</div>
+                  <div class="text-xl font-semibold tracking-tight text-brand-dark">
+                    <span
+                      x-text="Math.floor((statsData?.limits.windowRemainingSeconds || 0) / 60)"
+                    ></span>
+                    分钟
+                  </div>
+                </div>
+                <div class="bg-brand-card rounded-[1.25rem] p-4">
+                  <div class="text-sm text-gray-500 mb-1">窗口总时长</div>
+                  <div class="text-xl font-semibold tracking-tight text-brand-dark">
+                    <span x-text="statsData?.limits.rateLimitWindowMinutes ?? '-'"></span> 分钟
+                  </div>
+                </div>
+              </div>
+
+              <div
+                class="text-sm text-gray-500"
+                x-show="(() => { const limits = statsData?.limits; if (!limits) return true; const hasRequest = limits.rateLimitRequests !== undefined && limits.rateLimitRequests !== null; const hasToken = limits.tokenLimit !== undefined && limits.tokenLimit !== null; return !(hasRequest || hasToken); })()"
+              >
+                暂无配额数据，可能未设置限制或暂时无法获取。
+              </div>
+            </div>
+          </div>
+
+          <!-- 模型使用统计 -->
+          <div
+            class="bg-white/80 backdrop-blur-sm border border-gray-200 rounded-[1.5rem] p-5 md:p-6"
+            x-show="modelStats.length > 0"
+          >
+            <h3 class="text-lg sm:text-xl font-medium text-brand-dark mb-6">模型使用统计</h3>
+            <div class="space-y-4">
+              <template x-for="model in modelStats" :key="model.model">
+                <div class="bg-brand-card rounded-[1.25rem] p-5 hover:bg-opacity-80 transition">
+                  <div class="flex justify-between items-center mb-4">
+                    <span class="font-semibold text-sm text-brand-dark" x-text="model.model"></span>
+                  </div>
+                  <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4 text-sm">
+                    <div>
+                      <span class="text-gray-500 block mb-1 text-xs">请求</span>
+                      <div class="font-semibold text-brand-dark" x-text="model.requests"></div>
+                    </div>
+                    <div>
+                      <span class="text-gray-500 block mb-1 text-xs">输入</span>
+                      <div
+                        class="font-semibold text-brand-dark"
+                        x-text="model.inputTokens.toLocaleString()"
+                      ></div>
+                    </div>
+                    <div>
+                      <span class="text-gray-500 block mb-1 text-xs">输出</span>
+                      <div
+                        class="font-semibold text-brand-dark"
+                        x-text="model.outputTokens.toLocaleString()"
+                      ></div>
+                    </div>
+                    <div>
+                      <span class="text-gray-500 block mb-1 text-xs">缓存写入</span>
+                      <div
+                        class="font-semibold text-brand-dark"
+                        x-text="(model.cacheCreateTokens || 0).toLocaleString()"
+                      ></div>
+                    </div>
+                    <div>
+                      <span class="text-gray-500 block mb-1 text-xs">缓存读取</span>
+                      <div
+                        class="font-semibold text-brand-dark"
+                        x-text="(model.cacheReadTokens || 0).toLocaleString()"
+                      ></div>
+                    </div>
+                    <div>
+                      <span class="text-gray-500 block mb-1 text-xs">总计</span>
+                      <div
+                        class="font-semibold text-brand-dark"
+                        x-text="model.allTokens.toLocaleString()"
+                      ></div>
+                    </div>
+                  </div>
+                </div>
+              </template>
+            </div>
+          </div>
+
+          <!-- 无模型数据状态 -->
+          <div
+            class="bg-white/80 backdrop-blur-sm border border-gray-200 rounded-[1.5rem] p-8 text-center text-gray-500"
+            x-show="modelStats.length === 0"
+          >
+            <i class="fa-solid fa-chart-simple text-3xl mb-3 opacity-30"></i>
+            <p>暂无模型使用统计数据</p>
+          </div>
+        </div>
+
+        <!-- 无数据状态 -->
+        <div
+          x-show="!statsData"
+          x-cloak
+          class="bg-white/80 backdrop-blur-sm border border-gray-200 rounded-[2rem] overflow-hidden"
+        >
+          <div class="grid grid-cols-1 md:grid-cols-12">
+            <div class="md:col-span-7 p-6 sm:p-8 md:p-12">
+              <div
+                class="flex items-center gap-2 text-xs font-bold text-gray-400 uppercase tracking-widest mb-3"
+              >
+                <i class="fa-solid fa-chart-line text-[10px]"></i> API Key Stats
+              </div>
+              <h1 class="text-3xl md:text-4xl font-semibold tracking-tight text-brand-dark">
+                查询用量与费用
+              </h1>
+              <p class="mt-3 text-sm md:text-base text-gray-500 leading-relaxed">
+                输入您的 API Key（或 Key ID），即可查看用量、费用与配额状态。
+              </p>
+
+              <form @submit.prevent="queryStats" class="mt-6 sm:mt-8 max-w-xl">
+                <div
+                  class="flex items-center gap-3 bg-brand-card rounded-full p-2 sm:p-2.5 border border-gray-300/50 hover:border-brand-dark/30 focus-within:border-brand-dark/50 transition-all shadow-sm hover:shadow-md"
+                >
+                  <i class="fa-solid fa-key text-gray-400 ml-2.5 sm:ml-3 text-sm sm:text-base"></i>
+                  <input
+                    type="text"
+                    x-model="apiKeyId"
+                    placeholder="输入 API Key 或 Key ID"
+                    class="flex-1 bg-transparent outline-none text-sm sm:text-base placeholder:text-gray-400 text-brand-dark min-w-0"
+                    autocomplete="off"
+                    spellcheck="false"
+                  />
+                  <button
+                    type="submit"
+                    class="bg-brand-dark text-white px-4 sm:px-6 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm font-semibold hover:bg-opacity-90 transition-all shadow-md shadow-brand-dark/20 hover:shadow-lg flex items-center gap-2 shrink-0"
+                    :disabled="loading"
+                  >
+                    <i class="fa-solid fa-arrow-right text-[10px] sm:text-xs"></i>
+                    <span class="sm:hidden" x-text="loading ? '查询中' : '查询'"></span>
+                    <span class="hidden sm:inline" x-text="loading ? '查询中' : '查询统计'"></span>
+                  </button>
+                </div>
+              </form>
+
+              <div
+                x-show="error"
+                class="mt-4 text-red-600 text-sm font-medium"
+                x-text="error"
+              ></div>
+            </div>
+
+            <div class="hidden md:block md:col-span-5 p-6 md:p-8">
+              <div class="h-full w-full rounded-[1.5rem] overflow-hidden shadow-sm">
+                <img
+                  src="/public-pages/assets/laptop-code.jpg"
+                  alt="Usage Stats"
+                  class="w-full h-full object-cover hover:scale-105 transition duration-700 ease-in-out"
+                  loading="lazy"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <!-- Footer -->
+      <div class="border-t border-gray-300/50 pt-8 pb-12 mt-16">
+        <div class="flex flex-col md:flex-row justify-between items-center gap-6">
+          <div class="flex items-center gap-3">
+            <div
+              class="inline-logo-wrapper"
+              style="transform: scale(0.8); transform-origin: left center"
+            >
+              <a href="/" aria-label="JoJoCode 首页" class="block">
+                <div class="inline-logo-main">
+                  <div class="symbols">
+                    <span>&gt;</span>
+                    <span>_</span>
+                  </div>
+                  <div class="letters">
+                    <span>J</span>
+                    <span>O</span>
+                  </div>
+                </div>
+                <div class="inline-logo-subtitle">JO</div>
+              </a>
+            </div>
+            <span class="text-sm text-gray-500">© 2024 JoJoCode. 高性价比 AI API 中转服务.</span>
+          </div>
+          <div class="flex flex-wrap items-center justify-center gap-6 text-sm">
+            <a href="/" class="text-gray-500 hover:text-brand-dark transition">首页</a>
+            <a href="/price" class="text-gray-500 hover:text-brand-dark transition">价格</a>
+            <a href="/api-gateway-stats" class="text-gray-500 hover:text-brand-dark transition">查询统计</a>
+            <a href="/docs" class="text-gray-500 hover:text-brand-dark transition">使用文档</a>
+            <a href="/privacy" class="text-gray-500 hover:text-brand-dark transition">隐私协议</a>
+            <a href="/terms" class="text-gray-500 hover:text-brand-dark transition">服务协议</a>
+            <a
+              href="mailto:cac900101@gmail.com"
+              class="text-gray-500 hover:text-brand-dark transition"
+              >客服邮箱</a
+            >
+          </div>
+        </div>
+      </div>
+      </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+      // Nav search functionality
+      ;(function () {
+        const form = document.getElementById('nav-key-search')
+        const toggle = document.getElementById('nav-key-toggle')
+        const input = document.getElementById('nav-key-input')
+        if (!form || !toggle || !input) return
+
+        function setExpanded(expanded) {
+          form.classList.toggle('is-expanded', expanded)
+          toggle.setAttribute('aria-expanded', String(expanded))
+          if (expanded) {
+            requestAnimationFrame(() => input.focus())
+          } else if (!input.value.trim()) {
+            input.value = ''
+          }
+        }
+
+        setExpanded(false)
+
+        toggle.addEventListener('click', function () {
+          const expanded = form.classList.contains('is-expanded')
+          if (!expanded) return setExpanded(true)
+          if (!input.value.trim()) return setExpanded(false)
+          input.focus()
+        })
+
+        document.addEventListener('click', function (e) {
+          if (!form.classList.contains('is-expanded')) return
+          if (form.contains(e.target)) return
+          if (!input.value.trim()) setExpanded(false)
+        })
+
+        input.addEventListener('keydown', function (e) {
+          if (e.key === 'Escape' && !input.value.trim()) setExpanded(false)
+        })
+
+        form.addEventListener('submit', function (e) {
+          e.preventDefault()
+          const value = (input.value || '').trim()
+          window.location.href = value ? `/api-gateway-stats?id=${encodeURIComponent(value)}` : '/api-gateway-stats'
+        })
+      })()
+
+      // Stats app
+      function statsApp() {
+        return {
+          theme: localStorage.getItem('theme') || 'light',
+          accent: localStorage.getItem('accent') || 'iris',
+          apiKeyId: '',
+          statsData: null,
+          modelStats: [],
+          loading: false,
+          error: '',
+          init() {
+            this.$watch('theme', (val) => localStorage.setItem('theme', val))
+            this.$watch('accent', (val) => localStorage.setItem('accent', val))
+            const urlParams = new URLSearchParams(window.location.search)
+            const keyId = urlParams.get('id')
+            if (keyId) {
+              this.apiKeyId = keyId
+              this.queryStats()
+            }
+          },
+          getExpiryText() {
+            if (!this.statsData) return ''
+            const expiresAt = this.statsData.expiresAt
+            const expirationMode = this.statsData.expirationMode
+            const isActivated = this.statsData.isActivated
+            const activationDays = this.statsData.activationDays
+            const activationUnit = this.statsData.activationUnit
+
+            // 未激活状态
+            if (expirationMode === 'activation' && !isActivated) {
+              const unit = activationUnit === 'hours' ? '小时' : '天'
+              const days = activationDays || (activationUnit === 'hours' ? 24 : 30)
+              return `未激活 (激活后 ${days} ${unit}过期)`
+            }
+
+            // 永不过期
+            if (!expiresAt) return '永不过期'
+
+            const expiryDate = new Date(expiresAt)
+            const now = new Date()
+            const diffMs = expiryDate - now
+            const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24))
+
+            const formatted = expiryDate.toLocaleString('zh-CN', {
+              year: 'numeric',
+              month: '2-digit',
+              day: '2-digit',
+              hour: '2-digit',
+              minute: '2-digit'
+            })
+
+            if (diffMs < 0) return `已过期 (${formatted})`
+            if (diffDays <= 7) return `${formatted} (${diffDays}天后)`
+            if (diffDays <= 30) return `${formatted} (${diffDays}天后)`
+            return `${formatted}`
+          },
+          getExpiryBadgeClass() {
+            if (!this.statsData) return 'bg-gray-100 text-gray-600'
+            const expiresAt = this.statsData.expiresAt
+            const expirationMode = this.statsData.expirationMode
+            const isActivated = this.statsData.isActivated
+
+            // 未激活状态 - 蓝色
+            if (expirationMode === 'activation' && !isActivated) return 'bg-blue-100 text-blue-600'
+
+            // 永不过期 - 默认色
+            if (!expiresAt) return 'bg-gray-100 text-gray-600'
+
+            const expiryDate = new Date(expiresAt)
+            const now = new Date()
+            const diffMs = expiryDate - now
+            const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24))
+
+            if (diffMs < 0) return 'bg-red-100 text-red-600'
+            if (diffDays <= 7) return 'bg-orange-100 text-orange-600'
+            if (diffDays <= 30) return 'bg-yellow-100 text-yellow-600'
+            return 'bg-green-100 text-green-600'
+          },
+          getRemainingBudget() {
+            if (!this.statsData) return 0
+            const totalLimit = this.statsData.limits?.totalCostLimit || 0
+            const currentCost = this.statsData.usage?.total?.cost || 0
+            return Math.max(0, totalLimit - currentCost)
+          },
+          getRemainingBudgetClass() {
+            return 'text-brand-dark'
+          },
+          getUsedBudget() {
+            if (!this.statsData) return 0
+            return this.statsData.usage?.total?.cost || 0
+          },
+          getUsedBudgetClass() {
+            return 'text-brand-dark'
+          },
+          async queryStats() {
+            const input = this.apiKeyId.trim()
+            if (!input) {
+              this.error = '请输入 API Key'
+              return
+            }
+            this.loading = true
+            this.error = ''
+            this.statsData = null
+            this.modelStats = []
+            const uuidRegex = /^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/i
+            const isUUID = uuidRegex.test(input)
+            let apiId = input
+            try {
+              if (!isUUID) {
+                const idResponse = await fetch('/apiStats/api/get-key-id', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ apiKey: input })
+                })
+                if (!idResponse.ok) {
+                  const errorData = await idResponse.json()
+                  throw new Error(errorData.message || '无效的 API Key')
+                }
+                const idResult = await idResponse.json()
+                apiId = idResult.data.id
+              }
+              const response = await fetch('/apiStats/api/user-stats', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ apiId: apiId })
+              })
+              if (!response.ok) {
+                const errorData = await response.json()
+                throw new Error(errorData.message || '查询失败')
+              }
+              const result = await response.json()
+              this.statsData = result.data
+              const modelResponse = await fetch('/apiStats/api/user-model-stats', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ apiId: apiId, period: 'monthly' })
+              })
+              if (modelResponse.ok) {
+                const modelResult = await modelResponse.json()
+                this.modelStats = modelResult.data || []
+              }
+            } catch (err) {
+              this.error = err.message || '查询失败，请检查网络连接'
+              console.error('Query error:', err)
+            } finally {
+              this.loading = false
+            }
+          }
+        }
+      }
+    </script>
+  </body>
+</html>

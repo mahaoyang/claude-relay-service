@@ -25,6 +25,7 @@ const systemRoutes = require('./system')
 const publicStatsRoutes = require('./publicStats')
 const concurrencyRoutes = require('./concurrency')
 const claudeRelayConfigRoutes = require('./claudeRelayConfig')
+const disguiseSettingsRoutes = require('./disguiseSettings')
 
 // 挂载所有子路由
 // 使用完整路径的模块（直接挂载到根路径）
@@ -41,6 +42,7 @@ router.use('/', usageStatsRoutes)
 router.use('/', systemRoutes)
 router.use('/', concurrencyRoutes)
 router.use('/', claudeRelayConfigRoutes)
+router.use('/', disguiseSettingsRoutes)
 
 // 使用相对路径的模块（需要指定基础路径前缀）
 router.use('/account-groups', accountGroupsRoutes)

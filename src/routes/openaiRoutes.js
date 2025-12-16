@@ -6,6 +6,7 @@ const config = require('../../config')
 const { authenticateApiKey } = require('../middleware/auth')
 const codexDisguise = require('../middleware/codexDisguise')
 const codexRequestLogger = require('../middleware/codexRequestLogger')
+const disguiseSettingsService = require('../services/disguiseSettingsService')
 const unifiedOpenAIScheduler = require('../services/unifiedOpenAIScheduler')
 const openaiAccountService = require('../services/openaiAccountService')
 const openaiResponsesAccountService = require('../services/openaiResponsesAccountService')
@@ -38,6 +39,13 @@ function normalizeHeaders(headers = {}) {
     normalized[key.toLowerCase()] = Array.isArray(value) ? value[0] : value
   }
   return normalized
+}
+
+function deepCloneJson(value) {
+  if (!value || typeof value !== 'object') {
+    return value
+  }
+  return JSON.parse(JSON.stringify(value))
 }
 
 function toNumberSafe(value) {
@@ -221,6 +229,13 @@ const handleResponses = async (req, res) => {
   let accessToken = null
 
   try {
+    if (!req._originalHeadersForDisguiseCheck) {
+      req._originalHeadersForDisguiseCheck = { ...(req.headers || {}) }
+    }
+    if (!req._originalBodyForDisguiseCheck) {
+      req._originalBodyForDisguiseCheck = deepCloneJson(req.body)
+    }
+
     // 从中间件获取 API Key 数据
     const apiKeyData = req.apiKey || {}
 
@@ -298,6 +313,38 @@ const handleResponses = async (req, res) => {
       sessionId,
       requestedModel
     ))
+
+    // 伪装开关：全局开关 + 账号开关（默认开启，关闭则透传）
+    const isDisguiseGloballyEnabled = process.env.DISGUISE_ENABLED !== 'false'
+    const disguisePlatform = accountType === 'openai-responses' ? 'openai-responses' : 'openai'
+    let shouldDisguiseThisRequest = false
+
+    if (isDisguiseGloballyEnabled) {
+      try {
+        shouldDisguiseThisRequest = await disguiseSettingsService.isDisguiseEnabled(
+          disguisePlatform,
+          accountId
+        )
+      } catch (error) {
+        shouldDisguiseThisRequest = true
+      }
+    }
+
+    if (shouldDisguiseThisRequest) {
+      req.headers = { ...(req._originalHeadersForDisguiseCheck || {}) }
+      req.body = deepCloneJson(req._originalBodyForDisguiseCheck)
+      try {
+        await new Promise((resolve, reject) => {
+          codexDisguise(req, res, (err) => (err ? reject(err) : resolve()))
+        })
+      } catch (error) {
+        req.headers = { ...(req._originalHeadersForDisguiseCheck || {}) }
+        req.body = deepCloneJson(req._originalBodyForDisguiseCheck)
+      }
+    } else {
+      req.headers = { ...(req._originalHeadersForDisguiseCheck || {}) }
+      req.body = deepCloneJson(req._originalBodyForDisguiseCheck)
+    }
 
     // 如果是 OpenAI-Responses 账户，使用专门的中继服务处理
     if (accountType === 'openai-responses') {
@@ -869,22 +916,10 @@ const handleResponses = async (req, res) => {
 }
 
 // 注册两个路由路径，都使用相同的处理函数
-router.post('/responses', codexRequestLogger, authenticateApiKey, codexDisguise, handleResponses)
-router.post('/v1/responses', codexRequestLogger, authenticateApiKey, codexDisguise, handleResponses)
-router.post(
-  '/responses/compact',
-  codexRequestLogger,
-  authenticateApiKey,
-  codexDisguise,
-  handleResponses
-)
-router.post(
-  '/v1/responses/compact',
-  codexRequestLogger,
-  authenticateApiKey,
-  codexDisguise,
-  handleResponses
-)
+router.post('/responses', codexRequestLogger, authenticateApiKey, handleResponses)
+router.post('/v1/responses', codexRequestLogger, authenticateApiKey, handleResponses)
+router.post('/responses/compact', codexRequestLogger, authenticateApiKey, handleResponses)
+router.post('/v1/responses/compact', codexRequestLogger, authenticateApiKey, handleResponses)
 
 // 使用情况统计端点
 router.get('/usage', authenticateApiKey, async (req, res) => {

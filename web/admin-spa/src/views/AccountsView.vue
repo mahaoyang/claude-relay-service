@@ -1221,6 +1221,34 @@
                       <span class="ml-1">{{ account.schedulable ? '调度' : '停用' }}</span>
                     </button>
                     <button
+                      v-if="supportsDisguiseToggle(account)"
+                      :class="[
+                        'rounded px-2.5 py-1 text-xs font-medium transition-colors',
+                        account.isTogglingDisguise
+                          ? 'cursor-not-allowed bg-gray-100 text-gray-400'
+                          : account.disguiseEnabled
+                            ? 'bg-purple-100 text-purple-700 hover:bg-purple-200'
+                            : 'bg-red-100 text-red-700 hover:bg-red-200'
+                      ]"
+                      :disabled="account.isTogglingDisguise"
+                      :title="
+                        account.disguiseEnabled ? '点击关闭伪装（按原样透传）' : '点击开启伪装'
+                      "
+                      @click="toggleDisguise(account)"
+                    >
+                      <i
+                        :class="[
+                          'fas',
+                          account.isTogglingDisguise
+                            ? 'fa-spinner animate-spin'
+                            : account.disguiseEnabled
+                              ? 'fa-user-secret'
+                              : 'fa-arrow-right'
+                        ]"
+                      />
+                      <span class="ml-1">{{ account.disguiseEnabled ? '伪装' : '透传' }}</span>
+                    </button>
+                    <button
                       v-if="canViewUsage(account)"
                       class="rounded bg-indigo-100 px-2.5 py-1 text-xs font-medium text-indigo-700 transition-colors hover:bg-indigo-200"
                       title="查看使用详情"
@@ -1272,6 +1300,34 @@
                     >
                       <i :class="['fas', account.schedulable ? 'fa-toggle-on' : 'fa-toggle-off']" />
                       <span class="ml-1">{{ account.schedulable ? '调度' : '停用' }}</span>
+                    </button>
+                    <button
+                      v-if="supportsDisguiseToggle(account)"
+                      :class="[
+                        'rounded px-2.5 py-1 text-xs font-medium transition-colors',
+                        account.isTogglingDisguise
+                          ? 'cursor-not-allowed bg-gray-100 text-gray-400'
+                          : account.disguiseEnabled
+                            ? 'bg-purple-100 text-purple-700 hover:bg-purple-200'
+                            : 'bg-red-100 text-red-700 hover:bg-red-200'
+                      ]"
+                      :disabled="account.isTogglingDisguise"
+                      :title="
+                        account.disguiseEnabled ? '点击关闭伪装（按原样透传）' : '点击开启伪装'
+                      "
+                      @click="toggleDisguise(account)"
+                    >
+                      <i
+                        :class="[
+                          'fas',
+                          account.isTogglingDisguise
+                            ? 'fa-spinner animate-spin'
+                            : account.disguiseEnabled
+                              ? 'fa-user-secret'
+                              : 'fa-arrow-right'
+                        ]"
+                      />
+                      <span class="ml-1">{{ account.disguiseEnabled ? '伪装' : '透传' }}</span>
                     </button>
                     <button
                       class="rounded bg-blue-100 px-2.5 py-1 text-xs font-medium text-blue-700 transition-colors hover:bg-blue-200"
@@ -1688,6 +1744,29 @@
             >
               <i :class="['fas', account.schedulable ? 'fa-pause' : 'fa-play']" />
               {{ account.schedulable ? '暂停' : '启用' }}
+            </button>
+            <button
+              v-if="supportsDisguiseToggle(account)"
+              class="flex flex-1 items-center justify-center gap-1 rounded-lg px-3 py-2 text-xs transition-colors"
+              :class="
+                account.disguiseEnabled
+                  ? 'bg-purple-50 text-purple-600 hover:bg-purple-100'
+                  : 'bg-red-50 text-red-600 hover:bg-red-100'
+              "
+              :disabled="account.isTogglingDisguise"
+              @click="toggleDisguise(account)"
+            >
+              <i
+                :class="[
+                  'fas',
+                  account.isTogglingDisguise
+                    ? 'fa-spinner animate-spin'
+                    : account.disguiseEnabled
+                      ? 'fa-user-secret'
+                      : 'fa-arrow-right'
+                ]"
+              />
+              {{ account.disguiseEnabled ? '伪装' : '透传' }}
             </button>
 
             <button
@@ -2113,6 +2192,10 @@ const groupsLoaded = ref(false)
 const groupMembersLoaded = ref(false)
 const accountGroupMap = ref(new Map()) // Map<accountId, Array<groupInfo>>
 
+// 伪装开关（按账户，默认开启）
+const disguiseSettingsLoaded = ref(false)
+const disguiseDisabledMembers = ref(new Set()) // Set<`${platform}:${accountId}`>
+
 // 下拉选项数据
 const sortOptions = ref([
   { value: 'name', label: '按名称排序', icon: 'fa-font' },
@@ -2330,6 +2413,12 @@ const showResetButton = (account) => {
   )
 }
 
+const supportsDisguiseToggle = (account) => {
+  return ['claude', 'claude-console', 'bedrock', 'ccr', 'openai', 'openai-responses'].includes(
+    account.platform
+  )
+}
+
 // 获取账户操作菜单项（用于小屏下拉菜单）
 const getAccountActions = (account) => {
   const actions = []
@@ -2342,6 +2431,16 @@ const getAccountActions = (account) => {
       icon: 'fa-redo',
       color: 'orange',
       handler: () => resetAccountStatus(account)
+    })
+  }
+
+  if (supportsDisguiseToggle(account)) {
+    actions.push({
+      key: 'disguise',
+      label: account.disguiseEnabled ? '关闭伪装' : '开启伪装',
+      icon: 'fa-user-secret',
+      color: account.disguiseEnabled ? 'purple' : 'red',
+      handler: () => toggleDisguise(account)
     })
   }
 
@@ -2777,7 +2876,11 @@ const loadAccounts = async (forceReload = false) => {
     const platformsToFetch = getPlatformsForFilter(platformFilter.value)
 
     // 使用缓存机制加载绑定计数和分组数据（不再加载完整的 API Keys 数据）
-    await Promise.all([loadBindingCounts(forceReload), loadAccountGroups(forceReload)])
+    await Promise.all([
+      loadBindingCounts(forceReload),
+      loadAccountGroups(forceReload),
+      loadDisguiseSettings(forceReload)
+    ])
 
     // 后端账户API已经包含分组信息，不需要单独加载分组成员关系
     // await loadGroupMembers(forceReload)
@@ -2938,9 +3041,13 @@ const loadAccounts = async (forceReload = false) => {
 
     filteredAccounts = filteredAccounts.map((account) => {
       const proxyConfig = normalizeProxyData(account.proxyConfig || account.proxy)
+      const disguiseKey = `${account.platform}:${account.id}`
+      const disguiseEnabled = !disguiseDisabledMembers.value?.has(disguiseKey)
       return {
         ...account,
-        proxyConfig: proxyConfig || null
+        proxyConfig: proxyConfig || null,
+        disguiseEnabled,
+        isTogglingDisguise: false
       }
     })
 
@@ -3063,6 +3170,24 @@ const loadBindingCounts = async (forceReload = false) => {
   }
 }
 
+const loadDisguiseSettings = async (forceReload = false) => {
+  if (!forceReload && disguiseSettingsLoaded.value) {
+    return
+  }
+
+  try {
+    const response = await apiClient.get('/admin/disguise-settings')
+    if (response.success) {
+      const disabled = Array.isArray(response.data?.disabled) ? response.data.disabled : []
+      disguiseDisabledMembers.value = new Set(disabled)
+      disguiseSettingsLoaded.value = true
+    }
+  } catch (error) {
+    disguiseDisabledMembers.value = new Set()
+    disguiseSettingsLoaded.value = true
+  }
+}
+
 // 加载API Keys列表（保留用于其他功能，如删除账户时显示绑定信息）
 const loadApiKeys = async (forceReload = false) => {
   if (!forceReload && apiKeysLoaded.value) {
@@ -3104,6 +3229,8 @@ const clearCache = () => {
   groupsLoaded.value = false
   groupMembersLoaded.value = false
   accountGroupMap.value.clear()
+  disguiseSettingsLoaded.value = false
+  disguiseDisabledMembers.value = new Set()
 }
 
 // 按平台筛选账户
@@ -3624,6 +3751,41 @@ const toggleSchedulable = async (account) => {
     showToast('切换调度状态失败', 'error')
   } finally {
     account.isTogglingSchedulable = false
+  }
+}
+
+const toggleDisguise = async (account) => {
+  if (!supportsDisguiseToggle(account)) {
+    showToast('该账户类型暂不支持伪装开关', 'warning')
+    return
+  }
+  if (account.isTogglingDisguise) return
+
+  try {
+    account.isTogglingDisguise = true
+    const data = await apiClient.put(
+      `/admin/disguise-settings/${account.platform}/${account.id}/toggle`
+    )
+
+    if (data.success) {
+      const enabled = data.data?.enabled !== false
+      account.disguiseEnabled = enabled
+
+      const member = `${account.platform}:${account.id}`
+      if (enabled) {
+        disguiseDisabledMembers.value.delete(member)
+      } else {
+        disguiseDisabledMembers.value.add(member)
+      }
+
+      showToast(enabled ? '已开启伪装' : '已关闭伪装（透传）', 'success')
+    } else {
+      showToast(data.message || '操作失败', 'error')
+    }
+  } catch (error) {
+    showToast('切换伪装状态失败', 'error')
+  } finally {
+    account.isTogglingDisguise = false
   }
 }
 

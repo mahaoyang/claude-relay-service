@@ -170,33 +170,42 @@ class ClaudeRelayService {
       const sessionHash = sessionHelper.generateSessionHash(requestBody)
 
       // 选择可用的Claude账户（支持专属绑定和sticky会话）
-      let accountSelection
-      try {
-        accountSelection = await unifiedClaudeScheduler.selectAccountForApiKey(
-          apiKeyData,
-          sessionHash,
-          requestBody.model
-        )
-      } catch (error) {
-        if (error.code === 'CLAUDE_DEDICATED_RATE_LIMITED') {
-          const limitMessage = this._buildStandardRateLimitMessage(error.rateLimitEndAt)
-          logger.warn(
-            `🚫 Dedicated account ${error.accountId} is rate limited for API key ${apiKeyData.name}, returning 403`
+      const forcedAccountId = options?.forcedAccountId
+      const forcedAccountType = options?.forcedAccountType
+
+      let accountId
+      let accountType
+      if (forcedAccountId) {
+        accountId = forcedAccountId
+        accountType = forcedAccountType || 'claude-official'
+      } else {
+        let accountSelection
+        try {
+          accountSelection = await unifiedClaudeScheduler.selectAccountForApiKey(
+            apiKeyData,
+            sessionHash,
+            requestBody.model
           )
-          return {
-            statusCode: 403,
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              error: 'upstream_rate_limited',
-              message: limitMessage
-            }),
-            accountId: error.accountId
+        } catch (error) {
+          if (error.code === 'CLAUDE_DEDICATED_RATE_LIMITED') {
+            const limitMessage = this._buildStandardRateLimitMessage(error.rateLimitEndAt)
+            logger.warn(
+              `🚫 Dedicated account ${error.accountId} is rate limited for API key ${apiKeyData.name}, returning 403`
+            )
+            return {
+              statusCode: 403,
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                error: 'upstream_rate_limited',
+                message: limitMessage
+              }),
+              accountId: error.accountId
+            }
           }
+          throw error
         }
-        throw error
+        ;({ accountId, accountType } = accountSelection)
       }
-      const { accountId } = accountSelection
-      const { accountType } = accountSelection
       selectedAccountId = accountId
 
       logger.info(
@@ -1284,33 +1293,42 @@ class ClaudeRelayService {
       const sessionHash = sessionHelper.generateSessionHash(requestBody)
 
       // 选择可用的Claude账户（支持专属绑定和sticky会话）
-      let accountSelection
-      try {
-        accountSelection = await unifiedClaudeScheduler.selectAccountForApiKey(
-          apiKeyData,
-          sessionHash,
-          requestBody.model
-        )
-      } catch (error) {
-        if (error.code === 'CLAUDE_DEDICATED_RATE_LIMITED') {
-          const limitMessage = this._buildStandardRateLimitMessage(error.rateLimitEndAt)
-          if (!responseStream.headersSent) {
-            responseStream.status(403)
-            responseStream.setHeader('Content-Type', 'application/json')
-          }
-          responseStream.write(
-            JSON.stringify({
-              error: 'upstream_rate_limited',
-              message: limitMessage
-            })
+      const forcedAccountId = options?.forcedAccountId
+      const forcedAccountType = options?.forcedAccountType
+
+      let accountId
+      let accountType
+      if (forcedAccountId) {
+        accountId = forcedAccountId
+        accountType = forcedAccountType || 'claude-official'
+      } else {
+        let accountSelection
+        try {
+          accountSelection = await unifiedClaudeScheduler.selectAccountForApiKey(
+            apiKeyData,
+            sessionHash,
+            requestBody.model
           )
-          responseStream.end()
-          return
+        } catch (error) {
+          if (error.code === 'CLAUDE_DEDICATED_RATE_LIMITED') {
+            const limitMessage = this._buildStandardRateLimitMessage(error.rateLimitEndAt)
+            if (!responseStream.headersSent) {
+              responseStream.status(403)
+              responseStream.setHeader('Content-Type', 'application/json')
+            }
+            responseStream.write(
+              JSON.stringify({
+                error: 'upstream_rate_limited',
+                message: limitMessage
+              })
+            )
+            responseStream.end()
+            return
+          }
+          throw error
         }
-        throw error
+        ;({ accountId, accountType } = accountSelection)
       }
-      const { accountId } = accountSelection
-      const { accountType } = accountSelection
       selectedAccountId = accountId
 
       // 📬 用户消息队列处理：如果是用户消息请求，需要获取队列锁
