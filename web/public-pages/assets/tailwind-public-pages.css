@@ -1391,10 +1391,6 @@ video {
   background-color: rgb(254 249 195 / var(--tw-bg-opacity, 1));
 }
 
-.bg-white\/65 {
-  background-color: rgb(255 255 255 / 0.65);
-}
-
 .bg-gradient-to-tr {
   background-image: linear-gradient(to top right, var(--tw-gradient-stops));
 }
@@ -1797,10 +1793,6 @@ video {
 
 .decoration-gray-400 {
   text-decoration-color: #9ca3af;
-}
-
-.decoration-brand-dark\/30 {
-  text-decoration-color: rgb(31 47 34 / 0.3);
 }
 
 .underline-offset-4 {
