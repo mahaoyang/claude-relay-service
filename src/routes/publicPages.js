@@ -62,7 +62,7 @@ router.get('/docs', (req, res) => {
   const docsPath = path.join(publicPagesDir, 'docs.html')
 
   if (fs.existsSync(docsPath)) {
-    res.setHeader('Cache-Control', 'public, max-age=3600')
+    res.setHeader('Cache-Control', 'no-cache')
     res.setHeader('Content-Type', 'text/html; charset=utf-8')
     logger.info('📚 Serving CLI Docs page')
     return res.sendFile(docsPath)
@@ -92,7 +92,7 @@ router.get('/api-gateway-docs', (req, res) => {
   const docsPath = path.join(publicPagesDir, 'api-gateway-docs.html')
 
   if (fs.existsSync(docsPath)) {
-    res.setHeader('Cache-Control', 'public, max-age=3600')
+    res.setHeader('Cache-Control', 'no-cache')
     res.setHeader('Content-Type', 'text/html; charset=utf-8')
     logger.info('📚 Serving API Gateway Docs page')
     return res.sendFile(docsPath)

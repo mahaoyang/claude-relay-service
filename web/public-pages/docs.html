@@ -658,11 +658,11 @@
 	          <!-- Nav Links (Desktop) -->
 		          <div class="hidden md:flex items-center space-x-8 text-sm font-medium">
 		            <a href="/" class="jo-nav-link">首页</a>
+		            <a href="/docs" class="jo-nav-link" aria-current="page">文档</a>
 		            <a href="/price" class="jo-nav-link">价格</a>
-		            <a href="/api-gateway-stats" class="jo-nav-link">查询统计</a>
-		            <a href="/docs" class="jo-nav-link" aria-current="page">使用文档</a>
-		            <a href="/api-gateway" class="jo-nav-link">网关</a>
-		            <a href="/api-gateway-docs" class="jo-nav-link">网关文档</a>
+		            <a href="/api-gateway-stats" class="jo-nav-link">查询</a>
+		            <!-- <a href="/api-gateway" class="jo-nav-link">网关</a> -->
+		            <!-- <a href="/api-gateway-docs" class="jo-nav-link">网关文档</a> -->
 		            <a href="/about" class="jo-nav-link">关于</a>
 		          </div>
 
@@ -746,6 +746,13 @@
 	              首页
 	            </a>
             <a
+              href="/docs"
+              class="px-6 py-3 text-sm font-medium hover:bg-brand-bg/50 transition border-b border-gray-200"
+              aria-current="page"
+            >
+              文档
+            </a>
+            <a
               href="/price"
               class="px-6 py-3 text-sm font-medium hover:bg-brand-bg/50 transition border-b border-gray-200"
             >
@@ -755,16 +762,9 @@
 	              href="/api-gateway-stats"
 	              class="px-6 py-3 text-sm font-medium hover:bg-brand-bg/50 transition border-b border-gray-200"
 	            >
-	              查询统计
+	              查询
 	            </a>
-		            <a
-		              href="/docs"
-		              class="px-6 py-3 text-sm font-medium hover:bg-brand-bg/50 transition border-b border-gray-200"
-		              aria-current="page"
-		            >
-		              使用文档
-		            </a>
-            <a
+            <!-- <a
               href="/api-gateway"
               class="px-6 py-3 text-sm font-medium hover:bg-brand-bg/50 transition border-b border-gray-200"
             >
@@ -775,7 +775,7 @@
               class="px-6 py-3 text-sm font-medium hover:bg-brand-bg/50 transition border-b border-gray-200"
             >
               网关文档
-            </a>
+            </a> -->
 		            <a
 		              href="/about"
 		              class="px-6 py-3 text-sm font-medium hover:bg-brand-bg/50 transition"
@@ -795,7 +795,6 @@
 	              <h1
 	                class="text-3xl sm:text-4xl md:text-5xl font-bold text-brand-dark mb-4 flex items-center gap-4"
 	              >
-	                <i class="fa-solid fa-terminal text-2xl sm:text-3xl md:text-4xl"></i>
 	                使用文档
 	              </h1>
               <p class="text-base md:text-lg text-gray-600 font-light leading-relaxed max-w-2xl">
@@ -811,10 +810,10 @@
                   <i class="fa-solid fa-arrow-up-right-from-square text-[11px]"></i>
                 </a>
                 <a
-                  href="/"
+                  href="/api-gateway-docs"
                   class="inline-flex items-center gap-2 rounded-full border border-brand-dark/15 bg-white/55 px-4 py-2 text-xs md:text-sm font-medium text-brand-dark hover:bg-white/70 transition"
                 >
-                  返回首页
+                  网关文档
                   <i class="fa-solid fa-arrow-right text-[11px]"></i>
                 </a>
               </div>
@@ -824,6 +823,15 @@
                 <div class="rounded-xl border border-brand-dark/10 bg-white/45 px-3 py-2">/connect 绑定 Key</div>
                 <div class="rounded-xl border border-brand-dark/10 bg-white/45 px-3 py-2">/model 选择模型</div>
               </div>
+
+              <p
+                class="mt-4 max-w-2xl rounded-2xl border border-brand-dark/12 bg-white/65 px-4 py-3 text-sm font-semibold text-brand-dark leading-relaxed"
+              >
+                提示：如果你使用的是上游官方原生 CLI（Claude Code / Gemini CLI / OpenAI Codex），请查看
+                <a href="/api-gateway-docs" class="underline decoration-brand-dark/40 hover:decoration-brand-dark"
+                  >网关文档</a
+                >。
+              </p>
             </div>
 
             <div class="lg:col-span-5">
@@ -1012,9 +1020,9 @@
           </div>
           <div class="flex flex-wrap items-center justify-center gap-6 text-sm">
             <a href="/" class="text-gray-500 hover:text-brand-dark transition">首页</a>
+            <a href="/docs" class="text-gray-500 hover:text-brand-dark transition">文档</a>
             <a href="/price" class="text-gray-500 hover:text-brand-dark transition">价格</a>
-            <a href="/api-gateway-stats" class="text-gray-500 hover:text-brand-dark transition">查询统计</a>
-            <a href="/docs" class="text-gray-500 hover:text-brand-dark transition">使用文档</a>
+            <a href="/api-gateway-stats" class="text-gray-500 hover:text-brand-dark transition">查询</a>
             <a href="/privacy" class="text-gray-500 hover:text-brand-dark transition">隐私协议</a>
             <a href="/terms" class="text-gray-500 hover:text-brand-dark transition">服务协议</a>
             <a
