@@ -970,15 +970,6 @@ class ApiKeyService {
         model
       )
 
-      // ============================================================================
-      // FORK CUSTOMIZATION: 应用费用倍率
-      // 费用倍率与 token 倍率保持一致，统一使用 pricingService.getCostMultiplier
-      // ============================================================================
-      const pricingService = require('./pricingService')
-      const costMultiplier = pricingService.getCostMultiplier(model)
-      const multipliedCost = costInfo.costs.total * costMultiplier
-      // ============================================================================
-
       // 检查是否为 1M 上下文请求
       let isLongContextRequest = false
       if (model && model.includes('[1m]')) {
@@ -1001,10 +992,10 @@ class ApiKeyService {
       )
 
       // 记录费用统计
-      if (multipliedCost > 0) {
-        await redis.incrementDailyCost(keyId, multipliedCost)
+      if (costInfo.costs.total > 0) {
+        await redis.incrementDailyCost(keyId, costInfo.costs.total)
         logger.database(
-          `💰 Recorded cost for ${keyId}: $${multipliedCost.toFixed(6)} (multiplier: ${costMultiplier}x), model: ${model}`
+          `💰 Recorded cost for ${keyId}: $${costInfo.costs.total.toFixed(6)}, model: ${model}`
         )
       } else {
         logger.debug(`💰 No cost recorded for ${keyId} - zero cost for model: ${model}`)
@@ -1040,7 +1031,7 @@ class ApiKeyService {
       }
 
       // 记录单次请求的使用详情
-      const usageCost = multipliedCost
+      const usageCost = costInfo && costInfo.costs ? costInfo.costs.total || 0 : 0
       await redis.addUsageRecord(keyId, {
         timestamp: new Date().toISOString(),
         model,
@@ -1051,7 +1042,6 @@ class ApiKeyService {
         cacheReadTokens,
         totalTokens,
         cost: Number(usageCost.toFixed(6)),
-        costMultiplier,
         costBreakdown: costInfo && costInfo.costs ? costInfo.costs : undefined
       })
 
@@ -1177,17 +1167,6 @@ class ApiKeyService {
         ephemeral1hTokens = usageObject.cache_creation.ephemeral_1h_input_tokens || 0
       }
 
-      // ============================================================================
-      // FORK CUSTOMIZATION: 应用费用倍率
-      // 费用倍率与 token 倍率保持一致，统一使用 pricingService.getCostMultiplier
-      // ============================================================================
-      const pricingServiceForMultiplier = require('./pricingService')
-      const costMultiplierForDetails = pricingServiceForMultiplier.getCostMultiplier(model)
-      const multipliedTotalCost = costInfo.totalCost * costMultiplierForDetails
-      const multipliedEphemeral5mCost = costInfo.ephemeral5mCost * costMultiplierForDetails
-      const multipliedEphemeral1hCost = costInfo.ephemeral1hCost * costMultiplierForDetails
-      // ============================================================================
-
       // 记录API Key级别的使用统计 - 这个必须执行
       await redis.incrementTokenUsage(
         keyId,
@@ -1203,21 +1182,21 @@ class ApiKeyService {
       )
 
       // 记录费用统计
-      if (multipliedTotalCost > 0) {
-        await redis.incrementDailyCost(keyId, multipliedTotalCost)
+      if (costInfo.totalCost > 0) {
+        await redis.incrementDailyCost(keyId, costInfo.totalCost)
         logger.database(
-          `💰 Recorded cost for ${keyId}: $${multipliedTotalCost.toFixed(6)} (multiplier: ${costMultiplierForDetails}x), model: ${model}`
+          `💰 Recorded cost for ${keyId}: $${costInfo.totalCost.toFixed(6)}, model: ${model}`
         )
 
         // 记录 Opus 周费用（如果适用）
-        await this.recordOpusCost(keyId, multipliedTotalCost, model, accountType)
+        await this.recordOpusCost(keyId, costInfo.totalCost, model, accountType)
 
         // 记录详细的缓存费用（如果有）
-        if (multipliedEphemeral5mCost > 0 || multipliedEphemeral1hCost > 0) {
+        if (costInfo.ephemeral5mCost > 0 || costInfo.ephemeral1hCost > 0) {
           logger.database(
-            `💰 Cache costs - 5m: $${multipliedEphemeral5mCost.toFixed(
+            `💰 Cache costs - 5m: $${costInfo.ephemeral5mCost.toFixed(
               6
-            )}, 1h: $${multipliedEphemeral1hCost.toFixed(6)}`
+            )}, 1h: $${costInfo.ephemeral1hCost.toFixed(6)}`
           )
         }
       } else {

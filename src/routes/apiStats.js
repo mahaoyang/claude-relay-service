@@ -206,6 +206,13 @@ router.post('/api/user-stats', async (req, res) => {
     // 获取验证结果中的完整keyData（包含isActive状态和cost信息）
     const fullKeyData = keyData
 
+    // ============================================================================
+    // FORK CUSTOMIZATION: 获取全局费用倍率（展示层统一应用）
+    // ============================================================================
+    const pricingService = require('../services/pricingService')
+    const globalCostMultiplier = pricingService.globalMultiplier || 1.0
+    // ============================================================================
+
     // 🔧 FIX: 使用 allTimeCost 而不是扫描月度键
     // 计算总费用 - 优先使用持久化的总费用计数器
     let totalCost = 0
@@ -219,9 +226,12 @@ router.post('/api/user-stats', async (req, res) => {
       const allTimeCost = parseFloat((await client.get(totalCostKey)) || '0')
 
       if (allTimeCost > 0) {
-        totalCost = allTimeCost
-        formattedCost = CostCalculator.formatCost(allTimeCost)
-        logger.debug(`📊 使用 allTimeCost 计算用户统计: ${allTimeCost}`)
+        // ============================================================================
+        // FORK CUSTOMIZATION: 应用费用倍率
+        // ============================================================================
+        totalCost = allTimeCost * globalCostMultiplier
+        formattedCost = CostCalculator.formatCost(totalCost)
+        logger.debug(`📊 使用 allTimeCost 计算用户统计: ${allTimeCost} * ${globalCostMultiplier} = ${totalCost}`)
       } else {
         // Fallback: 如果 allTimeCost 为空（旧键），尝试月度键
         const allModelKeys = await client.keys(`usage:${keyId}:model:monthly:*:*`)
@@ -349,6 +359,13 @@ router.post('/api/user-stats', async (req, res) => {
 
       // 获取当日费用
       currentDailyCost = (await redis.getDailyCost(keyId)) || 0
+
+      // ============================================================================
+      // FORK CUSTOMIZATION: 应用费用倍率到当前窗口费用和当日费用
+      // ============================================================================
+      currentWindowCost = currentWindowCost * globalCostMultiplier
+      currentDailyCost = currentDailyCost * globalCostMultiplier
+      // ============================================================================
     } catch (error) {
       logger.warn(`Failed to get current usage for key ${keyId}:`, error)
     }
