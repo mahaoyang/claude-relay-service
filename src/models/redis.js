@@ -516,11 +516,37 @@ class RedisClient {
     const finalCacheCreateTokens = cacheCreateTokens || 0
     const finalCacheReadTokens = cacheReadTokens || 0
 
-    // 重新计算真实的总token数（包括缓存token）
+    // ============================================================================
+    // FORK CUSTOMIZATION: 应用 token 倍率
+    // 获取模型的费用倍率，同样应用于 token 计数（用于显示）
+    // ============================================================================
+    let tokenMultiplier = 1.0
+    try {
+      // 延迟加载 pricingService 避免循环依赖
+      const pricingService = require('../services/pricingService')
+      if (pricingService && typeof pricingService.getCostMultiplier === 'function') {
+        tokenMultiplier = pricingService.getCostMultiplier(model)
+      }
+    } catch (err) {
+      logger.warn(`⚠️ Failed to get token multiplier for ${model}: ${err.message}`)
+    }
+
+    // 应用倍率到所有 token 计数（使用 Math.round 四舍五入）
+    const multipliedInputTokens = Math.round(finalInputTokens * tokenMultiplier)
+    const multipliedOutputTokens = Math.round(finalOutputTokens * tokenMultiplier)
+    const multipliedCacheCreateTokens = Math.round(finalCacheCreateTokens * tokenMultiplier)
+    const multipliedCacheReadTokens = Math.round(finalCacheReadTokens * tokenMultiplier)
+    const multipliedEphemeral5mTokens = Math.round(ephemeral5mTokens * tokenMultiplier)
+    const multipliedEphemeral1hTokens = Math.round(ephemeral1hTokens * tokenMultiplier)
+    // ============================================================================
+    // END FORK CUSTOMIZATION
+    // ============================================================================
+
+    // 重新计算真实的总token数（包括缓存token）- 使用乘以倍率后的值
     const totalTokens =
-      finalInputTokens + finalOutputTokens + finalCacheCreateTokens + finalCacheReadTokens
+      multipliedInputTokens + multipliedOutputTokens + multipliedCacheCreateTokens + multipliedCacheReadTokens
     // 核心token（不包括缓存）- 用于与历史数据兼容
-    const coreTokens = finalInputTokens + finalOutputTokens
+    const coreTokens = multipliedInputTokens + multipliedOutputTokens
 
     // 使用Pipeline优化性能
     const pipeline = this.client.pipeline()
@@ -528,19 +554,19 @@ class RedisClient {
     // 现有的统计保持不变
     // 核心token统计（保持向后兼容）
     pipeline.hincrby(key, 'totalTokens', coreTokens)
-    pipeline.hincrby(key, 'totalInputTokens', finalInputTokens)
-    pipeline.hincrby(key, 'totalOutputTokens', finalOutputTokens)
+    pipeline.hincrby(key, 'totalInputTokens', multipliedInputTokens)
+    pipeline.hincrby(key, 'totalOutputTokens', multipliedOutputTokens)
     // 缓存token统计（新增）
-    pipeline.hincrby(key, 'totalCacheCreateTokens', finalCacheCreateTokens)
-    pipeline.hincrby(key, 'totalCacheReadTokens', finalCacheReadTokens)
+    pipeline.hincrby(key, 'totalCacheCreateTokens', multipliedCacheCreateTokens)
+    pipeline.hincrby(key, 'totalCacheReadTokens', multipliedCacheReadTokens)
     pipeline.hincrby(key, 'totalAllTokens', totalTokens) // 包含所有类型的总token
     // 详细缓存类型统计（新增）
-    pipeline.hincrby(key, 'totalEphemeral5mTokens', ephemeral5mTokens)
-    pipeline.hincrby(key, 'totalEphemeral1hTokens', ephemeral1hTokens)
+    pipeline.hincrby(key, 'totalEphemeral5mTokens', multipliedEphemeral5mTokens)
+    pipeline.hincrby(key, 'totalEphemeral1hTokens', multipliedEphemeral1hTokens)
     // 1M 上下文请求统计（新增）
     if (isLongContextRequest) {
-      pipeline.hincrby(key, 'totalLongContextInputTokens', finalInputTokens)
-      pipeline.hincrby(key, 'totalLongContextOutputTokens', finalOutputTokens)
+      pipeline.hincrby(key, 'totalLongContextInputTokens', multipliedInputTokens)
+      pipeline.hincrby(key, 'totalLongContextOutputTokens', multipliedOutputTokens)
       pipeline.hincrby(key, 'totalLongContextRequests', 1)
     }
     // 请求计数
@@ -548,104 +574,104 @@ class RedisClient {
 
     // 每日统计
     pipeline.hincrby(daily, 'tokens', coreTokens)
-    pipeline.hincrby(daily, 'inputTokens', finalInputTokens)
-    pipeline.hincrby(daily, 'outputTokens', finalOutputTokens)
-    pipeline.hincrby(daily, 'cacheCreateTokens', finalCacheCreateTokens)
-    pipeline.hincrby(daily, 'cacheReadTokens', finalCacheReadTokens)
+    pipeline.hincrby(daily, 'inputTokens', multipliedInputTokens)
+    pipeline.hincrby(daily, 'outputTokens', multipliedOutputTokens)
+    pipeline.hincrby(daily, 'cacheCreateTokens', multipliedCacheCreateTokens)
+    pipeline.hincrby(daily, 'cacheReadTokens', multipliedCacheReadTokens)
     pipeline.hincrby(daily, 'allTokens', totalTokens)
     pipeline.hincrby(daily, 'requests', 1)
     // 详细缓存类型统计
-    pipeline.hincrby(daily, 'ephemeral5mTokens', ephemeral5mTokens)
-    pipeline.hincrby(daily, 'ephemeral1hTokens', ephemeral1hTokens)
+    pipeline.hincrby(daily, 'ephemeral5mTokens', multipliedEphemeral5mTokens)
+    pipeline.hincrby(daily, 'ephemeral1hTokens', multipliedEphemeral1hTokens)
     // 1M 上下文请求统计
     if (isLongContextRequest) {
-      pipeline.hincrby(daily, 'longContextInputTokens', finalInputTokens)
-      pipeline.hincrby(daily, 'longContextOutputTokens', finalOutputTokens)
+      pipeline.hincrby(daily, 'longContextInputTokens', multipliedInputTokens)
+      pipeline.hincrby(daily, 'longContextOutputTokens', multipliedOutputTokens)
       pipeline.hincrby(daily, 'longContextRequests', 1)
     }
 
     // 每月统计
     pipeline.hincrby(monthly, 'tokens', coreTokens)
-    pipeline.hincrby(monthly, 'inputTokens', finalInputTokens)
-    pipeline.hincrby(monthly, 'outputTokens', finalOutputTokens)
-    pipeline.hincrby(monthly, 'cacheCreateTokens', finalCacheCreateTokens)
-    pipeline.hincrby(monthly, 'cacheReadTokens', finalCacheReadTokens)
+    pipeline.hincrby(monthly, 'inputTokens', multipliedInputTokens)
+    pipeline.hincrby(monthly, 'outputTokens', multipliedOutputTokens)
+    pipeline.hincrby(monthly, 'cacheCreateTokens', multipliedCacheCreateTokens)
+    pipeline.hincrby(monthly, 'cacheReadTokens', multipliedCacheReadTokens)
     pipeline.hincrby(monthly, 'allTokens', totalTokens)
     pipeline.hincrby(monthly, 'requests', 1)
     // 详细缓存类型统计
-    pipeline.hincrby(monthly, 'ephemeral5mTokens', ephemeral5mTokens)
-    pipeline.hincrby(monthly, 'ephemeral1hTokens', ephemeral1hTokens)
+    pipeline.hincrby(monthly, 'ephemeral5mTokens', multipliedEphemeral5mTokens)
+    pipeline.hincrby(monthly, 'ephemeral1hTokens', multipliedEphemeral1hTokens)
 
     // 按模型统计 - 每日
-    pipeline.hincrby(modelDaily, 'inputTokens', finalInputTokens)
-    pipeline.hincrby(modelDaily, 'outputTokens', finalOutputTokens)
-    pipeline.hincrby(modelDaily, 'cacheCreateTokens', finalCacheCreateTokens)
-    pipeline.hincrby(modelDaily, 'cacheReadTokens', finalCacheReadTokens)
+    pipeline.hincrby(modelDaily, 'inputTokens', multipliedInputTokens)
+    pipeline.hincrby(modelDaily, 'outputTokens', multipliedOutputTokens)
+    pipeline.hincrby(modelDaily, 'cacheCreateTokens', multipliedCacheCreateTokens)
+    pipeline.hincrby(modelDaily, 'cacheReadTokens', multipliedCacheReadTokens)
     pipeline.hincrby(modelDaily, 'allTokens', totalTokens)
     pipeline.hincrby(modelDaily, 'requests', 1)
 
     // 按模型统计 - 每月
-    pipeline.hincrby(modelMonthly, 'inputTokens', finalInputTokens)
-    pipeline.hincrby(modelMonthly, 'outputTokens', finalOutputTokens)
-    pipeline.hincrby(modelMonthly, 'cacheCreateTokens', finalCacheCreateTokens)
-    pipeline.hincrby(modelMonthly, 'cacheReadTokens', finalCacheReadTokens)
+    pipeline.hincrby(modelMonthly, 'inputTokens', multipliedInputTokens)
+    pipeline.hincrby(modelMonthly, 'outputTokens', multipliedOutputTokens)
+    pipeline.hincrby(modelMonthly, 'cacheCreateTokens', multipliedCacheCreateTokens)
+    pipeline.hincrby(modelMonthly, 'cacheReadTokens', multipliedCacheReadTokens)
     pipeline.hincrby(modelMonthly, 'allTokens', totalTokens)
     pipeline.hincrby(modelMonthly, 'requests', 1)
 
     // API Key级别的模型统计 - 每日
-    pipeline.hincrby(keyModelDaily, 'inputTokens', finalInputTokens)
-    pipeline.hincrby(keyModelDaily, 'outputTokens', finalOutputTokens)
-    pipeline.hincrby(keyModelDaily, 'cacheCreateTokens', finalCacheCreateTokens)
-    pipeline.hincrby(keyModelDaily, 'cacheReadTokens', finalCacheReadTokens)
+    pipeline.hincrby(keyModelDaily, 'inputTokens', multipliedInputTokens)
+    pipeline.hincrby(keyModelDaily, 'outputTokens', multipliedOutputTokens)
+    pipeline.hincrby(keyModelDaily, 'cacheCreateTokens', multipliedCacheCreateTokens)
+    pipeline.hincrby(keyModelDaily, 'cacheReadTokens', multipliedCacheReadTokens)
     pipeline.hincrby(keyModelDaily, 'allTokens', totalTokens)
     pipeline.hincrby(keyModelDaily, 'requests', 1)
     // 详细缓存类型统计
-    pipeline.hincrby(keyModelDaily, 'ephemeral5mTokens', ephemeral5mTokens)
-    pipeline.hincrby(keyModelDaily, 'ephemeral1hTokens', ephemeral1hTokens)
+    pipeline.hincrby(keyModelDaily, 'ephemeral5mTokens', multipliedEphemeral5mTokens)
+    pipeline.hincrby(keyModelDaily, 'ephemeral1hTokens', multipliedEphemeral1hTokens)
 
     // API Key级别的模型统计 - 每月
-    pipeline.hincrby(keyModelMonthly, 'inputTokens', finalInputTokens)
-    pipeline.hincrby(keyModelMonthly, 'outputTokens', finalOutputTokens)
-    pipeline.hincrby(keyModelMonthly, 'cacheCreateTokens', finalCacheCreateTokens)
-    pipeline.hincrby(keyModelMonthly, 'cacheReadTokens', finalCacheReadTokens)
+    pipeline.hincrby(keyModelMonthly, 'inputTokens', multipliedInputTokens)
+    pipeline.hincrby(keyModelMonthly, 'outputTokens', multipliedOutputTokens)
+    pipeline.hincrby(keyModelMonthly, 'cacheCreateTokens', multipliedCacheCreateTokens)
+    pipeline.hincrby(keyModelMonthly, 'cacheReadTokens', multipliedCacheReadTokens)
     pipeline.hincrby(keyModelMonthly, 'allTokens', totalTokens)
     pipeline.hincrby(keyModelMonthly, 'requests', 1)
     // 详细缓存类型统计
-    pipeline.hincrby(keyModelMonthly, 'ephemeral5mTokens', ephemeral5mTokens)
-    pipeline.hincrby(keyModelMonthly, 'ephemeral1hTokens', ephemeral1hTokens)
+    pipeline.hincrby(keyModelMonthly, 'ephemeral5mTokens', multipliedEphemeral5mTokens)
+    pipeline.hincrby(keyModelMonthly, 'ephemeral1hTokens', multipliedEphemeral1hTokens)
 
     // 小时级别统计
     pipeline.hincrby(hourly, 'tokens', coreTokens)
-    pipeline.hincrby(hourly, 'inputTokens', finalInputTokens)
-    pipeline.hincrby(hourly, 'outputTokens', finalOutputTokens)
-    pipeline.hincrby(hourly, 'cacheCreateTokens', finalCacheCreateTokens)
-    pipeline.hincrby(hourly, 'cacheReadTokens', finalCacheReadTokens)
+    pipeline.hincrby(hourly, 'inputTokens', multipliedInputTokens)
+    pipeline.hincrby(hourly, 'outputTokens', multipliedOutputTokens)
+    pipeline.hincrby(hourly, 'cacheCreateTokens', multipliedCacheCreateTokens)
+    pipeline.hincrby(hourly, 'cacheReadTokens', multipliedCacheReadTokens)
     pipeline.hincrby(hourly, 'allTokens', totalTokens)
     pipeline.hincrby(hourly, 'requests', 1)
 
     // 按模型统计 - 每小时
-    pipeline.hincrby(modelHourly, 'inputTokens', finalInputTokens)
-    pipeline.hincrby(modelHourly, 'outputTokens', finalOutputTokens)
-    pipeline.hincrby(modelHourly, 'cacheCreateTokens', finalCacheCreateTokens)
-    pipeline.hincrby(modelHourly, 'cacheReadTokens', finalCacheReadTokens)
+    pipeline.hincrby(modelHourly, 'inputTokens', multipliedInputTokens)
+    pipeline.hincrby(modelHourly, 'outputTokens', multipliedOutputTokens)
+    pipeline.hincrby(modelHourly, 'cacheCreateTokens', multipliedCacheCreateTokens)
+    pipeline.hincrby(modelHourly, 'cacheReadTokens', multipliedCacheReadTokens)
     pipeline.hincrby(modelHourly, 'allTokens', totalTokens)
     pipeline.hincrby(modelHourly, 'requests', 1)
 
     // API Key级别的模型统计 - 每小时
-    pipeline.hincrby(keyModelHourly, 'inputTokens', finalInputTokens)
-    pipeline.hincrby(keyModelHourly, 'outputTokens', finalOutputTokens)
-    pipeline.hincrby(keyModelHourly, 'cacheCreateTokens', finalCacheCreateTokens)
-    pipeline.hincrby(keyModelHourly, 'cacheReadTokens', finalCacheReadTokens)
+    pipeline.hincrby(keyModelHourly, 'inputTokens', multipliedInputTokens)
+    pipeline.hincrby(keyModelHourly, 'outputTokens', multipliedOutputTokens)
+    pipeline.hincrby(keyModelHourly, 'cacheCreateTokens', multipliedCacheCreateTokens)
+    pipeline.hincrby(keyModelHourly, 'cacheReadTokens', multipliedCacheReadTokens)
     pipeline.hincrby(keyModelHourly, 'allTokens', totalTokens)
     pipeline.hincrby(keyModelHourly, 'requests', 1)
 
     // 新增：系统级分钟统计
     pipeline.hincrby(systemMinuteKey, 'requests', 1)
     pipeline.hincrby(systemMinuteKey, 'totalTokens', totalTokens)
-    pipeline.hincrby(systemMinuteKey, 'inputTokens', finalInputTokens)
-    pipeline.hincrby(systemMinuteKey, 'outputTokens', finalOutputTokens)
-    pipeline.hincrby(systemMinuteKey, 'cacheCreateTokens', finalCacheCreateTokens)
-    pipeline.hincrby(systemMinuteKey, 'cacheReadTokens', finalCacheReadTokens)
+    pipeline.hincrby(systemMinuteKey, 'inputTokens', multipliedInputTokens)
+    pipeline.hincrby(systemMinuteKey, 'outputTokens', multipliedOutputTokens)
+    pipeline.hincrby(systemMinuteKey, 'cacheCreateTokens', multipliedCacheCreateTokens)
+    pipeline.hincrby(systemMinuteKey, 'cacheReadTokens', multipliedCacheReadTokens)
 
     // 设置过期时间
     pipeline.expire(daily, 86400 * 32) // 32天过期
