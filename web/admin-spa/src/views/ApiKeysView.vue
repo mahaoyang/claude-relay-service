@@ -337,6 +337,12 @@
                       <i v-else class="fas fa-sort ml-1 text-gray-400" />
                     </th>
                     <th
+                      class="min-w-[80px] px-3 py-4 text-center text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-gray-300"
+                      title="用于收集真实 Claude CLI 请求头配置"
+                    >
+                      白名单
+                    </th>
+                    <th
                       class="min-w-[70px] px-3 py-4 text-right text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-gray-300"
                       :class="{
                         'cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600': canSortByCost,
@@ -604,6 +610,15 @@
                           />
                           {{ key.isActive ? '活跃' : '禁用' }}
                         </span>
+                      </td>
+                      <!-- 白名单收集列 -->
+                      <td class="whitespace-nowrap px-3 py-3">
+                        <CollectSessionToggle
+                          :api-key-id="key.id"
+                          :value="!!key.collectSession"
+                          @error="handleCollectSessionError"
+                          @update="handleCollectSessionUpdate"
+                        />
                       </td>
                       <!-- 费用 -->
                       <td class="whitespace-nowrap px-3 py-3 text-right" style="font-size: 13px">
@@ -920,6 +935,14 @@
                             <span class="ml-1">编辑</span>
                           </button>
                           <button
+                            class="rounded px-2 py-1 text-xs font-medium text-amber-600 transition-colors hover:bg-amber-50 hover:text-amber-900 dark:hover:bg-amber-900/20"
+                            title="修改费用"
+                            @click="openEditUsedCostModal(key)"
+                          >
+                            <i class="fas fa-dollar-sign" />
+                            <span class="ml-1">费用</span>
+                          </button>
+                          <button
                             v-if="
                               key.expiresAt &&
                               (isApiKeyExpired(key.expiresAt) ||
@@ -944,6 +967,14 @@
                           >
                             <i :class="['fas', key.isActive ? 'fa-ban' : 'fa-check-circle']" />
                             <span class="ml-1">{{ key.isActive ? '禁用' : '激活' }}</span>
+                          </button>
+                          <button
+                            class="rounded px-2 py-1 text-xs font-medium text-red-600 transition-colors hover:bg-red-50 hover:text-red-900 dark:hover:bg-red-900/20"
+                            title="重置额度"
+                            @click="resetApiKeyUsageActionRef?.open(key)"
+                          >
+                            <i class="fas fa-rotate-left" />
+                            <span class="ml-1">重置额度</span>
                           </button>
                           <button
                             class="rounded px-2 py-1 text-xs font-medium text-red-600 transition-colors hover:bg-red-50 hover:text-red-900 dark:hover:bg-red-900/20"
@@ -2114,6 +2145,16 @@
       @close="showUsageDetailModal = false"
       @open-timeline="openTimeline"
     />
+
+    <EditUsedCostModal
+      :api-key-id="editUsedCostKeyId"
+      :api-key-name="editUsedCostKeyName"
+      :show="showEditUsedCostModal"
+      @close="showEditUsedCostModal = false"
+      @saved="handleUsedCostSaved"
+    />
+
+    <ResetApiKeyUsageAction ref="resetApiKeyUsageActionRef" @success="loadApiKeys" />
   </div>
 </template>
 
@@ -2133,9 +2174,12 @@ import BatchApiKeyModal from '@/components/apikeys/BatchApiKeyModal.vue'
 import BatchEditApiKeyModal from '@/components/apikeys/BatchEditApiKeyModal.vue'
 import ExpiryEditModal from '@/components/apikeys/ExpiryEditModal.vue'
 import UsageDetailModal from '@/components/apikeys/UsageDetailModal.vue'
+import EditUsedCostModal from '@/components/apikeys/EditUsedCostModal.vue'
+import ResetApiKeyUsageAction from '@/components/apikeys/ResetApiKeyUsageAction.vue'
 import LimitProgressBar from '@/components/apikeys/LimitProgressBar.vue'
 import CustomDropdown from '@/components/common/CustomDropdown.vue'
 import ActionDropdown from '@/components/common/ActionDropdown.vue'
+import CollectSessionToggle from '@/components/apikeys/CollectSessionToggle.vue'
 
 // 响应式数据
 const router = useRouter()
@@ -2153,6 +2197,7 @@ const isIndeterminate = ref(false)
 const showCheckboxes = ref(false)
 const apiKeysLoading = ref(false)
 const apiKeyStatsTimeRange = ref('today')
+const resetApiKeyUsageActionRef = ref(null)
 
 // 全局日期筛选器
 const globalDateFilter = reactive({
@@ -2238,6 +2283,25 @@ const editingExpiryKey = ref(null)
 const expiryEditModalRef = ref(null)
 const showUsageDetailModal = ref(false)
 const selectedApiKeyForDetail = ref(null)
+
+// 编辑已用费用弹窗状态
+const showEditUsedCostModal = ref(false)
+const editUsedCostKeyId = ref('')
+const editUsedCostKeyName = ref('')
+
+// 打开编辑已用费用弹窗
+const openEditUsedCostModal = (apiKey) => {
+  editUsedCostKeyId.value = apiKey.id
+  editUsedCostKeyName.value = apiKey.name
+  showEditUsedCostModal.value = true
+}
+
+// 已用费用保存后的处理
+const handleUsedCostSaved = () => {
+  // 刷新数据
+  loadApiKeys()
+  loadPageStats()
+}
 
 // 标签相关
 const selectedTagFilter = ref('')
@@ -3806,6 +3870,13 @@ const getApiKeyActions = (key) => {
       icon: 'fa-edit',
       color: 'blue',
       handler: () => openEditApiKeyModal(key)
+    },
+    {
+      key: 'editCost',
+      label: '修改费用',
+      icon: 'fa-dollar-sign',
+      color: 'amber',
+      handler: () => openEditUsedCostModal(key)
     }
   ]
 
@@ -3830,6 +3901,14 @@ const getApiKeyActions = (key) => {
   })
 
   // 删除
+  actions.push({
+    key: 'resetUsage',
+    label: '重置额度',
+    icon: 'fa-rotate-left',
+    color: 'red',
+    handler: () => resetApiKeyUsageActionRef.value?.open(key)
+  })
+
   actions.push({
     key: 'delete',
     label: '删除',
@@ -4811,6 +4890,23 @@ onMounted(async () => {
   // 异步加载账号数据（不阻塞页面显示）
   loadAccounts()
 })
+
+// 处理白名单收集状态更新
+const handleCollectSessionUpdate = ({ apiKeyId, collectSession }) => {
+  const apiKey = apiKeys.value.find((k) => k.id === apiKeyId)
+  if (apiKey) {
+    apiKey.collectSession = collectSession
+  }
+  showToast(
+    collectSession ? '已启用白名单收集' : '已禁用白名单收集',
+    collectSession ? 'success' : 'info'
+  )
+}
+
+// 处理白名单收集错误
+const handleCollectSessionError = (message) => {
+  showToast(message || '更新白名单收集状态失败', 'error')
+}
 
 // 组件卸载时清理定时器
 onUnmounted(() => {

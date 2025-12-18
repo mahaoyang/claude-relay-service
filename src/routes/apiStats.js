@@ -804,7 +804,7 @@ router.post('/api/batch-model-stats', async (req, res) => {
 
 // 🧪 API Key 端点测试接口 - 测试API Key是否能正常访问服务
 router.post('/api-key/test', async (req, res) => {
-  const config = require('../../config/config')
+  const config = require('../../config')
   const { sendStreamTestRequest } = require('../utils/testPayloadHelper')
 
   try {

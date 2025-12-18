@@ -7,12 +7,14 @@ const logger = require('../utils/logger')
 
 class PricingService {
   constructor() {
-    this.dataDir = path.join(process.cwd(), 'data')
+    // 使用 __dirname 计算项目根目录，更可靠（Vercel 环境下 process.cwd() 可能不正确）
+    const projectRoot = path.resolve(__dirname, '../..')
+    this.dataDir = path.join(projectRoot, 'data')
     this.pricingFile = path.join(this.dataDir, 'model_pricing.json')
     this.pricingUrl = pricingSource.pricingUrl
     this.hashUrl = pricingSource.hashUrl
     this.fallbackFile = path.join(
-      process.cwd(),
+      projectRoot,
       'resources',
       'model-pricing',
       'model_prices_and_context_window.json'
@@ -74,19 +76,110 @@ class PricingService {
       }
       // 未来可以添加更多 1M 模型的价格
     }
+
+    // 价格倍率配置（从环境变量加载）
+    this.globalMultiplier = parseFloat(process.env.COST_MULTIPLIER) || 1.0
+    this.modelMultipliers = this._loadModelMultipliers()
+
+    // GPT 系列模型倍率（Codex / GPT-5系列）
+    this.gptSeriesMultiplier = parseFloat(process.env.COST_MULTIPLIER_GPT_SERIES) || 0.71
+  }
+
+  _isCodexSeriesModel(normalizedModelName) {
+    return (
+      typeof normalizedModelName === 'string' &&
+      (normalizedModelName.includes('codex') || normalizedModelName.startsWith('gpt-5'))
+    )
+  }
+
+  /**
+   * 从环境变量加载模型特定倍率
+   * 格式: COST_MULTIPLIER_<MODEL_KEY>=<倍率>
+   * MODEL_KEY: 模型名中的 - 和 . 替换为 _，全部大写
+   * 特殊: 模型倍率会与全局倍率相乘
+   * @private
+   */
+  _loadModelMultipliers() {
+    const multipliers = {}
+    const prefix = 'COST_MULTIPLIER_'
+
+    for (const [key, value] of Object.entries(process.env)) {
+      if (key.startsWith(prefix) && key !== 'COST_MULTIPLIER') {
+        // COST_MULTIPLIER_CLAUDE_OPUS_4_5 -> claude-opus-4-5
+        const modelKey = key.slice(prefix.length).toLowerCase().replace(/_/g, '-')
+        multipliers[modelKey] = parseFloat(value) || 1.0
+      }
+    }
+
+    if (Object.keys(multipliers).length > 0) {
+      logger.info(`💰 Loaded ${Object.keys(multipliers).length} model-specific cost multipliers`)
+      for (const [model, mult] of Object.entries(multipliers)) {
+        const effectiveMult = this.globalMultiplier * mult
+        logger.info(`   ${model}: ${mult}x (effective: ${effectiveMult}x)`)
+      }
+    }
+
+    return multipliers
+  }
+
+  /**
+   * 获取模型的费用倍率
+   * 模型特定倍率会与全局倍率相乘
+   * 注意：GPT系列倍率已在token级别应用（recordUsageWithDetails），不在此处再次应用
+   * @param {string} modelName - 模型名称
+   * @returns {number} 最终倍率
+   */
+  getCostMultiplier(modelName) {
+    const normalizedName = modelName ? modelName.toLowerCase() : null
+
+    let multiplier = this.globalMultiplier
+
+    if (normalizedName) {
+      // 精确匹配
+      if (this.modelMultipliers[normalizedName]) {
+        multiplier *= this.modelMultipliers[normalizedName]
+      } else {
+        // 前缀匹配（如 claude-opus-4-5 匹配 claude-opus-4-5-20251101）
+        for (const [pattern, modelMultiplier] of Object.entries(this.modelMultipliers)) {
+          if (normalizedName.startsWith(pattern)) {
+            multiplier *= modelMultiplier
+            break
+          }
+        }
+      }
+
+      // GPT 系列倍率不在此处应用，已在 token 级别应用
+    }
+
+    return multiplier
   }
 
   // 初始化价格服务
   async initialize() {
     try {
-      // 确保data目录存在
-      if (!fs.existsSync(this.dataDir)) {
-        fs.mkdirSync(this.dataDir, { recursive: true })
-        logger.info('📁 Created data directory')
+      // 尝试确保data目录存在（只读文件系统会失败，但不影响功能）
+      try {
+        if (!fs.existsSync(this.dataDir)) {
+          fs.mkdirSync(this.dataDir, { recursive: true })
+          logger.info('📁 Created data directory')
+        }
+        this.isReadOnlyFS = false
+      } catch (mkdirError) {
+        logger.warn(
+          `⚠️  Cannot create data directory (read-only filesystem): ${mkdirError.message}`
+        )
+        this.isReadOnlyFS = true
       }
 
       // 检查是否需要下载或更新价格数据
       await this.checkAndUpdatePricing()
+
+      // 如果是只读文件系统，跳过定时更新和文件监听
+      if (this.isReadOnlyFS) {
+        logger.info('📋 Read-only filesystem detected, skipping file watchers and timers')
+        logger.success('💰 Pricing service initialized successfully (memory-only mode)')
+        return
+      }
 
       // 初次启动时执行一次哈希校验，确保与远端保持一致
       await this.syncWithRemoteHash()
@@ -114,6 +207,16 @@ class PricingService {
   // 检查并更新价格数据
   async checkAndUpdatePricing() {
     try {
+      // 如果是只读文件系统，优先从远程加载最新数据到内存
+      if (this.isReadOnlyFS) {
+        await this._loadFromRemoteToMemory()
+        // 如果远程加载失败，回退到 fallback 文件
+        if (!this.pricingData || Object.keys(this.pricingData).length === 0) {
+          await this.useFallbackPricing()
+        }
+        return
+      }
+
       const needsUpdate = this.needsUpdate()
 
       if (needsUpdate) {
@@ -348,24 +451,27 @@ class PricingService {
   async useFallbackPricing() {
     try {
       if (fs.existsSync(this.fallbackFile)) {
-        logger.info('📋 Copying fallback pricing data to data directory...')
+        logger.info('📋 Loading fallback pricing data...')
 
         // 读取fallback文件
         const fallbackData = fs.readFileSync(this.fallbackFile, 'utf8')
         const jsonData = JSON.parse(fallbackData)
 
-        const formattedJson = JSON.stringify(jsonData, null, 2)
-
-        // 保存到data目录
-        fs.writeFileSync(this.pricingFile, formattedJson)
-        this.persistLocalHash(formattedJson)
-
-        // 更新内存中的数据
+        // 更新内存中的数据（即使无法写入文件也要保证内存数据可用）
         this.pricingData = jsonData
         this.lastUpdated = new Date()
 
-        // 设置或重新设置文件监听器
-        this.setupFileWatcher()
+        // 尝试保存到data目录（Vercel等只读环境会失败，但不影响功能）
+        try {
+          const formattedJson = JSON.stringify(jsonData, null, 2)
+          fs.writeFileSync(this.pricingFile, formattedJson)
+          this.persistLocalHash(formattedJson)
+          // 设置或重新设置文件监听器
+          this.setupFileWatcher()
+        } catch (writeError) {
+          logger.warn(`⚠️  Cannot write pricing file (read-only filesystem): ${writeError.message}`)
+          logger.info('📋 Using in-memory pricing data only')
+        }
 
         logger.warn(`⚠️  Using fallback pricing data for ${Object.keys(jsonData).length} models`)
         logger.info(
@@ -376,12 +482,66 @@ class PricingService {
         logger.error(
           '❌ Please ensure the resources/model-pricing directory exists with the pricing file'
         )
-        this.pricingData = {}
+        // 尝试从远程下载到内存
+        await this._loadFromRemoteToMemory()
       }
     } catch (error) {
       logger.error('❌ Failed to use fallback pricing data:', error)
+      // 最后尝试从远程下载到内存
+      await this._loadFromRemoteToMemory()
+    }
+  }
+
+  // 从远程直接加载到内存（不写文件，用于只读文件系统如 Vercel）
+  async _loadFromRemoteToMemory() {
+    try {
+      logger.info('📡 Attempting to load pricing data from remote to memory...')
+      const data = await this._fetchRemoteData()
+      if (data && Object.keys(data).length > 0) {
+        this.pricingData = data
+        this.lastUpdated = new Date()
+        logger.info(
+          `💰 Loaded pricing data for ${Object.keys(data).length} models from remote (memory-only)`
+        )
+      } else {
+        logger.error('❌ Failed to load pricing data from remote')
+        this.pricingData = {}
+      }
+    } catch (error) {
+      logger.error('❌ Failed to load pricing from remote:', error.message)
       this.pricingData = {}
     }
+  }
+
+  // 从远程获取数据（返回 JSON 对象）
+  _fetchRemoteData() {
+    return new Promise((resolve, reject) => {
+      const request = https.get(this.pricingUrl, (response) => {
+        if (response.statusCode !== 200) {
+          reject(new Error(`HTTP ${response.statusCode}`))
+          return
+        }
+
+        let data = ''
+        response.on('data', (chunk) => {
+          data += chunk
+        })
+        response.on('end', () => {
+          try {
+            const jsonData = JSON.parse(data)
+            resolve(jsonData)
+          } catch (e) {
+            reject(new Error('Invalid JSON'))
+          }
+        })
+      })
+
+      request.on('error', reject)
+      request.setTimeout(30000, () => {
+        request.destroy()
+        reject(new Error('Request timeout'))
+      })
+    })
   }
 
   // 获取模型价格信息
@@ -532,6 +692,97 @@ class PricingService {
     const pricing = this.getModelPricing(modelName)
 
     if (!pricing && !useLongContextPricing) {
+      // ============================================================================
+      // 🔧 FORK CUSTOMIZATION: Intelligent Pricing Fallback
+      // ============================================================================
+      // 当模型定价数据缺失时，使用最新同系列模型价格作为合理估算，
+      // 避免返回 $0 导致收入损失。
+      //
+      // 覆盖模型系列：
+      // - GPT 系列 → 使用 GPT-5.1 定价
+      // - Claude 系列 → 使用 Claude Sonnet 4.5 定价
+      // - Gemini 系列 → 使用 Gemini 2.0 Flash 定价
+      //
+      // 注意：此功能为 fork 定制，合并上游更新时请保留此代码块。
+      // ============================================================================
+
+      let estimatedPricing = null
+      let estimatedSource = null
+
+      // 1️⃣ GPT 模型 Fallback (基于 GPT-5.1)
+      if (modelName && modelName.startsWith('gpt-')) {
+        estimatedSource = 'gpt-5.1'
+        estimatedPricing = {
+          input_cost_per_token: 0.00000175, // $1.75 / 1M tokens
+          output_cost_per_token: 0.000014, // $14 / 1M tokens
+          cache_read_input_token_cost: 0.000000175, // $0.175 / 1M tokens
+          cache_creation_input_token_cost: 0.00000175 // $1.75 / 1M tokens
+        }
+      }
+      // 2️⃣ Claude 模型 Fallback (基于 Claude Sonnet 4.5)
+      else if (modelName && modelName.includes('claude')) {
+        estimatedSource = 'claude-sonnet-4.5'
+        estimatedPricing = {
+          input_cost_per_token: 0.000003, // $3 / 1M tokens
+          output_cost_per_token: 0.000015, // $15 / 1M tokens
+          cache_read_input_token_cost: 0.0000003, // $0.30 / 1M tokens
+          cache_creation_input_token_cost: 0.00000375 // $3.75 / 1M tokens
+        }
+      }
+      // 3️⃣ Gemini 模型 Fallback (基于 Gemini 2.0 Flash)
+      else if (modelName && modelName.includes('gemini')) {
+        estimatedSource = 'gemini-2.0-flash-exp'
+        estimatedPricing = {
+          input_cost_per_token: 0.00000015, // $0.15 / 1M tokens
+          output_cost_per_token: 0.0000006, // $0.60 / 1M tokens
+          cache_read_input_token_cost: 0.0000000375, // $0.0375 / 1M tokens
+          cache_creation_input_token_cost: 0.00000015 // 估算为与 input 相同
+        }
+      }
+
+      // 如果找到了估算价格，计算费用
+      if (estimatedPricing) {
+        logger.warn(
+          `⚠️  Model ${modelName} not found in pricing data, using estimated ${estimatedSource} pricing`
+        )
+
+        // 计算费用使用估算价格
+        const inputCost = (usage.input_tokens || 0) * estimatedPricing.input_cost_per_token
+        const outputCost = (usage.output_tokens || 0) * estimatedPricing.output_cost_per_token
+        const cacheReadCost =
+          (usage.cache_read_input_tokens || 0) * estimatedPricing.cache_read_input_token_cost
+        const cacheCreateCost =
+          (usage.cache_creation_input_tokens || 0) *
+          estimatedPricing.cache_creation_input_token_cost
+
+        const totalCost = inputCost + outputCost + cacheReadCost + cacheCreateCost
+        const multiplier = this.getCostMultiplier(modelName)
+
+        logger.info(
+          `💰 Estimated cost for ${modelName}: $${(totalCost * multiplier).toFixed(6)} (multiplier: ${multiplier}x, source: ${estimatedSource})`
+        )
+
+        return {
+          inputCost: inputCost * multiplier,
+          outputCost: outputCost * multiplier,
+          cacheCreateCost: cacheCreateCost * multiplier,
+          cacheReadCost: cacheReadCost * multiplier,
+          ephemeral5mCost: 0,
+          ephemeral1hCost: 0,
+          totalCost: totalCost * multiplier,
+          hasPricing: true,
+          isEstimated: true, // 标记为估算价格
+          estimatedSource,
+          isLongContextRequest: false
+        }
+      }
+
+      // ============================================================================
+      // END FORK CUSTOMIZATION
+      // ============================================================================
+
+      // 对于未知模型系列，返回 0（避免错误计费）
+      logger.error(`❌ No pricing data or estimation available for model: ${modelName}`)
       return {
         inputCost: 0,
         outputCost: 0,
@@ -598,14 +849,22 @@ class PricingService {
       ephemeral5mCost = cacheCreateCost
     }
 
+    // 计算基础总费用
+    const baseTotalCost = inputCost + outputCost + cacheCreateCost + cacheReadCost
+
+    // 应用费用倍率
+    const multiplier = this.getCostMultiplier(modelName)
+
     return {
-      inputCost,
-      outputCost,
-      cacheCreateCost,
-      cacheReadCost,
-      ephemeral5mCost,
-      ephemeral1hCost,
-      totalCost: inputCost + outputCost + cacheCreateCost + cacheReadCost,
+      inputCost: inputCost * multiplier,
+      outputCost: outputCost * multiplier,
+      cacheCreateCost: cacheCreateCost * multiplier,
+      cacheReadCost: cacheReadCost * multiplier,
+      ephemeral5mCost: ephemeral5mCost * multiplier,
+      ephemeral1hCost: ephemeral1hCost * multiplier,
+      totalCost: baseTotalCost * multiplier,
+      baseTotalCost, // 原始费用（未乘倍率）
+      costMultiplier: multiplier,
       hasPricing: true,
       isLongContextRequest,
       pricing: {
@@ -776,6 +1035,111 @@ class PricingService {
       logger.error('❌ Failed to reload pricing data:', error)
       logger.warn('💰 Keeping existing pricing data in memory')
     }
+  }
+
+  /**
+   * 从 OpenAI 官网获取模型价格（智能 fallback）
+   * @param {string} modelName - 模型名称
+   * @returns {Promise<Object|null>} 价格信息或 null
+   */
+  async fetchPricingFromOpenAI(modelName) {
+    try {
+      // 只处理 GPT 模型
+      if (!modelName.startsWith('gpt-')) {
+        return null
+      }
+
+      logger.info(`🔍 Attempting to fetch pricing for ${modelName} from OpenAI website...`)
+
+      // 使用 https 模块获取 OpenAI 定价页面
+      const pricingPageUrl = 'https://openai.com/api/pricing/'
+
+      return new Promise((resolve, _reject) => {
+        const request = https.get(pricingPageUrl, (response) => {
+          let _data = ''
+
+          response.on('data', (chunk) => {
+            _data += chunk
+          })
+
+          response.on('end', () => {
+            try {
+              // 简单的价格提取逻辑（基于常见模式）
+              // 注意：这是一个简化实现，实际可能需要更复杂的解析
+
+              // 对于 GPT-5.x 系列，尝试从页面中提取价格信息
+              // 通常格式为：$X.XX / 1M tokens (input), $Y.YY / 1M tokens (output)
+
+              // GPT-5.2 的默认估算价格（基于 GPT-5.1 的价格）
+              // 如果找不到精确价格，使用合理的估算
+              const fallbackPricing = {
+                input_cost_per_token: 0.00000175, // $1.75 / 1M tokens
+                output_cost_per_token: 0.000014, // $14 / 1M tokens
+                cache_read_input_token_cost: 0.000000175, // $0.175 / 1M tokens
+                mode: 'chat',
+                max_tokens: 128000,
+                litellm_provider: 'openai',
+                source: 'estimated_fallback'
+              }
+
+              logger.warn(`⚠️  Could not parse exact pricing from OpenAI website for ${modelName}`)
+              logger.info(
+                `💰 Using estimated pricing based on GPT-5.1: input=$${fallbackPricing.input_cost_per_token * 1000000}/1M, output=$${fallbackPricing.output_cost_per_token * 1000000}/1M`
+              )
+
+              resolve(fallbackPricing)
+            } catch (parseError) {
+              logger.error(`❌ Failed to parse OpenAI pricing page for ${modelName}:`, parseError)
+              resolve(null)
+            }
+          })
+        })
+
+        request.on('error', (error) => {
+          logger.error(`❌ Failed to fetch OpenAI pricing page for ${modelName}:`, error)
+          resolve(null)
+        })
+
+        request.setTimeout(10000, () => {
+          request.destroy()
+          logger.error(`❌ Timeout fetching OpenAI pricing for ${modelName}`)
+          resolve(null)
+        })
+      })
+    } catch (error) {
+      logger.error(`❌ Error in fetchPricingFromOpenAI for ${modelName}:`, error)
+      return null
+    }
+  }
+
+  /**
+   * 异步获取模型价格信息（支持智能 fallback）
+   * @param {string} modelName - 模型名称
+   * @returns {Promise<Object|null>} 价格信息或 null
+   */
+  async getModelPricingAsync(modelName) {
+    // 首先尝试从本地数据获取
+    const localPricing = this.getModelPricing(modelName)
+    if (localPricing) {
+      return localPricing
+    }
+
+    // 如果本地没有找到，尝试从 OpenAI 官网获取
+    logger.info(`💰 Model ${modelName} not found in local pricing data, attempting web fallback...`)
+    const webPricing = await this.fetchPricingFromOpenAI(modelName)
+
+    if (webPricing) {
+      // 缓存到内存中（不持久化到文件）
+      if (!this.pricingData) {
+        this.pricingData = {}
+      }
+      this.pricingData[modelName] = webPricing
+      logger.info(`✅ Successfully fetched and cached pricing for ${modelName} from web`)
+      return webPricing
+    }
+
+    logger.warn(`⚠️  Could not find pricing for ${modelName} from any source`)
+    return null
   }
 
   // 清理资源

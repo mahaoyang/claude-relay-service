@@ -430,7 +430,7 @@ router.get('/usage-trend', authenticateAdmin, async (req, res) => {
         logger.info(`  startTime (parsed): ${startTime.toISOString()}`)
         logger.info(`  endTime (parsed): ${endTime.toISOString()}`)
         logger.info(
-          `  System timezone offset: ${require('../../../config/config').system.timezoneOffset || 8}`
+          `  System timezone offset: ${require('../../../config').system.timezoneOffset || 8}`
         )
       } else {
         // 默认最近24小时

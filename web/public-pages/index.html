@@ -1,0 +1,1031 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="/public-pages/assets/favicon-light.svg"
+      id="favicon"
+    />
+    <script>
+      // 动态设置 favicon 根据主题
+      ;(function () {
+        const theme = localStorage.getItem('theme') || 'light'
+        const favicon = document.getElementById('favicon')
+        favicon.href =
+          theme === 'dark'
+            ? '/public-pages/assets/favicon-dark.svg'
+            : '/public-pages/assets/favicon-light.svg'
+
+        // 监听主题变化
+        window.addEventListener('storage', function (e) {
+          if (e.key === 'theme') {
+            favicon.href =
+              e.newValue === 'dark'
+                ? '/public-pages/assets/favicon-dark.svg'
+                : '/public-pages/assets/favicon-light.svg'
+          }
+        })
+      })()
+    </script>
+
+    <!-- SEO Meta 标签 -->
+    <title>JoJo Code - Code CLI Provider | 安装 JoJo Code CLI，购买使用额度</title>
+    <meta
+      name="description"
+      content="JoJo Code 提供跨平台 Code CLI（命令行编程助手）。购买使用额度后，npm install -g jojocode 安装，使用 /connect 绑定 Key、/model 选择模型即可开始。"
+    />
+    <meta
+      name="keywords"
+      content="JoJo Code, JoJoCode, Code CLI, coding assistant, developer CLI, 命令行, 使用额度, 代码助手, npm install -g jojocode"
+    />
+    <meta name="author" content="JoJoCode" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://www.jojocode.org/" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://www.jojocode.org/" />
+    <meta property="og:title" content="JoJo Code - Code CLI Provider" />
+    <meta
+      property="og:description"
+      content="跨平台 Code CLI：npm install -g jojocode，/connect 绑定 Key，/model 选择模型，购买使用额度即可使用。"
+    />
+    <meta property="og:image" content="/public-pages/index.jpg" />
+    <meta property="og:locale" content="zh_CN" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="https://www.jojocode.org/" />
+    <meta name="twitter:title" content="JoJo Code - Code CLI Provider" />
+    <meta
+      name="twitter:description"
+      content="跨平台 Code CLI：npm install -g jojocode，/connect 绑定 Key，/model 选择模型，购买使用额度即可使用。"
+    />
+    <meta name="twitter:image" content="/public-pages/index.jpg" />
+
+    <!-- 结构化数据 (JSON-LD) -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "JoJoCode",
+        "description": "跨平台 Code CLI 提供商（按使用额度计费）",
+        "url": "https://www.jojocode.org/",
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": "https://www.jojocode.org/api-gateway-stats?id={search_term_string}",
+          "query-input": "required name=search_term_string"
+        }
+      }
+    </script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "JoJoCode",
+        "url": "https://www.jojocode.org/",
+        "logo": "/public-pages/assets/logo-light.png",
+        "description": "JoJo Code CLI 提供商（按使用额度计费）"
+      }
+    </script>
+
+    <!-- Tailwind CSS (Local) -->
+    <link rel="stylesheet" href="/public-pages/assets/tailwind-public-pages.css" />
+
+	    <!-- Google Fonts: Manrope -->
+	    <link rel="preconnect" href="https://fonts.googleapis.com" />
+	    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+	    <link
+	      href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700&display=swap"
+	      rel="stylesheet"
+	    />
+
+    <!-- FontAwesome for Icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+
+    <!-- Alpine.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+    <style>
+      html {
+        scrollbar-gutter: stable;
+        --jo-scrollbar-horizontal-size: 4px;
+      }
+
+      body {
+        background: radial-gradient(1200px 600px at 20% 10%, rgba(31, 47, 34, 0.06), transparent 60%),
+          radial-gradient(1000px 500px at 90% 30%, rgba(31, 47, 34, 0.05), transparent 55%),
+          #f2f0e9;
+        color: #1f2f22;
+      }
+
+      .jo-surface {
+        border: 1px solid rgba(31, 47, 34, 0.12);
+        background: rgba(255, 255, 255, 0.38);
+        backdrop-filter: blur(10px);
+        box-shadow:
+          0 24px 60px rgba(31, 47, 34, 0.08),
+          0 2px 0 rgba(255, 255, 255, 0.4) inset;
+      }
+
+	      .jo-soft-ring {
+	        box-shadow:
+	          0 18px 40px rgba(31, 47, 34, 0.08),
+	          0 0 0 1px rgba(31, 47, 34, 0.10) inset;
+	      }
+
+	      .jo-tab-badge-icon {
+	        width: 15px;
+	        height: 15px;
+	        font-size: 15px;
+	        line-height: 1;
+	        display: inline-flex;
+	        align-items: center;
+	        justify-content: center;
+	        flex: 0 0 15px;
+	      }
+
+		      .jo-h1 {
+		        letter-spacing: -0.03em;
+		      }
+
+      /* Custom scrollbar */
+      ::-webkit-scrollbar {
+        width: 8px;
+        height: var(--jo-scrollbar-horizontal-size);
+      }
+
+      ::-webkit-scrollbar-track {
+        background: #f2f0e9;
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background: #d1d1d1;
+        border-radius: 4px;
+      }
+
+      ::-webkit-scrollbar-thumb:hover {
+        background: #1f2f22;
+      }
+
+      [x-cloak] {
+        display: none !important;
+      }
+
+      /* Smooth fade for tabs */
+      .tab-content {
+        display: none;
+        animation: fadeIn 0.4s ease-in-out;
+      }
+
+      .tab-content.active {
+        display: block;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .hover-arrow-move:hover i {
+        transform: translateX(4px) translateY(-4px);
+        transition: transform 0.2s ease;
+      }
+
+      /* Inline Logo Styles - Match logo.html proportions */
+      .inline-logo-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        line-height: 1;
+      }
+
+      .inline-logo-main {
+        display: flex;
+        align-items: baseline;
+        font-weight: 700;
+        color: #1f2f22;
+        line-height: 1;
+        filter: drop-shadow(1px 2px 2px rgba(0, 0, 0, 0.15));
+      }
+
+      .inline-logo-main .symbols {
+        font-size: 8px;
+        letter-spacing: -0.5px;
+        font-weight: 600;
+        display: flex;
+        align-items: baseline;
+        margin-right: 3px;
+      }
+
+      .inline-logo-main .letters {
+        font-size: 20px;
+        letter-spacing: -1.2px;
+        display: flex;
+        align-items: baseline;
+        font-weight: 700;
+      }
+
+      .inline-logo-subtitle {
+        font-size: 5px;
+        font-weight: 500;
+        color: #1f2f22;
+        letter-spacing: 0.4px;
+        opacity: 0.8;
+        margin-top: 1px;
+        text-shadow: 0.5px 0.5px 1px rgba(0, 0, 0, 0.1);
+        text-align: center;
+      }
+
+	      /* Nav mini search (expand on click) */
+	      #nav-key-search {
+	        position: relative;
+	        border: 0;
+	        background: transparent;
+	        box-shadow: none;
+	        padding: 0;
+	        backdrop-filter: none;
+	      }
+
+	      .jo-nav-link {
+	        position: relative;
+	        display: inline-block;
+	        color: rgba(31, 47, 34, 0.72);
+	        text-decoration: none;
+	        transition: color 160ms ease;
+	      }
+
+	      .jo-nav-link:hover {
+	        color: #1f2f22;
+	      }
+
+	      .jo-nav-link::after {
+	        content: '';
+	        position: absolute;
+	        left: 50%;
+	        transform: translateX(-50%);
+	        width: 0;
+	        height: 1px;
+	        bottom: -2px;
+	        background-color: #1f2f22;
+	        transition: width 220ms ease;
+	      }
+
+	      .jo-nav-link:hover::after {
+	        width: 100%;
+	      }
+
+	      .jo-nav-link[aria-current='page'] {
+	        color: #1f2f22;
+	      }
+
+	      .jo-nav-link[aria-current='page']::after {
+	        width: 100%;
+	      }
+
+	      .jo-nav-link:focus-visible {
+	        outline: 2px solid rgba(31, 47, 34, 0.22);
+	        outline-offset: 3px;
+	      }
+
+      #nav-key-search .nav-search-field {
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        position: absolute;
+        top: 50%;
+        right: calc(100% + 0.5rem);
+        transform: translateY(-50%) scale(0.98);
+        z-index: 20;
+        padding: 0.25rem 0.375rem 0.25rem 0.75rem;
+        border-radius: 9999px;
+        border: 1px solid rgba(31, 47, 34, 0.12);
+        background: rgba(255, 255, 255, 0.6);
+        backdrop-filter: blur(12px);
+        box-shadow: 0 8px 24px rgba(31, 47, 34, 0.07);
+        flex: 0 0 auto;
+        max-width: 0;
+        width: 0;
+        opacity: 0;
+        overflow: hidden;
+        pointer-events: none;
+        transition:
+          width 320ms cubic-bezier(0.16, 1, 0.3, 1),
+          max-width 320ms cubic-bezier(0.16, 1, 0.3, 1),
+          opacity 220ms ease,
+          transform 320ms cubic-bezier(0.16, 1, 0.3, 1),
+          border-color 220ms ease,
+          box-shadow 220ms ease;
+      }
+
+      #nav-key-search.is-expanded .nav-search-field {
+        max-width: min(16rem, 65vw);
+        width: min(16rem, 65vw);
+        opacity: 1;
+        transform: translateY(-50%) scale(1);
+        pointer-events: auto;
+      }
+
+      #nav-key-search.is-expanded .nav-search-field:hover {
+        border-color: rgba(31, 47, 34, 0.18);
+      }
+
+      #nav-key-search.is-expanded .nav-search-field:focus-within {
+        border-color: rgba(31, 47, 34, 0.22);
+        box-shadow: 0 6px 18px rgba(31, 47, 34, 0.05);
+      }
+    </style>
+  </head>
+
+  <body class="font-sans antialiased selection:bg-brand-dark selection:text-white">
+    <!-- Main Container -->
+    <div class="max-w-[1440px] mx-auto px-0 sm:px-6 md:px-12 py-2 sm:py-8 md:py-12">
+      <div class="jo-surface rounded-2xl sm:rounded-[2.5rem] px-4 sm:px-6 md:px-12 py-4 sm:py-6 md:py-10">
+        <!-- Navigation Header -->
+        <nav
+          class="pb-4 md:pb-8 mb-8 md:mb-12 border-b border-brand-dark/10"
+          x-data="{ mobileMenuOpen: false }"
+          role="navigation"
+          aria-label="主导航"
+        >
+        <div class="flex items-center justify-between gap-4">
+          <!-- Logo -->
+          <div class="flex items-center gap-3">
+            <a href="/" aria-label="JoJoCode 首页" class="inline-flex">
+              <div class="inline-logo-wrapper">
+                <div class="inline-logo-main">
+                  <div class="symbols">
+                    <span>&gt;</span>
+                    <span>_</span>
+                  </div>
+                  <div class="letters">
+                    <span>J</span>
+                    <span>O</span>
+                  </div>
+                </div>
+                <div class="inline-logo-subtitle">JO</div>
+              </div>
+            </a>
+          </div>
+
+          <!-- Nav Links (Desktop) -->
+	          <div
+	            class="hidden md:flex items-center space-x-8 text-sm font-medium"
+	            role="menubar"
+	            aria-label="桌面导航菜单"
+		          >
+		            <a href="/" class="jo-nav-link" role="menuitem" aria-current="page">首页</a>
+		            <a href="/docs" class="jo-nav-link" role="menuitem">文档</a>
+		            <a href="/price" class="jo-nav-link" role="menuitem">价格</a>
+		            <a href="/api-gateway-stats" class="jo-nav-link" role="menuitem">查询</a>
+		            <!-- <a href="/api-gateway" class="jo-nav-link" role="menuitem">网关</a> -->
+		            <!-- <a href="/api-gateway-docs" class="jo-nav-link" role="menuitem">网关文档</a> -->
+		            <a href="/about" class="jo-nav-link" role="menuitem">关于</a>
+		          </div>
+
+          <div class="flex items-center gap-4">
+            <!-- Key Search -->
+            <form
+              id="nav-key-search"
+              class="flex items-center flex-none rounded-full"
+              autocomplete="off"
+            >
+              <button
+                id="nav-key-toggle"
+                type="button"
+                class="h-7 w-7 shrink-0 rounded-full bg-white/60 border border-brand-dark/10 flex items-center justify-center hover:border-brand-dark/20 transition"
+                aria-label="搜索 Key"
+                aria-expanded="false"
+              >
+                <i class="fa-solid fa-magnifying-glass text-brand-gray text-xs"></i>
+              </button>
+
+              <div class="nav-search-field">
+                <input
+                  id="nav-key-input"
+                  type="text"
+                  inputmode="text"
+                  autocapitalize="off"
+                  spellcheck="false"
+                  placeholder="输入 Key 查询额度"
+                  class="bg-transparent outline-none placeholder:text-brand-gray/70 text-xs w-full min-w-0"
+                />
+                <button
+                  type="submit"
+                  class="h-7 w-7 shrink-0 rounded-full bg-brand-dark text-white flex items-center justify-center hover:bg-opacity-90 transition shadow-md shadow-brand-dark/10"
+                  aria-label="查询统计"
+                >
+                  <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                </button>
+              </div>
+            </form>
+
+            <!-- CTA Button -->
+            <a
+              href="/docs"
+              class="hidden md:inline-flex bg-brand-dark text-white px-3 py-1.5 md:px-5 md:py-2 rounded-full text-xs md:text-sm font-medium hover:bg-opacity-90 transition shadow-lg shadow-brand-dark/10 whitespace-nowrap"
+            >
+              安装 CLI
+            </a>
+
+            <!-- Mobile Menu Button -->
+            <button
+              @click="mobileMenuOpen = !mobileMenuOpen"
+              class="md:hidden h-7 w-7 rounded-full bg-white/60 border border-brand-dark/10 flex items-center justify-center hover:border-brand-dark/20 transition"
+              aria-label="打开移动菜单"
+              aria-expanded="false"
+              :aria-expanded="mobileMenuOpen"
+              aria-controls="mobile-menu"
+            >
+              <i
+                class="fa-solid text-brand-gray text-xs"
+                :class="mobileMenuOpen ? 'fa-xmark' : 'fa-bars'"
+                aria-hidden="true"
+              ></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div
+          id="mobile-menu"
+          x-show="mobileMenuOpen"
+          x-cloak
+          @click.away="mobileMenuOpen = false"
+          x-transition:enter="transition ease-out duration-200"
+          x-transition:enter-start="opacity-0 -translate-y-2"
+          x-transition:enter-end="opacity-100 translate-y-0"
+          x-transition:leave="transition ease-in duration-150"
+          x-transition:leave-start="opacity-100 translate-y-0"
+          x-transition:leave-end="opacity-0 -translate-y-2"
+          class="md:hidden mt-4 bg-white/80 backdrop-blur-sm border border-gray-200 rounded-2xl overflow-hidden"
+          role="menu"
+          aria-label="移动导航菜单"
+        >
+	          <div class="flex flex-col">
+	            <a
+	              href="/"
+	              class="px-6 py-3 text-sm font-medium hover:bg-brand-bg/50 transition border-b border-gray-200"
+	              role="menuitem"
+	              aria-current="page"
+	            >
+	              首页
+	            </a>
+            <a
+              href="/docs"
+              class="px-6 py-3 text-sm font-medium hover:bg-brand-bg/50 transition border-b border-gray-200"
+              role="menuitem"
+            >
+              文档
+            </a>
+            <a
+              href="/price"
+              class="px-6 py-3 text-sm font-medium hover:bg-brand-bg/50 transition border-b border-gray-200"
+              role="menuitem"
+            >
+              价格
+            </a>
+            <a
+              href="/api-gateway-stats"
+              class="px-6 py-3 text-sm font-medium hover:bg-brand-bg/50 transition border-b border-gray-200"
+              role="menuitem"
+            >
+              查询
+            </a>
+            <!-- <a
+              href="/api-gateway"
+              class="px-6 py-3 text-sm font-medium hover:bg-brand-bg/50 transition border-b border-gray-200"
+              role="menuitem"
+            >
+              网关
+            </a>
+            <a
+              href="/api-gateway-docs"
+              class="px-6 py-3 text-sm font-medium hover:bg-brand-bg/50 transition border-b border-gray-200"
+              role="menuitem"
+            >
+              网关文档
+            </a> -->
+	            <a
+	              href="/about"
+	              class="px-6 py-3 text-sm font-medium hover:bg-brand-bg/50 transition"
+	              role="menuitem"
+	            >
+	              关于
+	            </a>
+	          </div>
+	        </div>
+      </nav>
+
+      <!-- Hero Section -->
+      <header class="mb-16 md:mb-20">
+        <div class="flex flex-col md:flex-row justify-between items-start mb-8 gap-8">
+          <div>
+            <p class="text-sm md:text-base text-gray-500 mb-2">/ Code CLI Provider</p>
+	            <h1
+	              class="jo-h1 text-4xl sm:text-5xl md:text-7xl font-semibold tracking-tight leading-tight uppercase text-brand-dark"
+	            >
+	              JoJo Code <br />
+	              CLI
+	            </h1>
+          </div>
+          <div class="flex flex-col items-end mt-1 md:mt-0 gap-3 md:gap-4">
+            <div class="text-right max-w-xs">
+              <p class="text-gray-600 text-sm md:text-base leading-relaxed">
+                面向开发者的 Code CLI<br />购买使用额度 · 安装即用
+              </p>
+              <div class="mt-3 flex flex-col gap-1.5 text-xs text-gray-500">
+                <div class="flex items-center justify-end gap-2">
+                  <span class="h-1.5 w-1.5 rounded-full bg-brand-dark/35"></span>
+                  <span>npm install -g jojocode</span>
+                </div>
+                <div class="flex items-center justify-end gap-2">
+                  <span class="h-1.5 w-1.5 rounded-full bg-brand-dark/35"></span>
+                  <span>/connect 绑定 Key · /model 选模型</span>
+                </div>
+              </div>
+            </div>
+
+            <a
+              href="/api-gateway-stats"
+              class="group flex items-center gap-2 text-xs font-bold uppercase tracking-wide border-b border-brand-dark/30 pb-1 hover-arrow-move"
+            >
+              查询用量
+              <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
+            </a>
+          </div>
+        </div>
+
+        <!-- Hero Image -->
+        <div class="w-full h-[260px] md:h-[420px] overflow-hidden rounded-[2rem] jo-soft-ring">
+          <!-- <img
+            src="/public-pages/assets/JoJoCode.jpg"
+            alt="JoJo Code CLI"
+            class="w-full h-full object-cover hover:scale-105 transition duration-700 ease-in-out"
+          /> -->
+          <img
+            src="https://images.unsplash.com/photo-1654355229863-95a8a7a779dd?auto=format&fit=crop&w=1800&q=80"
+            alt="Digital nomad working on the beach"
+            class="w-full h-full object-cover hover:scale-105 transition duration-700 ease-in-out"
+          />
+        </div>
+      </header>
+
+      <!-- About Section Grid -->
+      <section class="grid grid-cols-1 md:grid-cols-12 gap-6 mb-20 md:mb-24">
+        <!-- Left Image -->
+        <div class="md:col-span-3 h-[300px] md:h-[400px]">
+          <img
+            src="https://images.unsplash.com/photo-1653907696261-be994f43ffbd?auto=format&fit=crop&w=1200&q=80"
+            alt="Remote work with laptop"
+            class="w-full h-full object-cover rounded-[1.5rem] jo-soft-ring"
+            loading="lazy"
+          />
+        </div>
+
+        <!-- Center Content -->
+        <div class="md:col-span-5 flex flex-col justify-center px-4 md:px-8">
+          <div
+            class="flex items-center gap-2 text-xs font-bold text-gray-400 uppercase tracking-widest mb-4"
+          >
+            <i class="fa-solid fa-star text-[10px]"></i> 关于我们
+          </div>
+          <h2 class="text-3xl font-medium leading-tight mb-6 text-brand-dark">
+            一个 Key 打通 CLI<br />购买使用额度，安装即用
+          </h2>
+          <p class="text-gray-600 text-sm leading-relaxed mb-8">
+            JoJo Code 面向开发者提供 Code CLI。购买使用额度后，安装 `jojocode`，用 `/connect` 绑定 Key，
+            再用 `/model` 选择模型，即可在终端完成编程、改代码、写说明与排查问题等工作流。
+          </p>
+          <a
+            href="/docs"
+            class="group inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wide underline underline-offset-4 decoration-gray-400 hover:decoration-brand-dark transition hover-arrow-move w-max"
+          >
+            查看文档
+            <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
+          </a>
+        </div>
+
+        <!-- Right Image -->
+        <div class="md:col-span-4 h-[300px] md:h-[400px]">
+          <img
+            src="https://images.unsplash.com/photo-1494783367193-149034c05e8f?auto=format&fit=crop&w=1200&q=80"
+            alt="Travel road landscape"
+            class="w-full h-full object-cover rounded-[1.5rem] jo-soft-ring"
+            loading="lazy"
+          />
+        </div>
+      </section>
+
+      <!-- Why Choose Us -->
+      <section class="mb-20 md:mb-24">
+        <div class="flex items-end justify-between gap-6 mb-8">
+          <h3 class="text-2xl font-medium text-brand-dark">为什么选择我们？</h3>
+          <p class="text-sm text-gray-500 max-w-md text-right hidden md:block">
+            少折腾，多产出：更像“工具基础设施”，而不是又一个平台账号体系。
+          </p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 border-t border-brand-dark/10 pt-8">
+          <!-- Card 1 -->
+          <div class="flex items-start justify-between gap-6 rounded-2xl bg-white/30 p-6 jo-soft-ring">
+            <div>
+              <h4 class="font-semibold text-lg mb-2">价格透明</h4>
+              <p class="text-gray-500 text-sm max-w-xs">
+                按使用额度计费，无隐藏收费，随时查询剩余额度与使用记录。
+              </p>
+            </div>
+            <div
+              class="h-10 w-10 rounded-full bg-brand-bg/60 flex items-center justify-center text-brand-dark/80"
+            >
+              <i class="fa-solid fa-dollar-sign text-sm"></i>
+            </div>
+          </div>
+
+          <!-- Card 2 -->
+          <div class="flex items-start justify-between gap-6 rounded-2xl bg-white/30 p-6 jo-soft-ring">
+            <div>
+              <h4 class="font-semibold text-lg mb-2">模型选择</h4>
+              <p class="text-gray-500 text-sm max-w-xs">
+                使用 `/model` 选择适合当前任务的模型，并可随时切换，保持工作流连贯。
+              </p>
+            </div>
+            <div
+              class="h-10 w-10 rounded-full bg-brand-bg/60 flex items-center justify-center text-brand-dark/80"
+            >
+              <i class="fa-solid fa-shield-halved text-sm"></i>
+            </div>
+          </div>
+
+          <!-- Card 3 -->
+          <div class="flex items-start justify-between gap-6 rounded-2xl bg-white/30 p-6 jo-soft-ring">
+            <div>
+              <h4 class="font-semibold text-lg mb-2">即买即用</h4>
+              <p class="text-gray-500 text-sm max-w-xs">
+                购买使用额度后，一条命令安装，绑定 Key 即可开始使用。
+              </p>
+            </div>
+            <div
+              class="h-10 w-10 rounded-full bg-brand-bg/60 flex items-center justify-center text-brand-dark/80"
+            >
+              <i class="fa-solid fa-bolt text-sm"></i>
+            </div>
+          </div>
+
+          <!-- Card 4 -->
+          <div class="flex items-start justify-between gap-6 rounded-2xl bg-white/30 p-6 jo-soft-ring">
+            <div>
+              <h4 class="font-semibold text-lg mb-2">稳定可靠</h4>
+              <p class="text-gray-500 text-sm max-w-xs">
+                7x24 小时稳定运行，智能负载均衡，多账户冗余，确保服务持续可用。
+              </p>
+            </div>
+            <div
+              class="h-10 w-10 rounded-full bg-brand-bg/60 flex items-center justify-center text-brand-dark/80"
+            >
+              <i class="fa-solid fa-server text-sm"></i>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- CLI Workflows Section (Tabs) -->
+      <section class="mb-24">
+        <div class="text-center mb-12">
+          <div
+            class="flex items-center justify-center gap-2 text-xs font-bold text-gray-400 uppercase tracking-widest mb-2"
+          >
+            <i class="fa-solid fa-terminal text-[10px]"></i> JoJo Code CLI
+          </div>
+          <h2 class="text-3xl font-medium text-brand-dark mb-3">三步上手</h2>
+          <p class="text-gray-500 text-sm max-w-md mx-auto">
+            安装、连接、选模型：保持简单，尽量不打断你的开发节奏。
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+          <div class="lg:col-span-3 flex flex-col space-y-2">
+            <button
+              onclick="openTab(event, 'connect')"
+              class="tab-btn active text-left px-6 py-4 rounded-xl text-sm font-medium transition-all duration-300 bg-brand-dark text-white shadow-lg"
+            >
+              <i class="fa-solid fa-link mr-2"></i> /connect
+            </button>
+            <button
+              onclick="openTab(event, 'model')"
+              class="tab-btn text-left px-6 py-4 rounded-xl text-sm font-medium transition-all duration-300 hover:bg-brand-dark/15 text-brand-dark bg-[#EAE8E1]"
+            >
+              <i class="fa-solid fa-layer-group mr-2"></i> /model
+            </button>
+            <button
+              onclick="openTab(event, 'workflow')"
+              class="tab-btn text-left px-6 py-4 rounded-xl text-sm font-medium transition-all duration-300 hover:bg-brand-dark/15 text-brand-dark bg-[#EAE8E1]"
+            >
+              <i class="fa-solid fa-code mr-2"></i> 工作流
+            </button>
+            <button
+              onclick="openTab(event, 'credits')"
+              class="tab-btn text-left px-6 py-4 rounded-xl text-sm font-medium transition-all duration-300 hover:bg-brand-dark/15 text-brand-dark bg-[#EAE8E1]"
+            >
+              <i class="fa-solid fa-wallet mr-2"></i> 额度
+            </button>
+          </div>
+
+          <div class="lg:col-span-9 rounded-[2rem] p-4 lg:p-6 min-h-[400px] bg-white/30 jo-soft-ring">
+            <div id="connect" class="tab-content active h-full">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6 h-full items-center">
+                <div class="h-[300px] md:h-[400px] overflow-hidden rounded-2xl jo-soft-ring">
+                  <img
+                    src="https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?q=80&w=910&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                    alt="CLI connect"
+                    class="w-full h-full object-cover hover:scale-105 transition duration-500"
+                    loading="lazy"
+                  />
+                </div>
+                <div class="flex flex-col justify-center pr-4">
+                  <div
+                    class="flex items-center gap-2 text-xs font-bold text-gray-500 uppercase tracking-wide mb-4"
+                  >
+                    <i class="fa-solid fa-link text-[10px]"></i> 绑定 Key
+                  </div>
+                  <h3 class="text-2xl md:text-3xl font-medium mb-4 text-brand-dark">/connect</h3>
+                  <p class="text-gray-600 text-sm leading-relaxed mb-6">
+                    安装完成后启动 <code>jojocode</code>，输入 <code>/connect</code> 并粘贴你的 Key。连接成功后即可开始对话式编程。
+                  </p>
+
+                  <div class="bg-brand-bg/60 p-3 rounded-lg flex items-center gap-3 mb-8">
+                    <i class="fa-solid fa-check-circle jo-tab-badge-icon text-brand-dark"></i>
+                    <div class="flex items-center">
+                      <p class="text-xs font-bold text-brand-dark leading-none">一次连接 · 多次复用 · 轻量上手</p>
+                    </div>
+                  </div>
+
+                  <a
+                    href="/docs"
+                    class="group flex items-center gap-2 text-xs font-bold uppercase tracking-wide border-b border-brand-dark/30 pb-1 w-max hover-arrow-move"
+                  >
+                    查看文档
+                    <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <div id="model" class="tab-content h-full">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6 h-full items-center">
+                <div class="h-[300px] md:h-[400px] overflow-hidden rounded-2xl jo-soft-ring">
+                  <img
+                    src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=1400&q=80"
+                    alt="Model selection"
+                    class="w-full h-full object-cover hover:scale-105 transition duration-500"
+                    loading="lazy"
+                  />
+                </div>
+                <div class="flex flex-col justify-center pr-4">
+                  <div
+                    class="flex items-center gap-2 text-xs font-bold text-gray-500 uppercase tracking-wide mb-4"
+                  >
+                    <i class="fa-solid fa-layer-group text-[10px]"></i> 随时切换
+                  </div>
+                  <h3 class="text-2xl md:text-3xl font-medium mb-4 text-brand-dark">/model</h3>
+                  <p class="text-gray-600 text-sm leading-relaxed mb-6">
+                    输入 <code>/model</code> 选择当前会话使用的模型。需要更强推理、更快响应或更低成本时，随时切换即可。
+                  </p>
+
+                  <div class="bg-brand-bg/60 p-3 rounded-lg flex items-center gap-3 mb-8">
+                    <i class="fa-solid fa-check-circle jo-tab-badge-icon text-brand-dark"></i>
+                    <div class="flex items-center">
+                      <p class="text-xs font-bold text-brand-dark leading-none">任务匹配 · 成本可控 · 不换工具</p>
+                    </div>
+                  </div>
+
+                  <a
+                    href="/docs"
+                    class="group flex items-center gap-2 text-xs font-bold uppercase tracking-wide border-b border-brand-dark/30 pb-1 w-max hover-arrow-move"
+                  >
+                    查看文档
+                    <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <div id="workflow" class="tab-content h-full">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6 h-full items-center">
+                <div class="h-[300px] md:h-[400px] overflow-hidden rounded-2xl jo-soft-ring">
+                  <img
+                    src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1400&q=80"
+                    alt="Terminal workflow"
+                    class="w-full h-full object-cover hover:scale-105 transition duration-500"
+                    loading="lazy"
+                  />
+                </div>
+                <div class="flex flex-col justify-center pr-4">
+                  <div
+                    class="flex items-center gap-2 text-xs font-bold text-gray-500 uppercase tracking-wide mb-4"
+                  >
+                    <i class="fa-solid fa-code text-[10px]"></i> 开发者习惯
+                  </div>
+                  <h3 class="text-2xl md:text-3xl font-medium mb-4 text-brand-dark">对话式编程</h3>
+                  <p class="text-gray-600 text-sm leading-relaxed mb-6">
+                    把报错、代码片段、需求描述贴进终端，让 CLI 帮你拆解问题、生成补丁方案、补齐文档与测试思路。
+                  </p>
+
+                  <div class="bg-brand-bg/60 p-3 rounded-lg flex items-center gap-3 mb-8">
+                    <i class="fa-solid fa-check-circle jo-tab-badge-icon text-brand-dark"></i>
+                    <div class="flex items-center">
+                      <p class="text-xs font-bold text-brand-dark leading-none">贴代码 · 给建议 · 帮你推进</p>
+                    </div>
+                  </div>
+
+                  <a
+                    href="/docs"
+                    class="group flex items-center gap-2 text-xs font-bold uppercase tracking-wide border-b border-brand-dark/30 pb-1 w-max hover-arrow-move"
+                  >
+                    查看文档
+                    <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <div id="credits" class="tab-content h-full">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6 h-full items-center">
+                <div class="h-[300px] md:h-[400px] overflow-hidden rounded-2xl jo-soft-ring">
+                  <img
+                    src="https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=1400&q=80"
+                    alt="Credits and usage"
+                    class="w-full h-full object-cover hover:scale-105 transition duration-500"
+                    loading="lazy"
+                  />
+                </div>
+                <div class="flex flex-col justify-center pr-4">
+                  <div
+                    class="flex items-center gap-2 text-xs font-bold text-gray-500 uppercase tracking-wide mb-4"
+                  >
+                    <i class="fa-solid fa-wallet text-[10px]"></i> 使用额度
+                  </div>
+                  <h3 class="text-2xl md:text-3xl font-medium mb-4 text-brand-dark">按额度使用</h3>
+                  <p class="text-gray-600 text-sm leading-relaxed mb-6">
+                    你购买的是使用额度。需要查看剩余额度、用量与费用明细，可前往查询页面。
+                  </p>
+
+                  <div class="bg-brand-bg/60 p-3 rounded-lg flex items-center gap-3 mb-8">
+                    <i class="fa-solid fa-check-circle jo-tab-badge-icon text-brand-dark"></i>
+                    <div class="flex items-center">
+                      <p class="text-xs font-bold text-brand-dark leading-none">额度清晰 · 记录可查 · 支持售后</p>
+                    </div>
+                  </div>
+
+                  <a
+                    href="/api-gateway-stats"
+                    class="group flex items-center gap-2 text-xs font-bold uppercase tracking-wide border-b border-brand-dark/30 pb-1 w-max hover-arrow-move"
+                  >
+                    查询统计
+                    <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Footer -->
+      <div class="border-t border-gray-300/50 pt-8 pb-12">
+        <div class="flex flex-col md:flex-row justify-between items-center gap-6">
+          <div class="flex items-center gap-3">
+            <div
+              class="inline-logo-wrapper"
+              style="transform: scale(0.8); transform-origin: left center"
+            >
+              <a href="/" aria-label="JoJoCode 首页" class="block">
+                <div class="inline-logo-main">
+                  <div class="symbols">
+                    <span>&gt;</span>
+                    <span>_</span>
+                  </div>
+                  <div class="letters">
+                    <span>J</span>
+                    <span>O</span>
+                  </div>
+                </div>
+                <div class="inline-logo-subtitle">JO</div>
+              </a>
+            </div>
+            <span class="text-sm text-gray-500">© 2024 JoJo Code. Code CLI Provider.</span>
+          </div>
+	          <div class="flex flex-wrap items-center justify-center gap-6 text-sm">
+	            <a href="/" class="text-gray-500 hover:text-brand-dark transition">首页</a>
+	            <a href="/docs" class="text-gray-500 hover:text-brand-dark transition">文档</a>
+	            <a href="/price" class="text-gray-500 hover:text-brand-dark transition">价格</a>
+	            <a href="/api-gateway-stats" class="text-gray-500 hover:text-brand-dark transition">查询</a>
+	            <a href="/privacy" class="text-gray-500 hover:text-brand-dark transition">隐私协议</a>
+	            <a href="/terms" class="text-gray-500 hover:text-brand-dark transition">服务协议</a>
+	            <a
+	              href="mailto:cac900101@gmail.com"
+	              class="text-gray-500 hover:text-brand-dark transition"
+	              >客服邮箱</a
+	            >
+	          </div>
+	        </div>
+	      </div>
+      </div>
+    </div>
+
+    <!--
+      Photo credits (Unsplash):
+      - hero-nomad-beach.jpg: https://unsplash.com/photos/Y7AwRJmfC0I
+      - about-nomad-laptop.jpg: https://unsplash.com/photos/lryOuTup7C8
+      - about-travel-road.jpg: https://unsplash.com/photos/A-NVHPka9Rk
+      - tab-lake-mountain.jpg: https://unsplash.com/photos/T7K4aEPoGGk
+      - tab-hot-air-balloon.jpg: https://unsplash.com/photos/t7YycgAoVSw
+      - tab-train-window.jpg: https://unsplash.com/photos/OZNrrSOI3U8
+      - tab-city-sunset.jpg: https://unsplash.com/photos/QKnoHdX72XE
+    -->
+
+    <!-- JavaScript for Tabs -->
+    <script>
+      ;(function () {
+        const form = document.getElementById('nav-key-search')
+        const toggle = document.getElementById('nav-key-toggle')
+        const input = document.getElementById('nav-key-input')
+        if (!form || !toggle || !input) return
+
+        function setExpanded(expanded) {
+          form.classList.toggle('is-expanded', expanded)
+          toggle.setAttribute('aria-expanded', String(expanded))
+          if (expanded) {
+            requestAnimationFrame(() => input.focus())
+          } else if (!input.value.trim()) {
+            input.value = ''
+          }
+        }
+
+        setExpanded(false)
+
+        toggle.addEventListener('click', function () {
+          const expanded = form.classList.contains('is-expanded')
+          if (!expanded) return setExpanded(true)
+          if (!input.value.trim()) return setExpanded(false)
+          input.focus()
+        })
+
+        document.addEventListener('click', function (e) {
+          if (!form.classList.contains('is-expanded')) return
+          if (form.contains(e.target)) return
+          if (!input.value.trim()) setExpanded(false)
+        })
+
+        input.addEventListener('keydown', function (e) {
+          if (e.key === 'Escape' && !input.value.trim()) setExpanded(false)
+        })
+
+        form.addEventListener('submit', function (e) {
+          e.preventDefault()
+          const value = (input.value || '').trim()
+          window.location.href = value ? `/api-gateway-stats?id=${encodeURIComponent(value)}` : '/api-gateway-stats'
+        })
+      })()
+
+      function openTab(evt, tabName) {
+        var i, tabcontent, tablinks
+        tabcontent = document.getElementsByClassName('tab-content')
+        for (i = 0; i < tabcontent.length; i++) {
+          tabcontent[i].classList.remove('active')
+          tabcontent[i].style.display = 'none'
+        }
+
+        tablinks = document.getElementsByClassName('tab-btn')
+        for (i = 0; i < tablinks.length; i++) {
+          tablinks[i].classList.remove('active', 'bg-brand-dark', 'text-white', 'shadow-lg')
+          tablinks[i].classList.add('bg-[#EAE8E1]', 'text-brand-dark', 'hover:bg-brand-dark/15')
+        }
+
+        document.getElementById(tabName).style.display = 'block'
+        setTimeout(() => {
+          document.getElementById(tabName).classList.add('active')
+        }, 10)
+
+        evt.currentTarget.classList.remove(
+          'bg-[#EAE8E1]',
+          'text-brand-dark',
+          'hover:bg-brand-dark/15'
+        )
+        evt.currentTarget.classList.add('active', 'bg-brand-dark', 'text-white', 'shadow-lg')
+      }
+    </script>
+  </body>
+</html>

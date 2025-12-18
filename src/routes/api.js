@@ -7,13 +7,24 @@ const bedrockAccountService = require('../services/bedrockAccountService')
 const unifiedClaudeScheduler = require('../services/unifiedClaudeScheduler')
 const apiKeyService = require('../services/apiKeyService')
 const { authenticateApiKey } = require('../middleware/auth')
+const disguiseMiddleware = require('../middleware/disguise')
+const requestLogger = require('../middleware/requestLogger') // 重新启用 - 用于调试 anthropic-version
+const { modelMapper } = require('../middleware/modelMapper')
 const logger = require('../utils/logger')
 const { getEffectiveModel, parseVendorPrefixedModel } = require('../utils/modelHelper')
 const sessionHelper = require('../utils/sessionHelper')
 const { updateRateLimitCounters } = require('../utils/rateLimitHelper')
 const claudeRelayConfigService = require('../services/claudeRelayConfigService')
+const disguiseSettingsService = require('../services/disguiseSettingsService')
 const { sanitizeUpstreamError } = require('../utils/errorSanitizer')
 const router = express.Router()
+
+function deepCloneJson(value) {
+  if (!value || typeof value !== 'object') {
+    return value
+  }
+  return JSON.parse(JSON.stringify(value))
+}
 
 function queueRateLimitUpdate(rateLimitInfo, usageSummary, model, context = '') {
   if (!rateLimitInfo) {
@@ -109,6 +120,14 @@ function isOldSession(body) {
 async function handleMessagesRequest(req, res) {
   try {
     const startTime = Date.now()
+    if (!req._originalBodyForDisguiseCheck) {
+      req._originalBodyForDisguiseCheck = deepCloneJson(req.body)
+    }
+    if (!req._originalHeadersForDisguiseCheck) {
+      req._originalHeadersForDisguiseCheck = { ...(req.headers || {}) }
+    }
+    const originalBody = req._originalBodyForDisguiseCheck
+    const originalHeaders = req._originalHeadersForDisguiseCheck
 
     // Claude 服务权限校验，阻止未授权的 Key
     if (
@@ -237,7 +256,7 @@ async function handleMessagesRequest(req, res) {
       let usageDataCaptured = false
 
       // 生成会话哈希用于sticky会话
-      const sessionHash = sessionHelper.generateSessionHash(req.body)
+      const sessionHash = sessionHelper.generateSessionHash(originalBody)
 
       // 🔒 全局会话绑定验证
       let forcedAccount = null
@@ -248,11 +267,11 @@ async function handleMessagesRequest(req, res) {
         const globalBindingEnabled = await claudeRelayConfigService.isGlobalSessionBindingEnabled()
 
         if (globalBindingEnabled) {
-          const originalSessionId = claudeRelayConfigService.extractOriginalSessionId(req.body)
+          const originalSessionId = claudeRelayConfigService.extractOriginalSessionId(originalBody)
 
           if (originalSessionId) {
             const validation = await claudeRelayConfigService.validateNewSession(
-              req.body,
+              originalBody,
               originalSessionId
             )
 
@@ -290,7 +309,7 @@ async function handleMessagesRequest(req, res) {
       }
 
       // 使用统一调度选择账号（传递请求的模型）
-      const requestedModel = req.body.model
+      const requestedModel = originalBody.model
       let accountId
       let accountType
       try {
@@ -338,10 +357,10 @@ async function handleMessagesRequest(req, res) {
         accountType === 'claude-official'
       ) {
         // 🚫 检测旧会话（污染的会话）
-        if (isOldSession(req.body)) {
+        if (isOldSession(originalBody)) {
           const cfg = await claudeRelayConfigService.getConfig()
           logger.warn(
-            `🚫 Old session rejected: sessionId=${originalSessionIdForBinding}, messages.length=${req.body?.messages?.length}, tools.length=${req.body?.tools?.length || 0}, isOldSession=true`
+            `🚫 Old session rejected: sessionId=${originalSessionIdForBinding}, messages.length=${originalBody?.messages?.length}, tools.length=${originalBody?.tools?.length || 0}, isOldSession=true`
           )
           return res.status(400).json({
             error: {
@@ -364,6 +383,61 @@ async function handleMessagesRequest(req, res) {
       }
 
       // 根据账号类型选择对应的转发服务并调用
+      const isDisguiseGloballyEnabled = process.env.DISGUISE_ENABLED !== 'false'
+      let shouldDisguiseThisRequest = false
+      if (isDisguiseGloballyEnabled && accountType === 'claude-official') {
+        try {
+          shouldDisguiseThisRequest = await disguiseSettingsService.isDisguiseEnabled(
+            'claude',
+            accountId
+          )
+        } catch (error) {
+          shouldDisguiseThisRequest = true
+        }
+      } else if (isDisguiseGloballyEnabled && accountType === 'claude-console') {
+        try {
+          shouldDisguiseThisRequest = await disguiseSettingsService.isDisguiseEnabled(
+            'claude-console',
+            accountId
+          )
+        } catch (error) {
+          shouldDisguiseThisRequest = true
+        }
+      } else if (isDisguiseGloballyEnabled && accountType === 'bedrock') {
+        try {
+          shouldDisguiseThisRequest = await disguiseSettingsService.isDisguiseEnabled(
+            'bedrock',
+            accountId
+          )
+        } catch (error) {
+          shouldDisguiseThisRequest = true
+        }
+      } else if (isDisguiseGloballyEnabled && accountType === 'ccr') {
+        try {
+          shouldDisguiseThisRequest = await disguiseSettingsService.isDisguiseEnabled(
+            'ccr',
+            accountId
+          )
+        } catch (error) {
+          shouldDisguiseThisRequest = true
+        }
+      }
+
+      if (shouldDisguiseThisRequest) {
+        req.body = deepCloneJson(originalBody)
+        req.headers = { ...originalHeaders }
+        try {
+          await new Promise((resolve, reject) => {
+            disguiseMiddleware(req, res, (err) => (err ? reject(err) : resolve()))
+          })
+        } catch (error) {
+          req.body = deepCloneJson(originalBody)
+          req.headers = { ...originalHeaders }
+        }
+      } else {
+        req.body = deepCloneJson(originalBody)
+        req.headers = { ...originalHeaders }
+      }
       if (accountType === 'claude-official') {
         // 官方Claude账号使用原有的转发服务（会自己选择账号）
         await claudeRelayService.relayStreamRequestWithUsageCapture(
@@ -398,7 +472,8 @@ async function handleMessagesRequest(req, res) {
               }
 
               const cacheReadTokens = usageData.cache_read_input_tokens || 0
-              const model = usageData.model || 'unknown'
+              // 优先使用原始请求模型（模型映射中间件保存），用于统计显示客户端请求的模型
+              const model = req.originalModel || usageData.model || 'unknown'
 
               // 记录真实的token使用量（包含模型信息和所有4种token以及账户ID）
               const { accountId: usageAccountId } = usageData
@@ -447,7 +522,9 @@ async function handleMessagesRequest(req, res) {
                 JSON.stringify(usageData)
               )
             }
-          }
+          },
+          null,
+          { forcedAccountId: accountId, forcedAccountType: accountType }
         )
       } else if (accountType === 'claude-console') {
         // Claude Console账号使用Console转发服务（需要传递accountId）
@@ -483,7 +560,8 @@ async function handleMessagesRequest(req, res) {
               }
 
               const cacheReadTokens = usageData.cache_read_input_tokens || 0
-              const model = usageData.model || 'unknown'
+              // 优先使用原始请求模型（模型映射中间件保存），用于统计显示客户端请求的模型
+              const model = req.originalModel || usageData.model || 'unknown'
 
               // 记录真实的token使用量（包含模型信息和所有4种token以及账户ID）
               const usageAccountId = usageData.accountId
@@ -624,7 +702,8 @@ async function handleMessagesRequest(req, res) {
               }
 
               const cacheReadTokens = usageData.cache_read_input_tokens || 0
-              const model = usageData.model || 'unknown'
+              // 优先使用原始请求模型（模型映射中间件保存），用于统计显示客户端请求的模型
+              const model = req.originalModel || usageData.model || 'unknown'
 
               // 记录真实的token使用量（包含模型信息和所有4种token以及账户ID）
               const usageAccountId = usageData.accountId
@@ -743,7 +822,7 @@ async function handleMessagesRequest(req, res) {
       }
 
       // 生成会话哈希用于sticky会话
-      const sessionHash = sessionHelper.generateSessionHash(req.body)
+      const sessionHash = sessionHelper.generateSessionHash(originalBody)
 
       // 🔒 全局会话绑定验证（非流式）
       let forcedAccountNonStream = null
@@ -754,11 +833,11 @@ async function handleMessagesRequest(req, res) {
         const globalBindingEnabled = await claudeRelayConfigService.isGlobalSessionBindingEnabled()
 
         if (globalBindingEnabled) {
-          const originalSessionId = claudeRelayConfigService.extractOriginalSessionId(req.body)
+          const originalSessionId = claudeRelayConfigService.extractOriginalSessionId(originalBody)
 
           if (originalSessionId) {
             const validation = await claudeRelayConfigService.validateNewSession(
-              req.body,
+              originalBody,
               originalSessionId
             )
 
@@ -795,7 +874,7 @@ async function handleMessagesRequest(req, res) {
       }
 
       // 使用统一调度选择账号（传递请求的模型）
-      const requestedModel = req.body.model
+      const requestedModel = originalBody.model
       let accountId
       let accountType
       try {
@@ -837,10 +916,10 @@ async function handleMessagesRequest(req, res) {
         accountType === 'claude-official'
       ) {
         // 🚫 检测旧会话（污染的会话）
-        if (isOldSession(req.body)) {
+        if (isOldSession(originalBody)) {
           const cfg = await claudeRelayConfigService.getConfig()
           logger.warn(
-            `🚫 Old session rejected (non-stream): sessionId=${originalSessionIdForBindingNonStream}, messages.length=${req.body?.messages?.length}, tools.length=${req.body?.tools?.length || 0}, isOldSession=true`
+            `🚫 Old session rejected (non-stream): sessionId=${originalSessionIdForBindingNonStream}, messages.length=${originalBody?.messages?.length}, tools.length=${originalBody?.tools?.length || 0}, isOldSession=true`
           )
           return res.status(400).json({
             error: {
@@ -868,6 +947,62 @@ async function handleMessagesRequest(req, res) {
       logger.debug(`[DEBUG] Request URL: ${req.url}`)
       logger.debug(`[DEBUG] Request path: ${req.path}`)
 
+      const isDisguiseGloballyEnabled = process.env.DISGUISE_ENABLED !== 'false'
+      let shouldDisguiseThisRequest = false
+      if (isDisguiseGloballyEnabled && accountType === 'claude-official') {
+        try {
+          shouldDisguiseThisRequest = await disguiseSettingsService.isDisguiseEnabled(
+            'claude',
+            accountId
+          )
+        } catch (error) {
+          shouldDisguiseThisRequest = true
+        }
+      } else if (isDisguiseGloballyEnabled && accountType === 'claude-console') {
+        try {
+          shouldDisguiseThisRequest = await disguiseSettingsService.isDisguiseEnabled(
+            'claude-console',
+            accountId
+          )
+        } catch (error) {
+          shouldDisguiseThisRequest = true
+        }
+      } else if (isDisguiseGloballyEnabled && accountType === 'bedrock') {
+        try {
+          shouldDisguiseThisRequest = await disguiseSettingsService.isDisguiseEnabled(
+            'bedrock',
+            accountId
+          )
+        } catch (error) {
+          shouldDisguiseThisRequest = true
+        }
+      } else if (isDisguiseGloballyEnabled && accountType === 'ccr') {
+        try {
+          shouldDisguiseThisRequest = await disguiseSettingsService.isDisguiseEnabled(
+            'ccr',
+            accountId
+          )
+        } catch (error) {
+          shouldDisguiseThisRequest = true
+        }
+      }
+
+      if (shouldDisguiseThisRequest) {
+        req.body = deepCloneJson(originalBody)
+        req.headers = { ...originalHeaders }
+        try {
+          await new Promise((resolve, reject) => {
+            disguiseMiddleware(req, res, (err) => (err ? reject(err) : resolve()))
+          })
+        } catch (error) {
+          req.body = deepCloneJson(originalBody)
+          req.headers = { ...originalHeaders }
+        }
+      } else {
+        req.body = deepCloneJson(originalBody)
+        req.headers = { ...originalHeaders }
+      }
+
       if (accountType === 'claude-official') {
         // 官方Claude账号使用原有的转发服务
         response = await claudeRelayService.relayRequest(
@@ -875,7 +1010,8 @@ async function handleMessagesRequest(req, res) {
           req.apiKey,
           req,
           res,
-          req.headers
+          req.headers,
+          { forcedAccountId: accountId, forcedAccountType: accountType }
         )
       } else if (accountType === 'claude-console') {
         // Claude Console账号使用Console转发服务
@@ -986,7 +1122,8 @@ async function handleMessagesRequest(req, res) {
           // Parse the model to remove vendor prefix if present (e.g., "ccr,gemini-2.5-pro" -> "gemini-2.5-pro")
           const rawModel = jsonData.model || req.body.model || 'unknown'
           const { baseModel } = parseVendorPrefixedModel(rawModel)
-          const model = baseModel || rawModel
+          // 优先使用原始请求模型（模型映射中间件保存），用于统计显示客户端请求的模型
+          const model = req.originalModel || baseModel || rawModel
 
           // 记录真实的token使用量（包含模型信息和所有4种token以及账户ID）
           const { accountId: responseAccountId } = response
@@ -1154,10 +1291,22 @@ async function handleMessagesRequest(req, res) {
 }
 
 // 🚀 Claude API messages 端点 - /api/v1/messages
-router.post('/v1/messages', authenticateApiKey, handleMessagesRequest)
+router.post(
+  '/v1/messages',
+  requestLogger, // 重新启用 - 用于调试 anthropic-version
+  authenticateApiKey,
+  modelMapper, // 全局模型映射（可选，通过 MODEL_MAPPER_ENABLED 控制）
+  handleMessagesRequest
+)
 
 // 🚀 Claude API messages 端点 - /claude/v1/messages (别名)
-router.post('/claude/v1/messages', authenticateApiKey, handleMessagesRequest)
+router.post(
+  '/claude/v1/messages',
+  requestLogger, // 重新启用 - 用于调试 anthropic-version
+  authenticateApiKey,
+  modelMapper, // 全局模型映射（可选，通过 MODEL_MAPPER_ENABLED 控制）
+  handleMessagesRequest
+)
 
 // 📋 模型列表端点 - 支持 Claude, OpenAI, Gemini
 router.get('/v1/models', authenticateApiKey, async (req, res) => {

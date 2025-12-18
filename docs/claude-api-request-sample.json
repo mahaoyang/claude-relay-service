@@ -1,0 +1,144 @@
+{
+  "meta": {
+    "source": "Claude Relay Service HTTP Debug Interceptor",
+    "captured_date": "2025-12-16T17:34:05Z",
+    "request_id": "1765906445096-u7n2la",
+    "client": "claude-code/2.0.70",
+    "endpoint": "/api/v1/messages",
+    "method": "POST"
+  },
+  "request": {
+    "url": "http://localhost:3010/api/v1/messages?beta=true",
+    "query_parameters": {
+      "beta": "true"
+    },
+    "headers": {
+      "host": "localhost:3010",
+      "connection": "keep-alive",
+      "accept": "application/json",
+      "x-stainless-retry-count": "0",
+      "x-stainless-timeout": "600",
+      "x-stainless-lang": "js",
+      "x-stainless-package-version": "0.70.0",
+      "x-stainless-os": "Linux",
+      "x-stainless-arch": "x64",
+      "x-stainless-runtime": "node",
+      "x-stainless-runtime-version": "v24.11.1",
+      "anthropic-dangerous-direct-browser-access": "true",
+      "anthropic-version": "2023-06-01",
+      "x-app": "cli",
+      "user-agent": "claude-cli/2.0.70 (external, cli)",
+      "authorization": "Bearer cr_b31f990e8663111d39812c9007a6fccfdf3ca18c67ed695e22611b26ad371f51",
+      "content-type": "application/json",
+      "anthropic-beta": "claude-code-20250219,interleaved-thinking-2025-05-14,context-management-2025-06-27",
+      "accept-language": "*",
+      "sec-fetch-mode": "cors",
+      "accept-encoding": "gzip, deflate",
+      "sentry-trace": "6cbc7d582cd14650b4bf1a4c1a014b3c-91e5503ce3da883b",
+      "baggage": "sentry-environment=external,sentry-release=2.0.70,sentry-public_key=e531a1d9ec1de9064fae9d4affb0b0f4,sentry-trace_id=6cbc7d582cd14650b4bf1a4c1a014b3c",
+      "content-length": "712"
+    },
+    "body": {
+      "model": "glm-4.6",
+      "messages": [
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "text",
+              "text": "Please write a 5-10 word title for the following conversation:\n\nUser: hi\n\nUser: [Request interrupted by user]\n\nRespond with the title for the conversation and nothing else."
+            }
+          ]
+        }
+      ],
+      "system": [
+        {
+          "type": "text",
+          "text": "You are Claude Code, Anthropic's official CLI for Claude."
+        },
+        {
+          "type": "text",
+          "text": "Summarize this coding conversation in under 50 characters.\nCapture the main task, key files, problems addressed, and current status."
+        }
+      ],
+      "tools": [],
+      "metadata": {
+        "user_id": "user_1afa2e8165ce838aac57ba26c30a0b8468f0b287fcfce2d8b6e2f6169ebf76cf_account__session_238bed9b-6db2-4be8-9e26-7ec3c7ce7636"
+      },
+      "max_tokens": 21333,
+      "temperature": 1
+    }
+  },
+  "response": {
+    "status": 503,
+    "duration_ms": 729,
+    "headers": {
+      "cross-origin-opener-policy": "same-origin",
+      "cross-origin-resource-policy": "same-origin",
+      "origin-agent-cluster": "?1",
+      "referrer-policy": "strict-origin-when-cross-origin",
+      "strict-transport-security": "max-age=15552000; includeSubDomains",
+      "x-content-type-options": "nosniff",
+      "x-dns-prefetch-control": "off",
+      "x-download-options": "noopen",
+      "x-frame-options": "DENY",
+      "x-permitted-cross-domain-policies": "none",
+      "x-xss-protection": "1; mode=block",
+      "access-control-allow-origin": "*",
+      "cache-control": "no-cache, no-store, must-revalidate",
+      "pragma": "no-cache",
+      "expires": "0",
+      "date": "Tue, 16 Dec 2025 17:34:07 GMT",
+      "content-type": "application/json; charset=utf-8",
+      "connection": "keep-alive",
+      "cf-ray": "9aefee0098846de2-SEA",
+      "cf-cache-status": "DYNAMIC",
+      "server": "cloudflare",
+      "via": "1.1 Caddy",
+      "x-oneapi-request-id": "20251217013407513987736lEAjEPde",
+      "vary": "accept-encoding"
+    },
+    "body": {
+      "error": {
+        "code": "model_not_found",
+        "message": "分组 Claude Code 下模型 glm-4.6 无可用渠道（distributor） (request id: 20251217013407513987736lEAjEPde)",
+        "type": "The requested model is currently unavailable"
+      }
+    }
+  },
+  "analysis": {
+    "request_type": "Claude API Messages",
+    "client_sdk": "Stainless SDK 0.70.0",
+    "client_runtime": "Node.js v24.11.1",
+    "client_platform": "Linux x64 (WSL Ubuntu 24.04)",
+    "authentication": "Bearer Token (API Key: cr_b31f...)",
+    "api_version": "2023-06-01",
+    "beta_features": [
+      "claude-code-20250219",
+      "interleaved-thinking-2025-05-14",
+      "context-management-2025-06-27"
+    ],
+    "telemetry": {
+      "sentry_trace_id": "6cbc7d582cd14650b4bf1a4c1a014b3c",
+      "sentry_span_id": "91e5503ce3da883b",
+      "sentry_environment": "external",
+      "sentry_release": "2.0.70"
+    },
+    "request_characteristics": {
+      "model_requested": "glm-4.6",
+      "max_tokens": 21333,
+      "temperature": 1,
+      "message_count": 1,
+      "system_prompts": 2,
+      "tools_count": 0,
+      "stream_mode": false
+    }
+  },
+  "notes": [
+    "This is a real Claude Code CLI request captured by the relay service",
+    "The request uses Anthropic's Messages API format",
+    "Beta features are enabled for Claude Code specific functionality",
+    "The request failed with 503 because the model 'glm-4.6' was not available",
+    "Full telemetry and tracing information is included in headers"
+  ]
+}

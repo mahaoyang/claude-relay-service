@@ -1,0 +1,1090 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="/public-pages/assets/favicon-light.svg"
+      id="favicon"
+    />
+    <script>
+      // 动态设置 favicon 根据主题
+      ;(function () {
+        const theme = localStorage.getItem('theme') || 'light'
+        const favicon = document.getElementById('favicon')
+        favicon.href =
+          theme === 'dark'
+            ? '/public-pages/assets/favicon-dark.svg'
+            : '/public-pages/assets/favicon-light.svg'
+
+        // 监听主题变化
+        window.addEventListener('storage', function (e) {
+          if (e.key === 'theme') {
+            favicon.href =
+              e.newValue === 'dark'
+                ? '/public-pages/assets/favicon-dark.svg'
+                : '/public-pages/assets/favicon-light.svg'
+          }
+        })
+      })()
+    </script>
+
+    <!-- SEO Meta 标签 -->
+    <title>使用文档 - JoJo Code CLI | 安装、连接与模型选择</title>
+    <meta
+      name="description"
+      content="JoJo Code CLI 使用文档：npm install -g jojocode 安装；/connect 绑定 Key；/model 选择模型；快速上手命令行编程工作流。"
+    />
+    <meta
+      name="keywords"
+      content="JoJo Code CLI, JoJoCode, Code CLI, npm install -g jojocode, /connect, /model, 命令行, 代码助手"
+    />
+    <meta name="author" content="JoJoCode" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://www.jojocode.org/docs" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://www.jojocode.org/docs" />
+    <meta property="og:title" content="使用文档 - JoJo Code CLI" />
+    <meta
+      property="og:description"
+      content="安装、连接与模型选择：npm install -g jojocode，/connect 绑定 Key，/model 选择模型。"
+    />
+    <meta property="og:locale" content="zh_CN" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:url" content="https://www.jojocode.org/docs" />
+    <meta name="twitter:title" content="使用文档 - JoJo Code CLI" />
+    <meta
+      name="twitter:description"
+      content="安装、连接与模型选择：npm install -g jojocode，/connect 绑定 Key，/model 选择模型。"
+    />
+
+    <!-- 结构化数据 (JSON-LD) -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "TechArticle",
+        "headline": "JoJo Code CLI 使用文档",
+        "description": "JoJo Code CLI 的安装、连接与模型选择教程",
+        "author": {
+          "@type": "Organization",
+          "name": "JoJoCode"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "JoJoCode"
+        }
+      }
+    </script>
+
+    <!-- Tailwind CSS (Local) -->
+    <link rel="stylesheet" href="/public-pages/assets/tailwind-public-pages.css" />
+
+    <!-- Google Fonts: Manrope -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- FontAwesome for Icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+
+    <!-- Alpine.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/collapse@3.x.x/dist/cdn.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+    <!-- Highlight.js for code syntax highlighting -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-light.min.css"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/bash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/powershell.min.js"></script>
+
+    <style>
+      html {
+        scrollbar-gutter: stable;
+        --jo-scrollbar-horizontal-size: 4px;
+        scroll-behavior: smooth;
+      }
+
+      body {
+        background: radial-gradient(1200px 600px at 20% 10%, rgba(31, 47, 34, 0.06), transparent 60%),
+          radial-gradient(1000px 500px at 90% 30%, rgba(31, 47, 34, 0.05), transparent 55%),
+          #f2f0e9;
+        color: #1f2f22;
+      }
+
+      .jo-surface {
+        border: 1px solid rgba(31, 47, 34, 0.12);
+        background: rgba(255, 255, 255, 0.38);
+        backdrop-filter: blur(10px);
+        box-shadow:
+          0 24px 60px rgba(31, 47, 34, 0.08),
+          0 2px 0 rgba(255, 255, 255, 0.4) inset;
+      }
+
+      /* Custom scrollbar */
+      ::-webkit-scrollbar {
+        width: 8px;
+        height: var(--jo-scrollbar-horizontal-size);
+      }
+
+      ::-webkit-scrollbar-track {
+        background: #f2f0e9;
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background: #d1d1d1;
+        border-radius: 4px;
+      }
+
+      ::-webkit-scrollbar-thumb:hover {
+        background: #1f2f22;
+      }
+
+      [x-cloak] {
+        display: none !important;
+      }
+
+      /* Inline Logo Styles */
+      .inline-logo-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        line-height: 1;
+      }
+
+      .inline-logo-main {
+        display: flex;
+        align-items: baseline;
+        font-weight: 700;
+        color: #1f2f22;
+        line-height: 1;
+        filter: drop-shadow(1px 2px 2px rgba(0, 0, 0, 0.15));
+      }
+
+      .inline-logo-main .symbols {
+        font-size: 8px;
+        letter-spacing: -0.5px;
+        font-weight: 600;
+        display: flex;
+        align-items: baseline;
+        margin-right: 3px;
+      }
+
+      .inline-logo-main .letters {
+        font-size: 20px;
+        letter-spacing: -1.2px;
+        display: flex;
+        align-items: baseline;
+        font-weight: 700;
+      }
+
+      .inline-logo-subtitle {
+        font-size: 5px;
+        font-weight: 500;
+        color: #1f2f22;
+        letter-spacing: 0.4px;
+        opacity: 0.8;
+        margin-top: 1px;
+        text-shadow: 0.5px 0.5px 1px rgba(0, 0, 0, 0.1);
+        text-align: center;
+      }
+
+	      /* Nav mini search */
+	      #nav-key-search {
+	        position: relative;
+	        border: 0;
+	        background: transparent;
+	        box-shadow: none;
+	        padding: 0;
+	        backdrop-filter: none;
+	      }
+
+	      .jo-nav-link {
+	        position: relative;
+	        display: inline-block;
+	        color: rgba(31, 47, 34, 0.72);
+	        text-decoration: none;
+	        transition: color 160ms ease;
+	      }
+
+	      .jo-nav-link:hover {
+	        color: #1f2f22;
+	      }
+
+	      .jo-nav-link::after {
+	        content: '';
+	        position: absolute;
+	        left: 50%;
+	        transform: translateX(-50%);
+	        width: 0;
+	        height: 1px;
+	        bottom: -2px;
+	        background-color: #1f2f22;
+	        transition: width 220ms ease;
+	      }
+
+	      .jo-nav-link:hover::after {
+	        width: 100%;
+	      }
+
+	      .jo-nav-link[aria-current='page'] {
+	        color: #1f2f22;
+	      }
+
+	      .jo-nav-link[aria-current='page']::after {
+	        width: 100%;
+	      }
+
+	      .jo-nav-link:focus-visible {
+	        outline: 2px solid rgba(31, 47, 34, 0.22);
+	        outline-offset: 3px;
+	      }
+
+      /* Sticky System Tabs divider badge (match temp-docs positioning pattern) */
+      .jo-sticky-divider-badge {
+        position: absolute;
+        left: 50%;
+        top: 0;
+        transform: translate(-50%, -50%);
+        pointer-events: none;
+        z-index: 5;
+      }
+
+	      .jo-sticky-divider-badge .jo-sticky-divider-badge-outer {
+	        width: 5rem;
+	        height: 5rem;
+	        background: rgba(255, 255, 255, 0.38);
+	        border-radius: 9999px;
+	        display: flex;
+	        align-items: center;
+	        justify-content: center;
+	      }
+
+	      .jo-sticky-divider-badge .jo-sticky-divider-badge-inner {
+	        width: 4rem;
+	        height: 4rem;
+	        background: #ffffff;
+	        border-radius: 9999px;
+	        display: flex;
+	        align-items: center;
+	        justify-content: center;
+        pointer-events: auto;
+        cursor: pointer;
+        text-decoration: none;
+        box-shadow: 0 1px 2px rgba(31, 47, 34, 0.14);
+        transition:
+          transform 160ms cubic-bezier(0.16, 1, 0.3, 1),
+          box-shadow 160ms ease,
+          background-color 160ms ease;
+        will-change: transform;
+      }
+
+      .jo-sticky-divider-badge .jo-sticky-divider-badge-inner:focus-visible {
+        outline: 2px solid rgba(31, 47, 34, 0.28);
+        outline-offset: 4px;
+      }
+
+      .jo-sticky-divider-badge .jo-sticky-divider-badge-inner i {
+        color: #5d6b3f;
+        font-size: 1.875rem;
+        transition:
+          transform 160ms cubic-bezier(0.16, 1, 0.3, 1),
+          color 160ms ease;
+      }
+
+      @media (hover: hover) {
+        .jo-sticky-divider-badge .jo-sticky-divider-badge-inner:hover {
+          transform: translateY(-1px) scale(1.04);
+          box-shadow: 0 14px 36px rgba(31, 47, 34, 0.12);
+          background-color: rgba(255, 255, 255, 0.95);
+        }
+
+        .jo-sticky-divider-badge .jo-sticky-divider-badge-inner:hover i {
+          transform: rotate(-6deg) scale(1.03);
+          color: #4a5632;
+        }
+      }
+
+      #nav-key-search .nav-search-field {
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        position: absolute;
+        top: 50%;
+        right: calc(100% + 0.5rem);
+        transform: translateY(-50%) scale(0.98);
+        z-index: 20;
+        padding: 0.25rem 0.375rem 0.25rem 0.75rem;
+        border-radius: 9999px;
+        border: 1px solid rgba(31, 47, 34, 0.12);
+        background: rgba(255, 255, 255, 0.6);
+        backdrop-filter: blur(12px);
+        box-shadow: 0 8px 24px rgba(31, 47, 34, 0.07);
+        flex: 0 0 auto;
+        max-width: 0;
+        width: 0;
+        opacity: 0;
+        overflow: hidden;
+        pointer-events: none;
+        transition:
+          width 320ms cubic-bezier(0.16, 1, 0.3, 1),
+          max-width 320ms cubic-bezier(0.16, 1, 0.3, 1),
+          opacity 220ms ease,
+          transform 320ms cubic-bezier(0.16, 1, 0.3, 1),
+          border-color 220ms ease,
+          box-shadow 220ms ease;
+      }
+
+      #nav-key-search.is-expanded .nav-search-field {
+        max-width: min(16rem, 65vw);
+        width: min(16rem, 65vw);
+        opacity: 1;
+        transform: translateY(-50%) scale(1);
+        pointer-events: auto;
+      }
+
+      #nav-key-search.is-expanded .nav-search-field:hover {
+        border-color: rgba(31, 47, 34, 0.18);
+      }
+
+      #nav-key-search.is-expanded .nav-search-field:focus-within {
+        border-color: rgba(31, 47, 34, 0.22);
+        box-shadow: 0 6px 18px rgba(31, 47, 34, 0.05);
+      }
+
+      /* Code blocks */
+      .code-block {
+        background: #f8f8f8;
+        border: 1px solid #e5e5e5;
+        border-radius: 12px;
+        padding: 1rem 1.25rem;
+        font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+        font-size: 0.8125rem;
+        line-height: 1.5;
+        overflow-x: auto;
+        overflow-y: hidden;
+        color: #1f2f22;
+        white-space: normal;
+        text-align: left;
+      }
+
+      .code-block br {
+        display: none;
+      }
+
+      .code-block code {
+        background: transparent;
+        padding: 0;
+        color: inherit;
+        display: block;
+        white-space: pre;
+      }
+
+      /* Step number */
+      .step-number {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 1.5rem;
+        height: 1.5rem;
+        min-width: 1.5rem;
+        border-radius: 50%;
+        background: #1f2f22;
+        color: white;
+        font-weight: 700;
+        font-size: 0.75rem;
+        flex-shrink: 0;
+      }
+
+      /* Tab buttons */
+      .tab-shell {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 0.25rem;
+        padding: 0.25rem;
+        border-radius: 9999px;
+        border: 1px solid rgba(31, 47, 34, 0.12);
+        background: rgba(255, 255, 255, 0.55);
+        backdrop-filter: blur(12px);
+        box-shadow: 0 10px 30px rgba(31, 47, 34, 0.06);
+      }
+
+      .tab-button {
+        flex: 0 0 auto;
+        padding: 0.55rem 0.95rem;
+        border-radius: 9999px;
+        font-size: 0.875rem;
+        font-weight: 500;
+        transition: all 0.2s ease;
+        cursor: pointer;
+        border: none;
+        background: transparent;
+        color: #6b7280;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+      }
+
+      .tab-button:hover:not(.active) {
+        background: #ececec;
+        color: #374151;
+      }
+
+      .tab-button.active {
+        background: #1f2f22;
+        color: white;
+        box-shadow: 0 2px 8px rgba(31, 47, 34, 0.15);
+        font-weight: 600;
+      }
+
+      .hover-arrow-move:hover i {
+        transform: translateX(4px) translateY(-4px);
+        transition: transform 0.2s ease;
+      }
+
+      /* Lily-UI accordion structure with JoJoCode card styling */
+      .rt-AccordionRoot {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .rt-AccordionItem {
+        border: 1px solid rgba(31, 47, 34, 0.12);
+        background: rgba(255, 255, 255, 0.45);
+        backdrop-filter: blur(10px);
+        border-radius: 1rem;
+        padding: 1rem 1.25rem;
+      }
+
+      .rt-AccordionTrigger {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        padding: 0;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        text-align: left;
+        font-family: inherit;
+        transition: color 150ms;
+      }
+
+      .rt-AccordionTrigger:hover {
+        background-color: transparent;
+      }
+
+      .rt-AccordionTrigger[data-state='open'] {
+        background-color: transparent;
+      }
+
+      .rt-AccordionChevron {
+        transition: transform 200ms cubic-bezier(0.87, 0, 0.13, 1);
+        color: #6b7280;
+        flex-shrink: 0;
+      }
+
+      .rt-AccordionTrigger[data-state='open'] .rt-AccordionChevron {
+        transform: rotate(180deg);
+      }
+
+      .rt-AccordionContent {
+        overflow: hidden;
+      }
+
+      .rt-AccordionContentInner {
+        padding-top: 1rem;
+      }
+
+	      /* Info boxes */
+	      .info-box {
+	        box-sizing: border-box;
+	        border-left: 0.25em solid rgba(31, 47, 34, 0.22);
+	        padding-left: 1rem;
+	        padding-block: 0.125rem;
+	        background: transparent;
+	        border-radius: 0;
+	        border-top: 0;
+	        border-right: 0;
+	        border-bottom: 0;
+	        margin: 1.25rem 0;
+	      }
+
+	      .info-box-green {
+	        border-left-color: #22c55e;
+	      }
+
+	      .info-box-blue {
+	        border-left-color: #3b82f6;
+	      }
+
+      /* Section title */
+      .section-title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #1f2f22;
+        margin: 2.5rem 0 1.5rem;
+        padding-bottom: 0.75rem;
+        border-bottom: 2px solid #e5e5e5;
+        position: relative;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+      }
+
+      .section-title::after {
+        content: '';
+        position: absolute;
+        bottom: -2px;
+        left: 0;
+        width: 4rem;
+        height: 2px;
+        background: #1f2f22;
+        border-radius: 1px;
+      }
+
+      /* Inline code */
+      code:not(.code-block code) {
+        font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+        font-size: 0.8125rem;
+        padding: 0.125rem 0.375rem;
+        background: #ececec;
+        border-radius: 4px;
+        color: #1f2f22;
+      }
+    </style>
+  </head>
+
+	  <body
+	    class="font-sans antialiased selection:bg-brand-dark selection:text-white min-h-screen"
+	    x-data="{
+	      system: 'windows',
+	      baseUrl: 'https://www.jojocode.org',
+	      envLine(name, value) {
+	        return this.system === 'windows' ? `$env:${name} = '${value}'` : `export ${name}='${value}'`
+	      },
+	      claudeSetupCmd() {
+	        const lines = [
+	          this.envLine('ANTHROPIC_BASE_URL', `${this.baseUrl}/api`),
+	          this.envLine('ANTHROPIC_AUTH_TOKEN', '你的API密钥'),
+	          'claude'
+	        ]
+	        return lines.join('\n')
+	      },
+	      installNodeCmd() {
+	        if (this.system === 'windows') {
+	          return ['# 推荐：下载并安装 Node.js LTS', 'https://nodejs.org/'].join('\n')
+	        }
+	        if (this.system === 'macos') {
+	          return ['# Homebrew（推荐）', 'brew install node'].join('\n')
+	        }
+	        return [
+	          '# Ubuntu / Debian（示例）',
+	          'curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -',
+	          'sudo apt-get install -y nodejs'
+	        ].join('\n')
+	      },
+	      verifyCmd() {
+	        return ['node --version', 'npm --version', 'claude --version'].join('\n')
+	      },
+	      geminiCmd() {
+	        return [
+	          this.envLine('GOOGLE_GEMINI_BASE_URL', `${this.baseUrl}/gemini`),
+	          this.envLine('GEMINI_API_KEY', '你的API密钥'),
+	          this.envLine('GEMINI_MODEL', 'gemini-2.0-flash-exp')
+	        ].join('\n')
+	      },
+	      codexCmd() {
+	        return [
+	          this.envLine('OPENAI_API_BASE', `${this.baseUrl}/openai`),
+	          this.envLine('OPENAI_API_KEY', '你的API密钥')
+	        ].join('\n')
+	      },
+	      droidCmd() {
+	        return [
+	          this.envLine('DROID_BASE_URL', `${this.baseUrl}/droid/claude`),
+	          this.envLine('DROID_API_KEY', '你的API密钥')
+	        ].join('\n')
+	      },
+	      vscodeConfigPath() {
+	        return this.system === 'windows'
+	          ? 'C:\\\\Users\\\\你的用户名\\\\.claude\\\\config.json'
+	          : '~/.claude/config.json'
+	      }
+	    }"
+	  >
+    <!-- Main Container -->
+    <div class="max-w-[1440px] mx-auto px-0 sm:px-6 md:px-12 py-2 sm:py-8 md:py-12">
+      <div class="jo-surface rounded-2xl sm:rounded-[2.5rem] px-4 sm:px-6 md:px-12 py-4 sm:py-6 md:py-10">
+      <!-- Navigation Header -->
+      <nav class="mb-10 md:mb-16" x-data="{ mobileMenuOpen: false }">
+        <div class="flex items-center justify-between gap-4">
+          <!-- Logo -->
+          <div class="flex items-center gap-3">
+            <a href="/" aria-label="JoJoCode 首页" class="inline-flex">
+              <div class="inline-logo-wrapper">
+                <div class="inline-logo-main">
+                  <div class="symbols">
+                    <span>&gt;</span>
+                    <span>_</span>
+                  </div>
+                  <div class="letters">
+                    <span>J</span>
+                    <span>O</span>
+                  </div>
+                </div>
+                <div class="inline-logo-subtitle">JO</div>
+              </div>
+            </a>
+          </div>
+
+	          <!-- Nav Links (Desktop) -->
+		          <div class="hidden md:flex items-center space-x-8 text-sm font-medium">
+		            <a href="/" class="jo-nav-link">首页</a>
+		            <a href="/docs" class="jo-nav-link" aria-current="page">文档</a>
+		            <a href="/price" class="jo-nav-link">价格</a>
+		            <a href="/api-gateway-stats" class="jo-nav-link">查询</a>
+		            <!-- <a href="/api-gateway" class="jo-nav-link">网关</a> -->
+		            <!-- <a href="/api-gateway-docs" class="jo-nav-link">网关文档</a> -->
+		            <a href="/about" class="jo-nav-link">关于</a>
+		          </div>
+
+          <div class="flex items-center gap-4">
+            <!-- Key Search -->
+            <form
+              id="nav-key-search"
+              class="flex items-center flex-none rounded-full"
+              autocomplete="off"
+            >
+              <button
+                id="nav-key-toggle"
+                type="button"
+                class="h-7 w-7 shrink-0 rounded-full bg-white/60 border border-brand-dark/10 flex items-center justify-center hover:border-brand-dark/20 transition"
+                aria-label="搜索 Key"
+                aria-expanded="false"
+              >
+                <i class="fa-solid fa-magnifying-glass text-brand-gray text-xs"></i>
+              </button>
+
+              <div class="nav-search-field">
+                <input
+                  id="nav-key-input"
+                  type="text"
+                  inputmode="text"
+                  autocapitalize="off"
+                  spellcheck="false"
+                  placeholder="输入 Key 查询额度"
+                  class="bg-transparent outline-none placeholder:text-brand-gray/70 text-xs w-full min-w-0"
+                />
+                <button
+                  type="submit"
+                  class="h-7 w-7 shrink-0 rounded-full bg-brand-dark text-white flex items-center justify-center hover:bg-opacity-90 transition shadow-md shadow-brand-dark/10"
+                  aria-label="查询统计"
+                >
+                  <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                </button>
+              </div>
+            </form>
+
+            <!-- CTA Button -->
+            <a
+              href="/"
+              class="hidden md:inline-flex bg-brand-dark text-white px-3 py-1.5 md:px-5 md:py-2 rounded-full text-xs md:text-sm font-medium hover:bg-opacity-90 transition shadow-lg shadow-brand-dark/10 whitespace-nowrap"
+            >
+              返回首页
+            </a>
+
+            <!-- Mobile Menu Button -->
+            <button
+              @click="mobileMenuOpen = !mobileMenuOpen"
+              class="md:hidden h-7 w-7 rounded-full bg-white/60 border border-brand-dark/10 flex items-center justify-center hover:border-brand-dark/20 transition"
+              aria-label="菜单"
+            >
+              <i
+                class="fa-solid text-brand-gray text-xs"
+                :class="mobileMenuOpen ? 'fa-xmark' : 'fa-bars'"
+              ></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div
+          x-show="mobileMenuOpen"
+          x-cloak
+          @click.away="mobileMenuOpen = false"
+          x-transition:enter="transition ease-out duration-200"
+          x-transition:enter-start="opacity-0 -translate-y-2"
+          x-transition:enter-end="opacity-100 translate-y-0"
+          x-transition:leave="transition ease-in duration-150"
+          x-transition:leave-start="opacity-100 translate-y-0"
+          x-transition:leave-end="opacity-0 -translate-y-2"
+          class="md:hidden mt-4 bg-white/80 backdrop-blur-sm border border-gray-200 rounded-2xl overflow-hidden"
+        >
+	          <div class="flex flex-col">
+	            <a
+	              href="/"
+	              class="px-6 py-3 text-sm font-medium hover:bg-brand-bg/50 transition border-b border-gray-200"
+	            >
+	              首页
+	            </a>
+            <a
+              href="/docs"
+              class="px-6 py-3 text-sm font-medium hover:bg-brand-bg/50 transition border-b border-gray-200"
+              aria-current="page"
+            >
+              文档
+            </a>
+            <a
+              href="/price"
+              class="px-6 py-3 text-sm font-medium hover:bg-brand-bg/50 transition border-b border-gray-200"
+            >
+              价格
+            </a>
+	            <a
+	              href="/api-gateway-stats"
+	              class="px-6 py-3 text-sm font-medium hover:bg-brand-bg/50 transition border-b border-gray-200"
+	            >
+	              查询
+	            </a>
+            <!-- <a
+              href="/api-gateway"
+              class="px-6 py-3 text-sm font-medium hover:bg-brand-bg/50 transition border-b border-gray-200"
+            >
+              网关
+            </a>
+            <a
+              href="/api-gateway-docs"
+              class="px-6 py-3 text-sm font-medium hover:bg-brand-bg/50 transition border-b border-gray-200"
+            >
+              网关文档
+            </a> -->
+		            <a
+		              href="/about"
+		              class="px-6 py-3 text-sm font-medium hover:bg-brand-bg/50 transition"
+		            >
+		              关于
+		            </a>
+		          </div>
+		        </div>
+      </nav>
+
+      <!-- Main Content -->
+      <main class="max-w-6xl mx-auto">
+        <section class="mb-10 md:mb-14">
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+            <div class="lg:col-span-7 min-w-0">
+              <p class="text-sm md:text-base text-gray-500 mb-2">/ Documentation</p>
+	              <h1
+	                class="text-3xl sm:text-4xl md:text-5xl font-bold text-brand-dark mb-4 flex items-center gap-4"
+	              >
+	                使用文档
+	              </h1>
+              <p class="text-base md:text-lg text-gray-600 font-light leading-relaxed max-w-2xl">
+                最小可用：安装、连接、选模型。你只需要学会 <code>/connect</code> 和 <code>/model</code>。
+              </p>
+
+              <div class="mt-6 flex flex-wrap items-center gap-3">
+                <a
+                  href="/api-gateway-stats"
+                  class="group inline-flex items-center gap-2 rounded-full bg-brand-dark text-white px-4 py-2 text-xs md:text-sm font-medium hover:bg-opacity-90 transition shadow-lg shadow-brand-dark/10 hover-arrow-move"
+                >
+                  查询额度
+                  <i class="fa-solid fa-arrow-up-right-from-square text-[11px]"></i>
+                </a>
+                <a
+                  href="/api-gateway-docs"
+                  class="inline-flex items-center gap-2 rounded-full border border-brand-dark/15 bg-white/55 px-4 py-2 text-xs md:text-sm font-medium text-brand-dark hover:bg-white/70 transition"
+                >
+                  网关文档
+                  <i class="fa-solid fa-arrow-right text-[11px]"></i>
+                </a>
+              </div>
+
+              <div class="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs text-gray-600">
+                <div class="rounded-xl border border-brand-dark/10 bg-white/45 px-3 py-2">npm 全局安装</div>
+                <div class="rounded-xl border border-brand-dark/10 bg-white/45 px-3 py-2">/connect 绑定 Key</div>
+                <div class="rounded-xl border border-brand-dark/10 bg-white/45 px-3 py-2">/model 选择模型</div>
+              </div>
+
+              <p class="mt-3 text-xs text-brand-dark leading-relaxed max-w-2xl">
+                提示：如果你使用的是上游官方原生 CLI（Claude Code / Gemini CLI / OpenAI Codex），请查看
+                <a href="/api-gateway-docs" class="underline decoration-brand-dark/40 hover:decoration-brand-dark"
+                  >网关文档</a
+                >。
+              </p>
+            </div>
+
+            <div class="lg:col-span-5">
+              <div
+                class="relative overflow-hidden rounded-3xl border border-brand-dark/10 bg-white/30 shadow-[0_22px_55px_rgba(31,47,34,0.10)]"
+              >
+                <img
+                  src="https://plus.unsplash.com/premium_photo-1661962244825-73142e2b6d93?q=80&w=1868&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                  alt="CLI docs"
+                  class="w-full h-60 sm:h-72 lg:h-80 object-cover opacity-90 hover:scale-105 transition duration-700 ease-in-out"
+                />
+                <div
+                  class="absolute inset-0 bg-gradient-to-tr from-brand-dark/30 via-transparent to-white/10 pointer-events-none"
+                ></div>
+                <div class="absolute bottom-4 left-4 right-4">
+                  <div class="rounded-2xl bg-white/70 backdrop-blur-md border border-white/60 px-4 py-3">
+                    <div class="flex items-center justify-between">
+                      <span class="text-xs font-semibold text-brand-dark">Quick Start</span>
+                      <span class="text-[11px] text-gray-500">npm / connect / model</span>
+                    </div>
+                    <div class="mt-2 text-[11px] text-gray-600">
+                      <code>npm install -g jojocode</code>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="mb-12 md:mb-16">
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12">
+            <div class="lg:col-span-6 space-y-10">
+              <div>
+                <h2 class="text-2xl font-semibold text-brand-dark mb-3">1) 安装</h2>
+                <p class="text-gray-600 text-sm leading-relaxed mb-4">
+                  JoJo Code CLI 通过 npm 发布。建议使用 Node.js 18+。
+                </p>
+                <div class="code-block"><code>npm install -g jojocode</code></div>
+              </div>
+
+              <div>
+                <h2 class="text-2xl font-semibold text-brand-dark mb-3">2) 连接你的 Key</h2>
+                <p class="text-gray-600 text-sm leading-relaxed mb-4">
+                  在 CLI 中输入 <code>/connect</code> 开始连接流程。完成后即可在会话里使用你的 Key。
+                </p>
+                <div class="rounded-2xl border border-brand-dark/10 bg-white/45 p-4 sm:p-5 mb-4">
+                  <div class="flex items-center gap-2 text-xs font-semibold text-brand-dark mb-4">
+                    <span
+                      class="inline-flex h-6 w-6 items-center justify-center rounded-full bg-brand-dark text-white"
+                    >
+                      <i class="fa-solid fa-plug text-[9px]" aria-hidden="true"></i>
+                    </span>
+                    <span>连接步骤</span>
+                  </div>
+                  <ol class="space-y-3">
+                    <li class="flex items-start gap-3">
+                      <span class="step-number">1</span>
+                      <div class="min-w-0">
+                        <div class="text-sm font-semibold text-brand-dark">选择 Provider</div>
+                        <div class="mt-2 flex flex-wrap gap-2 text-[11px] text-gray-600">
+                          <span class="rounded-full border border-brand-dark/10 bg-white/70 px-3 py-1"
+                            >Anthropic</span
+                          >
+                          <span class="rounded-full border border-brand-dark/10 bg-white/70 px-3 py-1"
+                            >OpenAI</span
+                          >
+                          <span class="rounded-full border border-brand-dark/10 bg-white/70 px-3 py-1"
+                            >Google</span
+                          >
+                        </div>
+                      </div>
+                    </li>
+                    <li class="flex items-start gap-3">
+                      <span class="step-number">2</span>
+                      <div class="min-w-0">
+                        <div class="text-sm font-semibold text-brand-dark">选择录入方式</div>
+                        <div class="text-sm text-gray-600 mt-1">
+                          选择 <code>Manually enter API Key</code>
+                        </div>
+                      </div>
+                    </li>
+                    <li class="flex items-start gap-3">
+                      <span class="step-number">3</span>
+                      <div class="min-w-0">
+                        <div class="text-sm font-semibold text-brand-dark">粘贴 API Key 并完成</div>
+                        <div class="text-sm text-gray-600 mt-1">连接成功后即可开始对话与选模型。</div>
+                      </div>
+                    </li>
+                  </ol>
+                </div>
+                <p class="text-xs text-gray-500 leading-relaxed mb-4">
+                  提示：Key 与使用额度相关，请妥善保管，避免泄露或转发给第三方。
+                </p>
+                <div class="code-block"><code>jojocode
+/connect</code></div>
+              </div>
+            </div>
+
+            <div class="lg:col-span-6 space-y-10">
+              <div>
+                <h2 class="text-2xl font-semibold text-brand-dark mb-3">3) 选择模型</h2>
+                <p class="text-gray-600 text-sm leading-relaxed mb-4">
+                  输入 <code>/model</code> 选择当前会话模型；随时切换以匹配任务（例如更强推理/更快响应/更低成本）。
+                </p>
+                <div class="code-block"><code>/model</code></div>
+              </div>
+
+              <div>
+                <h2 class="text-2xl font-semibold text-brand-dark mb-3">常用提示</h2>
+                <ul class="text-sm text-gray-600 leading-relaxed space-y-2">
+                  <li>把报错信息与相关代码片段一起贴上，能显著提高定位效率。</li>
+                  <li>给出目标与约束（语言/框架/风格/不能改的文件），输出会更稳定。</li>
+                  <li>需要可执行的修改时，说明你希望“输出补丁/给出修改步骤”。</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="mb-12 md:mb-16">
+          <h2 class="text-2xl font-semibold text-brand-dark mb-3">额度与查询</h2>
+          <p class="text-gray-600 text-sm leading-relaxed mb-4">
+            你购买的是使用额度。需要查看剩余额度与使用记录，可前往查询页面。
+          </p>
+          <div class="flex flex-wrap items-center gap-3">
+            <a
+              href="/api-gateway-stats"
+              class="inline-flex items-center gap-2 rounded-full bg-brand-dark text-white px-4 py-2 text-xs md:text-sm font-medium hover:bg-opacity-90 transition"
+            >
+              打开查询统计
+              <i class="fa-solid fa-arrow-up-right-from-square text-[11px]"></i>
+            </a>
+            <a
+              href="mailto:cac900101@gmail.com"
+              class="inline-flex items-center gap-2 rounded-full border border-brand-dark/15 bg-white/55 px-4 py-2 text-xs md:text-sm font-medium text-brand-dark hover:bg-white/70 transition"
+            >
+              联系客服
+              <i class="fa-solid fa-envelope text-[11px]"></i>
+            </a>
+          </div>
+        </section>
+
+        <section class="mb-6 md:mb-10">
+          <h2 class="text-2xl font-semibold text-brand-dark mb-3">常见问题</h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="rounded-2xl border border-brand-dark/10 bg-white/45 p-5">
+              <h3 class="font-semibold text-brand-dark mb-2">连接失败或提示无效 Key？</h3>
+              <p class="text-sm text-gray-600 leading-relaxed">
+                检查是否复制了完整 Key（无多余空格/引号），并确认该 Key 仍然有效；如仍无法解决，请邮件联系客服并附上错误截图。
+              </p>
+            </div>
+            <div class="rounded-2xl border border-brand-dark/10 bg-white/45 p-5">
+              <h3 class="font-semibold text-brand-dark mb-2">如何切换模型？</h3>
+              <p class="text-sm text-gray-600 leading-relaxed">
+                在会话中输入 <code>/model</code>，按提示选择即可。切换后对后续对话生效。
+              </p>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <!-- Footer -->
+      <div class="border-t border-gray-300/50 pt-8 pb-12 mt-16">
+        <div class="flex flex-col md:flex-row justify-between items-center gap-6">
+          <div class="flex items-center gap-3">
+            <div
+              class="inline-logo-wrapper"
+              style="transform: scale(0.8); transform-origin: left center"
+            >
+              <a href="/" aria-label="JoJoCode 首页" class="block">
+                <div class="inline-logo-main">
+                  <div class="symbols">
+                    <span>&gt;</span>
+                    <span>_</span>
+                  </div>
+                  <div class="letters">
+                    <span>J</span>
+                    <span>O</span>
+                  </div>
+                </div>
+                <div class="inline-logo-subtitle">JO</div>
+              </a>
+            </div>
+            <span class="text-sm text-gray-500">© 2024 JoJo Code. Code CLI Provider.</span>
+          </div>
+          <div class="flex flex-wrap items-center justify-center gap-6 text-sm">
+            <a href="/" class="text-gray-500 hover:text-brand-dark transition">首页</a>
+            <a href="/docs" class="text-gray-500 hover:text-brand-dark transition">文档</a>
+            <a href="/price" class="text-gray-500 hover:text-brand-dark transition">价格</a>
+            <a href="/api-gateway-stats" class="text-gray-500 hover:text-brand-dark transition">查询</a>
+            <a href="/privacy" class="text-gray-500 hover:text-brand-dark transition">隐私协议</a>
+            <a href="/terms" class="text-gray-500 hover:text-brand-dark transition">服务协议</a>
+            <a
+              href="mailto:cac900101@gmail.com"
+              class="text-gray-500 hover:text-brand-dark transition"
+              >客服邮箱</a
+            >
+          </div>
+        </div>
+      </div>
+      </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+      // Nav search functionality
+      ;(function () {
+        const form = document.getElementById('nav-key-search')
+        const toggle = document.getElementById('nav-key-toggle')
+        const input = document.getElementById('nav-key-input')
+        if (!form || !toggle || !input) return
+
+        function setExpanded(expanded) {
+          form.classList.toggle('is-expanded', expanded)
+          toggle.setAttribute('aria-expanded', String(expanded))
+          if (expanded) {
+            requestAnimationFrame(() => input.focus())
+          } else if (!input.value.trim()) {
+            input.value = ''
+          }
+        }
+
+        setExpanded(false)
+
+        toggle.addEventListener('click', function () {
+          const expanded = form.classList.contains('is-expanded')
+          if (!expanded) return setExpanded(true)
+          if (!input.value.trim()) return setExpanded(false)
+          input.focus()
+        })
+
+        document.addEventListener('click', function (e) {
+          if (!form.classList.contains('is-expanded')) return
+          if (form.contains(e.target)) return
+          if (!input.value.trim()) setExpanded(false)
+        })
+
+        input.addEventListener('keydown', function (e) {
+          if (e.key === 'Escape' && !input.value.trim()) setExpanded(false)
+        })
+
+        form.addEventListener('submit', function (e) {
+          e.preventDefault()
+          const value = (input.value || '').trim()
+          window.location.href = value ? `/api-gateway-stats?id=${encodeURIComponent(value)}` : '/api-gateway-stats'
+        })
+      })()
+
+      // Code highlighting
+      document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('.code-block code').forEach((el) => {
+          hljs.highlightElement(el)
+        })
+      })
+    </script>
+  </body>
+</html>

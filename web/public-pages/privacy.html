@@ -1,0 +1,331 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="/public-pages/assets/favicon-light.svg"
+      id="favicon"
+    />
+    <script>
+      ;(function () {
+        const theme = localStorage.getItem('theme') || 'light'
+        const favicon = document.getElementById('favicon')
+        favicon.href =
+          theme === 'dark'
+            ? '/public-pages/assets/favicon-dark.svg'
+            : '/public-pages/assets/favicon-light.svg'
+
+        window.addEventListener('storage', function (e) {
+          if (e.key === 'theme') {
+            favicon.href =
+              e.newValue === 'dark'
+                ? '/public-pages/assets/favicon-dark.svg'
+                : '/public-pages/assets/favicon-light.svg'
+          }
+        })
+      })()
+    </script>
+
+    <title>隐私协议 - JoJoCode</title>
+    <meta
+      name="description"
+      content="JoJoCode 隐私协议：说明我们如何收集、使用、共享与保护您的信息。"
+    />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://www.jojocode.org/privacy" />
+
+    <link rel="stylesheet" href="/public-pages/assets/tailwind-public-pages.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+
+    <style>
+      html {
+        scrollbar-gutter: stable;
+        --jo-scrollbar-horizontal-size: 4px;
+      }
+
+      body {
+        background: radial-gradient(1200px 600px at 20% 10%, rgba(31, 47, 34, 0.06), transparent 60%),
+          radial-gradient(1000px 500px at 90% 30%, rgba(31, 47, 34, 0.05), transparent 55%),
+          #f2f0e9;
+        color: #1f2f22;
+      }
+
+      .jo-surface {
+        border: 1px solid rgba(31, 47, 34, 0.12);
+        background: rgba(255, 255, 255, 0.38);
+        backdrop-filter: blur(10px);
+        box-shadow:
+          0 24px 60px rgba(31, 47, 34, 0.08),
+          0 2px 0 rgba(255, 255, 255, 0.4) inset;
+      }
+
+      .inline-logo-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        line-height: 1;
+      }
+
+      .inline-logo-main {
+        display: flex;
+        align-items: baseline;
+        font-weight: 700;
+        color: #1f2f22;
+        line-height: 1;
+        filter: drop-shadow(1px 2px 2px rgba(0, 0, 0, 0.15));
+      }
+
+      .inline-logo-main .symbols {
+        font-size: 8px;
+        letter-spacing: -0.5px;
+        font-weight: 600;
+        display: flex;
+        align-items: baseline;
+        margin-right: 3px;
+      }
+
+      .inline-logo-main .letters {
+        font-size: 20px;
+        letter-spacing: -1.2px;
+        display: flex;
+        align-items: baseline;
+        font-weight: 700;
+      }
+
+      .inline-logo-subtitle {
+        font-size: 5px;
+        font-weight: 500;
+        color: #1f2f22;
+        letter-spacing: 0.4px;
+        opacity: 0.8;
+        margin-top: 1px;
+        text-shadow: 0.5px 0.5px 1px rgba(0, 0, 0, 0.1);
+        text-align: center;
+      }
+
+      .jo-nav-link {
+        position: relative;
+        display: inline-block;
+        color: rgba(31, 47, 34, 0.72);
+        text-decoration: none;
+        transition: color 160ms ease;
+      }
+
+      .jo-nav-link:hover {
+        color: #1f2f22;
+      }
+
+      .jo-nav-link::after {
+        content: '';
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 0;
+        height: 1px;
+        bottom: -2px;
+        background-color: #1f2f22;
+        transition: width 220ms ease;
+      }
+
+      .jo-nav-link:hover::after {
+        width: 100%;
+      }
+
+      .jo-nav-link[aria-current='page'] {
+        color: #1f2f22;
+      }
+
+      .jo-nav-link[aria-current='page']::after {
+        width: 100%;
+      }
+    </style>
+  </head>
+
+  <body class="font-sans antialiased selection:bg-brand-dark selection:text-white">
+    <div class="max-w-[1440px] mx-auto px-0 sm:px-6 md:px-12 py-2 sm:py-8 md:py-12">
+      <div class="jo-surface rounded-2xl sm:rounded-[2.5rem] px-4 sm:px-6 md:px-12 py-4 sm:py-6 md:py-10">
+        <nav class="pb-4 md:pb-8 mb-8 md:mb-12 border-b border-brand-dark/10" aria-label="主导航">
+          <div class="flex items-center justify-between gap-4">
+            <a href="/" aria-label="JoJoCode 首页" class="inline-flex">
+              <div class="inline-logo-wrapper">
+                <div class="inline-logo-main">
+                  <div class="symbols">
+                    <span>&gt;</span>
+                    <span>_</span>
+                  </div>
+                  <div class="letters">
+                    <span>J</span>
+                    <span>O</span>
+                  </div>
+                </div>
+                <div class="inline-logo-subtitle">JO</div>
+              </div>
+            </a>
+
+            <div class="hidden sm:flex items-center gap-8 text-sm font-medium">
+              <a href="/" class="jo-nav-link">首页</a>
+              <a href="/docs" class="jo-nav-link">文档</a>
+              <a href="/price" class="jo-nav-link">价格</a>
+              <a href="/api-gateway-stats" class="jo-nav-link">查询</a>
+              <!-- <a href="/api-gateway" class="jo-nav-link">网关</a> -->
+              <!-- <a href="/api-gateway-docs" class="jo-nav-link">网关文档</a> -->
+              <a href="/about" class="jo-nav-link">关于</a>
+              <a href="/privacy" class="jo-nav-link" aria-current="page">隐私协议</a>
+              <a href="/terms" class="jo-nav-link">服务协议</a>
+            </div>
+          </div>
+
+          <div class="sm:hidden mt-4 flex flex-wrap gap-4 text-sm font-medium">
+            <a href="/" class="jo-nav-link">首页</a>
+            <a href="/docs" class="jo-nav-link">文档</a>
+            <a href="/price" class="jo-nav-link">价格</a>
+            <a href="/api-gateway-stats" class="jo-nav-link">查询</a>
+            <!-- <a href="/api-gateway" class="jo-nav-link">网关</a> -->
+            <!-- <a href="/api-gateway-docs" class="jo-nav-link">网关文档</a> -->
+            <a href="/about" class="jo-nav-link">关于</a>
+            <a href="/privacy" class="jo-nav-link" aria-current="page">隐私协议</a>
+            <a href="/terms" class="jo-nav-link">服务协议</a>
+          </div>
+        </nav>
+
+        <main class="max-w-4xl">
+          <header class="mb-8">
+            <p class="text-sm text-gray-500">/ Legal</p>
+            <h1 class="text-3xl sm:text-4xl font-semibold tracking-tight text-brand-dark mt-2">
+              隐私协议
+            </h1>
+            <p class="text-gray-600 text-sm mt-3 leading-relaxed">
+              本协议说明 JoJoCode（以下简称“我们”）如何收集、使用、共享与保护您的信息。本协议最后更新日期：2025-12-15。
+            </p>
+          </header>
+
+          <section class="space-y-6 text-sm text-gray-700 leading-relaxed">
+            <div>
+              <h2 class="text-lg font-semibold text-brand-dark mb-2">1. 我们收集的信息</h2>
+              <ul class="list-disc pl-5 space-y-1">
+                <li>账户与联系信息：例如您在购买/沟通中提供的邮箱。</li>
+                <li>使用与日志信息：例如请求时间、请求量、错误信息、设备与浏览器信息（User-Agent）、IP 等用于安全与统计的必要信息。</li>
+                <li>支付相关信息：支付由第三方支付服务商处理；我们通常只会接收并保存订单号、支付状态、对账所需的交易标识等信息，不会直接保存完整的银行卡号/安全码。</li>
+                <li>Cookie/本地存储：用于必要的功能（例如主题偏好）与基础体验。</li>
+              </ul>
+            </div>
+
+            <div>
+              <h2 class="text-lg font-semibold text-brand-dark mb-2">2. 我们如何使用信息</h2>
+              <ul class="list-disc pl-5 space-y-1">
+                <li>提供与维护服务：包括鉴权、请求转发、用量统计、计费与风控。</li>
+                <li>安全与反滥用：用于检测异常访问、恶意请求、欺诈或违反服务协议的行为。</li>
+                <li>客户支持：用于处理咨询、故障排查与售后问题。</li>
+                <li>合规与争议处理：用于履行法律义务、对账、审计与纠纷处理。</li>
+              </ul>
+            </div>
+
+            <div>
+              <h2 class="text-lg font-semibold text-brand-dark mb-2">3. 信息共享与第三方</h2>
+              <ul class="list-disc pl-5 space-y-1">
+                <li>支付服务：我们可能会与支付服务商（例如 Creem）共享完成交易所必需的信息。</li>
+                <li>
+                  上游 AI 服务提供方：为提供中转服务，您的请求可能会被转发到您选择的上游 AI 服务提供方处理；其对数据的处理受其自身政策约束。
+                </li>
+                <li>基础设施与托管：我们可能使用云服务、日志与监控服务来运行与保护系统。</li>
+                <li>法律要求：在法律法规或监管要求下，我们可能披露必要信息。</li>
+              </ul>
+            </div>
+
+            <div>
+              <h2 class="text-lg font-semibold text-brand-dark mb-2">4. 数据保存与删除</h2>
+              <p>
+                我们会在实现服务目的所需的最短期限内保存信息；为满足合规、对账与安全需要，部分日志与交易记录可能需要保留更长时间。若您希望删除或导出与您相关的信息，可通过下方联系方式联系我们。
+              </p>
+            </div>
+
+            <div>
+              <h2 class="text-lg font-semibold text-brand-dark mb-2">5. 安全</h2>
+              <p>
+                我们采取合理的技术与管理措施保护信息安全（例如访问控制、加密存储、最小权限等）。但互联网传输与存储不存在绝对安全，您理解并同意相关风险。
+              </p>
+            </div>
+
+            <div>
+              <h2 class="text-lg font-semibold text-brand-dark mb-2">6. 您的权利</h2>
+              <p>
+                在适用法律允许的范围内，您可以请求访问、更正、删除您的信息，或对部分处理提出异议。我们可能需要验证您的身份后再处理请求。
+              </p>
+            </div>
+
+            <div>
+              <h2 class="text-lg font-semibold text-brand-dark mb-2">7. 协议变更</h2>
+              <p>
+                我们可能不时更新本协议。更新后版本将发布在本页面，并以“最后更新日期”为准。若更新涉及重大变更，我们会以合理方式提示。
+              </p>
+            </div>
+
+            <div>
+              <h2 class="text-lg font-semibold text-brand-dark mb-2">8. 联系我们</h2>
+              <p>
+                如对本隐私协议有任何疑问或请求，请联系：
+                <a
+                  class="underline decoration-brand-dark/40 hover:decoration-brand-dark"
+                  href="mailto:cac900101@gmail.com"
+                  >cac900101@gmail.com</a
+                >
+              </p>
+            </div>
+          </section>
+
+          <div class="border-t border-gray-300/50 pt-8 pb-12 mt-16">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-6">
+              <div class="flex items-center gap-3">
+                <div
+                  class="inline-logo-wrapper"
+                  style="transform: scale(0.8); transform-origin: left center"
+                >
+                  <a href="/" aria-label="JoJoCode 首页" class="block">
+                    <div class="inline-logo-main">
+                      <div class="symbols">
+                        <span>&gt;</span>
+                        <span>_</span>
+                      </div>
+                      <div class="letters">
+                        <span>J</span>
+                        <span>O</span>
+                      </div>
+                    </div>
+                    <div class="inline-logo-subtitle">JO</div>
+                  </a>
+                </div>
+                <span class="text-sm text-gray-500">© 2024 JoJoCode.</span>
+              </div>
+              <div class="flex flex-wrap items-center justify-center gap-6 text-sm">
+                <a href="/" class="text-gray-500 hover:text-brand-dark transition">首页</a>
+                <a href="/docs" class="text-gray-500 hover:text-brand-dark transition">文档</a>
+                <a href="/price" class="text-gray-500 hover:text-brand-dark transition">价格</a>
+                <a href="/api-gateway-stats" class="text-gray-500 hover:text-brand-dark transition">查询</a>
+                <a href="/about" class="text-gray-500 hover:text-brand-dark transition">关于</a>
+                <a href="/privacy" class="text-gray-500 hover:text-brand-dark transition">隐私协议</a>
+                <a href="/terms" class="text-gray-500 hover:text-brand-dark transition">服务协议</a>
+                <a
+                  href="mailto:cac900101@gmail.com"
+                  class="text-gray-500 hover:text-brand-dark transition"
+                  >客服邮箱</a
+                >
+              </div>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+  </body>
+</html>

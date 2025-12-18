@@ -5,7 +5,7 @@ const {
 } = require('@aws-sdk/client-bedrock-runtime')
 const { fromEnv } = require('@aws-sdk/credential-providers')
 const logger = require('../utils/logger')
-const config = require('../../config/config')
+const config = require('../../config')
 const userMessageQueueService = require('./userMessageQueueService')
 
 class BedrockRelayService {

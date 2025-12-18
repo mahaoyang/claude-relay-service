@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Armonia Excursions</title>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Google Fonts: Manrope -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- FontAwesome for Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <!-- Custom Config -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'brand-bg': '#F2F0E9', // The beige background
+            'brand-dark': '#1F2F22', // The dark green text/buttons
+            'brand-gray': '#8A8A8A',
+            'brand-card': '#EAE8E1'
+          },
+          fontFamily: {
+            sans: ['Manrope', 'sans-serif'],
+          },
+          spacing: {
+            '128': '32rem',
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      background-color: #F2F0E9;
+      color: #1F2F22;
+    }
+
+    /* Custom scrollbar for a cleaner look */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #F2F0E9;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #D1D1D1;
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #1F2F22;
+    }
+
+    /* Smooth fade for tabs */
+    .tab-content {
+      display: none;
+      animation: fadeIn 0.4s ease-in-out;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .hover-arrow-move:hover i {
+      transform: translateX(4px) translateY(-4px);
+      transition: transform 0.2s ease;
+    }
+  </style>
+</head>
+
+<body class="font-sans antialiased selection:bg-brand-dark selection:text-brand-bg">
+
+  <!-- Main Container -->
+  <div class="max-w-[1440px] mx-auto px-6 md:px-12 py-6">
+
+    <!-- Navigation Header -->
+    <nav class="flex flex-wrap items-center justify-between mb-16 gap-4">
+      <!-- Language Selector -->
+      <div
+        class="flex items-center space-x-2 text-sm font-medium border border-gray-300 rounded-full px-3 py-1.5 cursor-pointer hover:border-brand-dark transition">
+        <i class="fa-solid fa-globe text-xs"></i>
+        <span>English</span>
+        <i class="fa-solid fa-chevron-down text-xs ml-1"></i>
+      </div>
+
+      <!-- Nav Links (Desktop) -->
+      <div class="hidden md:flex items-center space-x-8 text-sm font-medium">
+        <a href="#" class="hover:text-gray-600 transition">Home</a>
+        <a href="#" class="hover:text-gray-600 transition">About us</a>
+        <a href="#" class="hover:text-gray-600 transition">Transfers</a>
+        <a href="#" class="hover:text-gray-600 transition">Tours</a>
+        <a href="#" class="hover:text-gray-600 transition">Contacts</a>
+      </div>
+
+      <!-- CTA Button -->
+      <a href="#"
+        class="bg-brand-dark text-white px-6 py-2.5 rounded-full text-sm font-medium hover:bg-opacity-90 transition shadow-lg shadow-brand-dark/10">
+        Book a Tour
+      </a>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="mb-20">
+      <div class="flex flex-col md:flex-row justify-between items-end mb-8">
+        <div>
+          <p class="text-sm md:text-base text-gray-500 mb-2">/ travel agency website</p>
+          <h1 class="text-5xl md:text-7xl font-semibold tracking-tight leading-tight uppercase text-brand-dark">
+            Armonia <br> Excursions
+          </h1>
+        </div>
+        <div class="flex flex-col items-end mt-6 md:mt-0 gap-4 md:gap-8">
+          <p class="text-gray-600 text-sm md:text-base max-w-xs text-right">
+            The most popular and trusted travel agency in Greece
+          </p>
+          <a href="#"
+            class="group flex items-center gap-2 text-xs font-bold uppercase tracking-wide border-b border-brand-dark/30 pb-1 hover-arrow-move">
+            Explore Destinations
+            <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
+          </a>
+        </div>
+      </div>
+
+      <!-- Hero Image -->
+      <div class="w-full h-[300px] md:h-[500px] overflow-hidden rounded-[2rem] shadow-sm">
+        <img src="https://images.unsplash.com/photo-1603565816030-6b389eeb23cb?q=80&w=2000&auto=format&fit=crop"
+          alt="Ancient Greek Temple on a hill"
+          class="w-full h-full object-cover hover:scale-105 transition duration-700 ease-in-out">
+      </div>
+    </header>
+
+    <!-- About Section Grid -->
+    <section class="grid grid-cols-1 md:grid-cols-12 gap-6 mb-24">
+      <!-- Left Image (Meteora) -->
+      <div class="md:col-span-3 h-[300px] md:h-[400px]">
+        <img src="https://images.unsplash.com/photo-1564053489984-317bbd824340?q=80&w=800&auto=format&fit=crop"
+          alt="Meteora Monasteries" class="w-full h-full object-cover rounded-[1.5rem]">
+      </div>
+
+      <!-- Center Content -->
+      <div class="md:col-span-5 flex flex-col justify-center px-4 md:px-8">
+        <div class="flex items-center gap-2 text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">
+          <i class="fa-solid fa-star text-[10px]"></i> About Us
+        </div>
+        <h2 class="text-3xl font-medium leading-tight mb-6 text-brand-dark">
+          The Highest Level of Comfort, Convenience and Service
+        </h2>
+        <p class="text-gray-600 text-sm leading-relaxed mb-8">
+          At Armonia Excursions, we combine premium service with attention to detail. Whether it's a private journey
+          tailored just for you, a shared group experience, or a seamless transfer – we take care of everything, so you
+          can enjoy every moment.
+        </p>
+        <a href="#"
+          class="group inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wide underline underline-offset-4 decoration-gray-400 hover:decoration-brand-dark transition hover-arrow-move w-max">
+          More About Us
+          <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
+        </a>
+      </div>
+
+      <!-- Right Image (Columns) -->
+      <div class="md:col-span-4 h-[300px] md:h-[400px]">
+        <img src="https://images.unsplash.com/photo-1555993539-1732b0258235?q=80&w=800&auto=format&fit=crop"
+          alt="Acropolis Columns" class="w-full h-full object-cover rounded-[1.5rem]">
+      </div>
+    </section>
+
+    <!-- Why Choose Us -->
+    <section class="mb-24">
+      <h3 class="text-2xl font-medium mb-8 text-brand-dark">Why Choose Us?</h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 border-t border-gray-300/50 pt-8">
+        <!-- Card 1 -->
+        <div class="flex justify-between items-start group">
+          <div>
+            <h4 class="font-semibold text-lg mb-2">Professional team</h4>
+            <p class="text-gray-500 text-sm max-w-xs">
+              With years of experience in tourism, making sure you enjoy every moment.
+            </p>
+          </div>
+          <div class="text-gray-400 group-hover:text-brand-dark transition-colors duration-300">
+            <!-- Star Icon SVG equivalent -->
+            <i class="fa-regular fa-star text-xl"></i>
+          </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="flex justify-between items-start group">
+          <div>
+            <h4 class="font-semibold text-lg mb-2">Flexibility</h4>
+            <p class="text-gray-500 text-sm max-w-xs">
+              From historic landmarks to airports and ports – we take you where you need to go.
+            </p>
+          </div>
+          <div class="text-gray-400 group-hover:text-brand-dark transition-colors duration-300">
+            <!-- Location Icon -->
+            <i class="fa-solid fa-location-dot text-xl"></i>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Services Section (Tabs) -->
+    <section class="mb-24">
+      <!-- Header -->
+      <div class="text-center mb-12">
+        <div
+          class="flex items-center justify-center gap-2 text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">
+          <i class="fa-solid fa-heart text-[10px]"></i> Services
+        </div>
+        <h2 class="text-3xl font-medium text-brand-dark mb-3">What we offer?</h2>
+        <p class="text-gray-500 text-sm max-w-md mx-auto">
+          From a private tour and a scheduled route to an accessible travel experience - we've got the perfect option
+          for you.
+        </p>
+      </div>
+
+      <!-- Tab Layout -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+
+        <!-- Sidebar Navigation -->
+        <div class="lg:col-span-3 flex flex-col space-y-2">
+          <button onclick="openTab(event, 'private')"
+            class="tab-btn active text-left px-6 py-4 rounded-xl text-sm font-medium transition-all duration-300 bg-brand-dark text-white shadow-lg">
+            Private Tours
+          </button>
+          <button onclick="openTab(event, 'scheduled')"
+            class="tab-btn text-left px-6 py-4 rounded-xl text-sm font-medium transition-all duration-300 hover:bg-brand-card text-brand-dark bg-[#EAE8E1]">
+            Scheduled Tours
+          </button>
+          <button onclick="openTab(event, 'transfers')"
+            class="tab-btn text-left px-6 py-4 rounded-xl text-sm font-medium transition-all duration-300 hover:bg-brand-card text-brand-dark bg-[#EAE8E1]">
+            Transfers
+          </button>
+          <button onclick="openTab(event, 'accessibility')"
+            class="tab-btn text-left px-6 py-4 rounded-xl text-sm font-medium transition-all duration-300 hover:bg-brand-card text-brand-dark bg-[#EAE8E1]">
+            Wheelchair Accessibility
+          </button>
+        </div>
+
+        <!-- Content Area -->
+        <div class="lg:col-span-9 bg-[#EAE8E1] rounded-[2rem] p-4 lg:p-6 min-h-[400px]">
+
+          <!-- Tab 1: Private Tours (Active by default) -->
+          <div id="private" class="tab-content active h-full">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 h-full items-center">
+              <!-- Image -->
+              <div class="h-[300px] md:h-[400px] overflow-hidden rounded-xl">
+                <img src="https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?q=80&w=800&auto=format&fit=crop"
+                  onerror="this.onerror=null; this.src='https://placehold.co/800x600/EAE8E1/1F2F22?text=Private+Tour+Image';"
+                  alt="Mercedes Vito on road"
+                  class="w-full h-full object-cover hover:scale-105 transition duration-500">
+              </div>
+              <!-- Text -->
+              <div class="flex flex-col justify-center pr-4">
+                <div class="flex items-center gap-2 text-xs font-bold text-gray-500 uppercase tracking-wide mb-4">
+                  <i class="fa-solid fa-gem text-[10px]"></i> As you wish
+                </div>
+                <h3 class="text-2xl md:text-3xl font-medium mb-4 text-brand-dark">
+                  Tailored <span class="italic font-serif">Private Tours</span> <br> in Mercedes Vito
+                </h3>
+                <p class="text-gray-600 text-sm leading-relaxed mb-6">
+                  Enjoy a personalized journey in our Mercedes Vito (9-seater: 8 clients + driver). These tours offer
+                  complete flexibility — visit as many or as few places as you wish, all at your own pace.
+                </p>
+
+                <div class="bg-brand-bg/60 p-3 rounded-lg flex items-start gap-3 mb-8">
+                  <i class="fa-solid fa-crown text-brand-dark mt-1"></i>
+                  <div>
+                    <p class="text-xs font-bold text-brand-dark">Perfect for those seeking a custom experience.</p>
+                  </div>
+                </div>
+
+                <a href="#"
+                  class="group flex items-center gap-2 text-xs font-bold uppercase tracking-wide border-b border-brand-dark/30 pb-1 w-max hover-arrow-move">
+                  Explore Tours
+                  <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tab 2: Scheduled Tours -->
+          <div id="scheduled" class="tab-content h-full">
+            <div class="flex flex-col items-center justify-center h-[400px] text-center p-8">
+              <i class="fa-regular fa-calendar-check text-4xl text-brand-dark mb-4 opacity-50"></i>
+              <h3 class="text-2xl font-medium text-brand-dark mb-2">Scheduled Group Tours</h3>
+              <p class="text-gray-600 max-w-md">Join our carefully curated group tours to popular destinations with
+                expert guides and comfortable transport.</p>
+            </div>
+          </div>
+
+          <!-- Tab 3: Transfers -->
+          <div id="transfers" class="tab-content h-full">
+            <div class="flex flex-col items-center justify-center h-[400px] text-center p-8">
+              <i class="fa-solid fa-van-shuttle text-4xl text-brand-dark mb-4 opacity-50"></i>
+              <h3 class="text-2xl font-medium text-brand-dark mb-2">Airport & Port Transfers</h3>
+              <p class="text-gray-600 max-w-md">Seamless transfers from Athens International Airport or Piraeus Port
+                directly to your hotel.</p>
+            </div>
+          </div>
+
+          <!-- Tab 4: Accessibility -->
+          <div id="accessibility" class="tab-content h-full">
+            <div class="flex flex-col items-center justify-center h-[400px] text-center p-8">
+              <i class="fa-solid fa-wheelchair text-4xl text-brand-dark mb-4 opacity-50"></i>
+              <h3 class="text-2xl font-medium text-brand-dark mb-2">Wheelchair Accessible Travel</h3>
+              <p class="text-gray-600 max-w-md">We believe travel is for everyone. Specialized vehicles and routes
+                designed for accessibility.</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer Credit (Matches Design) -->
+    <div class="text-center py-8 text-gray-400 text-sm">
+      / ui.poly.volt
+    </div>
+
+  </div>
+
+  <!-- JavaScript for Tabs -->
+  <script>
+    function openTab(evt, tabName) {
+      // Get all elements with class="tab-content" and hide them
+      var i, tabcontent, tablinks;
+      tabcontent = document.getElementsByClassName("tab-content");
+      for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].classList.remove("active");
+        tabcontent[i].style.display = "none";
+      }
+
+      // Get all elements with class="tab-btn" and remove the class "active" (and reset styles)
+      tablinks = document.getElementsByClassName("tab-btn");
+      for (i = 0; i < tablinks.length; i++) {
+        tablinks[i].classList.remove("active", "bg-brand-dark", "text-white", "shadow-lg");
+        tablinks[i].classList.add("bg-[#EAE8E1]", "text-brand-dark");
+      }
+
+      // Show the current tab, and add an "active" class to the button that opened the tab
+      document.getElementById(tabName).style.display = "block";
+      // Use a small timeout to allow display:block to apply before adding opacity class for animation
+      setTimeout(() => {
+        document.getElementById(tabName).classList.add("active");
+      }, 10);
+
+      // Style the clicked button
+      evt.currentTarget.classList.remove("bg-[#EAE8E1]", "text-brand-dark");
+      evt.currentTarget.classList.add("active", "bg-brand-dark", "text-white", "shadow-lg");
+    }
+
+    // Initialize default styling ensures the first tab is correctly styled if HTML classes were messy
+    document.addEventListener('DOMContentLoaded', () => {
+      // Logic handled by HTML inline classes, but this is a fallback safety
+    });
+  </script>
+</body>
+
+</html>

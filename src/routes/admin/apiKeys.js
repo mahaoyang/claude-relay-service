@@ -4,7 +4,8 @@ const redis = require('../../models/redis')
 const { authenticateAdmin } = require('../../middleware/auth')
 const logger = require('../../utils/logger')
 const CostCalculator = require('../../utils/costCalculator')
-const config = require('../../../config/config')
+const pricingService = require('../../services/pricingService')
+const config = require('../../../config')
 
 const router = express.Router()
 
@@ -931,19 +932,11 @@ async function calculateKeyStats(keyId, timeRange, startDate, endDate) {
     // 先获取 API Key 配置，判断是否需要查询限制相关数据
     const apiKey = await redis.getApiKey(keyId)
     const rateLimitWindow = parseInt(apiKey?.rateLimitWindow) || 0
-    const dailyCostLimit = parseFloat(apiKey?.dailyCostLimit) || 0
-    const totalCostLimit = parseFloat(apiKey?.totalCostLimit) || 0
 
-    // 只在启用了每日费用限制时查询
-    if (dailyCostLimit > 0) {
-      dailyCost = await redis.getDailyCost(keyId)
-    }
-
-    // 只在启用了总费用限制时查询
-    if (totalCostLimit > 0) {
-      const totalCostKey = `usage:cost:total:${keyId}`
-      allTimeCost = parseFloat((await client.get(totalCostKey)) || '0')
-    }
+    // 无条件获取当日费用和总费用（与 Stats API 保持一致）
+    dailyCost = (await redis.getDailyCost(keyId)) || 0
+    const totalCostKey = `usage:cost:total:${keyId}`
+    allTimeCost = parseFloat((await client.get(totalCostKey)) || '0')
 
     // 🔧 FIX: 对于 "全部时间" 时间范围，直接使用 allTimeCost
     // 因为 usage:*:model:daily:* 键有 30 天 TTL，旧数据已经过期
@@ -1030,10 +1023,12 @@ async function calculateKeyStats(keyId, timeRange, startDate, endDate) {
   const modelStatsMap = new Map()
   let totalRequests = 0
 
-  // 用于去重：先统计月数据，避免与日数据重复
+  // 用于去重：只统计日数据，避免与月数据重复
   const dailyKeyPattern = /usage:.+:model:daily:(.+):\d{4}-\d{2}-\d{2}$/
   const monthlyKeyPattern = /usage:.+:model:monthly:(.+):\d{4}-\d{2}$/
-  const currentMonth = `${tzDate.getUTCFullYear()}-${String(tzDate.getUTCMonth() + 1).padStart(2, '0')}`
+
+  // 检查是否有日数据
+  const hasDailyData = uniqueKeys.some((key) => dailyKeyPattern.test(key))
 
   for (let i = 0; i < results.length; i++) {
     const [err, data] = results[i]
@@ -1060,12 +1055,8 @@ async function calculateKeyStats(keyId, timeRange, startDate, endDate) {
       continue
     }
 
-    // 跳过当前月的月数据
-    if (isMonthly && key.includes(`:${currentMonth}`)) {
-      continue
-    }
-    // 跳过非当前月的日数据
-    if (!isMonthly && !key.includes(`:${currentMonth}-`)) {
+    // 如果有日数据，则跳过月数据以避免重复
+    if (hasDailyData && isMonthly) {
       continue
     }
 
@@ -1104,19 +1095,35 @@ async function calculateKeyStats(keyId, timeRange, startDate, endDate) {
     cacheCreateTokens += stats.cacheCreateTokens
     cacheReadTokens += stats.cacheReadTokens
 
-    const costResult = CostCalculator.calculateCost(
-      {
-        input_tokens: stats.inputTokens,
-        output_tokens: stats.outputTokens,
-        cache_creation_input_tokens: stats.cacheCreateTokens,
-        cache_read_input_tokens: stats.cacheReadTokens
-      },
-      model
-    )
-    totalCost += costResult.costs.total
+    // 使用 pricingService 计算费用，保持与请求处理时的计算一致
+    const usageObject = {
+      input_tokens: stats.inputTokens,
+      output_tokens: stats.outputTokens,
+      cache_creation_input_tokens: stats.cacheCreateTokens,
+      cache_read_input_tokens: stats.cacheReadTokens
+    }
+    const costResult = pricingService.calculateCost(usageObject, model)
+    totalCost += costResult.totalCost || 0
   }
 
   const tokens = inputTokens + outputTokens + cacheCreateTokens + cacheReadTokens
+
+  // 确保 allTimeCost 数据一致性
+  // 1. 当 timeRange 是 'all' 时，使用 allTimeCost 和 totalCost 的较大值
+  // 2. 当 timeRange 不是 'all' 时，allTimeCost 也不应该小于当前范围的费用
+  //    因为历史总费用 >= 任何时间段的费用
+  // 这解决了 usage:cost:total 键可能未正确累加或数据不一致的问题
+  let effectiveAllTimeCost = allTimeCost
+  if (!timeRange || timeRange === 'all') {
+    // 全部时间范围：使用较大值
+    effectiveAllTimeCost = Math.max(allTimeCost, totalCost)
+  } else {
+    // 其他时间范围：allTimeCost 至少应该等于当前范围费用
+    // 如果 allTimeCost < totalCost，说明 allTimeCost 数据不完整
+    if (allTimeCost < totalCost) {
+      effectiveAllTimeCost = totalCost
+    }
+  }
 
   return {
     requests: totalRequests,
@@ -1133,7 +1140,7 @@ async function calculateKeyStats(keyId, timeRange, startDate, endDate) {
     windowRemainingSeconds,
     windowStartTime,
     windowEndTime,
-    allTimeCost // 历史总费用（用于总费用限制）
+    allTimeCost: effectiveAllTimeCost // 历史总费用（用于总费用限制）
   }
 }
 
@@ -1981,6 +1988,19 @@ router.put('/api-keys/:keyId', authenticateAdmin, async (req, res) => {
       updates.isActive = isActive
     }
 
+    // 处理已用费用（直接更新 Redis，不存储在 apiKey 对象中）
+    if (req.body.usedCost !== undefined) {
+      const usedCostValue = Number(req.body.usedCost)
+      if (!isNaN(usedCostValue) && usedCostValue >= 0) {
+        const client = redis.getClientSafe()
+        const totalCostKey = `usage:cost:total:${keyId}`
+        await client.set(totalCostKey, usedCostValue.toString())
+        logger.info(`💰 Admin updated used cost for API key ${keyId}: $${usedCostValue}`)
+      } else if (usedCostValue < 0) {
+        return res.status(400).json({ error: 'Used cost must be a non-negative number' })
+      }
+    }
+
     // 处理所有者变更
     if (ownerId !== undefined) {
       const userService = require('../../services/userService')
@@ -2027,6 +2047,41 @@ router.put('/api-keys/:keyId', authenticateAdmin, async (req, res) => {
   } catch (error) {
     logger.error('❌ Failed to update API key:', error)
     return res.status(500).json({ error: 'Failed to update API key', message: error.message })
+  }
+})
+
+// 🧹 重置单个 API Key 的历史用量/费用（危险操作）
+router.post('/api-keys/:keyId/reset-usage', authenticateAdmin, async (req, res) => {
+  try {
+    const { keyId } = req.params
+    const keyData = await redis.getApiKey(keyId)
+
+    if (!keyData || Object.keys(keyData).length === 0) {
+      return res.status(404).json({
+        success: false,
+        error: 'API key not found'
+      })
+    }
+
+    logger.warn(
+      `🧹 Admin reset usage for API key ${keyId} (${keyData.name || 'unknown'}) by ${
+        req.admin?.username || 'unknown'
+      }`
+    )
+
+    const stats = await redis.resetUsageStatsForKey(keyId)
+    return res.json({
+      success: true,
+      message: 'Usage stats reset successfully',
+      data: stats
+    })
+  } catch (error) {
+    logger.error('❌ Failed to reset API key usage stats:', error)
+    return res.status(500).json({
+      success: false,
+      error: 'Failed to reset API key usage stats',
+      message: error.message
+    })
   }
 })
 
@@ -2366,6 +2421,44 @@ router.delete('/api-keys/deleted/clear-all', authenticateAdmin, async (req, res)
     return res.status(500).json({
       success: false,
       error: '清空已删除的 API Keys 失败',
+      message: error.message
+    })
+  }
+})
+
+// 🎭 设置 API Key 的 session 收集状态（白名单）
+router.patch('/api-keys/:id/collect-session', authenticateAdmin, async (req, res) => {
+  try {
+    const { id } = req.params
+    const { collectSession } = req.body
+
+    if (typeof collectSession !== 'boolean') {
+      return res.status(400).json({
+        success: false,
+        error: 'Invalid collectSession value',
+        message: 'collectSession must be a boolean value'
+      })
+    }
+
+    const result = await apiKeyService.updateApiKey(id, { collectSession })
+
+    logger.success(
+      `🎭 Updated API key ${id} session collection: ${collectSession ? 'enabled' : 'disabled'}`
+    )
+
+    return res.json({
+      success: true,
+      message: `Session collection ${collectSession ? 'enabled' : 'disabled'} for API key`,
+      data: {
+        id,
+        collectSession
+      }
+    })
+  } catch (error) {
+    logger.error('❌ Failed to update API key session collection:', error)
+    return res.status(500).json({
+      success: false,
+      error: 'Failed to update session collection setting',
       message: error.message
     })
   }
