@@ -488,3 +488,4 @@ AUTO_DELIVERY_SECRET=
 | 2025-12-18 | 重构文档结构，简化倍率系统，补充前端伪装开关、调试中间件、自动发货功能文档 |
 | 2025-12-18 | 增强模型映射中间件：额度感知逻辑，前 10% 不映射，后 90% 按概率映射 |
 | 2025-12-18 | Token 统计应用倍率：`/api-gateway-stats` 显示的 token 数量现在反映 COST_MULTIPLIER 设置 |
+| 2025-12-18 | 重构倍率应用层：统一在 redis.js 层处理，移除 costCalculator/pricingService 中的重复应用 |
