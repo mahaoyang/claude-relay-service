@@ -285,6 +285,10 @@ class Application {
       const publicPagesRoutes = require('./routes/publicPages')
       this.app.use('/', publicPagesRoutes)
 
+      // 🚚 自动发货路由（可选启用）
+      const autoDeliveryRoutes = require('./routes/autoDelivery')
+      this.app.use('/auto-delivery', autoDeliveryRoutes)
+
       // 🏥 增强的健康检查端点
       this.app.get('/health', async (req, res) => {
         try {

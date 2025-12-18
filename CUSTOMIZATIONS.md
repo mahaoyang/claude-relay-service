@@ -260,9 +260,55 @@ DEBUG_HTTP_TRAFFIC=true  # 在 .env 中启用
 
 ---
 
-## 7. 其他定制功能
+## 7. 自动发货系统（闲鱼集成）
 
-### 7.1 Redis URL 连接支持
+### 7.1 功能说明
+
+**功能**: 提供 REST API 接口，自动生成和分配 API Keys，适合与电商平台（如闲鱼）自动发货系统集成
+
+**特性**:
+- 低入侵设计：独立路由模块，默认关闭
+- Bearer Token 认证
+- 支持账户绑定配置（专属/分组/共享模式）
+
+### 7.2 环境变量配置
+
+```bash
+AUTO_DELIVERY_ENABLED=true                    # 启用自动发货（默认 false）
+AUTO_DELIVERY_SECRET=your-64-char-secret      # 安全密钥
+```
+
+### 7.3 API 接口
+
+| 接口 | 方法 | 功能 |
+|------|------|------|
+| `/auto-delivery/health` | GET | 健康检查 |
+| `/auto-delivery/generate-api-key` | POST | 生成 API Key |
+
+**生成 API Key 请求示例**:
+```json
+{
+  "orderNo": "XY20251216001",
+  "name": "客户001",
+  "expiresInDays": 365,
+  "totalCostLimit": 10,
+  "accountBindings": [
+    { "platform": "claude", "mode": "group", "groupId": "xxx" }
+  ]
+}
+```
+
+### 7.4 相关文件
+
+- **路由**: `src/routes/autoDelivery.js`
+- **文档**: `docs/AUTO_DELIVERY.md`、`docs/XIANYU_INTEGRATION.md`
+- **测试**: `scripts/test-auto-delivery.sh`
+
+---
+
+## 8. 其他定制功能
+
+### 8.1 Redis URL 连接支持
 
 **功能**: 生产环境支持使用 Redis URL 连接
 
@@ -273,7 +319,7 @@ CRS_REDIS_URL=rediss://user:password@host:port
 
 **支持格式**: `redis://` 和 `rediss://`（TLS）
 
-### 7.2 智能定价 Fallback
+### 8.2 智能定价 Fallback
 
 **功能**: 当新模型发布但定价数据尚未更新时，自动使用同系列最新模型价格估算
 
@@ -286,7 +332,7 @@ CRS_REDIS_URL=rediss://user:password@host:port
 
 **代码位置**: `src/services/pricingService.js` 中的 `FORK CUSTOMIZATION` 代码块
 
-### 7.3 统计页面增强
+### 8.3 统计页面增强
 
 - 显示 `cache_create` 和 `cache_read` tokens
 - 显示剩余预算（已用/总限额）
@@ -320,6 +366,12 @@ config/index.js
 web/public-pages/*
 src/routes/publicPages.js
 src/routes/admin/publicStats.js
+
+# 自动发货
+src/routes/autoDelivery.js
+docs/AUTO_DELIVERY.md
+docs/XIANYU_INTEGRATION.md
+scripts/test-auto-delivery.sh
 ```
 
 ### 需保留的代码块
@@ -350,6 +402,10 @@ CRS_REDIS_URL=
 
 # 调试
 DEBUG_HTTP_TRAFFIC=false
+
+# 自动发货
+AUTO_DELIVERY_ENABLED=false
+AUTO_DELIVERY_SECRET=
 ```
 
 ---
@@ -360,4 +416,4 @@ DEBUG_HTTP_TRAFFIC=false
 |------|------|
 | 2025-12-10 | 初始版本，整理所有定制功能 |
 | 2025-12-13 | 新增智能定价 Fallback 机制 |
-| 2025-12-18 | 重构文档结构，简化倍率系统（移除 Opus 单独倍率），补充前端伪装开关、调试中间件文档 |
+| 2025-12-18 | 重构文档结构，简化倍率系统，补充前端伪装开关、调试中间件、自动发货功能文档 |
