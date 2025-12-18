@@ -1835,9 +1835,9 @@ const securityMiddleware = (req, res, next) => {
       'Content-Security-Policy',
       [
         "default-src 'self'",
-        "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://unpkg.com https://cdn.tailwindcss.com https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://cdn.bootcdn.net",
-        "style-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://cdnjs.cloudflare.com https://cdn.bootcdn.net",
-        "font-src 'self' https://cdnjs.cloudflare.com https://cdn.bootcdn.net",
+        "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://unpkg.com https://cdn.tailwindcss.com https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://cdn.bootcdn.net https://vercel.live",
+        "style-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://cdnjs.cloudflare.com https://cdn.bootcdn.net https://fonts.googleapis.com",
+        "font-src 'self' https://cdnjs.cloudflare.com https://cdn.bootcdn.net https://fonts.gstatic.com",
         "img-src 'self' data: https://images.unsplash.com",
         "connect-src 'self'",
         "frame-ancestors 'none'",
