@@ -99,7 +99,6 @@ class CostCalculator {
           cacheRead: result.pricing.cacheRead * 1000000
         },
         usingDynamicPricing: true,
-        costMultiplier: result.costMultiplier,
         isLongContextRequest: result.isLongContextRequest || false,
         usage: {
           inputTokens: usage.input_tokens || 0,
@@ -188,20 +187,10 @@ class CostCalculator {
 
     const totalCost = inputCost + outputCost + cacheWriteCost + cacheReadCost
 
-    const costMultiplier = pricingService.getCostMultiplier(model)
-    const multipliedCosts = {
-      input: inputCost * costMultiplier,
-      output: outputCost * costMultiplier,
-      cacheWrite: cacheWriteCost * costMultiplier,
-      cacheRead: cacheReadCost * costMultiplier,
-      total: totalCost * costMultiplier
-    }
-
     return {
       model,
       pricing,
       usingDynamicPricing,
-      costMultiplier,
       usage: {
         inputTokens,
         outputTokens,
@@ -210,27 +199,26 @@ class CostCalculator {
         totalTokens: inputTokens + outputTokens + cacheCreateTokens + cacheReadTokens
       },
       costs: {
-        input: multipliedCosts.input,
-        output: multipliedCosts.output,
-        cacheWrite: multipliedCosts.cacheWrite,
-        cacheRead: multipliedCosts.cacheRead,
-        total: multipliedCosts.total
+        input: inputCost,
+        output: outputCost,
+        cacheWrite: cacheWriteCost,
+        cacheRead: cacheReadCost,
+        total: totalCost
       },
       // 格式化的费用字符串
       formatted: {
-        input: this.formatCost(multipliedCosts.input),
-        output: this.formatCost(multipliedCosts.output),
-        cacheWrite: this.formatCost(multipliedCosts.cacheWrite),
-        cacheRead: this.formatCost(multipliedCosts.cacheRead),
-        total: this.formatCost(multipliedCosts.total)
+        input: this.formatCost(inputCost),
+        output: this.formatCost(outputCost),
+        cacheWrite: this.formatCost(cacheWriteCost),
+        cacheRead: this.formatCost(cacheReadCost),
+        total: this.formatCost(totalCost)
       },
       // 添加调试信息
       debug: {
         isOpenAIModel: model.includes('gpt') || model.includes('o1'),
         hasCacheCreatePrice: !!pricingData?.cache_creation_input_token_cost,
         cacheCreateTokens,
-        cacheWritePriceUsed: pricing.cacheWrite,
-        costMultiplier
+        cacheWritePriceUsed: pricing.cacheWrite
       }
     }
   }

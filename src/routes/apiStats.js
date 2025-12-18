@@ -2,11 +2,10 @@ const express = require('express')
 const redis = require('../models/redis')
 const logger = require('../utils/logger')
 const apiKeyService = require('../services/apiKeyService')
-const pricingService = require('../services/pricingService')
+const CostCalculator = require('../utils/costCalculator')
 const claudeAccountService = require('../services/claudeAccountService')
 const openaiAccountService = require('../services/openaiAccountService')
 const { createClaudeTestPayload } = require('../utils/testPayloadHelper')
-const CostCalculator = require('../utils/costCalculator')
 
 const router = express.Router()
 
@@ -649,20 +648,20 @@ router.post('/api/batch-stats', async (req, res) => {
           usage: stats.usage,
           dailyUsage: {
             ...stats.dailyStats,
-            formattedCost: pricingService.formatCost(stats.dailyStats.cost || 0)
+            formattedCost: CostCalculator.formatCost(stats.dailyStats.cost || 0)
           },
           monthlyUsage: {
             ...stats.monthlyStats,
-            formattedCost: pricingService.formatCost(stats.monthlyStats.cost || 0)
+            formattedCost: CostCalculator.formatCost(stats.monthlyStats.cost || 0)
           }
         })
       }
     })
 
     // 格式化费用显示
-    aggregated.usage.formattedCost = pricingService.formatCost(aggregated.usage.cost)
-    aggregated.dailyUsage.formattedCost = pricingService.formatCost(aggregated.dailyUsage.cost)
-    aggregated.monthlyUsage.formattedCost = pricingService.formatCost(aggregated.monthlyUsage.cost)
+    aggregated.usage.formattedCost = CostCalculator.formatCost(aggregated.usage.cost)
+    aggregated.dailyUsage.formattedCost = CostCalculator.formatCost(aggregated.dailyUsage.cost)
+    aggregated.monthlyUsage.formattedCost = CostCalculator.formatCost(aggregated.monthlyUsage.cost)
 
     logger.api(`📊 Batch stats query for ${apiIds.length} keys from ${req.ip || 'unknown'}`)
 
@@ -758,23 +757,17 @@ router.post('/api/batch-model-stats', async (req, res) => {
       })
     )
 
-    // 确保 pricingService 已初始化
-    if (!pricingService.pricingData) {
-      await pricingService.initialize()
-    }
-
     // 转换为数组并计算费用
     const modelStats = []
     for (const [model, usage] of modelUsageMap) {
-      const costData = pricingService.calculateCost(
-        {
-          input_tokens: usage.inputTokens,
-          output_tokens: usage.outputTokens,
-          cache_creation_input_tokens: usage.cacheCreateTokens,
-          cache_read_input_tokens: usage.cacheReadTokens
-        },
-        model
-      )
+      const usageData = {
+        input_tokens: usage.inputTokens,
+        output_tokens: usage.outputTokens,
+        cache_creation_input_tokens: usage.cacheCreateTokens,
+        cache_read_input_tokens: usage.cacheReadTokens
+      }
+
+      const costData = CostCalculator.calculateCost(usageData, model)
 
       modelStats.push({
         model,
@@ -784,22 +777,9 @@ router.post('/api/batch-model-stats', async (req, res) => {
         cacheCreateTokens: usage.cacheCreateTokens,
         cacheReadTokens: usage.cacheReadTokens,
         allTokens: usage.allTokens,
-        costs: {
-          input: costData.inputCost,
-          output: costData.outputCost,
-          cacheCreate: costData.cacheCreateCost,
-          cacheRead: costData.cacheReadCost,
-          total: costData.totalCost
-        },
-        formatted: {
-          input: pricingService.formatCost(costData.inputCost),
-          output: pricingService.formatCost(costData.outputCost),
-          cacheCreate: pricingService.formatCost(costData.cacheCreateCost),
-          cacheRead: pricingService.formatCost(costData.cacheReadCost),
-          total: pricingService.formatCost(costData.totalCost)
-        },
-        pricing: costData.pricing,
-        costMultiplier: costData.costMultiplier
+        costs: costData.costs,
+        formatted: costData.formatted,
+        pricing: costData.pricing
       })
     }
 
@@ -990,14 +970,26 @@ router.post('/api/user-model-stats', async (req, res) => {
       const data = await client.hgetall(key)
 
       if (data && Object.keys(data).length > 0) {
+        const usage = {
+          input_tokens: parseInt(data.inputTokens) || 0,
+          output_tokens: parseInt(data.outputTokens) || 0,
+          cache_creation_input_tokens: parseInt(data.cacheCreateTokens) || 0,
+          cache_read_input_tokens: parseInt(data.cacheReadTokens) || 0
+        }
+
+        const costData = CostCalculator.calculateCost(usage, model)
+
         modelStats.push({
           model,
           requests: parseInt(data.requests) || 0,
-          inputTokens: parseInt(data.inputTokens) || 0,
-          outputTokens: parseInt(data.outputTokens) || 0,
-          cacheCreateTokens: parseInt(data.cacheCreateTokens) || 0,
-          cacheReadTokens: parseInt(data.cacheReadTokens) || 0,
-          allTokens: parseInt(data.allTokens) || 0
+          inputTokens: usage.input_tokens,
+          outputTokens: usage.output_tokens,
+          cacheCreateTokens: usage.cache_creation_input_tokens,
+          cacheReadTokens: usage.cache_read_input_tokens,
+          allTokens: parseInt(data.allTokens) || 0,
+          costs: costData.costs,
+          formatted: costData.formatted,
+          pricing: costData.pricing
         })
       }
     }

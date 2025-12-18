@@ -81,8 +81,8 @@ class PricingService {
     this.globalMultiplier = parseFloat(process.env.COST_MULTIPLIER) || 1.0
     this.modelMultipliers = this._loadModelMultipliers()
 
-    // Codex 系列模型固定倍率
-    this.codexSeriesMultiplier = 0.71
+    // GPT 系列模型倍率（Codex / GPT-5系列）
+    this.gptSeriesMultiplier = parseFloat(process.env.COST_MULTIPLIER_GPT_SERIES) || 0.71
   }
 
   _isCodexSeriesModel(normalizedModelName) {
@@ -114,10 +114,7 @@ class PricingService {
     if (Object.keys(multipliers).length > 0) {
       logger.info(`💰 Loaded ${Object.keys(multipliers).length} model-specific cost multipliers`)
       for (const [model, mult] of Object.entries(multipliers)) {
-        const effectiveMult =
-          this.globalMultiplier *
-          mult *
-          (this._isCodexSeriesModel(model) ? this.codexSeriesMultiplier : 1)
+        const effectiveMult = this.globalMultiplier * mult
         logger.info(`   ${model}: ${mult}x (effective: ${effectiveMult}x)`)
       }
     }
@@ -128,6 +125,7 @@ class PricingService {
   /**
    * 获取模型的费用倍率
    * 模型特定倍率会与全局倍率相乘
+   * 注意：GPT系列倍率已在token级别应用（recordUsageWithDetails），不在此处再次应用
    * @param {string} modelName - 模型名称
    * @returns {number} 最终倍率
    */
@@ -150,9 +148,7 @@ class PricingService {
         }
       }
 
-      if (this._isCodexSeriesModel(normalizedName)) {
-        multiplier *= this.codexSeriesMultiplier
-      }
+      // GPT 系列倍率不在此处应用，已在 token 级别应用
     }
 
     return multiplier
