@@ -57,6 +57,7 @@ function verifyAutoDeliverySecret(req, res, next) {
  *   "restrictedModels": 限制的模型列表（可选，数组，默认[]空数组不限制）,
  *   "enableClientRestriction": 是否启用客户端限制（可选，默认false）,
  *   "allowedClients": 允许的客户端列表（可选，数组，默认[]）,
+ *   "expirationMode": "过期模式（可选，默认fixed）: fixed=立刻计时 | activation=首次激活",
  *
  *   // === 账户绑定配置（新增）===
  *   "accountBindings": [
@@ -111,6 +112,8 @@ router.post('/generate-api-key', verifyAutoDeliverySecret, async (req, res) => {
       restrictedModels = ['claude-opus-4-5', 'claude-opus-4'],
       enableClientRestriction = false,
       allowedClients = [],
+      // 过期模式：'fixed'(立刻计时) 或 'activation'(首次激活)
+      expirationMode = 'fixed',
       // 账户绑定配置（数组形式）
       accountBindings = []
     } = req.body
@@ -160,9 +163,13 @@ router.post('/generate-api-key', verifyAutoDeliverySecret, async (req, res) => {
     const timestamp = new Date().toISOString().split('T')[0]
     const apiKeyName = name || `自动发货-${timestamp}`
 
-    // 计算过期时间
-    const expiresAt = new Date()
-    expiresAt.setDate(expiresAt.getDate() + parseInt(expiresInDays, 10))
+    // 计算过期时间（仅 fixed 模式需要）
+    const activationDays = parseInt(expiresInDays, 10)
+    let expiresAt = null
+    if (expirationMode === 'fixed') {
+      expiresAt = new Date()
+      expiresAt.setDate(expiresAt.getDate() + activationDays)
+    }
 
     // 根据绑定配置设置账户字段
     const accountFields = {}
@@ -211,7 +218,10 @@ router.post('/generate-api-key', verifyAutoDeliverySecret, async (req, res) => {
     const result = await apiKeyService.generateApiKey({
       name: apiKeyName,
       description: fullDescription,
-      expiresAt: expiresAt.toISOString(),
+      expiresAt: expiresAt ? expiresAt.toISOString() : '',
+      expirationMode: expirationMode === 'activation' ? 'activation' : 'fixed',
+      activationDays: activationDays,
+      activationUnit: 'days',
       concurrencyLimit: parseInt(concurrencyLimit, 10),
       dailyCostLimit: parseFloat(dailyCostLimit),
       totalCostLimit: parseFloat(totalCostLimit),
@@ -230,7 +240,8 @@ router.post('/generate-api-key', verifyAutoDeliverySecret, async (req, res) => {
       keyId: result.keyId,
       name: apiKeyName,
       orderNo,
-      expiresInDays,
+      expiresInDays: activationDays,
+      expirationMode,
       permissions,
       accountBindings: accountBindings.map((b) => ({
         platform: b.platform,
@@ -244,11 +255,17 @@ router.post('/generate-api-key', verifyAutoDeliverySecret, async (req, res) => {
     })
 
     // 格式化过期时间为易读格式
-    const expiresAtFormatted = new Date(expiresAt).toLocaleDateString('zh-CN', {
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit'
-    })
+    const isActivationMode = expirationMode === 'activation'
+    let expiresAtFormatted
+    if (isActivationMode) {
+      expiresAtFormatted = `首次使用后 ${activationDays} 天`
+    } else {
+      expiresAtFormatted = new Date(expiresAt).toLocaleDateString('zh-CN', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit'
+      })
+    }
 
     // 构建友好的消息内容（用于闲鱼自动回复）
     const friendlyMessage = `🎉 自动发货成功！
@@ -257,7 +274,7 @@ router.post('/generate-api-key', verifyAutoDeliverySecret, async (req, res) => {
 ${result.apiKey}
 
 📋 套餐信息：
-• 有效期至：${expiresAtFormatted}
+• 有效期：${isActivationMode ? `首次使用后 ${activationDays} 天` : `至 ${expiresAtFormatted}`}${isActivationMode ? '\n• 激活模式：首次使用时开始计时' : ''}
 • 总额度：$${parseFloat(totalCostLimit)}
 • 每日限额：$${parseFloat(dailyCostLimit)}
 • 并发数：${parseInt(concurrencyLimit, 10)}
@@ -280,7 +297,9 @@ ${result.apiKey}
         apiKey: result.apiKey, // 明文API Key，只返回一次
         keyId: result.keyId,
         name: apiKeyName,
-        expiresAt: expiresAt.toISOString(),
+        expirationMode,
+        activationDays: isActivationMode ? activationDays : null,
+        expiresAt: expiresAt ? expiresAt.toISOString() : null,
         expiresAtFormatted,
         concurrencyLimit: parseInt(concurrencyLimit, 10),
         dailyCostLimit: parseFloat(dailyCostLimit),

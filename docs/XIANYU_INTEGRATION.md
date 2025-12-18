@@ -152,6 +152,37 @@ node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 }
 ```
 
+## 方案5：预售套餐（首次激活模式）
+
+适合预售场景，Key 创建后不立即计时，首次使用时才开始计算有效期。
+
+```json
+{
+  "url": "http://your-relay-server:3000/auto-delivery/generate-api-key",
+  "method": "POST",
+  "headers": {
+    "Authorization": "Bearer your-auto-delivery-secret-here",
+    "Content-Type": "application/json"
+  },
+  "params": {
+    "orderNo": "{order_id}",
+    "name": "预售套餐-{order_id}",
+    "description": "买家:{buyer_id}|商品:{item_id}|规格:{spec_name}={spec_value}|账号:{cookie_id}",
+    "expiresInDays": 30,
+    "expirationMode": "activation",
+    "concurrencyLimit": 5,
+    "dailyCostLimit": 0,
+    "totalCostLimit": 10,
+    "permissions": "all",
+    "enableModelRestriction": false
+  }
+}
+```
+
+**说明**: `expirationMode` 可选值：
+- `fixed`（默认）：立刻计时，创建后即开始计算有效期
+- `activation`：首次激活，首次 API 调用时才开始计算有效期
+
 ## 账户绑定模式
 
 - **shared**: 共享池 | **dedicated**: 专属账户(需`accountId`) | **group**: 分组账户(需`groupId`+`groupName`)
