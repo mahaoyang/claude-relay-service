@@ -10,11 +10,11 @@
   "routes": [
     {
       "src": "/admin-next/assets/(.*)",
-      "dest": "/web/admin-spa/dist/assets/$1"
+      "dest": "/public/admin-next/assets/$1"
     },
     {
       "src": "/admin-next(/.*)?",
-      "dest": "/web/admin-spa/dist/index.html"
+      "dest": "/public/admin-next/index.html"
     },
     {
       "src": "/(.*)",
