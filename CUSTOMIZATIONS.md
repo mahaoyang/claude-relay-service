@@ -339,6 +339,23 @@ CRS_REDIS_URL=rediss://user:password@host:port
 - 显示完整过期日期时间
 - 费用统计从实时计算改为读取 Redis 累计值
 
+### 8.4 模型映射中间件 (`src/middleware/modelMapper.js`)
+
+**功能**: 将所有 Claude 模型请求强制映射到指定模型
+
+**使用场景**:
+- 成本控制：强制使用低成本模型
+- 测试：统一测试特定模型行为
+- 灰度发布：逐步切换到新模型
+
+**环境变量**:
+```bash
+MODEL_MAPPER_ENABLED=true              # 启用映射（默认 false）
+MODEL_MAPPER_TARGET=claude-haiku-4-5   # 目标模型
+```
+
+**行为**: 仅映射 Claude 系列模型（`claude-*`、`anthropic.*`），其他模型不受影响
+
 ---
 
 ## 合并注意事项
@@ -352,6 +369,7 @@ src/middleware/codexDisguise.js
 src/middleware/debugInterceptor.js
 src/middleware/requestLogger.js
 src/middleware/codexRequestLogger.js
+src/middleware/modelMapper.js
 src/services/disguiseSettingsService.js
 src/services/sentryTripletPoolService.js
 src/services/codexSessionPoolService.js
@@ -402,6 +420,10 @@ CRS_REDIS_URL=
 
 # 调试
 DEBUG_HTTP_TRAFFIC=false
+
+# 模型映射
+MODEL_MAPPER_ENABLED=false
+MODEL_MAPPER_TARGET=claude-haiku-4-5-20251001
 
 # 自动发货
 AUTO_DELIVERY_ENABLED=false
