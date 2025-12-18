@@ -2,17 +2,11 @@
   "version": 2,
   "name": "claude-relay-service",
   "buildCommand": "npm run build",
-  "outputDirectory": ".",
-  "builds": [
-    {
-      "src": "api/serverless.js",
-      "use": "@vercel/node"
-    },
-    {
-      "src": "web/admin-spa/dist/**",
-      "use": "@vercel/static"
+  "functions": {
+    "api/serverless.js": {
+      "maxDuration": 60
     }
-  ],
+  },
   "routes": [
     {
       "src": "/admin-next/assets/(.*)",
