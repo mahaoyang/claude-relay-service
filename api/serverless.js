@@ -1,56 +1,33 @@
-// Vercel Serverless Function 入口 - 调试版本
-console.log('SERVERLESS: Starting...')
-
-let Application
-let loadError = null
+// Vercel Serverless Function 入口 - 极简调试版本
+console.log('STEP1')
 
 try {
-  console.log('SERVERLESS: Loading app module...')
-  Application = require('../src/app')
-  console.log('SERVERLESS: App module loaded successfully')
+  console.log('STEP2')
+  const Application = require('../src/app')
+  console.log('STEP3')
+
+  let appInstance = null
+
+  module.exports = async (req, res) => {
+    console.log('STEP4')
+    try {
+      if (!appInstance) {
+        console.log('STEP5')
+        const app = new Application()
+        await app.start()
+        appInstance = app.app
+        console.log('STEP6')
+      }
+      return appInstance(req, res)
+    } catch (err) {
+      console.error('ERROR:', err.message)
+      res.status(500).json({ error: err.message })
+    }
+  }
 } catch (err) {
-  loadError = err
-  console.error('SERVERLESS FATAL:', err.message)
-  console.error('SERVERLESS STACK:', err.stack)
-}
-
-let appInstance = null
-let appPromise = null
-
-async function getApp() {
-  if (loadError) {
-    throw loadError
-  }
-
-  if (appInstance) {
-    return appInstance
-  }
-
-  if (!appPromise) {
-    appPromise = (async () => {
-      console.log('SERVERLESS: Creating app instance...')
-      const app = new Application()
-      console.log('SERVERLESS: Starting app...')
-      await app.start()
-      console.log('SERVERLESS: App started successfully')
-      appInstance = app.app
-      return appInstance
-    })()
-  }
-
-  return appPromise
-}
-
-module.exports = async (req, res) => {
-  console.log('SERVERLESS: Handling request:', req.method, req.url)
-  try {
-    const app = await getApp()
-    return app(req, res)
-  } catch (err) {
-    console.error('SERVERLESS ERROR:', err.message)
-    res.status(500).json({
-      error: 'Server Error',
-      message: err.message
-    })
+  console.error('LOAD_ERROR:', err.message)
+  console.error('STACK:', err.stack)
+  module.exports = (req, res) => {
+    res.status(500).json({ error: 'Failed to load: ' + err.message })
   }
 }
