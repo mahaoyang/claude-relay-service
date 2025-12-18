@@ -139,6 +139,33 @@ COST_MULTIPLIER_GPT_SERIES=0.71
 - `getCostMultiplier(modelName)` - 获取最终倍率（全局 × 模型特定）
 - `calculateCost()` - 在统计时应用倍率
 
+### 3.4 Token 统计应用倍率
+
+**功能**: Token 统计也应用费用倍率，使 `/api-gateway-stats` 显示的 token 数量反映倍率设置
+
+**实现位置**: `src/models/redis.js` 的 `incrementTokenUsage` 方法
+
+**受影响的统计维度**:
+- API Key 总计（totalTokens, totalInputTokens, totalOutputTokens, 等）
+- 每日/每月统计
+- 按模型统计（每日/每月/每小时）
+- API Key 级别的模型统计
+- 系统级分钟统计
+
+**代码逻辑**:
+```javascript
+// 延迟加载 pricingService 避免循环依赖
+const pricingService = require('../services/pricingService')
+const tokenMultiplier = pricingService.getCostMultiplier(model)
+
+// 应用倍率到所有 token 计数（使用 Math.round 四舍五入）
+const multipliedInputTokens = Math.round(finalInputTokens * tokenMultiplier)
+const multipliedOutputTokens = Math.round(finalOutputTokens * tokenMultiplier)
+// ... 其他 token 类型同理
+```
+
+**注意**: 费用（cost）和 token 使用相同的倍率，保持统计一致性。
+
 ---
 
 ## 4. 请求头伪装中间件
@@ -460,3 +487,4 @@ AUTO_DELIVERY_SECRET=
 | 2025-12-13 | 新增智能定价 Fallback 机制 |
 | 2025-12-18 | 重构文档结构，简化倍率系统，补充前端伪装开关、调试中间件、自动发货功能文档 |
 | 2025-12-18 | 增强模型映射中间件：额度感知逻辑，前 10% 不映射，后 90% 按概率映射 |
+| 2025-12-18 | Token 统计应用倍率：`/api-gateway-stats` 显示的 token 数量现在反映 COST_MULTIPLIER 设置 |
