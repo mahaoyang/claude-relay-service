@@ -341,20 +341,39 @@ CRS_REDIS_URL=rediss://user:password@host:port
 
 ### 8.4 模型映射中间件 (`src/middleware/modelMapper.js`)
 
-**功能**: 将所有 Claude 模型请求强制映射到指定模型
+**功能**: 根据 API Key 额度使用情况，智能映射 Claude 模型请求到低成本模型
 
 **使用场景**:
-- 成本控制：强制使用低成本模型
+- 成本控制：根据额度使用进度智能切换到低成本模型
 - 测试：统一测试特定模型行为
 - 灰度发布：逐步切换到新模型
 
-**环境变量**:
-```bash
-MODEL_MAPPER_ENABLED=true              # 启用映射（默认 false）
-MODEL_MAPPER_TARGET=claude-haiku-4-5   # 目标模型
+**额度感知逻辑**:
+- 前 10% 额度：不做映射，使用原始模型（保证初期体验）
+- 10%-100% 额度：按概率映射，概率随使用比例线性增加
+  - 10% 使用量 → 0% 概率映射
+  - 55% 使用量 → 50% 概率映射
+  - 100% 使用量 → 100% 概率映射
+
+**概率计算公式**:
+```
+if usedRatio < threshold:
+    probability = 0
+else:
+    probability = (usedRatio - threshold) / (1 - threshold)
 ```
 
-**行为**: 仅映射 Claude 系列模型（`claude-*`、`anthropic.*`），其他模型不受影响
+**环境变量**:
+```bash
+MODEL_MAPPER_ENABLED=true                    # 启用映射（默认 false）
+MODEL_MAPPER_TARGET=claude-haiku-4-5-20251001  # 目标模型
+MODEL_MAPPER_THRESHOLD=0.1                   # 开始映射的阈值（默认 0.1 即 10%）
+```
+
+**行为**:
+- 仅映射 Claude 系列模型（`claude-*`、`anthropic.*`），其他模型不受影响
+- 如果 API Key 未设置额度限制（`totalCostLimit <= 0`），则直接映射（兼容旧逻辑）
+- 日志记录映射决策详情（使用比例、概率、随机数）
 
 ---
 
@@ -424,6 +443,7 @@ DEBUG_HTTP_TRAFFIC=false
 # 模型映射
 MODEL_MAPPER_ENABLED=false
 MODEL_MAPPER_TARGET=claude-haiku-4-5-20251001
+MODEL_MAPPER_THRESHOLD=0.1
 
 # 自动发货
 AUTO_DELIVERY_ENABLED=false
@@ -439,3 +459,4 @@ AUTO_DELIVERY_SECRET=
 | 2025-12-10 | 初始版本，整理所有定制功能 |
 | 2025-12-13 | 新增智能定价 Fallback 机制 |
 | 2025-12-18 | 重构文档结构，简化倍率系统，补充前端伪装开关、调试中间件、自动发货功能文档 |
+| 2025-12-18 | 增强模型映射中间件：额度感知逻辑，前 10% 不映射，后 90% 按概率映射 |
