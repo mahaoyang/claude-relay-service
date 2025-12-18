@@ -8,15 +8,17 @@ const logger = require('../utils/logger')
 const isVercel = process.env.VERCEL === '1' || process.env.NOW_REGION !== undefined
 const LOG_DIR = isVercel ? '/tmp/crs-debug-logs' : path.join(__dirname, '../../logs/http-debug')
 
-// 确保日志目录存在
-let fileLoggingEnabled = true
-try {
-  if (!fs.existsSync(LOG_DIR)) {
-    fs.mkdirSync(LOG_DIR, { recursive: true })
+// Vercel 环境直接禁用文件日志
+let fileLoggingEnabled = !isVercel
+if (fileLoggingEnabled) {
+  try {
+    if (!fs.existsSync(LOG_DIR)) {
+      fs.mkdirSync(LOG_DIR, { recursive: true })
+    }
+  } catch (error) {
+    fileLoggingEnabled = false
+    logger.warn('[DebugInterceptor] File logging disabled:', error.message)
   }
-} catch (error) {
-  fileLoggingEnabled = false
-  logger.warn('[DebugInterceptor] File logging disabled:', error.message)
 }
 
 // 获取当前日期作为日志文件名

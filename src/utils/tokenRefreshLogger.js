@@ -5,26 +5,29 @@ const os = require('os')
 const { maskToken } = require('./tokenMask')
 
 // 确定日志目录，Vercel 等只读环境回落到 /tmp，并在不可写时仅输出控制台
-const isVercel = !!process.env.VERCEL
+const isVercel = !!process.env.VERCEL || process.env.NOW_REGION !== undefined
 const fallbackLogDir = path.join(os.tmpdir(), 'crs-logs')
 let logDir = process.env.LOG_DIR || path.join(process.cwd(), 'logs')
-let fileLoggingEnabled = true
+let fileLoggingEnabled = !isVercel // Vercel 环境直接禁用文件日志
 
 const ensureDir = (dir) => {
   fs.mkdirSync(dir, { recursive: true, mode: 0o755 })
 }
 
-try {
-  ensureDir(logDir)
-} catch (error) {
+// 非 Vercel 环境才尝试创建日志目录
+if (fileLoggingEnabled) {
   try {
-    logDir = fallbackLogDir
     ensureDir(logDir)
-  } catch (fallbackError) {
-    console.warn(
-      `Token refresh file logging disabled (target: ${logDir}): ${fallbackError.message}; console only`
-    )
-    fileLoggingEnabled = false
+  } catch (error) {
+    try {
+      logDir = fallbackLogDir
+      ensureDir(logDir)
+    } catch (fallbackError) {
+      console.warn(
+        `Token refresh file logging disabled (target: ${logDir}): ${fallbackError.message}; console only`
+      )
+      fileLoggingEnabled = false
+    }
   }
 }
 

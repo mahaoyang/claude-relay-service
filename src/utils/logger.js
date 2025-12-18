@@ -140,26 +140,29 @@ const consoleFormat = createLogFormat(true)
 const isTestEnv = process.env.NODE_ENV === 'test' || process.env.JEST_WORKER_ID
 
 // 📁 确定日志目录（在不可写环境如 Vercel 上回落到 /tmp 并允许仅控制台日志）
-const isVercel = !!process.env.VERCEL
+const isVercel = !!process.env.VERCEL || process.env.NOW_REGION !== undefined
 const fallbackLogDir = path.join(os.tmpdir(), 'crs-logs')
 let logDirectory = process.env.LOG_DIR || config.logging.dirname
-let fileLoggingEnabled = true
+let fileLoggingEnabled = !isVercel // Vercel 环境直接禁用文件日志
 
 const ensureDir = (dir) => {
   fs.mkdirSync(dir, { recursive: true, mode: 0o755 })
 }
 
-try {
-  ensureDir(logDirectory)
-} catch (error) {
+// 非 Vercel 环境才尝试创建日志目录
+if (fileLoggingEnabled) {
   try {
-    logDirectory = fallbackLogDir
     ensureDir(logDirectory)
-  } catch (fallbackError) {
-    console.warn(
-      `File logging disabled (target: ${logDirectory}): ${fallbackError.message}; falling back to console only`
-    )
-    fileLoggingEnabled = false
+  } catch (error) {
+    try {
+      logDirectory = fallbackLogDir
+      ensureDir(logDirectory)
+    } catch (fallbackError) {
+      console.warn(
+        `File logging disabled (target: ${logDirectory}): ${fallbackError.message}; falling back to console only`
+      )
+      fileLoggingEnabled = false
+    }
   }
 }
 

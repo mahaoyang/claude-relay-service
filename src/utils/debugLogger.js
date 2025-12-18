@@ -15,7 +15,8 @@ function createDebugLogger(prefix, logFileName) {
     const logMessage = `[${timestamp}] ${message}`
 
     // 线上环境（Vercel等只读文件系统）使用 console.log
-    if (process.env.NODE_ENV === 'production' || process.env.VERCEL) {
+    const isVercel = process.env.VERCEL === '1' || process.env.NOW_REGION !== undefined
+    if (process.env.NODE_ENV === 'production' || isVercel) {
       console.log(`[${prefix}]`, logMessage)
     } else {
       // 本地开发环境写文件

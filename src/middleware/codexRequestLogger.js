@@ -7,16 +7,17 @@ const isVercel = process.env.VERCEL === '1' || process.env.NOW_REGION !== undefi
 const LOG_DIR = isVercel ? '/tmp/crs-debug-logs' : path.join(__dirname, '../../logs')
 const LOG_FILE = path.join(LOG_DIR, 'codex-requests.log')
 
-// 确保日志目录存在（使用 try-catch 处理权限问题）
-let fileLoggingEnabled = true
-try {
-  if (!fs.existsSync(LOG_DIR)) {
-    fs.mkdirSync(LOG_DIR, { recursive: true })
+// Vercel 环境直接禁用文件日志
+let fileLoggingEnabled = !isVercel
+if (fileLoggingEnabled) {
+  try {
+    if (!fs.existsSync(LOG_DIR)) {
+      fs.mkdirSync(LOG_DIR, { recursive: true })
+    }
+  } catch (error) {
+    fileLoggingEnabled = false
+    console.warn('[CodexRequestLogger] File logging disabled:', error.message)
   }
-} catch (error) {
-  // 如果无法创建目录，禁用文件日志
-  fileLoggingEnabled = false
-  console.warn('[CodexRequestLogger] File logging disabled:', error.message)
 }
 
 function formatJson(obj) {
