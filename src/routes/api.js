@@ -11,6 +11,7 @@ const disguiseMiddleware = require('../middleware/disguise')
 const requestLogger = require('../middleware/requestLogger') // 重新启用 - 用于调试 anthropic-version
 const logger = require('../utils/logger')
 const { getEffectiveModel, parseVendorPrefixedModel } = require('../utils/modelHelper')
+const { modelMapper } = require('../middleware/modelMapper')
 const sessionHelper = require('../utils/sessionHelper')
 const { updateRateLimitCounters } = require('../utils/rateLimitHelper')
 const claudeRelayConfigService = require('../services/claudeRelayConfigService')
@@ -1290,6 +1291,7 @@ router.post(
   '/v1/messages',
   requestLogger, // 重新启用 - 用于调试 anthropic-version
   authenticateApiKey,
+  modelMapper,
   handleMessagesRequest
 )
 
@@ -1298,6 +1300,7 @@ router.post(
   '/claude/v1/messages',
   requestLogger, // 重新启用 - 用于调试 anthropic-version
   authenticateApiKey,
+  modelMapper,
   handleMessagesRequest
 )
 
